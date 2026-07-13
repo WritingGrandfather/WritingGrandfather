@@ -1,0 +1,21 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="../USS/Ranking.uss" />
+
+    <ui:VisualElement name="ranking-root" class="ranking-root">
+        <ui:Label text="랭킹" name="ranking-title" class="ranking-title" />
+
+        <ui:VisualElement name="ranking-panel" class="ranking-panel">
+            <ui:VisualElement name="ranking-header-row" class="ranking-header-row">
+                <ui:Label text="순위" name="header-rank" class="header-cell header-cell--rank" />
+                <ui:Label text="이름" name="header-name" class="header-cell header-cell--name" />
+                <ui:Label text="점수" name="header-score" class="header-cell header-cell--score" />
+            </ui:VisualElement>
+
+            <ui:ScrollView name="ranking-list" class="ranking-list" mode="Vertical" vertical-scroller-visibility="Auto" />
+
+            <ui:Label text="아직 기록이 없습니다" name="ranking-empty" class="ranking-empty hidden" />
+        </ui:VisualElement>
+
+        <ui:Button text="뒤로" name="btn-back" class="ranking-back-button" />
+    </ui:VisualElement>
+</ui:UXML>
