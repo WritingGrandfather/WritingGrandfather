@@ -2610,8 +2610,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::OpenAIHandwritingEvaluator
   model: gpt-5.4-mini
   maxTokens: 1024
-  votes: 3
-  reasoningEffort: low
+  votes: 1
+  reasoningEffort: none
 --- !u!4 &936507627
 Transform:
   m_ObjectHideFlags: 0

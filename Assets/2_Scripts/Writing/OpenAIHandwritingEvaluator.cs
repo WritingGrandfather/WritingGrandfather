@@ -27,10 +27,10 @@ public class OpenAIHandwritingEvaluator : HandwritingEvaluator
 
     [Tooltip("다수결 표본 수. 같은 글씨에 대해 N개의 판독을 받아 투표로 결정 (1=투표 없음, 3 권장)\ngpt-5 계열은 병렬 요청으로, 구형 모델은 n 파라미터로 처리 (지연시간 증가 없음)")]
     [Range(1, 5)]
-    public int votes = 3;
+    public int votes = 1;
 
-    [Tooltip("추론 강도 (gpt-5 계열 전용): none / low / medium / high. 높을수록 정확·느림. 비우면 모델 기본값(medium)")]
-    public string reasoningEffort = "low";
+    [Tooltip("추론 강도 (gpt-5 계열 전용): none / low / medium / high / xhigh. 높을수록 정확·느림. 비우면 모델 기본값(medium)")]
+    public string reasoningEffort = "none";
 
     /// <summary>gpt-5 계열/o 계열 = 추론 모델 (파라미터 체계가 다름)</summary>
     bool IsReasoningFamily =>
