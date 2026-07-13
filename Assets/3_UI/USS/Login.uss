@@ -1,0 +1,216 @@
+.hidden {
+    display: none;
+}
+
+/* 화면 전체 (SafeAreaFitter가 패딩을 줌). 세로 가운데 정렬 */
+.login-root {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgb(250, 240, 222);
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 실제 내용: 가운데 + 최대폭(태블릿에서 너무 안 퍼지게). 화면에 맞춰 스케일 */
+.content {
+    width: 90%;
+    max-width: 560px;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 20px;
+}
+
+.title-label {
+    font-size: 34px;
+    -unity-font-style: bold;
+    color: rgb(90, 62, 40);
+    -unity-text-align: middle-center;
+    white-space: nowrap;
+    margin-bottom: 6px;
+}
+
+.subtitle {
+    font-size: 18px;
+    color: rgb(140, 115, 90);
+    -unity-text-align: middle-center;
+    margin-bottom: 28px;
+}
+
+/* 로그인 입력 묶는 카드 */
+.card {
+    background-color: rgb(255, 253, 248);
+    border-radius: 22px;
+    padding: 24px 20px 20px 20px;
+    margin-bottom: 22px;
+    align-items: stretch;
+}
+
+.input {
+    margin-bottom: 14px;
+    font-size: 20px;
+}
+
+.input .unity-base-field__label {
+    color: rgb(90, 62, 40);
+    min-width: 84px;
+    font-size: 17px;
+}
+
+.input .unity-base-text-field__input {
+    height: 56px;
+    border-radius: 12px;
+    border-width: 0;
+    background-color: rgb(245, 238, 227);
+    color: rgb(50, 40, 30);
+    padding: 0 12px;
+}
+
+.menu-button {
+    height: 66px;
+    flex-shrink: 0;
+    margin-bottom: 12px;
+    border-radius: 18px;
+    border-width: 0;
+    font-size: 22px;
+    color: rgb(255, 255, 255);
+    background-color: rgb(150, 111, 71);
+    -unity-text-align: middle-center;
+}
+
+.menu-button:hover {
+    background-color: rgb(170, 128, 86);
+}
+
+.menu-button--primary {
+    background-color: rgb(214, 108, 58);
+    margin-top: 4px;
+    margin-bottom: 0;
+}
+
+.menu-button--primary:hover {
+    background-color: rgb(230, 128, 76);
+}
+
+.menu-button--google {
+    background-color: rgb(66, 133, 244);
+}
+
+.menu-button--google:hover {
+    background-color: rgb(90, 150, 250);
+}
+
+.menu-button--guest {
+    background-color: rgb(120, 120, 120);
+}
+
+.menu-button--guest:hover {
+    background-color: rgb(140, 140, 140);
+}
+
+/* "또는" 구분선 */
+.divider {
+    font-size: 16px;
+    color: rgb(160, 140, 120);
+    -unity-text-align: middle-center;
+    margin-top: 4px;
+    margin-bottom: 14px;
+}
+
+.msg {
+    font-size: 17px;
+    color: rgb(190, 60, 40);
+    -unity-text-align: middle-center;
+    white-space: normal;
+    margin-top: 8px;
+}
+
+/* 회원가입 유도 줄 */
+.signup-row {
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-top: 18px;
+}
+
+.hint {
+    font-size: 17px;
+    color: rgb(120, 100, 80);
+    -unity-text-align: middle-center;
+}
+
+.link-button {
+    background-color: rgba(0, 0, 0, 0);
+    border-width: 0;
+    color: rgb(214, 108, 58);
+    font-size: 18px;
+    -unity-font-style: bold;
+    margin-left: 6px;
+}
+
+.link-button:hover {
+    color: rgb(230, 128, 76);
+}
+
+/* 회원가입 모달 */
+.modal-overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.modal-box {
+    width: 86%;
+    max-width: 520px;
+    background-color: rgb(255, 253, 248);
+    border-radius: 28px;
+    padding: 34px 28px;
+    align-items: stretch;
+}
+
+.modal-text {
+    font-size: 28px;
+    -unity-font-style: bold;
+    color: rgb(60, 45, 35);
+    margin-bottom: 22px;
+    -unity-text-align: middle-center;
+    white-space: nowrap;
+}
+
+.modal-button-row {
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+    margin-top: 14px;
+}
+
+.modal-button {
+    flex-grow: 1;
+    height: 76px;
+    margin: 0 8px;
+    border-radius: 18px;
+    border-width: 0;
+    font-size: 24px;
+    color: rgb(255, 255, 255);
+    -unity-text-align: middle-center;
+}
+
+.modal-button--confirm {
+    background-color: rgb(214, 108, 58);
+}
+
+.modal-button--confirm:hover {
+    background-color: rgb(230, 128, 76);
+}
+
+.modal-button--cancel {
+    background-color: rgb(120, 120, 120);
+}
+
+.modal-button--cancel:hover {
+    background-color: rgb(140, 140, 140);
+}
