@@ -150,16 +150,46 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
   uiDocument: {fileID: 249968774}
-  gungseoFont: {fileID: 0}
-  spawnInterval: 2
-  fallSpeed: 60
+  gungseoFont: {fileID: 12800000, guid: eeb8b184c61c3c743b0bd13837406ade, type: 3}
+  mode: 1
+  startSpawnInterval: 2.5
+  minSpawnInterval: 0.9
+  startFallSpeed: 80
+  maxFallSpeed: 240
+  rampDuration: 180
   fontSize: 72
   sideMarginPx: 80
   deadlineRatio: 0.8
   choseongPool: "\u3131\u3134\u3137\u3139\u3141\u3142\u3145\u3147\u3148\u314A\u314B\u314C\u314D\u314E"
   jungseongPool: "\u314F\u3151\u3153\u3155\u3157\u315B\u315C\u3160\u3161\u3163\u3150\u3154"
   jongseongPool: "\u3131\u3134\u3139\u3141\u3142\u3145\u3147"
-  jongseongChance: 0.4
+  startJongseongChance: 0.2
+  maxJongseongChance: 0.6
+  wordPool:
+  - "\uB098\uBB34"
+  - "\uD558\uB298"
+  - "\uBC14\uB2E4"
+  - "\uAD6C\uB984"
+  - "\uBC14\uB78C"
+  - "\uC0AC\uB791"
+  - "\uB178\uB798"
+  - "\uB2EC\uBE5B"
+  - "\uBCC4\uBE5B"
+  - "\uAC00\uB77D"
+  - "\uB9C8\uC74C"
+  - "\uC18C\uB9AC"
+  - "\uAC70\uC6B8"
+  - "\uB098\uBE44"
+  - "\uACE0\uB798"
+  - "\uC218\uBC15"
+  - "\uAC00\uBC29"
+  - "\uBAA8\uC790"
+  - "\uC2E0\uBC1C"
+  - "\uC6B0\uC0B0"
+  - "\uC9C0\uB3C4"
+  - "\uC57D\uC18D"
+  - "\uBB34\uC9C0\uAC1C"
+  - "\uB3C4\uC11C\uAD00"
 --- !u!114 &249968774
 MonoBehaviour:
   m_ObjectHideFlags: 0
