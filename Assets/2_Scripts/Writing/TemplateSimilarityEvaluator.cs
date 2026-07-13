@@ -172,27 +172,71 @@ public class TemplateSimilarityEvaluator : HandwritingEvaluator
         string[] cands = HangulComposer.GenerateConfusables(target);
         if (cands == null) return '\0';
 
+        int rTight = Mathf.Max(1, Mathf.RoundToInt(tolerance * 0.5f * gridSize));
+        bool[,] userFat = Dilate(user, rTight);
+        bool[,] targetFat = Dilate(targetTempl, rTight);
+        int targetInk = CountInk(targetTempl);
         int targetRaw = RawSimilarity(user, targetTempl);
+
         char best = '\0';
-        int bestScore = targetRaw + Mathf.Max(0, confusableMargin);
+        int bestRaw = -1;
+        string bestReason = "";
 
         foreach (string cand in cands)
         {
             if (string.IsNullOrEmpty(cand) || cand == target || cand.Length != 1) continue;
 
             bool[,] ct = aligned ? PlaceTemplate(MaskFromFont(cand[0])) : Normalize(MaskFromFont(cand[0]));
-            if (CountInk(ct) == 0) continue;
+            int candInk = CountInk(ct);
+            if (candInk == 0) continue;
 
-            int cs = RawSimilarity(user, ct);
-            if (cs > bestScore)
+            int candRaw = RawSimilarity(user, ct);
+            bool[,] candFat = Dilate(ct, rTight);
+
+            // 두 글자의 "차이 부위"를 직접 검사 (예: '자' vs '사' → 차이는 ㅈ의 윗획)
+            int uniqT = 0, uniqTCov = 0;   // 목표에만 있는 부분 / 그중 유저가 쓴 부분
+            int uniqC = 0, uniqCCov = 0;   // 후보에만 있는 부분 / 그중 유저가 쓴 부분
+            for (int y = 0; y < gridSize; y++)
             {
-                bestScore = cs;
+                for (int x = 0; x < gridSize; x++)
+                {
+                    if (targetTempl[y, x] && !candFat[y, x]) { uniqT++; if (userFat[y, x]) uniqTCov++; }
+                    if (ct[y, x] && !targetFat[y, x]) { uniqC++; if (userFat[y, x]) uniqCCov++; }
+                }
+            }
+
+            bool flagged = false;
+            string reason = "";
+
+            // 1) 목표를 목표답게 만드는 부위(획)를 거의 안 썼고, 전체적으로는 후보만큼 닮음
+            if (uniqT >= targetInk * 0.03f && (float)uniqTCov / uniqT < 0.45f && candRaw + 2 >= targetRaw)
+            {
+                flagged = true;
+                reason = $"목표 고유 부위 {(float)uniqTCov / uniqT:P0}만 덮음";
+            }
+            // 2) 후보에만 있는 부위를 뚜렷하게 추가로 씀 (여분 획)
+            else if (uniqC >= candInk * 0.03f && (float)uniqCCov / uniqC > 0.6f)
+            {
+                flagged = true;
+                reason = $"후보 고유 부위를 {(float)uniqCCov / uniqC:P0} 덮음";
+            }
+            // 3) 전반적으로 후보에 더 가까움
+            else if (candRaw > targetRaw + Mathf.Max(0, confusableMargin))
+            {
+                flagged = true;
+                reason = $"원점수 {targetRaw} < {candRaw}";
+            }
+
+            if (flagged && candRaw > bestRaw)
+            {
+                bestRaw = candRaw;
                 best = cand[0];
+                bestReason = reason;
             }
         }
 
         if (best != '\0')
-            Debug.Log($"[TemplateEval] 혼동 판정: 목표 '{target}' 원점수 {targetRaw} < '{best}' {bestScore} → 불통과");
+            Debug.Log($"[TemplateEval] 혼동 판정: 목표 '{target}' 대신 '{best}'로 보임 ({bestReason}) → 불통과");
         return best;
     }
 
