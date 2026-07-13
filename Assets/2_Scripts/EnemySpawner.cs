@@ -27,8 +27,14 @@ public class EnemySpawner : MonoBehaviour
     [Header("애니메이션")]
     [SerializeField] private float slideDuration = 0.4f; // 넘어가는 시간(초)
 
+    [Header("스테이지 전환 연출")]
+    [SerializeField] private int bannerFontSize = 90;
+    [SerializeField] private float bannerFadeDuration = 0.3f; // 배너 페이드 인/아웃 시간
+    [SerializeField] private float bannerHoldDuration = 1.2f; // 배너가 떠 있는 시간
+
     private Label currentLabel;
     private bool transitioning;
+    private string pendingBanner; // 다음 글자 진입 전에 보여줄 스테이지 배너 텍스트
 
     // 스테이지 진행 상태
     private int stageIndex;
@@ -54,6 +60,17 @@ public class EnemySpawner : MonoBehaviour
     // 캐시하지 않고 매번 가져온다 (UIDocument가 패널을 재생성하면 캐시가 무효화됨)
     private VisualElement Root => uiDocument.rootVisualElement;
 
+    private void OnEnable()
+    {
+        // root가 화면 전체를 채우도록 강제 (기본은 내용물 크기라서 높이가 0이 됨)
+        VisualElement root = Root;
+        root.style.position = Position.Absolute;
+        root.style.top = 0;
+        root.style.bottom = 0;
+        root.style.left = 0;
+        root.style.right = 0;
+    }
+
     private void Start()
     {
         if (gungseoFont == null)
@@ -66,12 +83,11 @@ public class EnemySpawner : MonoBehaviour
         if (float.IsNaN(Root.resolvedStyle.width) || Root.resolvedStyle.width <= 0f)
             return;
 
-        // 첫 단어 표시
-        if (currentLabel == null)
+        // 첫 단어 표시 (첫 스테이지 배너 포함)
+        if (currentLabel == null && !transitioning)
         {
-            CurrentText = PickText();
-            currentLabel = CreateLabel(CurrentText);
-            Root.Add(currentLabel);
+            transitioning = true;
+            ShowIncoming(PickText());
             return;
         }
 
@@ -96,15 +112,86 @@ public class EnemySpawner : MonoBehaviour
                 ve.style.translate = new Translate(-width * Easing.OutCubic(t), 0))
             .OnCompleted(() => old.RemoveFromHierarchy());
 
-        // 다음 글자: 오른쪽 화면 밖에서 중앙으로
-        CurrentText = PickText();
-        currentLabel = CreateLabel(CurrentText);
+        // 다음 글자 준비 (스테이지가 바뀌면 배너 연출 후 진입)
+        currentLabel = null;
+        ShowIncoming(PickText());
+    }
+
+    /// <summary>다음 텍스트를 표시한다. 스테이지 배너가 대기 중이면 배너 먼저.</summary>
+    private void ShowIncoming(string text)
+    {
+        CurrentText = text;
+
+        if (pendingBanner != null)
+        {
+            string banner = pendingBanner;
+            pendingBanner = null;
+            ShowStageBanner(banner, () => SlideInWord(text));
+        }
+        else
+        {
+            SlideInWord(text);
+        }
+    }
+
+    /// <summary>글자를 오른쪽 화면 밖에서 중앙으로 밀어 넣는다.</summary>
+    private void SlideInWord(string text)
+    {
+        float width = Root.resolvedStyle.width;
+        int durationMs = Mathf.RoundToInt(slideDuration * 1000f);
+
+        currentLabel = CreateLabel(text);
         currentLabel.style.translate = new Translate(width, 0);
         Root.Add(currentLabel);
         currentLabel.experimental.animation
             .Start(0f, 1f, durationMs, (ve, t) =>
                 ve.style.translate = new Translate(width * (1f - Easing.OutCubic(t)), 0))
             .OnCompleted(() => transitioning = false);
+    }
+
+    /// <summary>스테이지 배너 연출: 확대되며 페이드 인 → 잠시 유지 → 페이드 아웃.</summary>
+    private void ShowStageBanner(string bannerText, System.Action onDone)
+    {
+        var banner = new Label(bannerText);
+        banner.AddToClassList("stage-banner"); // USS로 꾸밀 때 사용
+        banner.style.position = Position.Absolute;
+        banner.style.left = 0;
+        banner.style.right = 0;
+        banner.style.top = Length.Percent(verticalRatio * 100f);
+        banner.style.unityTextAlign = TextAnchor.MiddleCenter;
+        banner.style.fontSize = bannerFontSize;
+        banner.style.color = Color.white;
+        banner.style.opacity = 0f;
+        banner.style.whiteSpace = WhiteSpace.Normal;
+        if (gungseoFont != null)
+            banner.style.unityFontDefinition = new StyleFontDefinition(gungseoFont);
+        Root.Add(banner);
+
+        int fadeMs = Mathf.RoundToInt(bannerFadeDuration * 1000f);
+        long holdMs = (long)(bannerHoldDuration * 1000f);
+
+        // 페이드 인 + 살짝 확대
+        banner.experimental.animation
+            .Start(0f, 1f, fadeMs, (ve, t) =>
+            {
+                float e = Easing.OutCubic(t);
+                ve.style.opacity = e;
+                ve.style.scale = new Scale(Vector2.one * (0.8f + 0.2f * e));
+            })
+            .OnCompleted(() =>
+            {
+                // 유지 후 페이드 아웃
+                banner.schedule.Execute(() =>
+                {
+                    banner.experimental.animation
+                        .Start(0f, 1f, fadeMs, (ve, t) => ve.style.opacity = 1f - t)
+                        .OnCompleted(() =>
+                        {
+                            banner.RemoveFromHierarchy();
+                            onDone?.Invoke();
+                        });
+                }).StartingIn(holdMs);
+            });
     }
 
     /// <summary>모드 변경. 스테이지를 처음부터 다시 시작하고 새 단어로 교체된다.</summary>
@@ -176,8 +263,12 @@ public class EnemySpawner : MonoBehaviour
 
             if (stageQueue.Count > 0)
             {
-                OnStageChanged?.Invoke(stageIndex + 1, stages[stageIndex]);
-                Debug.Log($"[EnemySpawner] 스테이지 {stageIndex + 1} 시작: {stages[stageIndex].stageName} ({stageQueue.Count}개)");
+                StageData stage = stages[stageIndex];
+                pendingBanner = string.IsNullOrEmpty(stage.stageName)
+                    ? $"{stageIndex + 1}단계"
+                    : $"{stageIndex + 1}단계\n{stage.stageName}";
+                OnStageChanged?.Invoke(stageIndex + 1, stage);
+                Debug.Log($"[EnemySpawner] 스테이지 {stageIndex + 1} 시작: {stage.stageName} ({stageQueue.Count}개)");
             }
             else
             {
