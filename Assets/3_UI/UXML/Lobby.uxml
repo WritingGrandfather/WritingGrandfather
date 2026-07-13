@@ -16,7 +16,10 @@
 
     <ui:VisualElement name="exit-modal" class="modal-overlay hidden">
         <ui:VisualElement name="exit-modal-box" class="modal-box">
-            <ui:Label text="정말 나가시겠습니까?" name="modal-text" class="modal-text" />
+            <ui:VisualElement name="modal-text-area" class="modal-text-area">
+                <ui:Label text="정말" name="modal-text-line1" class="modal-text" />
+                <ui:Label text="나가시겠습니까?" name="modal-text-line2" class="modal-text" />
+            </ui:VisualElement>
             <ui:VisualElement name="exit-modal-buttons" class="modal-button-row">
                 <ui:Button name="btn-exit-confirm" text="예" class="modal-button modal-button--confirm" />
                 <ui:Button name="btn-exit-cancel" text="아니오" class="modal-button modal-button--cancel" />
