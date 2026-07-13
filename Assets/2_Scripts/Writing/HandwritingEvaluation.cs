@@ -23,6 +23,7 @@ public class HandwritingFeedback
     public string recognizedText; // AI가 이미지에서 읽어낸 글자
     public int score;             // 0~100 종합 점수 (통과 판정에 사용)
     public bool passed;           // 통과 여부
+    public int stars;             // 별점 0~3 (불통과=0, 통과=최소1, 70↑=2, 85↑=3)
     public string message;        // 사용자에게 보여줄 피드백 문장
 
     // 세부 항목 점수 (0~100). 아직 계산 안 됐으면 -1 (UI는 이 경우 종합 score로 대체 표시).

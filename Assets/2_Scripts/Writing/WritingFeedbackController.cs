@@ -30,7 +30,7 @@ public class WritingFeedbackController : MonoBehaviour
 
     [Header("통과 기준")]
     [Tooltip("인식 글자가 목표와 일치하고 이 점수 이상이면 passed=true")]
-    [SerializeField] int passScore = 70;
+    [SerializeField] int passScore = 50;
 
     [Header("기획 판정 기준 (AI 프롬프트로 전달됨)")]
     [Tooltip("기획서에 정의된 채점/피드백 조건을 여기에 적는다. AI가 이 기준으로 판단.")]
@@ -140,8 +140,8 @@ public class WritingFeedbackController : MonoBehaviour
 
             if (recognized == target)
             {
-                // 글자가 맞으면 웬만하면 통과 — 점수는 가독성 참고치일 뿐 (상한 55로 클램프)
-                feedback.passed = feedback.score >= Mathf.Min(passScore, 55);
+                // 글자가 맞으면 점수가 passScore 이상일 때 통과
+                feedback.passed = feedback.score >= passScore;
             }
             else
             {
@@ -203,8 +203,18 @@ public class WritingFeedbackController : MonoBehaviour
 
     void Finish(HandwritingFeedback feedback)
     {
+        feedback.stars = ComputeStars(feedback);
         isEvaluating = false;
         onStatus?.Invoke("");
         onFeedback?.Invoke(feedback);
+    }
+
+    // 별점: 불통과=0, 통과=최소 1별, 점수 70↑=2별, 85↑=3별
+    static int ComputeStars(HandwritingFeedback fb)
+    {
+        if (fb == null || !fb.passed) return 0;
+        if (fb.score >= 85) return 3;
+        if (fb.score >= 70) return 2;
+        return 1;
     }
 }
