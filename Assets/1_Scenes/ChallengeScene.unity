@@ -8078,6 +8078,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ChallengeHudController
   playerHp: {fileID: 900000003}
   survival: {fileID: 900000013}
+  drawLine: {fileID: 1346376305}
+  writingCell: {fileID: 75206299}
   heartFillSprite: {fileID: -433881255743393065, guid: 11166f91a458c8b498633b87135a701c, type: 3}
   heartNullSprite: {fileID: 2646518341357981494, guid: 405ac44a89faaf64ea6ef7b38ed4dc8f, type: 3}
   baseHeartSize: 96
@@ -8087,6 +8089,15 @@ MonoBehaviour:
   timeBarBorderColor: {r: 1, g: 0.92, b: 0.75, a: 0.9}
   baseTimeBarHeight: 64
   baseTimeBarBorder: 4
+  baseTopOffset: 20
+  lobbySceneName: LobbyScene
+  baseExitButtonSize: 100
+  exitButtonColor: {r: 0.47, g: 0.47, b: 0.47, a: 0.9}
+  baseUndoResetButtonSize: 100
+  baseUndoResetGap: 16
+  baseUndoResetCardInset: 14
+  undoButtonColor: {r: 0.59, g: 0.44, b: 0.28, a: 0.5}
+  resetButtonColor: {r: 0.47, g: 0.47, b: 0.47, a: 0.5}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
