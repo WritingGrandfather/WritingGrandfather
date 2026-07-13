@@ -55,15 +55,15 @@
             <ui:VisualElement name="audio-panel" class="settings-tab-panel">
                 <ui:VisualElement class="settings-row">
                     <ui:Label text="전체 볼륨" class="settings-row-label" />
-                    <ui:Slider name="slider-master-volume" low-value="0" high-value="100" value="80" show-input-field="true" class="settings-control" />
+                    <ui:Toggle name="toggle-master-volume" value="true" class="settings-control" />
                 </ui:VisualElement>
                 <ui:VisualElement class="settings-row">
                     <ui:Label text="배경음" class="settings-row-label" />
-                    <ui:Slider name="slider-bgm-volume" low-value="0" high-value="100" value="70" show-input-field="true" class="settings-control" />
+                    <ui:Toggle name="toggle-bgm-volume" value="true" class="settings-control" />
                 </ui:VisualElement>
                 <ui:VisualElement class="settings-row">
                     <ui:Label text="효과음" class="settings-row-label" />
-                    <ui:Slider name="slider-sfx-volume" low-value="0" high-value="100" value="80" show-input-field="true" class="settings-control" />
+                    <ui:Toggle name="toggle-sfx-volume" value="true" class="settings-control" />
                 </ui:VisualElement>
             </ui:VisualElement>
 

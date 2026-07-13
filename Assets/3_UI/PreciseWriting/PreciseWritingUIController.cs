@@ -188,7 +188,7 @@ namespace WritingGrandfather.UI.PreciseWriting
                 Show(writingScreen);
             });
             exitButton?.RegisterCallback<ClickEvent>(_ =>
-                UnityEngine.SceneManagement.SceneManager.LoadScene("UIScene"));
+                UnityEngine.SceneManagement.SceneManager.LoadScene("LobbyScene"));
         }
 
         // 완료 클릭: 다음 단어가 있으면 넘어가고, 마지막 단어면 분석 후 결과를 보여준다.

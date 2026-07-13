@@ -121,32 +121,57 @@ public static class StrokeOrderValidator
 
     // ── 필순 계획 생성 ───────────────────────────────────────────────
 
+    // 복합모음 = 가로 부분 + 세로 부분 결합
+    static bool TrySplitMixedVowel(char jung, out char hPart, out char vPart)
+    {
+        switch (jung)
+        {
+            case 'ㅘ': hPart = 'ㅗ'; vPart = 'ㅏ'; return true;
+            case 'ㅙ': hPart = 'ㅗ'; vPart = 'ㅐ'; return true;
+            case 'ㅚ': hPart = 'ㅗ'; vPart = 'ㅣ'; return true;
+            case 'ㅝ': hPart = 'ㅜ'; vPart = 'ㅓ'; return true;
+            case 'ㅞ': hPart = 'ㅜ'; vPart = 'ㅔ'; return true;
+            case 'ㅟ': hPart = 'ㅜ'; vPart = 'ㅣ'; return true;
+            case 'ㅢ': hPart = 'ㅡ'; vPart = 'ㅣ'; return true;
+            default: hPart = vPart = '\0'; return false;
+        }
+    }
+
     static List<PlanStroke> BuildPlan(char cho, char jung, char jong)
     {
         bool vertical = "ㅏㅐㅑㅒㅓㅔㅕㅖㅣ".IndexOf(jung) >= 0;
         bool horizontal = "ㅗㅛㅜㅠㅡ".IndexOf(jung) >= 0;
-        if (!vertical && !horizontal) return null; // 복합 모음은 미지원 → 보류
+        bool mixed = TrySplitMixedVowel(jung, out char hPart, out char vPart);
+        if (!vertical && !horizontal && !mixed) return null;
 
         bool hasJong = jong != '\0';
+        var plan = new List<PlanStroke>();
+        Rect jongBox = new Rect(0.15f, 0.66f, 0.7f, 0.31f);
 
-        // 자모 배치 박스 (글자 유닛 정사각형, y: 위→아래)
-        Rect choBox, jungBox, jongBox = default;
         if (vertical)
         {
-            choBox = hasJong ? new Rect(0.03f, 0.03f, 0.45f, 0.47f) : new Rect(0.03f, 0.08f, 0.47f, 0.62f);
-            jungBox = hasJong ? new Rect(0.52f, 0.02f, 0.45f, 0.58f) : new Rect(0.55f, 0.02f, 0.42f, 0.9f);
-            if (hasJong) jongBox = new Rect(0.15f, 0.66f, 0.7f, 0.31f);
+            Rect choBox = hasJong ? new Rect(0.03f, 0.03f, 0.45f, 0.47f) : new Rect(0.03f, 0.08f, 0.47f, 0.62f);
+            Rect jungBox = hasJong ? new Rect(0.52f, 0.02f, 0.45f, 0.58f) : new Rect(0.55f, 0.02f, 0.42f, 0.9f);
+            if (!AppendJamo(plan, cho, choBox)) return null;
+            if (!AppendJamo(plan, jung, jungBox)) return null;
         }
-        else
+        else if (horizontal)
         {
-            choBox = hasJong ? new Rect(0.2f, 0.02f, 0.6f, 0.32f) : new Rect(0.18f, 0.05f, 0.64f, 0.42f);
-            jungBox = hasJong ? new Rect(0.03f, 0.36f, 0.94f, 0.26f) : new Rect(0.03f, 0.5f, 0.94f, 0.38f);
-            if (hasJong) jongBox = new Rect(0.15f, 0.66f, 0.7f, 0.31f);
+            Rect choBox = hasJong ? new Rect(0.2f, 0.02f, 0.6f, 0.32f) : new Rect(0.18f, 0.05f, 0.64f, 0.42f);
+            Rect jungBox = hasJong ? new Rect(0.03f, 0.36f, 0.94f, 0.26f) : new Rect(0.03f, 0.5f, 0.94f, 0.38f);
+            if (!AppendJamo(plan, cho, choBox)) return null;
+            if (!AppendJamo(plan, jung, jungBox)) return null;
+        }
+        else // mixed (ㅘ류): 초성 좌상, 가로모음 그 아래 왼쪽, 세로모음 오른쪽
+        {
+            Rect choBox = hasJong ? new Rect(0.03f, 0.02f, 0.45f, 0.32f) : new Rect(0.05f, 0.03f, 0.45f, 0.4f);
+            Rect hBox = hasJong ? new Rect(0.02f, 0.36f, 0.55f, 0.24f) : new Rect(0.02f, 0.48f, 0.58f, 0.34f);
+            Rect vBox = hasJong ? new Rect(0.62f, 0.02f, 0.35f, 0.58f) : new Rect(0.64f, 0.02f, 0.33f, 0.9f);
+            if (!AppendJamo(plan, cho, choBox)) return null;
+            if (!AppendJamo(plan, hPart, hBox)) return null;
+            if (!AppendJamo(plan, vPart, vBox)) return null;
         }
 
-        var plan = new List<PlanStroke>();
-        if (!AppendJamo(plan, cho, choBox)) return null;
-        if (!AppendJamo(plan, jung, jungBox)) return null;
         if (hasJong && !AppendJamo(plan, jong, jongBox)) return null;
         return plan;
     }
@@ -238,6 +263,16 @@ public static class StrokeOrderValidator
                 new[] { P(0, 0.66f), P(0.68f, 0.66f) },
                 new[] { P(0.72f, 0), P(0.72f, 1) } };
             case 'ㅣ': return new[] { new[] { P(0.5f, 0), P(0.5f, 1) } };
+            case 'ㅒ': return new[] {
+                new[] { P(0.15f, 0), P(0.15f, 1) },
+                new[] { P(0.15f, 0.33f), P(0.6f, 0.33f) },
+                new[] { P(0.15f, 0.66f), P(0.6f, 0.66f) },
+                new[] { P(0.62f, 0), P(0.62f, 1) } };
+            case 'ㅖ': return new[] {
+                new[] { P(0, 0.33f), P(0.5f, 0.33f) },
+                new[] { P(0, 0.66f), P(0.5f, 0.66f) },
+                new[] { P(0.52f, 0), P(0.52f, 1) },
+                new[] { P(0.85f, 0), P(0.85f, 1) } };
             case 'ㅐ': return new[] {
                 new[] { P(0.15f, 0), P(0.15f, 1) },
                 new[] { P(0.15f, 0.5f), P(0.6f, 0.5f) },
@@ -264,8 +299,51 @@ public static class StrokeOrderValidator
                 new[] { P(0.65f, 0.32f), P(0.65f, 1) } };
             case 'ㅡ': return new[] { new[] { P(0, 0.5f), P(1, 0.5f) } };
 
-            default: return null; // 쌍자음/복합모음 등 미지원
+            // 쌍자음 (같은 자음 좌우 결합)
+            case 'ㄲ': return Composite('ㄱ', 'ㄱ');
+            case 'ㄸ': return Composite('ㄷ', 'ㄷ');
+            case 'ㅃ': return Composite('ㅂ', 'ㅂ');
+            case 'ㅆ': return Composite('ㅅ', 'ㅅ');
+            case 'ㅉ': return Composite('ㅈ', 'ㅈ');
+
+            // 겹받침 (서로 다른 자음 좌우 결합)
+            case 'ㄳ': return Composite('ㄱ', 'ㅅ');
+            case 'ㄵ': return Composite('ㄴ', 'ㅈ');
+            case 'ㄶ': return Composite('ㄴ', 'ㅎ');
+            case 'ㄺ': return Composite('ㄹ', 'ㄱ');
+            case 'ㄻ': return Composite('ㄹ', 'ㅁ');
+            case 'ㄼ': return Composite('ㄹ', 'ㅂ');
+            case 'ㄽ': return Composite('ㄹ', 'ㅅ');
+            case 'ㄾ': return Composite('ㄹ', 'ㅌ');
+            case 'ㄿ': return Composite('ㄹ', 'ㅍ');
+            case 'ㅀ': return Composite('ㄹ', 'ㅎ');
+            case 'ㅄ': return Composite('ㅂ', 'ㅅ');
+
+            default: return null;
         }
+    }
+
+    /// <summary>두 자음을 좌우로 결합 (쌍자음/겹받침). 필순: 왼쪽 자음 전부 → 오른쪽 자음 전부.</summary>
+    static Vector2[][] Composite(char left, char right)
+    {
+        Vector2[][] a = JamoStrokes(left);
+        Vector2[][] b = JamoStrokes(right);
+        if (a == null || b == null) return null;
+
+        var result = new Vector2[a.Length + b.Length][];
+        for (int i = 0; i < a.Length; i++)
+        {
+            result[i] = new Vector2[a[i].Length];
+            for (int k = 0; k < a[i].Length; k++)
+                result[i][k] = new Vector2(a[i][k].x * 0.45f, a[i][k].y);           // 왼쪽 45%
+        }
+        for (int i = 0; i < b.Length; i++)
+        {
+            result[a.Length + i] = new Vector2[b[i].Length];
+            for (int k = 0; k < b[i].Length; k++)
+                result[a.Length + i][k] = new Vector2(0.55f + b[i][k].x * 0.45f, b[i][k].y); // 오른쪽 45%
+        }
+        return result;
     }
 
     // ── 유저 잉크를 유닛 정사각형으로 늘리기 ─────────────────────────

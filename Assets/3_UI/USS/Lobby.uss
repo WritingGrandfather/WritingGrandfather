@@ -2,6 +2,17 @@
     display: none;
 }
 
+/* 모든 Button(메뉴/탭/모달/설정 닫기 버튼 등)에 공통으로 적용되는 눌림 효과.
+   클래스가 아니라 타입 선택자라 어떤 버튼이든 별도 클래스 없이 다 적용된다. */
+Button {
+    transition-property: scale;
+    transition-duration: 0.08s;
+}
+
+Button:active {
+    scale: 0.94;
+}
+
 .lobby-root {
     position: absolute;
     width: 100%;

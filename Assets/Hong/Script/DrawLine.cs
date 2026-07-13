@@ -235,6 +235,10 @@ public class DrowLine : MonoBehaviour
 
     int PlayRandomPencilSound(int exclude)
     {
+        // pencilSound(같은 오브젝트의 PencilSound 컴포넌트)나 SoundManager 싱글톤이 없는 씬(예: 사운드 설정 없이
+        // WritingPracticeScene을 단독으로 재생하는 경우)에서도 그리기 자체는 죽지 않도록 방어
+        if (pencilSound == null || SoundManager.Instance == null) return -1;
+
         var sounds = pencilSound.pencilSounds;
         if (sounds == null || sounds.Count == 0) return -1;
 
