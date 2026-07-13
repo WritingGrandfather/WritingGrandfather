@@ -5,8 +5,8 @@ using UnityEngine.UIElements;
 /// </summary>
 public class Enemy
 {
-    /// <summary>이 적에게 배정된 한글 외자</summary>
-    public char Letter { get; }
+    /// <summary>이 적에게 배정된 텍스트 (낱말 모드: 외자 1글자, 단어 모드: 단어)</summary>
+    public string Text { get; }
 
     /// <summary>UI Toolkit 요소 (스타일은 .enemy-letter 클래스로 USS에서도 제어 가능)</summary>
     public Label Element { get; }
@@ -18,14 +18,14 @@ public class Enemy
     public System.Action<Enemy> OnReachedDeadline;
     public System.Action<Enemy> OnDied;
 
-    public Enemy(char letter, float x, float startY, float speed, float deadlineY)
+    public Enemy(string text, float x, float startY, float speed, float deadlineY)
     {
-        Letter = letter;
+        Text = text;
         this.speed = speed;
         this.deadlineY = deadlineY;
         y = startY;
 
-        Element = new Label(letter.ToString());
+        Element = new Label(text);
         Element.AddToClassList("enemy-letter");
         Element.style.position = Position.Absolute;
         Element.style.left = x;

@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.TextCore.Text;
 using UnityEngine.UIElements;
 
 /// <summary>
@@ -12,7 +11,10 @@ public class EnemySpawner : MonoBehaviour
 {
     [Header("참조")]
     [SerializeField] private UIDocument uiDocument;
-    [SerializeField] private FontAsset gungseoFont; // 궁서체 FontAsset (없으면 USS 클래스로 지정)
+    [SerializeField] private Font gungseoFont; // 궁서체 폰트 파일(.ttf/.otf)을 그대로 드래그
+
+    [Header("모드")]
+    [SerializeField] private GameMode mode = GameMode.Letter;
 
     [Header("난이도 (시작 → 최대, 완만한 곡선으로 상승)")]
     [SerializeField] private float startSpawnInterval = 2.5f; // 초기 스폰 간격(초)
@@ -35,12 +37,35 @@ public class EnemySpawner : MonoBehaviour
     [Range(0f, 1f)][SerializeField] private float startJongseongChance = 0.2f; // 초기 받침 확률
     [Range(0f, 1f)][SerializeField] private float maxJongseongChance = 0.6f;   // 최대 난이도일 때 받침 확률
 
+    [Header("단어 풀 (단어 모드에서 사용)")]
+    [SerializeField] private string[] wordPool =
+    {
+        "나무", "하늘", "바다", "구름", "바람", "사랑", "노래", "달빛",
+        "별빛", "가락", "마음", "소리", "거울", "나비", "고래", "수박",
+        "가방", "모자", "신발", "우산", "지도", "약속", "무지개", "도서관",
+    };
+
     private readonly List<Enemy> activeEnemies = new List<Enemy>();
     private readonly List<Enemy> toRemove = new List<Enemy>();
     private float timer;
     private float elapsed; // 게임 시작 후 경과 시간
 
     public IReadOnlyList<Enemy> ActiveEnemies => activeEnemies;
+
+    /// <summary>현재 모드. 모드 선택 UI에서 SetMode로 변경한다.</summary>
+    public GameMode Mode => mode;
+
+    /// <summary>모드 변경 (화면의 적을 비우고 난이도를 처음부터 다시 시작)</summary>
+    public void SetMode(GameMode newMode)
+    {
+        mode = newMode;
+        foreach (Enemy enemy in activeEnemies)
+            enemy.Remove();
+        activeEnemies.Clear();
+        toRemove.Clear();
+        elapsed = 0f;
+        timer = 0f;
+    }
 
     /// <summary>난이도 진행도 0~1. 지수 곡선이라 초반엔 천천히, 갈수록 최대치에 수렴.</summary>
     private float Progress => 1f - Mathf.Exp(-3f * elapsed / rampDuration);
@@ -90,14 +115,16 @@ public class EnemySpawner : MonoBehaviour
 
     private void Spawn()
     {
-        char letter = PickLetter();
-        if (letter == '\0') return; // 남은 글자가 없으면 스킵
+        string text = mode == GameMode.Letter ? PickLetter() : PickWord();
+        if (string.IsNullOrEmpty(text)) return; // 뽑을 게 없으면 스킵
 
-        float x = Random.Range(sideMarginPx, Root.resolvedStyle.width - sideMarginPx - fontSize);
+        // 글자 수만큼 폭을 고려해 X 범위 계산
+        float textWidth = fontSize * text.Length;
+        float x = Random.Range(sideMarginPx, Mathf.Max(sideMarginPx + 1f, Root.resolvedStyle.width - sideMarginPx - textWidth));
         float startY = -fontSize; // 화면 위쪽 밖에서 시작
         float deadlineY = Root.resolvedStyle.height * deadlineRatio;
 
-        var enemy = new Enemy(letter, x, startY, CurrentFallSpeed, deadlineY);
+        var enemy = new Enemy(text, x, startY, CurrentFallSpeed, deadlineY);
         enemy.Element.style.fontSize = fontSize;
         enemy.Element.style.color = Color.white; // 테마 기본색(검정)이 배경에 묻히는 것 방지
         if (gungseoFont != null)
@@ -109,13 +136,13 @@ public class EnemySpawner : MonoBehaviour
         Root.Add(enemy.Element);
         activeEnemies.Add(enemy);
 
-        Debug.Log($"[EnemySpawner] 스폰: '{letter}' x={x:F0}");
+        Debug.Log($"[EnemySpawner] 스폰: '{text}' x={x:F0}");
     }
 
-    /// <summary>자모를 랜덤 조합해 화면에 없는 글자를 뽑는다.</summary>
-    private char PickLetter()
+    /// <summary>[낱말 모드] 자모를 랜덤 조합해 화면에 없는 외자를 뽑는다.</summary>
+    private string PickLetter()
     {
-        var used = new HashSet<char>(activeEnemies.Select(e => e.Letter));
+        var used = new HashSet<string>(activeEnemies.Select(e => e.Text));
 
         const int maxAttempts = 30; // 중복 회피 재시도 횟수
         for (int i = 0; i < maxAttempts; i++)
@@ -127,10 +154,19 @@ public class EnemySpawner : MonoBehaviour
                 : '\0';
 
             char letter = HangulComposer.Compose(cho, jung, jong);
-            if (letter != '\0' && !used.Contains(letter))
-                return letter;
+            if (letter != '\0' && !used.Contains(letter.ToString()))
+                return letter.ToString();
         }
-        return '\0'; // 계속 중복이면 이번 스폰은 스킵
+        return null; // 계속 중복이면 이번 스폰은 스킵
+    }
+
+    /// <summary>[단어 모드] 단어 풀에서 화면에 없는 단어를 뽑는다.</summary>
+    private string PickWord()
+    {
+        var used = new HashSet<string>(activeEnemies.Select(e => e.Text));
+        var candidates = wordPool.Where(w => !string.IsNullOrEmpty(w) && !used.Contains(w)).ToList();
+        if (candidates.Count == 0) return null;
+        return candidates[Random.Range(0, candidates.Count)];
     }
 
     private void HandleReachedDeadline(Enemy enemy)
