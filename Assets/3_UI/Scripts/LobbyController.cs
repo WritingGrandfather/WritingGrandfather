@@ -103,7 +103,7 @@ public class LobbyController : MonoBehaviour
         inputGuard.style.right = 0;
         inputGuard.style.bottom = 0;
         root.Add(inputGuard);
-        root.schedule.Execute(() => inputGuard.RemoveFromHierarchy()).StartingIn(250);
+        root.schedule.Execute(() => inputGuard.RemoveFromHierarchy()).StartingIn(1000);
 
         // root.panel은 최소 한 프레임의 레이아웃/어태치 과정을 거쳐야 값이
         // 채워지므로, 아직 비어 있으면 패널에 붙는 시점(AttachToPanelEvent)에
