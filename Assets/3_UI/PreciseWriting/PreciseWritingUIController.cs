@@ -85,6 +85,12 @@ namespace WritingGrandfather.UI.PreciseWriting
         private string[] wordStageNames;
         private int lastBannerStage = -1;
 
+        // 스테이지 점수 누적 (스테이지 끝날 때 평균으로 결과창 표시)
+        private int stageSimilaritySum;
+        private int stageOrderSum;
+        private int stagePositionSum;
+        private int stageScoredCount;
+
         private void OnEnable()
         {
             root = GetComponent<UIDocument>().rootVisualElement;
@@ -344,7 +350,16 @@ namespace WritingGrandfather.UI.PreciseWriting
             undoButton?.RegisterCallback<ClickEvent>(_ => UndoManager.Instance?.Undo());
             retryButton?.RegisterCallback<ClickEvent>(_ =>
             {
-                wordIndex = 0;
+                // 스테이지 결과창에서: 다음 스테이지가 남았으면 이어서, 전부 끝났으면 처음부터
+                if (practiceWords != null && wordIndex < practiceWords.Length - 1)
+                {
+                    wordIndex++;
+                }
+                else
+                {
+                    wordIndex = 0;
+                    lastBannerStage = -1; // 1단계 배너 다시
+                }
                 UpdateWordLabel();
                 ClearStrokes();
                 Show(writingScreen);
@@ -362,17 +377,10 @@ namespace WritingGrandfather.UI.PreciseWriting
             UndoManager.Instance?.Clear();
         }
 
-        // 완료 클릭: 다음 단어가 있으면 넘어가고, 마지막 단어면 분석 후 결과를 보여준다.
+        // 완료 클릭: 현재 글자를 채점한다. 점수는 스테이지에 누적되고,
+        // 스테이지 마지막 글자면 스테이지 평균 점수로 결과창이 뜬다.
         private void OnCompleteClicked()
         {
-            if (practiceWords != null && wordIndex < practiceWords.Length - 1)
-            {
-                wordIndex++;
-                UpdateWordLabel();
-                ClearStrokes();
-                return;
-            }
-
             Show(analyzingScreen);
 
             if (feedbackController != null && writingCell != null)
@@ -386,17 +394,11 @@ namespace WritingGrandfather.UI.PreciseWriting
 
             // feedbackController가 연결 안 돼 있으면(테스트용) 데모 점수로 대체
             root.schedule.Execute(() =>
-            {
-                string scoreText = $"{demoScorePercent}%";
-                if (resultStrokeOrderScoreLabel != null) resultStrokeOrderScoreLabel.text = scoreText;
-                if (resultSimilarityScoreLabel != null) resultSimilarityScoreLabel.text = scoreText;
-                if (resultPositionScoreLabel != null) resultPositionScoreLabel.text = scoreText;
-                if (resultMessageLabel != null) resultMessageLabel.text = "(데모 점수 — AI 채점 미연결)";
-                Show(resultScreen);
-            }).StartingIn(1200);
+                HandleScored(demoScorePercent, demoScorePercent, demoScorePercent, "(데모 점수 — 채점 미연결)")
+            ).StartingIn(600);
         }
 
-        // WritingFeedbackController.onFeedback 콜백 — 실제 AI 채점 결과가 도착하면 호출된다.
+        // WritingFeedbackController.onFeedback 콜백 — 채점 결과가 도착하면 호출된다.
         // 세 항목은 각각 다른 방식으로 계산된 독립적인 점수다 (-1 = 이번엔 계산 안 됨 → 종합 점수로 대체 표시).
         private void OnFeedbackReceived(HandwritingFeedback feedback)
         {
@@ -406,10 +408,49 @@ namespace WritingGrandfather.UI.PreciseWriting
             int strokeOrder = feedback.strokeOrderScore >= 0 ? feedback.strokeOrderScore : feedback.score;
             int position = feedback.positionScore >= 0 ? feedback.positionScore : feedback.score;
 
-            if (resultStrokeOrderScoreLabel != null) resultStrokeOrderScoreLabel.text = $"{strokeOrder}%";
-            if (resultSimilarityScoreLabel != null) resultSimilarityScoreLabel.text = $"{similarity}%";
-            if (resultPositionScoreLabel != null) resultPositionScoreLabel.text = $"{position}%";
-            if (resultMessageLabel != null) resultMessageLabel.text = feedback.message;
+            HandleScored(similarity, strokeOrder, position, feedback.message);
+        }
+
+        // 글자 하나 채점 완료 → 스테이지에 누적. 스테이지 끝이면 결과창, 아니면 다음 글자로.
+        private void HandleScored(int similarity, int strokeOrder, int position, string message)
+        {
+            stageSimilaritySum += similarity;
+            stageOrderSum += strokeOrder;
+            stagePositionSum += position;
+            stageScoredCount++;
+
+            bool lastOverall = practiceWords == null || wordIndex >= practiceWords.Length - 1;
+            bool stageEnd = lastOverall ||
+                (wordStageNums != null && wordIndex + 1 < wordStageNums.Length &&
+                 wordStageNums[wordIndex + 1] != wordStageNums[wordIndex]);
+
+            if (stageEnd)
+            {
+                ShowStageResult(message);
+                return;
+            }
+
+            // 스테이지 진행 중 → 바로 다음 글자로
+            wordIndex++;
+            UpdateWordLabel();
+            ClearStrokes();
+            Show(writingScreen);
+        }
+
+        // 스테이지 결과창: 이번 스테이지 글자들의 평균 점수 표시
+        private void ShowStageResult(string lastMessage)
+        {
+            int n = Mathf.Max(1, stageScoredCount);
+            if (resultSimilarityScoreLabel != null) resultSimilarityScoreLabel.text = $"{stageSimilaritySum / n}%";
+            if (resultStrokeOrderScoreLabel != null) resultStrokeOrderScoreLabel.text = $"{stageOrderSum / n}%";
+            if (resultPositionScoreLabel != null) resultPositionScoreLabel.text = $"{stagePositionSum / n}%";
+
+            int stageNum = wordStageNums != null && wordIndex < wordStageNums.Length ? wordStageNums[wordIndex] : 0;
+            if (resultTitleLabel != null && stageNum > 0) resultTitleLabel.text = $"{stageNum}단계 완료!";
+            if (resultMessageLabel != null) resultMessageLabel.text = lastMessage;
+
+            // 다음 스테이지를 위해 누적 초기화
+            stageSimilaritySum = stageOrderSum = stagePositionSum = stageScoredCount = 0;
 
             Show(resultScreen);
         }
