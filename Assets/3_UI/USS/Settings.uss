@@ -146,7 +146,12 @@
     background-image: none;
 }
 
-.unity-toggle__checkmark:checked {
+/* Toggle은 ":checked" 의사 상태를 checkmark 자신이 아니라 그 부모인
+   .unity-toggle__input에 붙인다 (Toggle.UpdateMixedValueContent()가
+   visualInput.SetCheckedPseudoState()를 호출). ".unity-toggle__checkmark:checked"
+   로 걸면 checkmark 자신에는 그 상태가 없어서 절대 매칭되지 않아 체크해도
+   색이 안 바뀌었다 - 부모 기준으로 자손을 선택해야 한다. */
+.unity-toggle__input:checked .unity-toggle__checkmark {
     background-color: rgb(214, 108, 58);
 }
 

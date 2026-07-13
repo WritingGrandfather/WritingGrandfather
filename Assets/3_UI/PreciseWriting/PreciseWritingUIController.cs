@@ -62,6 +62,11 @@ namespace WritingGrandfather.UI.PreciseWriting
         private Label resultSimilarityScoreLabel;
         private Label resultPositionScoreLabel;
         private Label resultMessageLabel;
+        private Label resultTitleLabel;
+        private Label resultStrokeOrderCaptionLabel;
+        private Label resultSimilarityCaptionLabel;
+        private Label resultPositionCaptionLabel;
+        private Label analyzingLabel;
 
         private int wordIndex;
 
@@ -79,6 +84,9 @@ namespace WritingGrandfather.UI.PreciseWriting
             wordIndex = 0;
             UpdateWordLabel();
 
+            ApplyLocalization();
+            LocalizationManager.OnLanguageChanged += ApplyLocalization;
+
             safeArea?.RegisterCallback<GeometryChangedEvent>(OnLayoutGeo);
             writingScreen?.RegisterCallback<GeometryChangedEvent>(OnLayoutGeo);
             guideBox?.RegisterCallback<GeometryChangedEvent>(OnGuideBoxGeo);
@@ -94,6 +102,7 @@ namespace WritingGrandfather.UI.PreciseWriting
             guideBox?.UnregisterCallback<GeometryChangedEvent>(OnGuideBoxGeo);
             root?.UnregisterCallback<PointerMoveEvent>(OnPointerMoveOverRoot, TrickleDown.TrickleDown);
             feedbackController?.onFeedback?.RemoveListener(OnFeedbackReceived);
+            LocalizationManager.OnLanguageChanged -= ApplyLocalization;
             if (drawLine != null) drawLine.drawingEnabled = false;
         }
 
@@ -164,6 +173,29 @@ namespace WritingGrandfather.UI.PreciseWriting
             resultSimilarityScoreLabel = root.Q<Label>("result-similarity-score");
             resultPositionScoreLabel = root.Q<Label>("result-position-score");
             resultMessageLabel = root.Q<Label>("result-message");
+            resultTitleLabel = root.Q<Label>("result-title-label");
+            resultStrokeOrderCaptionLabel = root.Q<Label>("result-stroke-order-label");
+            resultSimilarityCaptionLabel = root.Q<Label>("result-similarity-label");
+            resultPositionCaptionLabel = root.Q<Label>("result-position-label");
+            analyzingLabel = root.Q<Label>("analyzing-label");
+        }
+
+        // reset-button/complete-button 등 UXML에 고정된 정적 텍스트만 대상으로 한다.
+        // toggle-btn 라벨("안내선"/"획 순서")은 SetupToggleButton()에서 코드로 직접
+        // 붙이는 런타임 문자열이라 이번 적용 범위에서는 제외했다.
+        private void ApplyLocalization()
+        {
+            if (resetButton != null) resetButton.text = LocalizationManager.Get("precise_writing.reset_button");
+            if (completeButton != null) completeButton.text = LocalizationManager.Get("precise_writing.complete_button");
+            if (retryButton != null) retryButton.text = LocalizationManager.Get("precise_writing.retry_button");
+            if (exitButton != null) exitButton.text = LocalizationManager.Get("precise_writing.exit_button");
+
+            if (analyzingLabel != null) analyzingLabel.text = LocalizationManager.Get("precise_writing.analyzing_label");
+
+            if (resultTitleLabel != null) resultTitleLabel.text = LocalizationManager.Get("precise_writing.result_title");
+            if (resultStrokeOrderCaptionLabel != null) resultStrokeOrderCaptionLabel.text = LocalizationManager.Get("precise_writing.result_stroke_order_label");
+            if (resultSimilarityCaptionLabel != null) resultSimilarityCaptionLabel.text = LocalizationManager.Get("precise_writing.result_similarity_label");
+            if (resultPositionCaptionLabel != null) resultPositionCaptionLabel.text = LocalizationManager.Get("precise_writing.result_position_label");
         }
 
         private void ApplyFont()

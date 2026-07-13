@@ -32,17 +32,17 @@
         </ui:VisualElement>
         <ui:VisualElement name="result-screen" class="screen overlay hidden">
             <ui:VisualElement class="overlay-box">
-                <ui:Label text="결과" class="overlay-title" />
+                <ui:Label text="결과" name="result-title-label" class="overlay-title" />
                 <ui:VisualElement class="result-row">
-                    <ui:Label text="획 순서 정확도" class="result-label" />
+                    <ui:Label text="획 순서 정확도" name="result-stroke-order-label" class="result-label" />
                     <ui:Label text="85%" name="result-stroke-order-score" class="result-value" />
                 </ui:VisualElement>
                 <ui:VisualElement class="result-row">
-                    <ui:Label text="글자 유사도" class="result-label" />
+                    <ui:Label text="글자 유사도" name="result-similarity-label" class="result-label" />
                     <ui:Label text="85%" name="result-similarity-score" class="result-value" />
                 </ui:VisualElement>
                 <ui:VisualElement class="result-row">
-                    <ui:Label text="글자 크기 위치 정확도" class="result-label" />
+                    <ui:Label text="글자 크기 위치 정확도" name="result-position-label" class="result-label" />
                     <ui:Label text="85%" name="result-position-score" class="result-value" />
                 </ui:VisualElement>
                 <ui:Label text="" name="result-message" class="result-message" />

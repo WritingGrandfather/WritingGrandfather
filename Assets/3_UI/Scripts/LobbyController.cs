@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
@@ -11,8 +12,12 @@ public class LobbyController : MonoBehaviour
     // insets eat into it, so text never gets clipped instead of just resized.
     // Matches the font-size values in Lobby.uss - keep both in sync.
     [SerializeField] string[] titleLabelNames = { "title-label-line1", "title-label-line2" };
+    // titleLabelNames와 같은 순서(line1, line2)로 대응되는 localization.csv 키.
+    static readonly string[] TitleLabelKeys = { "lobby.title.line1", "lobby.title.line2" };
     [SerializeField] float titleBaseFontSize = 52f;
     [SerializeField] string[] menuButtonNames = { "btn-start", "btn-settings", "btn-exit" };
+    // menuButtonNames와 같은 순서(시작, 설정, 나가기)로 대응되는 키.
+    static readonly string[] MenuButtonKeys = { "lobby.btn.start", "lobby.btn.settings", "lobby.btn.exit" };
     [SerializeField] float menuButtonBaseFontSize = 34f;
     // title-area (190) + its margin-bottom (40) + button-area (3 * (120 + 14)) in Lobby.uss.
     [SerializeField] float designContentHeight = 632f;
@@ -46,12 +51,33 @@ public class LobbyController : MonoBehaviour
     Vector2Int _appliedScreenSize;
     Vector2 _appliedPanelSize;
 
+    TextElement _modalTextLine1;
+    TextElement _modalTextLine2;
+    Button _btnExitConfirm;
+    Button _btnExitCancel;
+
     VisualElement _settingsPanel;
     TextElement _settingsTitle;
     Button _settingsCloseButton;
     Button[] _settingsTabButtons;
     VisualElement[] _settingsTabPanels;
     TextElement[] _settingsRowLabels;
+    // _settingsRowLabels는 이름이 아니라 UXML 문서 순서(화질/프레임/전체 볼륨/배경음/
+    // 효과음/언어 선택)로 모은 것이라, 이 배열도 그 순서와 반드시 일치해야 한다 -
+    // Lobby.uxml에서 행 라벨 순서가 바뀌면 여기도 같이 바꿔야 한다.
+    static readonly string[] SettingsRowLabelKeys =
+    {
+        "lobby.settings.quality_label",
+        "lobby.settings.framerate_label",
+        "lobby.settings.master_volume_label",
+        "lobby.settings.bgm_label",
+        "lobby.settings.sfx_label",
+        "lobby.settings.language_label",
+    };
+
+    DropdownField _dropdownQuality;
+    DropdownField _dropdownFramerate;
+    RadioButtonGroup _radioLanguage;
 
     void OnEnable()
     {
@@ -70,8 +96,12 @@ public class LobbyController : MonoBehaviour
         root.Q<Button>("btn-exit").clicked += OnExitClicked;
 
         _exitModal = root.Q<VisualElement>("exit-modal");
-        root.Q<Button>("btn-exit-confirm").clicked += OnExitConfirmClicked;
-        root.Q<Button>("btn-exit-cancel").clicked += OnExitCancelClicked;
+        _modalTextLine1 = root.Q<TextElement>("modal-text-line1");
+        _modalTextLine2 = root.Q<TextElement>("modal-text-line2");
+        _btnExitConfirm = root.Q<Button>("btn-exit-confirm");
+        _btnExitCancel = root.Q<Button>("btn-exit-cancel");
+        _btnExitConfirm.clicked += OnExitConfirmClicked;
+        _btnExitCancel.clicked += OnExitCancelClicked;
 
         _lobbyRoot = root.Q<VisualElement>("lobby-root");
         _titleLabels = System.Array.ConvertAll(titleLabelNames, name => _lobbyRoot.Q<TextElement>(name));
@@ -108,9 +138,90 @@ public class LobbyController : MonoBehaviour
             _settingsTabButtons[i].clicked += () => ShowSettingsTab(tabIndex);
         }
 
-        FixRadioButtonCheckmarks(root);
+        _dropdownQuality = root.Q<DropdownField>("dropdown-quality");
+        _dropdownFramerate = root.Q<DropdownField>("dropdown-framerate");
+        _radioLanguage = root.Q<RadioButtonGroup>("radio-language");
+        // UXML의 value="0"(한국어) 대신, 이전에 저장해 둔 언어 설정을 그대로
+        // 반영한다. SetValueWithoutNotify를 써서 OnLanguageRadioChanged가 다시
+        // 호출되며 SetLanguage를 한 번 더 트리거하는 걸 막는다.
+        _radioLanguage.SetValueWithoutNotify(LocalizationManager.CurrentLanguage == Language.Korean ? 0 : 1);
+        _radioLanguage.RegisterValueChangedCallback(OnLanguageRadioChanged);
+
+        LocalizationManager.OnLanguageChanged += OnLanguageChanged;
+        ApplyLocalization();
 
         ApplySafeArea();
+    }
+
+    void OnLanguageRadioChanged(ChangeEvent<int> evt)
+    {
+        LocalizationManager.SetLanguage(evt.newValue == 0 ? Language.Korean : Language.English);
+    }
+
+    // 언어가 바뀌면 모든 텍스트를 다시 채우고, 언어별로 글자 폭이 달라질 수
+    // 있으므로 폰트 스케일 캐시도 무효화해서 다음 Update()에서 다시 계산되게 한다.
+    void OnLanguageChanged()
+    {
+        ApplyLocalization();
+        _appliedPanelSize = default;
+    }
+
+    void ApplyLocalization()
+    {
+        for (int i = 0; i < _titleLabels.Length; i++)
+            _titleLabels[i].text = LocalizationManager.Get(TitleLabelKeys[i]);
+
+        for (int i = 0; i < _menuButtons.Length; i++)
+            _menuButtons[i].text = LocalizationManager.Get(MenuButtonKeys[i]);
+
+        _modalTextLine1.text = LocalizationManager.Get("lobby.exit.confirm_line1");
+        _modalTextLine2.text = LocalizationManager.Get("lobby.exit.confirm_line2");
+        _btnExitConfirm.text = LocalizationManager.Get("lobby.exit.confirm_yes");
+        _btnExitCancel.text = LocalizationManager.Get("lobby.exit.confirm_no");
+
+        _settingsTitle.text = LocalizationManager.Get("lobby.settings.title");
+        _settingsCloseButton.text = LocalizationManager.Get("lobby.settings.close");
+
+        _settingsTabButtons[0].text = LocalizationManager.Get("lobby.settings.tab_video");
+        _settingsTabButtons[1].text = LocalizationManager.Get("lobby.settings.tab_audio");
+        _settingsTabButtons[2].text = LocalizationManager.Get("lobby.settings.tab_language");
+
+        for (int i = 0; i < _settingsRowLabels.Length; i++)
+            _settingsRowLabels[i].text = LocalizationManager.Get(SettingsRowLabelKeys[i]);
+
+        // DropdownField.value는 (인덱스가 아니라) 선택된 문자열 그 자체라서,
+        // choices를 통째로 새 언어 문자열로 갈아끼우면 이전 value("보통" 등)가
+        // 새 choices 목록 어디에도 없어 선택이 깨진다. 인덱스를 먼저 기억해 뒀다가
+        // choices를 바꾼 뒤 그 인덱스로 다시 선택해서 같은 항목이 유지되게 한다.
+        int qualityIndex = _dropdownQuality.index;
+        _dropdownQuality.choices = new List<string>
+        {
+            LocalizationManager.Get("lobby.settings.quality_low"),
+            LocalizationManager.Get("lobby.settings.quality_medium"),
+            LocalizationManager.Get("lobby.settings.quality_high"),
+        };
+        _dropdownQuality.index = qualityIndex;
+
+        int framerateIndex = _dropdownFramerate.index;
+        _dropdownFramerate.choices = new List<string>
+        {
+            LocalizationManager.Get("lobby.settings.fps_30"),
+            LocalizationManager.Get("lobby.settings.fps_60"),
+        };
+        _dropdownFramerate.index = framerateIndex;
+        // 언어 이름 자체(한국어/English)는 항상 그 언어 고유 표기로 보여준다 -
+        // 라디오 그룹의 choices는 UI 언어가 바뀌어도 안 바뀐다.
+        _radioLanguage.choices = new List<string>
+        {
+            LocalizationManager.Get("lobby.settings.lang_korean"),
+            LocalizationManager.Get("lobby.settings.lang_english"),
+        };
+
+        // RadioButtonGroup.choices를 새로 대입하면 내부적으로 RadioButton들을
+        // 통째로 다시 만든다 - 그러면 이전에 만들어 둔 체크마크(들)는 새로
+        // 생성된 것으로 교체돼서, 위치/크기를 맞춰주는 FixRadioButtonCheckmarks
+        // 보정도 매번(언어가 바뀔 때마다) 다시 걸어줘야 한다.
+        FixRadioButtonCheckmarks(_radioLanguage);
     }
 
     // DropdownField를 눌렀을 때 뜨는 선택지 목록(GenericDropdownMenu)은 UXML로
@@ -200,6 +311,8 @@ public class LobbyController : MonoBehaviour
     void OnDisable()
     {
         _lobbyRoot?.UnregisterCallback<GeometryChangedEvent>(OnGeometryChanged);
+        _radioLanguage?.UnregisterValueChangedCallback(OnLanguageRadioChanged);
+        LocalizationManager.OnLanguageChanged -= OnLanguageChanged;
     }
 
     void OnGeometryChanged(GeometryChangedEvent evt)
