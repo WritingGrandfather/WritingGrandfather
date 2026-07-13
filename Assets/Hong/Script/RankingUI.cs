@@ -22,10 +22,14 @@ public class RankingUI : MonoBehaviour
         Refresh();
     }
 
-    // 뒤로가기 버튼(OnClick)에 연결 → 로비로 복귀.
+    // 뒤로가기 버튼(OnClick)에 연결 → 이전 씬(CallerScene)으로 복귀, 없으면 lobbyScene.
     public void BackToLobby()
     {
-        SceneManager.LoadScene(lobbyScene);
+        string target = !string.IsNullOrEmpty(RankingScreenController.CallerScene)
+            ? RankingScreenController.CallerScene
+            : lobbyScene;
+        RankingScreenController.CallerScene = null;
+        SceneManager.LoadScene(target);
     }
 
     public void OnRegisterButtonClicked()

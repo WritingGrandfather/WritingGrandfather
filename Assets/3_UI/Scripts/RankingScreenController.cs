@@ -63,6 +63,10 @@ public class RankingScreenController : MonoBehaviour
         if (rankingManager == null) rankingManager = FindObjectOfType<RankingManager>();
         LoadRanking();
 
+        // 레이아웃이 처음 계산되는 시점에 즉시 SafeArea를 적용해 첫 프레임 플래시 방지
+        if (rankingRoot != null)
+            rankingRoot.RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
+
         ApplySafeArea();
     }
 
@@ -70,6 +74,12 @@ public class RankingScreenController : MonoBehaviour
     {
         if (backButton != null) backButton.clicked -= OnBackClicked;
         LocalizationManager.OnLanguageChanged -= ApplyLocalization;
+        rankingRoot?.UnregisterCallback<GeometryChangedEvent>(OnGeometryChanged);
+    }
+
+    void OnGeometryChanged(GeometryChangedEvent evt)
+    {
+        ApplySafeArea();
     }
 
     void Update()
