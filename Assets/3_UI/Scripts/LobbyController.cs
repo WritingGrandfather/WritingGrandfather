@@ -216,8 +216,7 @@ public class LobbyController : MonoBehaviour
 
     void OnStartClicked()
     {
-        // Build Settings에 등록된 실제 씬 파일명이 "MainScnene"(오타)라 그대로 사용.
-        SceneManager.LoadScene("MainScnene");
+        SceneManager.LoadScene("ModSelectScene");
     }
 
     // 설정 패널은 항상 트리에 존재하고 .hidden 클래스(Lobby.uss)로만 표시 여부를

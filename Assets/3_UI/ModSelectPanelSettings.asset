@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 19101, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: PreciseWritingPanelSettings
+  m_Name: ModSelectPanelSettings
   m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.PanelSettings
   themeUss: {fileID: -4733365628477956816, guid: f3dc3a49491d04ae388d58150e60ebfc, type: 3}
   m_DisableNoThemeWarning: 0
@@ -26,7 +26,7 @@ MonoBehaviour:
   m_FallbackDpi: 96
   m_ReferenceResolution: {x: 1080, y: 1920}
   m_ScreenMatchMode: 0
-  m_Match: 0
+  m_Match: 1
   m_SortingOrder: 0
   m_TargetDisplay: 0
   m_BindingLogLevel: 0

@@ -154,15 +154,32 @@ public class AuthManager : MonoBehaviour
             return;
         }
         if (!ready) { onDone?.Invoke(false, "잠시 후 다시 시도해 주세요. (초기화 중)"); return; }
-        GoogleSignIn.Configuration = new GoogleSignInConfiguration
+        // Configuration은 인스턴스 생성 전 딱 한 번만 설정 가능 — 두 번째부터 설정하면
+        // "DefaultInstance already created. Cannot change configuration after creation." 에러가 남
+        if (GoogleSignIn.Configuration == null)
         {
-            WebClientId = googleWebClientId,
-            RequestIdToken = true,
-            UseGameSignIn = false
-        };
+            GoogleSignIn.Configuration = new GoogleSignInConfiguration
+            {
+                WebClientId = googleWebClientId,
+                RequestIdToken = true,
+                UseGameSignIn = false
+            };
+        }
         GoogleSignIn.DefaultInstance.SignIn().ContinueWithOnMainThread(task =>
         {
-            if (task.IsCanceled || task.IsFaulted) { onDone?.Invoke(false, "구글 로그인 취소/실패"); return; }
+            if (task.IsCanceled) { onDone?.Invoke(false, "구글 로그인 취소됨"); return; }
+            if (task.IsFaulted)
+            {
+                var e = task.Exception?.GetBaseException();
+                string reason = "구글 로그인 실패";
+                if (e is GoogleSignIn.SignInException sie)
+                    reason = $"구글 로그인 실패: Status={sie.Status} ({(int)sie.Status})";
+                else if (e != null)
+                    reason = "구글 로그인 실패: " + e.GetType().Name + " " + e.Message;
+                Debug.LogError("[Auth] " + reason);
+                onDone?.Invoke(false, reason);
+                return;
+            }
             var credential = GoogleAuthProvider.GetCredential(task.Result.IdToken, null);
             auth.SignInWithCredentialAsync(credential).ContinueWithOnMainThread(t =>
             {
