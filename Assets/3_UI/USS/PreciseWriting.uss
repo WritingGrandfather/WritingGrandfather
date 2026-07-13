@@ -1,0 +1,237 @@
+.hidden {
+    display: none;
+}
+
+.safe-area {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.screen {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+/* ---- 상단 바 ---- */
+
+.top-bar {
+    background-color: rgba(250, 240, 222, 0.9);
+    border-width: 2px;
+    border-color: rgb(150, 111, 71);
+    border-radius: 20px;
+    align-items: center;
+    justify-content: center;
+}
+
+.word-progress-row {
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: center;
+}
+
+.current-word-label {
+    font-size: 76px;
+    -unity-font-style: bold;
+    color: rgb(90, 62, 40);
+    -unity-text-align: middle-center;
+    white-space: nowrap;
+}
+
+.word-progress-label {
+    font-size: 20px;
+    color: rgb(150, 111, 71);
+    margin-left: 12px;
+    -unity-text-align: middle-center;
+    white-space: nowrap;
+}
+
+/* ---- 가이드 박스 ---- */
+
+.guide-box {
+    background-color: rgba(255, 253, 248, 0.55);
+    border-width: 3px;
+    border-color: rgb(150, 111, 71);
+    border-radius: 24px;
+    align-items: center;
+    justify-content: center;
+}
+
+.ghost-character-label {
+    color: rgba(90, 62, 40, 0.35);
+    -unity-text-align: middle-center;
+    white-space: nowrap;
+}
+
+.guide-cross {
+    position: absolute;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.guide-cross--h {
+    left: 4%;
+    right: 4%;
+    top: 50%;
+    height: 10px;
+    translate: 0 -5px;
+}
+
+.guide-cross--v {
+    top: 4%;
+    bottom: 4%;
+    left: 50%;
+    width: 10px;
+    flex-direction: column;
+    translate: -5px 0;
+}
+
+.guide-cross-dot {
+    width: 8px;
+    height: 8px;
+    background-color: rgba(150, 111, 71, 0.6);
+    border-radius: 4px;
+}
+
+/* ---- 획순 레이어 ---- */
+
+.stroke-order-layer {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+}
+
+/* ---- 완료 버튼 ---- */
+
+.primary-button {
+    border-radius: 18px;
+    border-width: 0;
+    font-size: 66px;
+    -unity-font-style: bold;
+    color: rgb(255, 255, 255);
+    background-color: rgb(214, 108, 58);
+    -unity-text-align: middle-center;
+}
+
+.primary-button:hover {
+    background-color: rgb(230, 128, 76);
+}
+
+/* ---- 하단 바 ---- */
+
+.bottom-bar {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.toggle-btn {
+    flex-direction: row;
+    flex-grow: 1;
+    align-items: center;
+    justify-content: center;
+    margin: 0 6px;
+    padding: 0 16px;
+    height: 100%;
+    border-radius: 32px;
+    border-width: 0;
+    background-color: rgb(220, 210, 195);
+}
+
+.toggle-btn-label {
+    font-size: 54px;
+    color: rgb(90, 62, 40);
+    -unity-text-align: middle-center;
+    white-space: nowrap;
+}
+
+.toggle-btn--on {
+    background-color: rgb(214, 108, 58);
+}
+
+.toggle-btn--on .toggle-btn-label {
+    color: rgb(255, 255, 255);
+}
+
+/* ---- 분석중 / 결과 오버레이 ---- */
+
+.overlay {
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.overlay-box {
+    width: 92%;
+    flex-shrink: 1;
+    background-color: rgb(255, 253, 248);
+    border-radius: 36px;
+    padding: 56px 40px;
+    align-items: center;
+}
+
+.overlay-title {
+    font-size: 48px;
+    -unity-font-style: bold;
+    color: rgb(90, 62, 40);
+    margin-bottom: 32px;
+    -unity-text-align: middle-center;
+    white-space: nowrap;
+}
+
+.result-row {
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+    margin-bottom: 24px;
+}
+
+.result-label {
+    font-size: 48px;
+    color: rgb(60, 45, 35);
+}
+
+.result-value {
+    font-size: 60px;
+    -unity-font-style: bold;
+    color: rgb(214, 108, 58);
+}
+
+.result-button-row {
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+    margin-top: 24px;
+}
+
+.modal-button {
+    flex-grow: 1;
+    flex-shrink: 1;
+    height: 120px;
+    margin: 0 10px;
+    border-radius: 24px;
+    border-width: 0;
+    font-size: 60px;
+    color: rgb(255, 255, 255);
+    -unity-text-align: middle-center;
+}
+
+.modal-button--confirm {
+    background-color: rgb(214, 108, 58);
+}
+
+.modal-button--confirm:hover {
+    background-color: rgb(230, 128, 76);
+}
+
+.modal-button--cancel {
+    background-color: rgb(120, 120, 120);
+}
+
+.modal-button--cancel:hover {
+    background-color: rgb(140, 140, 140);
+}

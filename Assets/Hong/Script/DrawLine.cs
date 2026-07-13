@@ -19,7 +19,7 @@ public class DrowLine : MonoBehaviour
     public Color lineColor = Color.black;
 
     LineRenderer lr;
-    EdgeCollider2D collider2D;
+    new EdgeCollider2D collider2D;
     List<Vector2> points = new List<Vector2>();
 
     // 현재 그리고 있는 라인의 풀 핸들

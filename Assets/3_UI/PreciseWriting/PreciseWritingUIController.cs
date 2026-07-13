@@ -1,0 +1,275 @@
+using UnityEngine;
+using UnityEngine.UIElements;
+
+namespace WritingGrandfather.UI.PreciseWriting
+{
+    [RequireComponent(typeof(UIDocument))]
+    public class PreciseWritingUIController : MonoBehaviour
+    {
+        // 위→아래로 실제 그려진 크기를 이어 붙여 배치한다 (guide-box가 폭 기준 정사각형이라
+        // 세로 공간이 남을 수 있으므로, 고정 비율 밴드 대신 이전 요소의 실제 하단을 기준으로 다음 요소를 배치).
+        private const float TopBarTopFrac = 0.04f;
+        private const float TopBarHeightFrac = 0.11f;
+        private const float GuideGapFrac = 0.035f;
+        private const float GuideWidthFrac = 0.92f;
+        private const float ButtonGapFrac = 0.035f;
+        private const float CompleteHeightFrac = 0.095f;
+        private const float ToggleGapFrac = 0.03f;
+        private const float ToggleHeightFrac = 0.08f;
+
+        [SerializeField] private Font koreanFont;
+
+        [Tooltip("데모용 연습 단어 목록 — 실제 출제 시스템 연동 전까지 임시로 사용")]
+        [SerializeField] private string[] practiceWords = { "가", "나", "다" };
+
+        [Tooltip("결과 화면에 표시할 데모 점수(%) — 실제 AI 평가 연동 전까지 임시로 사용")]
+        [SerializeField] private int demoScorePercent = 85;
+
+        private VisualElement root;
+        private VisualElement safeArea;
+        private VisualElement writingScreen;
+        private VisualElement analyzingScreen;
+        private VisualElement resultScreen;
+        private VisualElement topBar;
+        private VisualElement guideBox;
+        private VisualElement bottomBar;
+        private Label ghostCharacterLabel;
+        private VisualElement strokeOrderLayer;
+        private Toggle toggleShowCharacter;
+        private Toggle toggleShowStrokeOrder;
+        private Button completeButton;
+        private Button retryButton;
+        private Button exitButton;
+        private Label currentWordLabel;
+        private Label wordProgressLabel;
+        private VisualElement guideCrossH;
+        private VisualElement guideCrossV;
+        private Label resultStrokeOrderScoreLabel;
+        private Label resultSimilarityScoreLabel;
+        private Label resultPositionScoreLabel;
+
+        private int wordIndex;
+
+        private void OnEnable()
+        {
+            root = GetComponent<UIDocument>().rootVisualElement;
+            Cache();
+            ApplyFont();
+            SetupToggleButton(toggleShowCharacter, "안내선");
+            SetupToggleButton(toggleShowStrokeOrder, "획 순서");
+            Bind();
+            ApplyToggles();
+            BuildGuideCross();
+
+            wordIndex = 0;
+            UpdateWordLabel();
+
+            safeArea?.RegisterCallback<GeometryChangedEvent>(OnLayoutGeo);
+            writingScreen?.RegisterCallback<GeometryChangedEvent>(OnLayoutGeo);
+            root.schedule.Execute(ApplyLayout).StartingIn(0);
+        }
+
+        private void OnDisable()
+        {
+            safeArea?.UnregisterCallback<GeometryChangedEvent>(OnLayoutGeo);
+            writingScreen?.UnregisterCallback<GeometryChangedEvent>(OnLayoutGeo);
+        }
+
+        private void Cache()
+        {
+            safeArea = root.Q("safe-area");
+            writingScreen = root.Q("writing-screen");
+            analyzingScreen = root.Q("analyzing-screen");
+            resultScreen = root.Q("result-screen");
+            topBar = root.Q("top-bar");
+            guideBox = root.Q("guide-box");
+            bottomBar = root.Q("bottom-bar");
+            ghostCharacterLabel = root.Q<Label>("ghost-character-label");
+            strokeOrderLayer = root.Q("stroke-order-layer");
+            toggleShowCharacter = root.Q<Toggle>("toggle-show-character");
+            toggleShowStrokeOrder = root.Q<Toggle>("toggle-show-stroke-order");
+            completeButton = root.Q<Button>("complete-button");
+            retryButton = root.Q<Button>("retry-button");
+            exitButton = root.Q<Button>("exit-button");
+            currentWordLabel = root.Q<Label>("current-word-label");
+            wordProgressLabel = root.Q<Label>("word-progress-label");
+            guideCrossH = root.Q("guide-cross-h");
+            guideCrossV = root.Q("guide-cross-v");
+            resultStrokeOrderScoreLabel = root.Q<Label>("result-stroke-order-score");
+            resultSimilarityScoreLabel = root.Q<Label>("result-similarity-score");
+            resultPositionScoreLabel = root.Q<Label>("result-position-score");
+        }
+
+        private void ApplyFont()
+        {
+            if (root == null || koreanFont == null) return;
+            var def = new StyleFontDefinition(koreanFont);
+            root.style.unityFontDefinition = def;
+            root.Query<TextElement>().ForEach(el => el.style.unityFontDefinition = def);
+        }
+
+        private void Bind()
+        {
+            toggleShowCharacter?.RegisterValueChangedCallback(_ => ApplyToggles());
+            toggleShowStrokeOrder?.RegisterValueChangedCallback(_ => ApplyToggles());
+            completeButton?.RegisterCallback<ClickEvent>(_ => OnCompleteClicked());
+            retryButton?.RegisterCallback<ClickEvent>(_ =>
+            {
+                wordIndex = 0;
+                UpdateWordLabel();
+                Show(writingScreen);
+            });
+            exitButton?.RegisterCallback<ClickEvent>(_ =>
+                UnityEngine.SceneManagement.SceneManager.LoadScene("UIScene"));
+        }
+
+        // 완료 클릭: 다음 단어가 있으면 넘어가고, 마지막 단어면 분석 후 결과를 보여준다.
+        // (실제 AI 채점 연동 전까지 데모 점수를 사용하는 목업)
+        private void OnCompleteClicked()
+        {
+            if (practiceWords != null && wordIndex < practiceWords.Length - 1)
+            {
+                wordIndex++;
+                UpdateWordLabel();
+                return;
+            }
+
+            Show(analyzingScreen);
+            root.schedule.Execute(() =>
+            {
+                string scoreText = $"{demoScorePercent}%";
+                if (resultStrokeOrderScoreLabel != null) resultStrokeOrderScoreLabel.text = scoreText;
+                if (resultSimilarityScoreLabel != null) resultSimilarityScoreLabel.text = scoreText;
+                if (resultPositionScoreLabel != null) resultPositionScoreLabel.text = scoreText;
+                Show(resultScreen);
+            }).StartingIn(1200);
+        }
+
+        private void UpdateWordLabel()
+        {
+            if (practiceWords == null || practiceWords.Length == 0) return;
+
+            string word = practiceWords[wordIndex];
+            if (currentWordLabel != null) currentWordLabel.text = word;
+            if (ghostCharacterLabel != null) ghostCharacterLabel.text = word;
+            if (wordProgressLabel != null) wordProgressLabel.text = $"{wordIndex + 1} / {practiceWords.Length}";
+        }
+
+        // Toggle의 기본 체크박스 비주얼은 USS만으로는 완전히 숨기기 어려워(내부 구조가 테마에 따라 달라짐)
+        // 체크박스 파트를 아예 계층에서 제거하고, 우리 라벨을 직접 붙여 버튼처럼 보이게 만든다.
+        private static void SetupToggleButton(Toggle toggle, string label)
+        {
+            if (toggle == null) return;
+
+            toggle.Q(className: Toggle.inputUssClassName)?.RemoveFromHierarchy();
+            toggle.text = null;
+
+            var lbl = new Label(label);
+            lbl.AddToClassList("toggle-btn-label");
+            lbl.pickingMode = PickingMode.Ignore;
+            toggle.Add(lbl);
+        }
+
+        // guide-box 안의 가로/세로 점선 십자를 작은 점 세그먼트로 절차적으로 구성한다.
+        // (UI Toolkit USS에는 border-style: dashed가 없어 세그먼트 방식으로 대체)
+        private void BuildGuideCross()
+        {
+            BuildDashSegments(guideCrossH, 14);
+            BuildDashSegments(guideCrossV, 14);
+        }
+
+        private static void BuildDashSegments(VisualElement container, int count)
+        {
+            if (container == null) return;
+
+            container.Clear();
+            for (int i = 0; i < count; i++)
+            {
+                var dot = new VisualElement();
+                dot.AddToClassList("guide-cross-dot");
+                container.Add(dot);
+            }
+        }
+
+        private void OnLayoutGeo(GeometryChangedEvent evt) => ApplyLayout();
+
+        private void ApplyLayout()
+        {
+            if (writingScreen == null) return;
+            if (!TryGetLayoutSize(writingScreen, out var w, out var h)) return;
+
+            float topBarTop = TopBarTopFrac * h;
+            float topBarHeight = TopBarHeightFrac * h;
+            PlaceRect(topBar, 0.06f * w, topBarTop, 0.88f * w, topBarHeight);
+
+            float guideTop = topBarTop + topBarHeight + GuideGapFrac * h;
+            float guideSize = w * GuideWidthFrac;
+            PlaceRect(guideBox, (w - guideSize) * 0.5f, guideTop, guideSize, guideSize);
+            float guideBottom = guideTop + guideSize;
+
+            float completeTop = guideBottom + ButtonGapFrac * h;
+            float completeHeight = CompleteHeightFrac * h;
+            PlaceRect(completeButton, 0.06f * w, completeTop, 0.88f * w, completeHeight);
+            float completeBottom = completeTop + completeHeight;
+
+            float toggleTop = completeBottom + ToggleGapFrac * h;
+            float toggleHeight = ToggleHeightFrac * h;
+            PlaceRect(bottomBar, 0.06f * w, toggleTop, 0.88f * w, toggleHeight);
+
+            if (ghostCharacterLabel != null)
+                ghostCharacterLabel.style.fontSize = guideSize * 0.52f;
+        }
+
+        /// <summary>
+        /// absolute-only 부모는 contentRect 가 0 일 수 있어 resolvedStyle → layout 순으로 읽음.
+        /// </summary>
+        private static bool TryGetLayoutSize(VisualElement el, out float w, out float h)
+        {
+            w = el.resolvedStyle.width;
+            h = el.resolvedStyle.height;
+            if (w > 1f && h > 1f) return true;
+
+            var layout = el.layout;
+            w = layout.width;
+            h = layout.height;
+            if (w > 1f && h > 1f) return true;
+
+            var content = el.contentRect;
+            w = content.width;
+            h = content.height;
+            return w > 1f && h > 1f;
+        }
+
+        private static void PlaceRect(VisualElement el, float x, float y, float width, float height)
+        {
+            if (el == null) return;
+
+            el.style.position = Position.Absolute;
+            el.style.left = x;
+            el.style.top = y;
+            el.style.width = width;
+            el.style.height = height;
+        }
+
+        private void ApplyToggles()
+        {
+            var showChar = toggleShowCharacter == null || toggleShowCharacter.value;
+            var showStroke = toggleShowStrokeOrder != null && toggleShowStrokeOrder.value;
+
+            if (ghostCharacterLabel != null)
+                ghostCharacterLabel.style.display = showChar ? DisplayStyle.Flex : DisplayStyle.None;
+
+            strokeOrderLayer?.EnableInClassList("hidden", !showStroke);
+
+            toggleShowCharacter?.EnableInClassList("toggle-btn--on", showChar);
+            toggleShowStrokeOrder?.EnableInClassList("toggle-btn--on", showStroke);
+        }
+
+        private void Show(VisualElement target)
+        {
+            writingScreen?.EnableInClassList("hidden", target != writingScreen);
+            analyzingScreen?.EnableInClassList("hidden", target != analyzingScreen);
+            resultScreen?.EnableInClassList("hidden", target != resultScreen);
+        }
+    }
+}
