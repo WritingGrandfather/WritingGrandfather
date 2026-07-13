@@ -5,28 +5,28 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 /// <summary>
-/// xAI Grok Vision API로 칸 이미지를 인식하고 평가하는 평가기.
+/// OpenAI Vision API로 칸 이미지를 인식하고 평가하는 평가기.
 /// HandwritingEvaluator를 상속하므로, 씬에서 이 컴포넌트를 붙이면 WritingFeedbackController가 그대로 사용한다.
 ///
-/// xAI는 OpenAI 호환 API라서 Claude와 달리:
-///  - 엔드포인트: /v1/chat/completions
+/// OpenAI Chat Completions:
+///  - 엔드포인트: https://api.openai.com/v1/chat/completions
 ///  - 인증 헤더: Authorization: Bearer <key>
 ///  - 이미지: image_url(data URL) 형식
 ///
-/// API 키(xai-...)는 ApiKeyConfig(Assets/Resources/ApiKeyConfig.asset)에서 가져온다.
+/// API 키(sk-...)는 ApiKeyConfig(Assets/Resources/ApiKeyConfig.asset)에서 가져온다.
 /// </summary>
-public class GrokHandwritingEvaluator : HandwritingEvaluator
+public class OpenAIHandwritingEvaluator : HandwritingEvaluator
 {
     // ── AI 모델 칸 ────────────────────────────────────────────────────
     [Header("AI 모델 설정")]
-    [Tooltip("사용할 Grok 모델 ID. ")]
-    public string model = "grok-4.3";        // 비전 지원 여부는 xAI 공식 문서에서 확인 권장
+    [Tooltip("사용할 OpenAI 모델 ID (비전 지원). 예: gpt-4o / gpt-4o-mini / gpt-4.1")]
+    public string model = "gpt-4o";
 
     [Tooltip("응답 최대 토큰 수")]
     public int maxTokens = 1024;
     // ────────────────────────────────────────────────────────────────
 
-    const string Endpoint = "https://api.x.ai/v1/chat/completions";
+    const string Endpoint = "https://api.openai.com/v1/chat/completions";
 
     public override void Evaluate(HandwritingEvaluationRequest request, Action<HandwritingFeedback> onComplete)
     {
@@ -37,14 +37,14 @@ public class GrokHandwritingEvaluator : HandwritingEvaluator
     {
         if (string.IsNullOrEmpty(model))
         {
-            onComplete?.Invoke(HandwritingFeedback.Error("AI 모델이 설정되지 않았습니다. GrokHandwritingEvaluator의 model 필드를 채우세요."));
+            onComplete?.Invoke(HandwritingFeedback.Error("No AI model set. Fill the 'model' field on OpenAIHandwritingEvaluator."));
             yield break;
         }
 
         var config = ApiKeyConfig.Instance;
         if (config == null || string.IsNullOrEmpty(config.ApiKey))
         {
-            onComplete?.Invoke(HandwritingFeedback.Error("API 키가 없습니다. Assets/Resources/ApiKeyConfig.asset을 확인하세요."));
+            onComplete?.Invoke(HandwritingFeedback.Error("No API key. Check Assets/Resources/ApiKeyConfig.asset."));
             yield break;
         }
 
@@ -63,7 +63,7 @@ public class GrokHandwritingEvaluator : HandwritingEvaluator
 
             if (www.result != UnityWebRequest.Result.Success)
             {
-                onComplete?.Invoke(HandwritingFeedback.Error($"API 요청 실패: {www.responseCode} {www.error}\n{www.downloadHandler.text}"));
+                onComplete?.Invoke(HandwritingFeedback.Error($"API request failed: {www.responseCode} {www.error}\n{www.downloadHandler.text}"));
                 yield break;
             }
 
@@ -80,14 +80,14 @@ public class GrokHandwritingEvaluator : HandwritingEvaluator
         sb.AppendLine(request.criteria);
         sb.AppendLine();
         if (!string.IsNullOrEmpty(request.targetText))
-            sb.AppendLine($"목표 글자: \"{request.targetText}\"");
-        sb.AppendLine("첨부된 이미지의 손글씨를 인식하고 위 기준으로 평가하세요.");
-        sb.AppendLine("반드시 아래 JSON 형식으로만 답하세요(다른 텍스트 금지):");
-        sb.AppendLine("{\"recognizedText\":\"인식한글자\",\"score\":0~100정수,\"passed\":true/false,\"message\":\"피드백문장\"}");
+            sb.AppendLine($"Target text: \"{request.targetText}\"");
+        sb.AppendLine("Recognize the handwriting in the attached image and evaluate it by the criteria above.");
+        sb.AppendLine("Respond ONLY in this JSON format (no other text):");
+        sb.AppendLine("{\"recognizedText\":\"...\",\"score\":0-100 integer,\"passed\":true/false,\"message\":\"feedback sentence\"}");
         return sb.ToString();
     }
 
-    // OpenAI 호환 chat/completions 요청 JSON 조립 (텍스트 + 이미지 data URL)
+    // OpenAI Chat Completions 요청 JSON 조립 (텍스트 + 이미지 data URL)
     string BuildRequestJson(string base64Png, string prompt)
     {
         var sb = new StringBuilder();
@@ -113,7 +113,6 @@ public class GrokHandwritingEvaluator : HandwritingEvaluator
     }
 
     // 응답에서 choices[0].message.content 값만 추출.
-    // "message" 객체 뒤의 첫 "content":"..." 를 읽는다.
     static string ExtractText(string responseJson)
     {
         int msg = responseJson.IndexOf("\"message\"", StringComparison.Ordinal);
@@ -144,7 +143,7 @@ public class GrokHandwritingEvaluator : HandwritingEvaluator
     static HandwritingFeedback ParseFeedback(string aiText)
     {
         if (string.IsNullOrEmpty(aiText))
-            return HandwritingFeedback.Error("AI 응답이 비어 있습니다.");
+            return HandwritingFeedback.Error("Empty response from AI.");
 
         int open = aiText.IndexOf('{');
         int close = aiText.LastIndexOf('}');
@@ -153,7 +152,10 @@ public class GrokHandwritingEvaluator : HandwritingEvaluator
 
         try
         {
-            return JsonUtility.FromJson<HandwritingFeedback>(aiText);
+            var fb = JsonUtility.FromJson<HandwritingFeedback>(aiText);
+            // 최저 점수 보정 — 유저 기분 배려 (정상 채점 결과만, 60점 미만이면 60으로)
+            if (fb != null && fb.score < 60) fb.score = 60;
+            return fb;
         }
         catch
         {

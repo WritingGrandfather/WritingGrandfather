@@ -3,7 +3,8 @@
 
     <ui:VisualElement name="lobby-root" class="lobby-root">
         <ui:VisualElement name="title-area" class="title-area">
-            <ui:Label text="글씨 쓰는 할배" name="title-label" class="title-label" />
+            <ui:Label text="글씨 쓰는" name="title-label-line1" class="title-label" />
+            <ui:Label text="할배" name="title-label-line2" class="title-label" />
         </ui:VisualElement>
 
         <ui:VisualElement name="button-area" class="button-area">
@@ -15,7 +16,7 @@
 
     <ui:VisualElement name="exit-modal" class="modal-overlay hidden">
         <ui:VisualElement name="exit-modal-box" class="modal-box">
-            <ui:Label text="정말 나가시겠습니까?" class="modal-text" />
+            <ui:Label text="정말 나가시겠습니까?" name="modal-text" class="modal-text" />
             <ui:VisualElement name="exit-modal-buttons" class="modal-button-row">
                 <ui:Button name="btn-exit-confirm" text="예" class="modal-button modal-button--confirm" />
                 <ui:Button name="btn-exit-cancel" text="아니오" class="modal-button modal-button--cancel" />
