@@ -41,6 +41,17 @@ public class LoginController : MonoBehaviour
         root.Q<Button>("btn-guest").clicked += OnGuest;
         root.Q<Button>("btn-signup-confirm").clicked += OnSignupConfirm;
         root.Q<Button>("btn-signup-cancel").clicked += () => ShowSignup(false);
+
+        // 자동 로그인: 이전에 로그인했으면 바로 게임 씬으로
+        if (AuthManager.Instance != null)
+        {
+            SetMsg(_msg, "자동 로그인 확인 중...");
+            AuthManager.Instance.AutoLogin(auto =>
+            {
+                if (auto) SceneManager.LoadScene(nextScene);
+                else SetMsg(_msg, "");
+            });
+        }
     }
 
     void OnLogin()

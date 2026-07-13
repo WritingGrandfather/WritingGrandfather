@@ -1,4 +1,5 @@
 using System;
+using System.Text.RegularExpressions;
 using UnityEngine;
 #if FIREBASE_ENABLED
 using Firebase;
@@ -68,6 +69,44 @@ public class AuthManager : MonoBehaviour
             }
         });
 #endif
+    }
+
+    // ── 자동 로그인 (앱 재시작 시 이전 로그인 복원) ─────────────────
+    const string GuestKey = "auth_guest_login";
+
+    /// <summary>이전에 로그인한 적 있으면 복원한다. onResult(true)면 바로 게임 씬으로 보내면 됨.</summary>
+    public void AutoLogin(Action<bool> onResult)
+    {
+#if FIREBASE_ENABLED
+        StartCoroutine(AutoLoginRoutine(onResult));
+#else
+        if (PlayerPrefs.GetInt(GuestKey, 0) == 1) { SetGuestLocal(); onResult?.Invoke(true); }
+        else onResult?.Invoke(false);
+#endif
+    }
+
+#if FIREBASE_ENABLED
+    System.Collections.IEnumerator AutoLoginRoutine(Action<bool> onResult)
+    {
+        float t = 0f;
+        while (!ready && t < 5f) { t += Time.deltaTime; yield return null; } // Firebase 초기화 대기
+
+        if (ready && auth.CurrentUser != null)
+        {
+            ApplyUser(auth.CurrentUser, auth.CurrentUser.IsAnonymous);
+            onResult?.Invoke(true);
+            yield break;
+        }
+        if (PlayerPrefs.GetInt(GuestKey, 0) == 1) { SetGuestLocal(); onResult?.Invoke(true); yield break; }
+        onResult?.Invoke(false);
+    }
+#endif
+
+    void SetGuestLocal()
+    {
+        IsSignedIn = true; IsGuest = true;
+        UserId = SystemInfo.deviceUniqueIdentifier; DisplayName = "게스트";
+        PlayerPrefs.SetInt(GuestKey, 1);
     }
 
     // ── 이메일 회원가입 ─────────────────────────────────────────────
@@ -152,8 +191,8 @@ public class AuthManager : MonoBehaviour
             return;
         }
 #endif
-        // Firebase 없이도 게스트는 바로 진행 (익명, 저장은 로컬로 처리)
-        IsSignedIn = true; IsGuest = true; UserId = "guest"; DisplayName = "게스트";
+        // Firebase 없이도 게스트는 바로 진행 (저장은 로컬로 처리)
+        SetGuestLocal();
         onDone?.Invoke(true, "게스트로 시작");
     }
 
@@ -163,13 +202,20 @@ public class AuthManager : MonoBehaviour
         if (auth != null) auth.SignOut();
 #endif
         IsSignedIn = false; IsGuest = false; UserId = ""; DisplayName = "";
+        PlayerPrefs.DeleteKey(GuestKey);
     }
 
     // ── 내부 헬퍼 ───────────────────────────────────────────────────
+    // 이메일 형식: @ 앞뒤에 글자, 뒤엔 점+도메인. 공백/@ 중복 불가.
+    // 예) ok: a@b.com   막힘: @asdf.com, a@b, a@@b.com, "a b@c.com"
+    static readonly Regex EmailRegex =
+        new Regex(@"^[^@\s]+@[^@\s]+\.[^@\s]+$", RegexOptions.Compiled);
+
     bool ValidateInput(string email, string password, Action<bool, string> onDone)
     {
-        if (string.IsNullOrWhiteSpace(email) || !email.Contains("@"))
-        { onDone?.Invoke(false, "이메일을 올바르게 입력하세요."); return false; }
+        email = (email ?? "").Trim();
+        if (string.IsNullOrEmpty(email) || !EmailRegex.IsMatch(email))
+        { onDone?.Invoke(false, "이메일 형식이 올바르지 않습니다. (예: name@example.com)"); return false; }
         if (string.IsNullOrEmpty(password) || password.Length < 6)
         { onDone?.Invoke(false, "비밀번호는 6자 이상이어야 합니다."); return false; }
         return true;
@@ -184,6 +230,7 @@ public class AuthManager : MonoBehaviour
         DisplayName = (user != null && !string.IsNullOrEmpty(user.DisplayName))
             ? user.DisplayName
             : (guest ? "게스트" : (user != null ? user.Email : ""));
+        PlayerPrefs.SetInt(GuestKey, guest ? 1 : 0); // 게스트=로컬저장, 실제계정=클라우드
     }
 
     static string FirebaseError(System.Threading.Tasks.Task t)

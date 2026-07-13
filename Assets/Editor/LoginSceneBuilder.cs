@@ -28,8 +28,9 @@ public static class LoginSceneBuilder
         cam.backgroundColor = new Color(0.98f, 0.94f, 0.87f);
         camGO.transform.position = new Vector3(0, 0, -10);
 
-        // 인증 매니저 (씬 전환에도 유지됨)
+        // 인증/저장 매니저 (씬 전환에도 유지됨)
         new GameObject("AuthManager").AddComponent<AuthManager>();
+        new GameObject("SaveManager").AddComponent<SaveManager>();
 
         // UI Toolkit 문서
         var uxml = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(UxmlPath);
