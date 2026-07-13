@@ -84,7 +84,16 @@
     justify-content: center;
     align-items: center;
     flex-shrink: 0;
-    margin-bottom: 70px;
+    margin-bottom: 20px;
+}
+
+.version-label {
+    font-size: 26px;
+    -unity-font-style: bold;
+    color: rgb(90, 62, 40);
+    -unity-text-align: middle-center;
+    margin-bottom: 40px;
+    flex-shrink: 0;
 }
 
 .hint {

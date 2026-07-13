@@ -23,6 +23,8 @@
             <ui:Button name="btn-signup" text="회원가입" class="link-button" />
         </ui:VisualElement>
 
+        <ui:Label name="version-label" text="" class="version-label" />
+
         <ui:VisualElement name="login-panel" class="modal-overlay hidden">
             <ui:VisualElement name="login-box" class="modal-box">
                 <ui:Label text="이메일로 로그인" class="modal-text" />

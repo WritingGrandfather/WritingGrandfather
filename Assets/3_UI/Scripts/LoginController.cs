@@ -66,6 +66,10 @@ public class LoginController : MonoBehaviour
         _btnSignupConfirm = root.Q<Button>("btn-signup-confirm");
         _btnSignupCancel = root.Q<Button>("btn-signup-cancel");
 
+        var versionLabel = root.Q<Label>("version-label");
+        if (versionLabel != null)
+            versionLabel.text = "v" + Application.version;
+
         _btnEmailLogin.clicked += () => Show(_loginPanel, true);
         _btnGuest.clicked += OnGuest;
         _btnSignup.clicked += () => Show(_signupPanel, true);
