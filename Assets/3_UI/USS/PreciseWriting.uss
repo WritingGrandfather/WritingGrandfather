@@ -151,6 +151,29 @@ Button:active {
 }
 
 .reset-button {
+<<<<<<< Updated upstream
+=======
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    height: 100px;
+    padding: 0 24px;
+    border-radius: 30px;
+    border-width: 0;
+    font-size: 40px;
+    color: rgb(255, 255, 255);
+    background-color: rgba(120, 120, 120, 0.85);
+    -unity-text-align: middle-center;
+}
+
+.reset-button:hover {
+    background-color: rgba(140, 140, 140, 0.9);
+}
+
+/* ---- 획순 레이어 ---- */
+
+.stroke-order-layer {
+>>>>>>> Stashed changes
     position: absolute;
     top: 14px;
     right: 14px;

@@ -33,9 +33,6 @@ public class ChallengeCountdown : MonoBehaviour
     [Tooltip("시작 문구 표시 시간(초)")]
     [SerializeField] float startTextDuration = 0.7f;
 
-    [Tooltip("시작 문구")]
-    [SerializeField] string startText = "시작!";
-
     [Tooltip("글자 높이 (화면 픽셀 기준)")]
     [SerializeField] int fontSizePx = 170;
 
@@ -84,7 +81,7 @@ public class ChallengeCountdown : MonoBehaviour
             yield return new WaitForSeconds(stepDuration);
         }
 
-        tm.text = startText;
+        tm.text = LocalizationManager.Get("challenge.countdown_start");
         yield return new WaitForSeconds(startTextDuration);
         Destroy(go);
 

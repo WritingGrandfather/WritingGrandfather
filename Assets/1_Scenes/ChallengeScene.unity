@@ -8126,7 +8126,6 @@ MonoBehaviour:
   countFrom: 3
   stepDuration: 1
   startTextDuration: 0.7
-  startText: "시작!"
   fontSizePx: 170
   sortingOrder: 50
 --- !u!1660057539 &9223372036854775807

@@ -126,4 +126,5 @@ falling_writing.eval_no_response,채점 결과를 받지 못했습니다.,Didn't
 falling_writing.mismatch,'{0}'와 달라 보여요. 또박또박 다시 써볼까요?,This looks different from '{0}'. Try writing it neatly again?
 falling_writing.hit,'{0}' 명중! ({1}점),'{0}' Hit! ({1} pts)
 falling_writing.over_stroke,획이 너무 많아요 ({0}획 — '{1}'는 {2}획). 또박또박 다시 써볼까요?,Too many strokes ({0} strokes — '{1}' should be {2}). Try writing it neatly again?
+challenge.countdown_start,시작!,Start!
 
