@@ -52,8 +52,8 @@ public static class JihwanSceneBuilder
         cap.resolution = 512;
         cap.backgroundColor = Color.white;
 
-        var evalGO = new GameObject("GrokEvaluator");
-        var evaluator = evalGO.AddComponent<GrokHandwritingEvaluator>();
+        var evalGO = new GameObject("OpenAIEvaluator");
+        var evaluator = evalGO.AddComponent<OpenAIHandwritingEvaluator>();
 
         // ── UI 추가 (팀 Canvas 위에) ────────────────────────────────
         var feedbackTMP = MakeText("AI_FeedbackText", canvas.transform,
