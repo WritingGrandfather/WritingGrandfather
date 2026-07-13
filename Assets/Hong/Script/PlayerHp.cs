@@ -36,6 +36,6 @@ public class PlayerHp : MonoBehaviour
 
     public void Die()
     {
-        
+        Time.timeScale = 0;
     }
 }
