@@ -7,7 +7,7 @@ using UnityEngine.Pool;
 using UnityEngine.EventSystems;
 using Random = UnityEngine.Random;
 
-public class DrowLine : MonoBehaviour
+public class DrawLine : MonoBehaviour
 {
     // Resources/Prefabs/Line.prefab 의 파일명이 그대로 id가 됨
     const string linePoolId = "Line";
@@ -135,7 +135,7 @@ public class DrowLine : MonoBehaviour
 
         if (currentLineGO == null)
         {
-            Debug.LogError($"[DrowLine] '{linePoolId}' 스폰 실패 — Resources/Prefabs 안에 해당 id의 프리팹이 있는지, PooledObject 컴포넌트 id가 '{linePoolId}' 인지 확인하세요.");
+            Debug.LogError($"[DrawLine] '{linePoolId}' 스폰 실패 — Resources/Prefabs 안에 해당 id의 프리팹이 있는지, PooledObject 컴포넌트 id가 '{linePoolId}' 인지 확인하세요.");
             return;
         }
 
@@ -262,7 +262,7 @@ public class DrowLine : MonoBehaviour
 
     // pencilSound 컴포넌트를 씬에서 연결 안 해둔 경우(예: WritingPracticeScene의 DrawLine)에도
     // 소리가 나도록, 프로젝트에 들어있는 기본 연필 클립 이름을 폴백으로 쓴다.
-    static readonly List<string> DefaultPencilSounds = new List<string> { "pencliSound1", "pencliSound2" };
+    static readonly List<string> DefaultPencilSounds = new List<string> { "pencilSound1", "pencilSound2" };
 
     int PlayRandomPencilSound(int exclude)
     {

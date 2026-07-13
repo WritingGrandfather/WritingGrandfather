@@ -119,55 +119,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &49852414
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 49852416}
-  - component: {fileID: 49852415}
-  m_Layer: 0
-  m_Name: CellCapture
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &49852415
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 49852414}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fbb34007feba9fc49807bfd9444f613b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CellCapture
-  resolution: 512
-  backgroundColor: {r: 1, g: 1, b: 1, a: 1}
-  cullingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
---- !u!4 &49852416
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 49852414}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &70691071
 GameObject:
   m_ObjectHideFlags: 0
@@ -2187,7 +2138,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1346376305}
-        m_TargetAssemblyTypeName: DrowLine, Assembly-CSharp
+        m_TargetAssemblyTypeName: DrawLine, Assembly-CSharp
         m_MethodName: SetLineWidth
         m_Mode: 4
         m_Arguments:
@@ -2453,7 +2404,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1346376305}
-        m_TargetAssemblyTypeName: DrowLine, Assembly-CSharp
+        m_TargetAssemblyTypeName: DrawLine, Assembly-CSharp
         m_MethodName: SetLineWidth
         m_Mode: 4
         m_Arguments:
@@ -2586,7 +2537,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1346376305}
-        m_TargetAssemblyTypeName: DrowLine, Assembly-CSharp
+        m_TargetAssemblyTypeName: DrawLine, Assembly-CSharp
         m_MethodName: SetLineWidth
         m_Mode: 4
         m_Arguments:
@@ -3332,9 +3283,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WritingFeedbackController
   targetCell: {fileID: 75206299}
   strokeCapture: {fileID: 1775397693}
-  imageCapture: {fileID: 49852415}
   evaluator: {fileID: 936507628}
-  passScore: 70
+  passScore: 50
   criteria: 'You are a teacher helping a learner practice Korean handwriting. Recognize
     the handwriting in the image and compare it with the target character. Judge
     by: 1) matches the target, 2) stroke clarity, 3) stays inside the cell. Give
@@ -4029,7 +3979,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1346376305}
-        m_TargetAssemblyTypeName: DrowLine, Assembly-CSharp
+        m_TargetAssemblyTypeName: DrawLine, Assembly-CSharp
         m_MethodName: SetLineWidth
         m_Mode: 4
         m_Arguments:
@@ -5142,7 +5092,7 @@ GameObject:
   - component: {fileID: 1346376309}
   m_Layer: 0
   m_Name: Drow Line
-  m_TagString: DrowLine
+  m_TagString: DrawLine
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5158,7 +5108,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0454d2319955049ae85c3ca6a6034ab2, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DrowLine
+  m_EditorClassIdentifier: Assembly-CSharp::DrawLine
   lineWidth: 0.1
   lineColor: {r: 0, g: 0, b: 0, a: 1}
   drawingEnabled: 1
@@ -5236,8 +5186,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PencilSound
   pencilSounds:
-  - pencliSound1
-  - pencliSound2
+  - pencilSound1
+  - pencilSound2
 --- !u!1 &1369336973
 GameObject:
   m_ObjectHideFlags: 0
@@ -6977,7 +6927,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1346376305}
-        m_TargetAssemblyTypeName: DrowLine, Assembly-CSharp
+        m_TargetAssemblyTypeName: DrawLine, Assembly-CSharp
         m_MethodName: SetLineWidth
         m_Mode: 4
         m_Arguments:
@@ -8144,7 +8094,6 @@ SceneRoots:
   - {fileID: 1706301962}
   - {fileID: 75206300}
   - {fileID: 1775397694}
-  - {fileID: 49852416}
   - {fileID: 936507627}
   - {fileID: 913206371}
   - {fileID: 1369336975}

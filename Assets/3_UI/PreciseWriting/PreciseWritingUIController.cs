@@ -22,9 +22,9 @@ namespace WritingGrandfather.UI.PreciseWriting
         [SerializeField] private Font koreanFont;
 
         [Tooltip("단어가 바뀌거나 다시 시작할 때 이전 획을 지우기 위한 참조")]
-        [SerializeField] private DrowLine drawLine;
+        [SerializeField] private DrawLine drawLine;
 
-        [Tooltip("AI 채점 파이프라인 (WritingCell + StrokeCapture + CellCapture + Evaluator를 조율). 비워두면 데모 점수로 대체.")]
+        [Tooltip("AI 채점 파이프라인 (WritingCell + StrokeCapture + Evaluator를 조율). 비워두면 데모 점수로 대체.")]
         [SerializeField] private WritingFeedbackController feedbackController;
 
         [Tooltip("실제 캡처 영역을 정의하는 WritingCell — guide-box와 매 프레임 위치/크기를 맞춘다.")]
@@ -169,7 +169,7 @@ namespace WritingGrandfather.UI.PreciseWriting
             root.schedule.Execute(ApplyLayout).StartingIn(0);
 
             // PointerMoveEvent로 미리 계산해 둔 값 대신, 실제로 그리기를 시작하려는 그
-            // 순간 DrowLine이 직접 이 델리게이트를 호출해 판정하게 한다 - 자세한 이유는
+            // 순간 DrawLine이 직접 이 델리게이트를 호출해 판정하게 한다 - 자세한 이유는
             // CanDrawAtScreenPoint 주석 참고. drawingEnabled는 더 이상 위치별로 매 프레임
             // 갱신하지 않으므로(그 역할을 canDrawAt이 대신함), OnDisable에서 꺼뒀던 것을
             // 다시 켜서 "전체 그리기 허용" 스위치로만 사용한다.
@@ -221,8 +221,8 @@ namespace WritingGrandfather.UI.PreciseWriting
         }
 
         // guide-box의 화면상 위치/크기가 바뀔 때마다 WritingCell의 월드 좌표를 그대로 따라가게 해서
-        // AI 캡처(CellCapture/StrokeCapture)가 실제 손글씨가 그려지는 영역과 정확히 일치하도록 한다.
-        // guide-box 스크린 좌표 → Camera.main.ScreenToWorldPoint 변환은 DrowLine이 잉크를 찍을 때 쓰는 것과
+        // AI 캡처(StrokeCapture)가 실제 손글씨가 그려지는 영역과 정확히 일치하도록 한다.
+        // guide-box 스크린 좌표 → Camera.main.ScreenToWorldPoint 변환은 DrawLine이 잉크를 찍을 때 쓰는 것과
         // 동일한 방식이라 서로 어긋나지 않는다.
         private void OnGuideBoxGeo(GeometryChangedEvent evt) => SyncWritingCellToGuideBox();
 
@@ -265,7 +265,7 @@ namespace WritingGrandfather.UI.PreciseWriting
                 Mathf.Abs(worldA.y - worldB.y));
         }
 
-        // DrowLine.OnDrawStart()/DrawLoop()가 "지금 이 화면 좌표에서 그려도 되는가"를 물어볼 때마다
+        // DrawLine.OnDrawStart()/DrawLoop()가 "지금 이 화면 좌표에서 그려도 되는가"를 물어볼 때마다
         // 호출된다 - guide-box/safe-area 밖이거나 버튼(되돌리기/초기화) 위면 거부한다.
         // 예전에는 이 판정을 PointerMoveEvent로 미리 계산해 둔 drawingEnabled 값으로 대신했는데,
         // 새 Input System의 액션 콜백(OnDrawStart)과 UI Toolkit의 PointerMoveEvent 처리가 같은

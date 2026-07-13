@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class ToolSelector : MonoBehaviour
 {
-    public DrowLine drawLine;
+    public DrawLine drawLine;
     public Eraser eraser;
 
     public GameObject pencilSizePanel;

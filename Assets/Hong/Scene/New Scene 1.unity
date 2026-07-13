@@ -1218,7 +1218,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1346376305}
-        m_TargetAssemblyTypeName: DrowLine, Assembly-CSharp
+        m_TargetAssemblyTypeName: DrawLine, Assembly-CSharp
         m_MethodName: SetLineWidth
         m_Mode: 4
         m_Arguments:
@@ -1759,7 +1759,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1346376305}
-        m_TargetAssemblyTypeName: DrowLine, Assembly-CSharp
+        m_TargetAssemblyTypeName: DrawLine, Assembly-CSharp
         m_MethodName: SetLineWidth
         m_Mode: 4
         m_Arguments:
@@ -1892,7 +1892,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1346376305}
-        m_TargetAssemblyTypeName: DrowLine, Assembly-CSharp
+        m_TargetAssemblyTypeName: DrawLine, Assembly-CSharp
         m_MethodName: SetLineWidth
         m_Mode: 4
         m_Arguments:
@@ -2869,7 +2869,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1346376305}
-        m_TargetAssemblyTypeName: DrowLine, Assembly-CSharp
+        m_TargetAssemblyTypeName: DrawLine, Assembly-CSharp
         m_MethodName: SetLineWidth
         m_Mode: 4
         m_Arguments:
@@ -4164,7 +4164,7 @@ GameObject:
   - component: {fileID: 1346376309}
   m_Layer: 0
   m_Name: Drow Line
-  m_TagString: DrowLine
+  m_TagString: DrawLine
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4180,7 +4180,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0454d2319955049ae85c3ca6a6034ab2, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DrowLine
+  m_EditorClassIdentifier: Assembly-CSharp::DrawLine
   lineWidth: 0.1
   lineColor: {r: 0, g: 0, b: 0, a: 1}
   drawingEnabled: 1
@@ -4258,8 +4258,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PencilSound
   pencilSounds:
-  - pencliSound1
-  - pencliSound2
+  - pencilSound1
+  - pencilSound2
 --- !u!1 &1372578001
 GameObject:
   m_ObjectHideFlags: 0
@@ -5934,7 +5934,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1346376305}
-        m_TargetAssemblyTypeName: DrowLine, Assembly-CSharp
+        m_TargetAssemblyTypeName: DrawLine, Assembly-CSharp
         m_MethodName: SetLineWidth
         m_Mode: 4
         m_Arguments:

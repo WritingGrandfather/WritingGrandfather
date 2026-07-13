@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 // 지우개 모드 : eraserRadius 기준 원
 public class DrawCursor : MonoBehaviour
 {
-    public DrowLine drawLine;
+    public DrawLine drawLine;
     public Eraser   eraser;
 
     [SerializeField] int   circleSegments = 40;

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -174,6 +175,8 @@ public class LobbyController : MonoBehaviour
 
         _dropdownQuality = root.Q<DropdownField>("dropdown-quality");
         _dropdownFramerate = root.Q<DropdownField>("dropdown-framerate");
+        SetupVideoSettings();
+
         _radioLanguage = root.Q<RadioButtonGroup>("radio-language");
         // UXML의 value="0"(한국어) 대신, 이전에 저장해 둔 언어 설정을 그대로
         // 반영한다. SetValueWithoutNotify를 써서 OnLanguageRadioChanged가 다시
@@ -182,6 +185,9 @@ public class LobbyController : MonoBehaviour
         _radioLanguage.RegisterValueChangedCallback(OnLanguageRadioChanged);
 
         _radioAdultChild = root.Q<RadioButtonGroup>("radio-adult-child");
+        // UXML 기본값(0=성인)과 동일하게, 저장된 적 없으면 UserProfile.IsChildMode도 false(성인)이다.
+        _radioAdultChild.SetValueWithoutNotify(UserProfile.IsChildMode ? 1 : 0);
+        _radioAdultChild.RegisterValueChangedCallback(OnAdultChildRadioChanged);
 
         SetupAudioToggles(root);
 
@@ -212,6 +218,62 @@ public class LobbyController : MonoBehaviour
     void OnLanguageRadioChanged(ChangeEvent<int> evt)
     {
         LocalizationManager.SetLanguage(evt.newValue == 0 ? Language.Korean : Language.English);
+    }
+
+    // choices 순서가 [성인, 어린이]라 value 1 = 어린이 모드.
+    void OnAdultChildRadioChanged(ChangeEvent<int> evt)
+    {
+        UserProfile.IsChildMode = evt.newValue == 1;
+    }
+
+    // 화질/프레임 드롭다운을 저장된 값으로 복원하고, 바뀔 때마다 실제로 적용 + 저장한다.
+    // (이전에는 choices/index만 UI에 표시될 뿐 QualitySettings/targetFrameRate에 전혀
+    // 반영되지 않아 선택해도 아무 효과가 없었다.)
+    const string QualityPrefsKey = "settings.quality_index";   // 0=낮음,1=보통,2=높음 (UI 인덱스)
+    const string FrameratePrefsKey = "settings.framerate_index"; // 0=30fps,1=60fps
+
+    void SetupVideoSettings()
+    {
+        int savedQuality = PlayerPrefs.GetInt(QualityPrefsKey, 1); // 기본: 보통
+        _dropdownQuality.index = savedQuality;
+        ApplyQualityLevel(savedQuality);
+        _dropdownQuality.RegisterValueChangedCallback(evt =>
+        {
+            int index = _dropdownQuality.index;
+            PlayerPrefs.SetInt(QualityPrefsKey, index);
+            PlayerPrefs.Save();
+            ApplyQualityLevel(index);
+        });
+
+        int savedFramerate = PlayerPrefs.GetInt(FrameratePrefsKey, 1); // 기본: 60fps
+        _dropdownFramerate.index = savedFramerate;
+        ApplyFramerate(savedFramerate);
+        _dropdownFramerate.RegisterValueChangedCallback(evt =>
+        {
+            int index = _dropdownFramerate.index;
+            PlayerPrefs.SetInt(FrameratePrefsKey, index);
+            PlayerPrefs.Save();
+            ApplyFramerate(index);
+        });
+    }
+
+    // UI 인덱스(낮음/보통/높음)를 프로젝트의 실제 Quality Level(Very Low~Ultra 등)로 매핑한다.
+    // 이름으로 찾아서 프로젝트 설정이 바뀌어도 안전하게 대응하고, 못 찾으면 인덱스+1로 대체한다.
+    static void ApplyQualityLevel(int uiIndex)
+    {
+        string[] wantedNames = { "Low", "Medium", "High" };
+        string wanted = wantedNames[Mathf.Clamp(uiIndex, 0, wantedNames.Length - 1)];
+
+        var names = QualitySettings.names;
+        int level = Array.IndexOf(names, wanted);
+        if (level < 0) level = Mathf.Clamp(uiIndex + 1, 0, names.Length - 1);
+
+        QualitySettings.SetQualityLevel(level, true);
+    }
+
+    static void ApplyFramerate(int uiIndex)
+    {
+        Application.targetFrameRate = uiIndex == 0 ? 30 : 60;
     }
 
     void OnNicknameChanged(ChangeEvent<string> evt)
@@ -457,6 +519,7 @@ public class LobbyController : MonoBehaviour
     {
         _lobbyRoot?.UnregisterCallback<GeometryChangedEvent>(OnGeometryChanged);
         _radioLanguage?.UnregisterValueChangedCallback(OnLanguageRadioChanged);
+        _radioAdultChild?.UnregisterValueChangedCallback(OnAdultChildRadioChanged);
         _nicknameField?.UnregisterValueChangedCallback(OnNicknameChanged);
         LocalizationManager.OnLanguageChanged -= OnLanguageChanged;
     }

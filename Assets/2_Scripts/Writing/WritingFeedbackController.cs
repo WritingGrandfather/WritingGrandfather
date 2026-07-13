@@ -9,13 +9,13 @@ using UnityEngine.Events;
 /// <summary>
 /// 손글씨 피드백 전체 흐름을 조율하는 컨트롤러.
 ///
-/// 흐름: [평가 버튼] → 칸 캡처(CellCapture) → 평가 요청(HandwritingEvaluator)
+/// 흐름: [평가 버튼] → 획 캡처(StrokeCapture → StrokeRasterizer로 PNG 생성) → 평가 요청(HandwritingEvaluator)
 ///       → 결과(HandwritingFeedback)를 UnityEvent로 UI에 전달
 ///
 /// 씬 설정:
 ///  1) 이 컴포넌트를 빈 오브젝트에 추가
-///  2) targetCell   : 평가할 WritingCell 지정
-///  3) capture       : CellCapture 컴포넌트 지정
+///  2) targetCell    : 평가할 WritingCell 지정
+///  3) strokeCapture : StrokeCapture 컴포넌트 지정
 ///  4) evaluator     : HandwritingEvaluator (지금은 MockHandwritingEvaluator) 지정
 ///  5) 버튼 OnClick → WritingFeedbackController.RequestFeedback
 ///  6) onFeedback / onStatus 이벤트를 TMP 텍스트 등에 연결
@@ -25,7 +25,6 @@ public class WritingFeedbackController : MonoBehaviour
     [Header("참조")]
     [SerializeField] WritingCell targetCell;
     [SerializeField] StrokeCapture strokeCapture; // 획 좌표(획순/획수)
-    [SerializeField] CellCapture imageCapture;     // PNG(글자 인식/모양)
     [SerializeField] HandwritingEvaluator evaluator;
 
     [Header("통과 기준")]
@@ -144,8 +143,8 @@ public class WritingFeedbackController : MonoBehaviour
 
             if (recognized == target)
             {
-                // 글자가 맞으면 점수가 passScore 이상일 때 통과
-                feedback.passed = feedback.score >= passScore;
+                // 글자가 맞으면 점수가 (어린이 모드는 더 낮춘) 기준 이상일 때 통과
+                feedback.passed = feedback.score >= EffectivePassScore();
             }
             else
             {
@@ -161,6 +160,9 @@ public class WritingFeedbackController : MonoBehaviour
         Debug.Log($"[WritingFeedback] 목표='{targetCell?.targetText}' 인식='{feedback.recognizedText}' 점수={feedback.score} 통과={feedback.passed}");
 
         // 모양 통과 시 획순 검사 — 1순위: 로컬 필순 대조 (결정적·즉시), 2순위: AI (미지원 자모만)
+        // 어린이 모드에서는 획순만으로 불통과시키지 않는다 — 안내 문구는 그대로 보여주되
+        // 통과 여부는 모양 점수 위주로 판단해서 배우는 재미를 꺾지 않는다.
+        bool strictOrder = failOnWrongOrder && !UserProfile.IsChildMode;
         string target2 = (targetCell?.targetText ?? "").Trim();
         if (feedback.passed && target2.Length == 1)
         {
@@ -169,10 +171,13 @@ public class WritingFeedbackController : MonoBehaviour
             {
                 feedback.strokeOrderScore = local.score;
                 Debug.Log($"[StrokeOrder/로컬] {(local.ok ? "정상" : "오류")} {local.message} (점수 {local.score})");
-                if (!local.ok && failOnWrongOrder)
+                if (!local.ok)
                 {
-                    feedback.passed = false;
-                    if (feedback.score > 60) feedback.score = 60;
+                    if (strictOrder)
+                    {
+                        feedback.passed = false;
+                        if (feedback.score > 60) feedback.score = 60;
+                    }
                     feedback.message = local.message;
                 }
                 Finish(feedback);
@@ -188,7 +193,7 @@ public class WritingFeedbackController : MonoBehaviour
                 {
                     // AI 획순 검사는 참/거짓만 주므로 점수는 근사치로 환산
                     fb.strokeOrderScore = orderOk ? 90 : 55;
-                    if (!orderOk && failOnWrongOrder)
+                    if (!orderOk && strictOrder)
                     {
                         fb.passed = false;
                         if (fb.score > 60) fb.score = 60;
@@ -204,6 +209,10 @@ public class WritingFeedbackController : MonoBehaviour
 
         Finish(feedback);
     }
+
+    // 어린이 모드는 정확한 획순/모양보다 "쓰는 재미"가 우선이라 통과 기준을 낮춘다.
+    // 최소 30점은 유지해서, 낙서 수준까지 통과시키지는 않는다.
+    int EffectivePassScore() => UserProfile.IsChildMode ? Mathf.Max(30, passScore - 15) : passScore;
 
     void Finish(HandwritingFeedback feedback)
     {

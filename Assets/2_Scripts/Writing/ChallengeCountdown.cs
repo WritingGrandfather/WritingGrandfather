@@ -12,7 +12,7 @@ public class ChallengeCountdown : MonoBehaviour
     [Header("참조 (카운트다운 동안 멈출 것들)")]
     [SerializeField] FallingWordSpawner spawner;
     [SerializeField] FallingWritingSession session;
-    [SerializeField] DrowLine drawLine;
+    [SerializeField] DrawLine drawLine;
 
     [Tooltip("제한시간 컨트롤러 — 카운트다운 동안 시간이 줄지 않게 멈춘다")]
     [SerializeField] ChallengeSurvivalController survival;

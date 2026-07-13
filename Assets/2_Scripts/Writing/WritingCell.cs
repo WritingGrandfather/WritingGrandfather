@@ -3,7 +3,7 @@ using UnityEngine;
 /// <summary>
 /// 유저가 글씨를 쓰는 "칸" 하나를 정의한다.
 /// 이 오브젝트의 위치를 중심으로 size 만큼의 사각 영역이 칸이 되며,
-/// CellCapture가 이 영역만 잘라서 이미지로 만든다.
+/// StrokeCapture가 이 영역 기준으로 획 좌표를 정규화한다.
 /// targetText는 이 칸에서 써야 할 목표 글자(선택).
 /// </summary>
 public class WritingCell : MonoBehaviour

@@ -164,7 +164,6 @@ GameObject:
   - component: {fileID: 869136918}
   - component: {fileID: 1261887764}
   - component: {fileID: 1764770114}
-  - component: {fileID: 918817555}
   - component: {fileID: 2091857815}
   - component: {fileID: 676139461}
   - component: {fileID: 2091857816}
@@ -218,9 +217,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WritingFeedbackController
   targetCell: {fileID: 1261887764}
   strokeCapture: {fileID: 1764770114}
-  imageCapture: {fileID: 0}
   evaluator: {fileID: 2091857816}
-  passScore: 70
+  passScore: 50
   criteria: "\uBAA9\uD45C \uAE00\uC790\uB97C \uC815\uD655\uD55C \uD68D\uC21C\uACFC
     \uBAA8\uC591\uC73C\uB85C \uC37C\uB294\uC9C0 \uD3C9\uAC00\uD574\uC918. \uB2E4\uC74C
     \uAE30\uC900\uC744 \uC0AC\uC6A9\uD574\uC11C \uC885\uD569\uC801\uC73C\uB85C \uD310\uB2E8\uD574\uC918.
@@ -352,23 +350,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &918817555
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 340074031}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fbb34007feba9fc49807bfd9444f613b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CellCapture
-  resolution: 256
-  backgroundColor: {r: 1, g: 1, b: 1, a: 1}
-  cullingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
 --- !u!4 &924205830
 Transform:
   m_ObjectHideFlags: 0
@@ -395,7 +376,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0454d2319955049ae85c3ca6a6034ab2, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DrowLine
+  m_EditorClassIdentifier: Assembly-CSharp::DrawLine
   lineWidth: 0.1
   lineColor: {r: 0, g: 0, b: 0, a: 1}
   drawingEnabled: 1
@@ -447,7 +428,7 @@ GameObject:
   - component: {fileID: 1923026562}
   m_Layer: 0
   m_Name: DrawLine
-  m_TagString: DrowLine
+  m_TagString: DrawLine
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
