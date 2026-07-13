@@ -39,6 +39,7 @@ public class LoginController : MonoBehaviour
     void OnEnable()
     {
         var root = GetComponent<UIDocument>().rootVisualElement;
+        UIClickSound.Attach(root);
 
         _msg = root.Q<Label>("msg");
 
@@ -65,6 +66,10 @@ public class LoginController : MonoBehaviour
         _btnLoginCancel = root.Q<Button>("btn-login-cancel");
         _btnSignupConfirm = root.Q<Button>("btn-signup-confirm");
         _btnSignupCancel = root.Q<Button>("btn-signup-cancel");
+
+        var versionLabel = root.Q<Label>("version-label");
+        if (versionLabel != null)
+            versionLabel.text = "v" + Application.version;
 
         _btnEmailLogin.clicked += () => Show(_loginPanel, true);
         _btnGuest.clicked += OnGuest;

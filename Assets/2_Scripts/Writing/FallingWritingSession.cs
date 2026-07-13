@@ -41,13 +41,16 @@ public class FallingWritingSession : MonoBehaviour
 
     [Tooltip("자동 판정이 걸리는 채움 비율 (본보기를 이만큼 덮으면 판정. 벗어난 잉크는 무시)")]
     [Range(0.3f, 1f)]
-    [SerializeField] float autoFillThreshold = 0.9f;
+    [SerializeField] float autoFillThreshold = 0.95f;
 
     [Tooltip("채움 비율 검사 주기(초) — 너무 짧으면 연산 낭비")]
     [SerializeField] float autoCheckInterval = 0.15f;
 
     [Tooltip("조건 충족 후 펜을 뗀 뒤 판정까지 대기 시간(초) — 쓰는 도중 성급한 판정 방지")]
     [SerializeField] float autoEvaluateDelay = 0.4f;
+
+    [Tooltip("획수를 초과한 경우: 펜을 뗀 뒤 이 시간(초)이 지나면 바로 판정하고 무조건 불통과")]
+    [SerializeField] float overStrokeDelay = 0.5f;
 
     [Tooltip("예외 처리: 두 조건 다 못 채운 채 이 시간(초) 동안 아무것도 안 쓰면 그냥 판정 (대부분 불통과 → 다시 쓰기)")]
     [SerializeField] float idleEvaluateTimeout = 2.5f;
@@ -60,6 +63,23 @@ public class FallingWritingSession : MonoBehaviour
     public UnityEvent onWordCleared;
 
     bool isEvaluating;
+
+    void OnEnable()
+    {
+        if (spawner != null) spawner.OnWordReachedBottom += HandleWordDropped;
+    }
+
+    void OnDisable()
+    {
+        if (spawner != null) spawner.OnWordReachedBottom -= HandleWordDropped;
+    }
+
+    // 글자가 바닥에 떨어져 사라지면 쓰고 있던 글씨도 함께 지운다
+    void HandleWordDropped(FallingWordSpawner.FallingWord word)
+    {
+        drawLine?.ClearAll();
+        drawLine?.CancelCurrentStroke();
+    }
 
     /// <summary>현재 타겟 = 가장 먼저 소환된 외자 글자 (선입선출)</summary>
     FallingWordSpawner.FallingWord CurrentTarget()
@@ -115,7 +135,9 @@ public class FallingWritingSession : MonoBehaviour
         // 조건: 1차 채움 비율 (벗어난 잉크 무시) 또는 2차 획수 (표준 획수 완료)
         float coverage = evaluator.CoverageRatio(norm, target.Text[0]);
         int expected = ExpectedStrokes(target.Text[0]);
-        bool conditionMet = coverage >= autoFillThreshold
+        bool overStroke = expected > 0 && norm.Count > expected; // 획수 초과 → 빠르게 판정(불통과)
+        bool conditionMet = overStroke
+                         || coverage >= autoFillThreshold
                          || (expected > 0 && norm.Count >= expected);
 
         bool drawing = Pointer.current != null && Pointer.current.press.isPressed;
@@ -131,7 +153,7 @@ public class FallingWritingSession : MonoBehaviour
             // 펜을 뗀 상태로 대기 시간이 지나야 판정 (쓰는 도중 성급한 판정 방지)
             idleTime = 0f;
             strokeStableTime += autoCheckInterval;
-            if (strokeStableTime < autoEvaluateDelay) return;
+            if (strokeStableTime < (overStroke ? overStrokeDelay : autoEvaluateDelay)) return;
         }
         else
         {
@@ -176,7 +198,7 @@ public class FallingWritingSession : MonoBehaviour
         var norm = strokeCapture.GetNormalizedStrokes(cell);
         if (norm.Count == 0)
         {
-            Finish(new HandwritingFeedback { recognizedText = "", score = 0, passed = false, message = "글씨를 먼저 써볼까요?" });
+            Finish(new HandwritingFeedback { recognizedText = "", score = 0, passed = false, message = LocalizationManager.Get("falling_writing.no_ink") });
             return;
         }
 
@@ -189,7 +211,22 @@ public class FallingWritingSession : MonoBehaviour
         if (target == null)
         {
             drawLine?.ClearAll();
-            Finish(new HandwritingFeedback { recognizedText = "", score = 0, passed = false, message = "떨어지는 글자가 없어요." });
+            Finish(new HandwritingFeedback { recognizedText = "", score = 0, passed = false, message = LocalizationManager.Get("falling_writing.no_target_word") });
+            return;
+        }
+
+        // 획수 초과 = 무조건 불통과 (모양이 아무리 닮았어도)
+        int expectedStrokes = ExpectedStrokes(target.Text[0]);
+        if (expectedStrokes > 0 && norm.Count > expectedStrokes)
+        {
+            drawLine?.ClearAll();
+            Finish(new HandwritingFeedback
+            {
+                recognizedText = "",
+                score = 0,
+                passed = false,
+                message = string.Format(LocalizationManager.Get("falling_writing.over_stroke"), norm.Count, target.Text, expectedStrokes),
+            });
             return;
         }
 
@@ -204,7 +241,7 @@ public class FallingWritingSession : MonoBehaviour
         evaluator.Evaluate(request, r => fb = r); // TemplateSimilarityEvaluator는 즉시 콜백
         if (fb == null)
         {
-            Finish(HandwritingFeedback.Error("채점 결과를 받지 못했습니다."));
+            Finish(HandwritingFeedback.Error(LocalizationManager.Get("falling_writing.eval_no_response")));
             return;
         }
 
@@ -222,13 +259,16 @@ public class FallingWritingSession : MonoBehaviour
         if (fb.score < passScore)
         {
             drawLine?.ClearAll();
+            // fb.message가 그냥 "N% 닮았어요" 식의 일반 점수 메시지뿐이면 더 구체적인 안내로 바꿔준다.
+            // 문자열 자체(언어별로 달라짐) 대신 같은 점수로 다시 포맷한 결과와 비교해 판단한다.
+            bool isGenericScoreMessage = fb.message == string.Format(LocalizationManager.Get("writing_feedback.similarity_score"), fb.score);
             Finish(new HandwritingFeedback
             {
                 recognizedText = "",
                 score = fb.score,
                 passed = false,
-                message = string.IsNullOrEmpty(fb.message) || fb.message.Contains("닮았")
-                    ? $"'{target.Text}'와 달라 보여요. 또박또박 다시 써볼까요?"
+                message = string.IsNullOrEmpty(fb.message) || isGenericScoreMessage
+                    ? string.Format(LocalizationManager.Get("falling_writing.mismatch"), target.Text)
                     : fb.message,
             });
             return;
@@ -261,7 +301,7 @@ public class FallingWritingSession : MonoBehaviour
             recognizedText = target.Text,
             score = fb.score,
             passed = true,
-            message = $"'{target.Text}' 명중! ({fb.score}점)",
+            message = string.Format(LocalizationManager.Get("falling_writing.hit"), target.Text, fb.score),
         });
     }
 

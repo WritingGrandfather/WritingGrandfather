@@ -27,6 +27,32 @@ public static class StrokeOrderValidator
         public Rect box;        // 자모 배치 영역 (위치 게이트용)
     }
 
+    /// <summary>실시간 획순 가이드(미리보기 화살표/교정)가 쓰는, 표준 필순 한 획의 정보.</summary>
+    public class PlanStep
+    {
+        public char jamo;
+        public Vector2 start; // 유닛 정사각형(0~1), y: 위→아래
+        public Vector2 end;
+        public Rect box;
+    }
+
+    /// <summary>
+    /// 글자의 표준 필순 계획을 그대로 외부에 공개한다 (실시간 미리보기/교정 화살표용).
+    /// 지원 안 되는 자모/조합이면 null.
+    /// </summary>
+    public static List<PlanStep> BuildStandardPlan(char syllable)
+    {
+        if (!HangulComposer.Decompose(syllable, out char cho, out char jung, out char jong)) return null;
+
+        List<PlanStroke> plan = BuildPlan(cho, jung, jong);
+        if (plan == null) return null;
+
+        var result = new List<PlanStep>(plan.Count);
+        foreach (var p in plan)
+            result.Add(new PlanStep { jamo = p.jamo, start = p.pts[0], end = p.pts[p.pts.Length - 1], box = p.box });
+        return result;
+    }
+
     // ────────────────────────────────────────────────────────────────
 
     public static Result Validate(char syllable, List<List<Vector2>> strokes)
@@ -196,7 +222,7 @@ public static class StrokeOrderValidator
                 if (res.message == null)
                 {
                     char jamo = plan[seq[i]].jamo;
-                    res.message = $"'{jamo}'의 획 방향이 반대예요. 가로는 왼쪽→오른쪽, 세로는 위→아래로 그어볼까요?";
+                    res.message = string.Format(LocalizationManager.Get("writing_feedback.stroke_direction_wrong"), jamo);
                 }
             }
         }
@@ -214,8 +240,8 @@ public static class StrokeOrderValidator
                         char earlier = plan[seq[j]].jamo; // 먼저 썼어야 하는 획의 자모
                         char later = plan[seq[i]].jamo;   // 실제로 먼저 쓴 획의 자모
                         res.message = earlier == later
-                            ? $"'{earlier}'의 획 순서가 표준과 달라요. 위에서 아래, 왼쪽에서 오른쪽 순서로 써볼까요?"
-                            : $"'{earlier}'를 먼저 쓰고 '{later}'를 써볼까요?";
+                            ? string.Format(LocalizationManager.Get("writing_feedback.stroke_order_same_jamo"), earlier)
+                            : string.Format(LocalizationManager.Get("writing_feedback.stroke_order_different_jamo"), earlier, later);
                     }
                 }
             }

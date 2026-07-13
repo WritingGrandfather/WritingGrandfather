@@ -83,6 +83,10 @@ public class LobbyController : MonoBehaviour
     RadioButtonGroup _radioLanguage;
     RadioButtonGroup _radioAdultChild;
 
+    Toggle _toggleMasterVolume;
+    Toggle _toggleBgmVolume;
+    Toggle _toggleSfxVolume;
+
     Label _mypageEmailValue;
     VisualElement _mypagePasswordRow;
     VisualElement _mypageNicknameRow;
@@ -99,6 +103,7 @@ public class LobbyController : MonoBehaviour
     void OnEnable()
     {
         var root = GetComponent<UIDocument>().rootVisualElement;
+        UIClickSound.Attach(root);
 
         // 이전 씬(로그인 등)에서 누른 클릭의 포인터-업이 씬 전환 도중/직후에
         // 도착하면, 그 자리에 새로 생긴 이 씬의 버튼(예: 로그인의 "게스트로
@@ -175,6 +180,8 @@ public class LobbyController : MonoBehaviour
 
         _radioAdultChild = root.Q<RadioButtonGroup>("radio-adult-child");
 
+        SetupAudioToggles(root);
+
         _mypageEmailValue = root.Q<Label>("mypage-email-value");
         _mypagePasswordRow = root.Q<VisualElement>("mypage-password-row");
         _mypageNicknameRow = root.Q<VisualElement>("mypage-nickname-row");
@@ -208,6 +215,32 @@ public class LobbyController : MonoBehaviour
     {
         PlayerPrefs.SetString(NicknamePrefsKey, evt.newValue);
         PlayerPrefs.Save();
+    }
+
+    // 오디오 on/off 토글(전체/배경음/효과음)을 저장된 상태로 초기화하고, 바뀔 때마다
+    // PlayerPrefs에 저장한 뒤 SoundManager가 즉시 다시 읽어 반영하게 한다. PlayerPrefs를
+    // 단일 원본으로 삼아, SoundManager 인스턴스가 아직 없어도(씬 순서 문제) 값은 항상 저장된다.
+    void SetupAudioToggles(VisualElement root)
+    {
+        _toggleMasterVolume = root.Q<Toggle>("toggle-master-volume");
+        _toggleBgmVolume    = root.Q<Toggle>("toggle-bgm-volume");
+        _toggleSfxVolume    = root.Q<Toggle>("toggle-sfx-volume");
+
+        BindAudioToggle(_toggleMasterVolume, SoundManager.PrefMaster);
+        BindAudioToggle(_toggleBgmVolume,    SoundManager.PrefBgm);
+        BindAudioToggle(_toggleSfxVolume,    SoundManager.PrefSfx);
+    }
+
+    void BindAudioToggle(Toggle toggle, string prefKey)
+    {
+        if (toggle == null) return;
+        toggle.SetValueWithoutNotify(PlayerPrefs.GetInt(prefKey, 1) == 1);
+        toggle.RegisterValueChangedCallback(evt =>
+        {
+            PlayerPrefs.SetInt(prefKey, evt.newValue ? 1 : 0);
+            PlayerPrefs.Save();
+            SoundManager.Instance?.ReloadVolumePrefs();
+        });
     }
 
     // 언어가 바뀌면 모든 텍스트를 다시 채우고, 언어별로 글자 폭이 달라질 수

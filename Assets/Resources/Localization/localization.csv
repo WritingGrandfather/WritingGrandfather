@@ -100,4 +100,31 @@ auth.password_too_short,비밀번호는 6자 이상이어야 합니다.,Password
 auth.failure_prefix,실패:,Failed:
 auth.failure,실패,Failed
 auth.guest_display_name,게스트,Guest
+writing_feedback.eval_error,채점 오류: {0},Evaluation error: {0}
+writing_feedback.no_target,목표 글자가 없습니다.,No target character.
+writing_feedback.trace_single_only,따라쓰기 채점은 외자(한 글자)만 지원합니다.,Tracing evaluation only supports a single character.
+writing_feedback.no_font,TemplateSimilarityEvaluator에 폰트가 연결되지 않았습니다.,No font connected to TemplateSimilarityEvaluator.
+writing_feedback.empty_writing,글씨가 없어요. 칸에 글자를 써볼까요?,There's no writing. Try writing a character in the box?
+writing_feedback.font_glyph_missing,폰트에서 '{0}' 글자를 만들지 못했습니다.,Couldn't render '{0}' from the font.
+writing_feedback.confusable_character,'{0}'보다 '{1}'에 가까워 보여요. 다시 써볼까요?,This looks more like '{1}' than '{0}'. Want to try again?
+writing_feedback.similarity_score,본보기 글자와 {0}% 닮았어요.,{0}% similar to the model character.
+writing_feedback.neat_stroke_joined,획을 이어서 쓰신 것 같아요. 한 획씩 또박또박 써볼까요? (약 {0}획),It looks like you joined strokes together. Try writing each stroke separately? (about {0} strokes)
+writing_feedback.neat_too_many_strokes,획 수가 너무 많아요. 차분히 다시 써볼까요?,Too many strokes. Want to try again slowly?
+writing_feedback.neat_wobbly_line,선이 많이 구불거려요. 천천히 곧게 그어볼까요?,The lines are quite wobbly. Try drawing them slowly and straight?
+writing_feedback.stroke_direction_wrong,"'{0}'의 획 방향이 반대예요. 가로는 왼쪽→오른쪽, 세로는 위→아래로 그어볼까요?",The stroke direction for '{0}' is reversed. Try drawing horizontal strokes left→right and vertical strokes top→bottom?
+writing_feedback.stroke_order_same_jamo,"'{0}'의 획 순서가 표준과 달라요. 위에서 아래, 왼쪽에서 오른쪽 순서로 써볼까요?","The stroke order for '{0}' differs from the standard. Try writing top-to-bottom, left-to-right?"
+writing_feedback.stroke_order_different_jamo,'{0}'를 먼저 쓰고 '{1}'를 써볼까요?,Try writing '{0}' before '{1}'?
+precise_writing.stage_banner,{0}단계,{0}Stage
+precise_writing.stage_banner_named,"{0}단계
+{1}","{0}Stage
+{1}"
+precise_writing.stage_clear_title,{0}단계 완료!,{0}Stage Clear!
+precise_writing.demo_score_message,(데모 점수 — 채점 미연결),(Demo score — evaluator not connected)
+falling_writing.no_ink,글씨를 먼저 써볼까요?,Try writing a character first?
+falling_writing.no_target_word,떨어지는 글자가 없어요.,There's no falling character.
+falling_writing.eval_no_response,채점 결과를 받지 못했습니다.,Didn't receive a scoring result.
+falling_writing.mismatch,'{0}'와 달라 보여요. 또박또박 다시 써볼까요?,This looks different from '{0}'. Try writing it neatly again?
+falling_writing.hit,'{0}' 명중! ({1}점),'{0}' Hit! ({1} pts)
+falling_writing.over_stroke,획이 너무 많아요 ({0}획 — '{1}'는 {2}획). 또박또박 다시 써볼까요?,Too many strokes ({0} strokes — '{1}' should be {2}). Try writing it neatly again?
+challenge.countdown_start,시작!,Start!
 

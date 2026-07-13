@@ -102,12 +102,14 @@ public class ChallengeHudController : MonoBehaviour
     {
         if (playerHp != null) playerHp.OnHpChanged += HandleHpChanged;
         if (survival != null) survival.OnTimeChanged += HandleTimeChanged;
+        LocalizationManager.OnLanguageChanged += ApplyLocalization;
     }
 
     void OnDisable()
     {
         if (playerHp != null) playerHp.OnHpChanged -= HandleHpChanged;
         if (survival != null) survival.OnTimeChanged -= HandleTimeChanged;
+        LocalizationManager.OnLanguageChanged -= ApplyLocalization;
     }
 
     void Start()
@@ -183,14 +185,32 @@ public class ChallengeHudController : MonoBehaviour
         timeBarLabel.text = "";
 
         // 나가기 버튼 - 화면 우상단 고정, HUD 바와는 별개로 독립 배치한다.
-        exitButtonRt = CreateCornerButton("ExitButton", "나가기", exitButtonColor, new Vector2(1f, 1f), OnExitClicked);
+        // 텍스트는 정밀쓰기 씬과 같은 키를 재사용 - 언어가 바뀌면 ApplyLocalization()에서 갱신된다.
+        exitButtonRt = CreateCornerButton("ExitButton", LocalizationManager.Get("precise_writing.exit_button"), exitButtonColor, new Vector2(1f, 1f), OnExitClicked);
 
         // 되돌리기 / 초기화 버튼 - 화면 좌상단, 정밀쓰기 씬과 달리 반투명하게.
-        undoButtonRt = CreateCornerButton("UndoButton", "되돌리기", undoButtonColor, new Vector2(0f, 1f), OnUndoClicked);
-        resetButtonRt = CreateCornerButton("ResetButton", "초기화", resetButtonColor, new Vector2(0f, 1f), OnResetClicked);
+        undoButtonRt = CreateCornerButton("UndoButton", LocalizationManager.Get("precise_writing.undo_button"), undoButtonColor, new Vector2(0f, 1f), OnUndoClicked);
+        resetButtonRt = CreateCornerButton("ResetButton", LocalizationManager.Get("precise_writing.reset_button"), resetButtonColor, new Vector2(0f, 1f), OnResetClicked);
 
         lastScreenSize = new Vector2Int(Screen.width, Screen.height);
         LayoutBar();
+        ApplyLocalization();
+    }
+
+    // 나가기/되돌리기/초기화 버튼 글자를 현재 언어로 갱신한다 - 정밀쓰기 씬과 같은
+    // 로컬라이제이션 키를 재사용한다(도전 모드 전용 새 키를 따로 만들 필요 없음).
+    void ApplyLocalization()
+    {
+        SetButtonText(exitButtonRt, LocalizationManager.Get("precise_writing.exit_button"));
+        SetButtonText(undoButtonRt, LocalizationManager.Get("precise_writing.undo_button"));
+        SetButtonText(resetButtonRt, LocalizationManager.Get("precise_writing.reset_button"));
+    }
+
+    static void SetButtonText(RectTransform buttonRt, string text)
+    {
+        if (buttonRt == null) return;
+        var label = buttonRt.GetComponentInChildren<Text>();
+        if (label != null) label.text = text;
     }
 
     // 화면 모서리에 붙는 정사각형 아이콘 버튼(배경 + 흰 글씨 라벨) 하나를 만든다.

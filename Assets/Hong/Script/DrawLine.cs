@@ -42,6 +42,10 @@ public class DrowLine : MonoBehaviour
     // 프레임 지연 없이 항상 정확하게 판단한다.
     public Func<Vector2, bool> canDrawAt;
 
+    // 획 하나를 다 그렸을 때(펜을 뗀 순간) 그 획의 월드 좌표 목록을 전달한다.
+    // 실시간 획순 검사(PreciseWritingUIController)가 구독해서 즉시 판정한다.
+    public event Action<List<Vector2>> OnStrokeCompleted;
+
     // OnDrawStart가 정상적으로 완료됐을 때만 true — OnDrawEnd에서 핸들 저장 여부 판단
     bool isDrawing;
 
@@ -244,6 +248,8 @@ public class DrowLine : MonoBehaviour
                 () => RemoveLine(goRef[0]),
                 () => { goRef[0] = CreateLine(capturedPoints, capturedWidth, capturedColor); }
             );
+
+            OnStrokeCompleted?.Invoke(capturedPoints);
         }
         if (currentSfxSource != null) currentSfxSource.Stop();
         currentSfxSource = null;
@@ -254,13 +260,18 @@ public class DrowLine : MonoBehaviour
         points.Clear();
     }
 
+    // pencilSound 컴포넌트를 씬에서 연결 안 해둔 경우(예: WritingPracticeScene의 DrawLine)에도
+    // 소리가 나도록, 프로젝트에 들어있는 기본 연필 클립 이름을 폴백으로 쓴다.
+    static readonly List<string> DefaultPencilSounds = new List<string> { "pencliSound1", "pencliSound2" };
+
     int PlayRandomPencilSound(int exclude)
     {
-        // pencilSound(같은 오브젝트의 PencilSound 컴포넌트)나 SoundManager 싱글톤이 없는 씬(예: 사운드 설정 없이
-        // WritingPracticeScene을 단독으로 재생하는 경우)에서도 그리기 자체는 죽지 않도록 방어
-        if (pencilSound == null || SoundManager.Instance == null) return -1;
+        // SoundManager 싱글톤이 없으면(부트스트랩 실패 등) 그리기 자체는 죽지 않도록 방어
+        if (SoundManager.Instance == null) return -1;
 
-        var sounds = pencilSound.pencilSounds;
+        var sounds = (pencilSound != null && pencilSound.pencilSounds != null && pencilSound.pencilSounds.Count > 0)
+            ? pencilSound.pencilSounds
+            : DefaultPencilSounds;
         if (sounds == null || sounds.Count == 0) return -1;
 
         int idx = exclude;
@@ -369,5 +380,18 @@ public class DrowLine : MonoBehaviour
             ((IDisposable)handle).Dispose();
 
         lineHandles.Clear();
+    }
+
+    // 지금까지 그려진 모든 획의 색을 한 번에 바꾼다 - 실시간 획순 검사에서 획순을
+    // 틀렸을 때 글자 전체를 빨간색으로, 고쳐지면 다시 원래 색으로 되돌리는 데 사용.
+    public void SetInkColor(Color color)
+    {
+        foreach (var go in lineHandles.Keys)
+        {
+            var lineRenderer = go.GetComponent<LineRenderer>();
+            if (lineRenderer == null) continue;
+            lineRenderer.startColor = color;
+            lineRenderer.endColor = color;
+        }
     }
 }

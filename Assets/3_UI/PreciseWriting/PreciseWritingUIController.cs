@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.UIElements.Experimental;
@@ -60,9 +61,7 @@ namespace WritingGrandfather.UI.PreciseWriting
         private VisualElement drawMaskLeft;
         private VisualElement drawMaskRight;
         private Label ghostCharacterLabel;
-        private VisualElement strokeOrderLayer;
         private Toggle toggleShowCharacter;
-        private Toggle toggleShowStrokeOrder;
         private Button completeButton;
         private Button continueButton;
         private Button retryStageButton;
@@ -72,6 +71,7 @@ namespace WritingGrandfather.UI.PreciseWriting
         private Button topBarStopButton;
         private Label currentWordLabel;
         private Label wordProgressLabel;
+        private Label strokeFeedbackLabel;
         private VisualElement guideCrossH;
         private VisualElement guideCrossV;
         private Label resultStrokeOrderScoreLabel;
@@ -84,7 +84,6 @@ namespace WritingGrandfather.UI.PreciseWriting
         private Label resultPositionCaptionLabel;
         private Label analyzingLabel;
         private Label toggleShowCharacterLabel;
-        private Label toggleShowStrokeOrderLabel;
         private VisualElement resultStarsRow;
 
         private int wordIndex;
@@ -105,13 +104,17 @@ namespace WritingGrandfather.UI.PreciseWriting
         private int stageScoredCount;
         private string lastFeedbackMessage = "";
 
+        // ghost-character-label의 폰트 크기가 guide-box의 이 비율이라(ApplyLayout 참고),
+        // 실제로 보이는 흐린 글자는 guide-box 전체를 채우지 않고 이 비율만큼만 중앙에 작게 그려진다.
+        private const float GhostGlyphScale = 0.52f;
+
         private void OnEnable()
         {
             root = GetComponent<UIDocument>().rootVisualElement;
+            UIClickSound.Attach(root);
             Cache();
             ApplyFont();
             toggleShowCharacterLabel = SetupToggleButton(toggleShowCharacter);
-            toggleShowStrokeOrderLabel = SetupToggleButton(toggleShowStrokeOrder);
             Bind();
             ApplyToggles();
             BuildGuideCross();
@@ -308,9 +311,7 @@ namespace WritingGrandfather.UI.PreciseWriting
             drawMaskLeft = root.Q("draw-mask-left");
             drawMaskRight = root.Q("draw-mask-right");
             ghostCharacterLabel = root.Q<Label>("ghost-character-label");
-            strokeOrderLayer = root.Q("stroke-order-layer");
             toggleShowCharacter = root.Q<Toggle>("toggle-show-character");
-            toggleShowStrokeOrder = root.Q<Toggle>("toggle-show-stroke-order");
             completeButton = root.Q<Button>("complete-button");
             continueButton = root.Q<Button>("continue-button");
             retryStageButton = root.Q<Button>("retry-stage-button");
@@ -320,6 +321,9 @@ namespace WritingGrandfather.UI.PreciseWriting
             topBarStopButton = root.Q<Button>("top-bar-stop-button");
             currentWordLabel = root.Q<Label>("current-word-label");
             wordProgressLabel = root.Q<Label>("word-progress-label");
+            strokeFeedbackLabel = root.Q<Label>("stroke-feedback-label");
+            // top-bar 아래에 겹쳐 뜨는 오버레이라 그림 그리기 입력을 가리면 안 된다.
+            if (strokeFeedbackLabel != null) strokeFeedbackLabel.pickingMode = PickingMode.Ignore;
             guideCrossH = root.Q("guide-cross-h");
             guideCrossV = root.Q("guide-cross-v");
             resultStrokeOrderScoreLabel = root.Q<Label>("result-stroke-order-score");
@@ -352,7 +356,6 @@ namespace WritingGrandfather.UI.PreciseWriting
             if (resultPositionCaptionLabel != null) resultPositionCaptionLabel.text = LocalizationManager.Get("precise_writing.result_position_label");
 
             if (toggleShowCharacterLabel != null) toggleShowCharacterLabel.text = LocalizationManager.Get("precise_writing.toggle_show_character");
-            if (toggleShowStrokeOrderLabel != null) toggleShowStrokeOrderLabel.text = LocalizationManager.Get("precise_writing.toggle_show_stroke_order");
         }
 
         private void ApplyFont()
@@ -366,7 +369,6 @@ namespace WritingGrandfather.UI.PreciseWriting
         private void Bind()
         {
             toggleShowCharacter?.RegisterValueChangedCallback(_ => ApplyToggles());
-            toggleShowStrokeOrder?.RegisterValueChangedCallback(_ => ApplyToggles());
             completeButton?.RegisterCallback<ClickEvent>(_ => OnCompleteClicked());
             resetButton?.RegisterCallback<ClickEvent>(_ => ClearStrokes());
             undoButton?.RegisterCallback<ClickEvent>(_ => UndoManager.Instance?.Undo());
@@ -388,6 +390,8 @@ namespace WritingGrandfather.UI.PreciseWriting
             stageLoopCount = 0;
             lastBannerStage = -1;
             stageSimilaritySum = stageOrderSum = stagePositionSum = stageScoredCount = 0;
+            lastFeedbackMessage = "";
+            UpdateStrokeFeedbackLabel("", true);
             UpdateWordLabel();
             ClearStrokes();
             Show(writingScreen);
@@ -419,7 +423,7 @@ namespace WritingGrandfather.UI.PreciseWriting
 
             // feedbackController가 연결 안 돼 있으면(테스트용) 데모 점수로 대체
             root.schedule.Execute(() =>
-                HandleScored(demoScorePercent, demoScorePercent, demoScorePercent, "(데모 점수 — 채점 미연결)")
+                HandleScored(demoScorePercent, demoScorePercent, demoScorePercent, LocalizationManager.Get("precise_writing.demo_score_message"), demoScorePercent >= 50)
             ).StartingIn(600);
         }
 
@@ -442,12 +446,12 @@ namespace WritingGrandfather.UI.PreciseWriting
                 root.schedule.Execute(() =>
                 {
                     SetGuideVisible(true);
-                    HandleScored(similarity, strokeOrder, position, feedback.message);
+                    HandleScored(similarity, strokeOrder, position, feedback.message, feedback.passed);
                 }).StartingIn((long)delayMs);
                 return;
             }
 
-            HandleScored(similarity, strokeOrder, position, feedback.message);
+            HandleScored(similarity, strokeOrder, position, feedback.message, feedback.passed);
         }
 
         // 교정 카드 표시 중 십자 점선/본보기 글자 숨김·복원 (복원 시 토글 상태 존중)
@@ -470,13 +474,14 @@ namespace WritingGrandfather.UI.PreciseWriting
         // 글자 하나 채점 완료 → 누적하고 다음 글자로. 첫 바퀴(stageLoopCount==0, 스테이지1~5를
         // 아직 다 안 돌았을 때)엔 스테이지가 바뀔 때마다 자동으로 점수창을 띄운다. 5단계까지
         // 다 돌고 나면(무한모드) 더 이상 자동으로 뜨지 않고, 그만하기를 눌렀을 때만 뜬다.
-        private void HandleScored(int similarity, int strokeOrder, int position, string message)
+        private void HandleScored(int similarity, int strokeOrder, int position, string message, bool good)
         {
             stageSimilaritySum += similarity;
             stageOrderSum += strokeOrder;
             stagePositionSum += position;
             stageScoredCount++;
             lastFeedbackMessage = message;
+            UpdateStrokeFeedbackLabel(message, good);
 
             bool hasStages = stages != null && stages.Length > 0;
             bool lastOverall = practiceWords == null || wordIndex >= practiceWords.Length - 1;
@@ -522,7 +527,7 @@ namespace WritingGrandfather.UI.PreciseWriting
             if (resultTitleLabel != null)
             {
                 resultTitleLabel.text = completedStageNum > 0
-                    ? $"{completedStageNum}단계 완료!"
+                    ? string.Format(LocalizationManager.Get("precise_writing.stage_clear_title"), completedStageNum)
                     : LocalizationManager.Get("precise_writing.result_title");
             }
 
@@ -604,6 +609,18 @@ namespace WritingGrandfather.UI.PreciseWriting
             }
         }
 
+        // 직전 글자 채점의 피드백 문구(주로 획순 오류 안내)를 상단바에 표시한다.
+        // 다음 글자를 쓰는 동안에도 계속 보여서, 뭘 고쳐야 하는지 보면서 다시 쓸 수 있게 한다.
+        private void UpdateStrokeFeedbackLabel(string message, bool good)
+        {
+            if (strokeFeedbackLabel == null) return;
+            bool has = !string.IsNullOrEmpty(message);
+            strokeFeedbackLabel.text = has ? message : "";
+            strokeFeedbackLabel.EnableInClassList("hidden", !has);
+            strokeFeedbackLabel.EnableInClassList("stroke-feedback-label--good", has && good);
+            strokeFeedbackLabel.EnableInClassList("stroke-feedback-label--bad", has && !good);
+        }
+
         private void UpdateWordLabel()
         {
             if (practiceWords == null || practiceWords.Length == 0) return;
@@ -631,7 +648,10 @@ namespace WritingGrandfather.UI.PreciseWriting
         {
             if (root == null) return;
 
-            var banner = new Label(string.IsNullOrEmpty(stageName) ? $"{stageNum}단계" : $"{stageNum}단계\n{stageName}");
+            string bannerText = string.IsNullOrEmpty(stageName)
+                ? string.Format(LocalizationManager.Get("precise_writing.stage_banner"), stageNum)
+                : string.Format(LocalizationManager.Get("precise_writing.stage_banner_named"), stageNum, stageName);
+            var banner = new Label(bannerText);
             banner.pickingMode = PickingMode.Ignore;
             banner.style.position = Position.Absolute;
             banner.style.left = 0;
@@ -738,8 +758,17 @@ namespace WritingGrandfather.UI.PreciseWriting
             float toggleHeight = ToggleHeightFrac * h;
             PlaceRect(bottomBar, 0.06f * w, toggleTop, 0.88f * w, toggleHeight);
 
+            // 안내선 토글 바로 아래에 피드백 문구를 붙여 놓되, 화면 높이(h)를 절대 넘지 않도록
+            // 클램프한다. 텍스트는 위쪽 정렬(upper-center)이라 이 영역이 아래로 넉넉히 남아도
+            // 토글에 붙어 시작한다 - 세로로 가운데 정렬했을 때 큰 여유 공간 중앙에 떠서
+            // 토글과 멀어 보이던 문제를 피한다.
+            float toggleBottom = toggleTop + toggleHeight;
+            float feedbackTop = Mathf.Min(toggleBottom + 4f, h - 36f);
+            float feedbackHeight = Mathf.Max(30f, Mathf.Min(h - feedbackTop - 6f, 100f));
+            PlaceRect(strokeFeedbackLabel, 0.06f * w, feedbackTop, 0.88f * w, feedbackHeight);
+
             if (ghostCharacterLabel != null)
-                ghostCharacterLabel.style.fontSize = guideSize * 0.52f;
+                ghostCharacterLabel.style.fontSize = guideSize * GhostGlyphScale;
         }
 
         /// <summary>
@@ -776,15 +805,11 @@ namespace WritingGrandfather.UI.PreciseWriting
         private void ApplyToggles()
         {
             var showChar = toggleShowCharacter == null || toggleShowCharacter.value;
-            var showStroke = toggleShowStrokeOrder != null && toggleShowStrokeOrder.value;
 
             if (ghostCharacterLabel != null)
                 ghostCharacterLabel.style.display = showChar ? DisplayStyle.Flex : DisplayStyle.None;
 
-            strokeOrderLayer?.EnableInClassList("hidden", !showStroke);
-
             toggleShowCharacter?.EnableInClassList("toggle-btn--on", showChar);
-            toggleShowStrokeOrder?.EnableInClassList("toggle-btn--on", showStroke);
         }
 
         private void Show(VisualElement target)

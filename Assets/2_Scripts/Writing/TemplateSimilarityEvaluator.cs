@@ -67,9 +67,11 @@ public class TemplateSimilarityEvaluator : HandwritingEvaluator
     [Tooltip("켜면 목표와 헷갈리는 글자들과도 비교해서, 다른 글자에 더 가까우면 불통과시킨다")]
     [SerializeField] bool checkConfusables = true;
 
-    [Tooltip("혼동 글자가 목표보다 이만큼(점) 이상 더 닮았으면 그 글자로 판정")]
+    [Tooltip("혼동 글자가 목표보다 이만큼(점) 이상 더 닮았으면 그 글자로 판정. " +
+             "너무 낮으면(예: 4) 손 떨림 등 정상적인 점수 흔들림만으로도 " +
+             "제대로 쓴 글자를 다른 글자로 오판하기 쉽다.")]
     [Range(0, 20)]
-    [SerializeField] int confusableMargin = 4;
+    [SerializeField] int confusableMargin = 14;
 
     [Header("디버그")]
     [Tooltip("켜면 본보기/유저 마스크 비교 이미지를 DebugCapture 폴더에 저장")]
@@ -84,7 +86,7 @@ public class TemplateSimilarityEvaluator : HandwritingEvaluator
         catch (Exception e)
         {
             Debug.LogError("[TemplateEval] " + e);
-            onComplete?.Invoke(HandwritingFeedback.Error("채점 오류: " + e.Message));
+            onComplete?.Invoke(HandwritingFeedback.Error(string.Format(LocalizationManager.Get("writing_feedback.eval_error"), e.Message)));
         }
     }
 
@@ -92,11 +94,11 @@ public class TemplateSimilarityEvaluator : HandwritingEvaluator
     {
         string target = (request.targetText ?? "").Trim();
         if (string.IsNullOrEmpty(target))
-            return HandwritingFeedback.Error("목표 글자가 없습니다.");
+            return HandwritingFeedback.Error(LocalizationManager.Get("writing_feedback.no_target"));
         if (target.Length != 1)
-            return HandwritingFeedback.Error("따라쓰기 채점은 외자(한 글자)만 지원합니다.");
+            return HandwritingFeedback.Error(LocalizationManager.Get("writing_feedback.trace_single_only"));
         if (font == null)
-            return HandwritingFeedback.Error("TemplateSimilarityEvaluator에 폰트가 연결되지 않았습니다.");
+            return HandwritingFeedback.Error(LocalizationManager.Get("writing_feedback.no_font"));
 
         bool aligned = strokeCapture != null && cell != null; // 따라쓰기 정렬 채점 모드
 
@@ -114,13 +116,13 @@ public class TemplateSimilarityEvaluator : HandwritingEvaluator
         }
 
         if (CountInk(user) == 0 && outsideInk == 0)
-            return new HandwritingFeedback { recognizedText = "", score = 0, passed = false, message = "글씨가 없어요. 칸에 글자를 써볼까요?" };
+            return new HandwritingFeedback { recognizedText = "", score = 0, passed = false, message = LocalizationManager.Get("writing_feedback.empty_writing") };
 
         bool[,] templ = aligned
             ? PlaceTemplate(MaskFromFont(target[0]))
             : Normalize(MaskFromFont(target[0]));
         if (CountInk(templ) == 0)
-            return HandwritingFeedback.Error($"폰트에서 '{target}' 글자를 만들지 못했습니다.");
+            return HandwritingFeedback.Error(string.Format(LocalizationManager.Get("writing_feedback.font_glyph_missing"), target));
 
         // 교정 겹쳐보기용으로 마지막 비교 마스크 보관
         lastUserMask = user;
@@ -131,7 +133,7 @@ public class TemplateSimilarityEvaluator : HandwritingEvaluator
         // 혼동 글자 검사: 목표보다 헷갈리는 다른 글자(사↔자↔차 등)에 더 가까우면 불통과
         if (checkConfusables)
         {
-            char confChar = FindBetterConfusable(user, target, aligned, score, outsideInk);
+            char confChar = FindBetterConfusable(user, templ, target, aligned);
             if (confChar != '\0')
             {
                 if (debugDump) DumpMasks(user, templ);
@@ -140,7 +142,7 @@ public class TemplateSimilarityEvaluator : HandwritingEvaluator
                     recognizedText = confChar.ToString(),
                     score = Mathf.Min(score, 40),
                     passed = false,
-                    message = $"'{target}'보다 '{confChar}'에 가까워 보여요. 다시 써볼까요?",
+                    message = string.Format(LocalizationManager.Get("writing_feedback.confusable_character"), target, confChar),
                 };
             }
         }
@@ -157,38 +159,108 @@ public class TemplateSimilarityEvaluator : HandwritingEvaluator
             recognizedText = target, // 유사도 방식이므로 목표 글자 기준으로 채점 (통과 여부는 컨트롤러가 점수로 판단)
             score = score,
             passed = false,
-            message = neatWarn ?? $"본보기 글자와 {score}% 닮았어요.",
+            message = neatWarn ?? string.Format(LocalizationManager.Get("writing_feedback.similarity_score"), score),
         };
     }
 
     // ── 혼동 글자 검사: 유저 잉크가 목표보다 더 닮은 헷갈리는 글자를 찾는다 ──
     //    (한 획 차이 글자들 — 사/자/차, ㅏ/ㅑ 등. 없으면 '\0')
-    char FindBetterConfusable(bool[,] user, string target, bool aligned, int targetScore, int outsideInk)
+    //    ※ 관용 곡선/굵은 허용 오차를 쓰면 한 획 차이가 묻히므로,
+    //      여기서는 곡선 없는 원시 F1 + 절반 허용 오차로 순수하게 모양만 대조한다.
+    char FindBetterConfusable(bool[,] user, bool[,] targetTempl, string target, bool aligned)
     {
         string[] cands = HangulComposer.GenerateConfusables(target);
         if (cands == null) return '\0';
 
+        int rTight = Mathf.Max(1, Mathf.RoundToInt(tolerance * 0.5f * gridSize));
+        bool[,] userFat = Dilate(user, rTight);
+        bool[,] targetFat = Dilate(targetTempl, rTight);
+        int targetInk = CountInk(targetTempl);
+        int targetRaw = RawSimilarity(user, targetTempl);
+
         char best = '\0';
-        int bestScore = targetScore + Mathf.Max(0, confusableMargin);
+        int bestRaw = -1;
+        string bestReason = "";
 
         foreach (string cand in cands)
         {
             if (string.IsNullOrEmpty(cand) || cand == target || cand.Length != 1) continue;
 
             bool[,] ct = aligned ? PlaceTemplate(MaskFromFont(cand[0])) : Normalize(MaskFromFont(cand[0]));
-            if (CountInk(ct) == 0) continue;
+            int candInk = CountInk(ct);
+            if (candInk == 0) continue;
 
-            int cs = Compare(user, ct, outsideInk, verbose: false);
-            if (cs > bestScore)
+            int candRaw = RawSimilarity(user, ct);
+            bool[,] candFat = Dilate(ct, rTight);
+
+            // 두 글자의 "차이 부위"를 직접 검사 (예: '자' vs '사' → 차이는 ㅈ의 윗획)
+            int uniqT = 0, uniqTCov = 0;   // 목표에만 있는 부분 / 그중 유저가 쓴 부분
+            int uniqC = 0, uniqCCov = 0;   // 후보에만 있는 부분 / 그중 유저가 쓴 부분
+            for (int y = 0; y < gridSize; y++)
             {
-                bestScore = cs;
+                for (int x = 0; x < gridSize; x++)
+                {
+                    if (targetTempl[y, x] && !candFat[y, x]) { uniqT++; if (userFat[y, x]) uniqTCov++; }
+                    if (ct[y, x] && !targetFat[y, x]) { uniqC++; if (userFat[y, x]) uniqCCov++; }
+                }
+            }
+
+            bool flagged = false;
+            string reason = "";
+
+            // 1) 목표를 목표답게 만드는 부위(획)를 거의 안 썼고, 전체적으로는 후보만큼 닮음
+            if (uniqT >= targetInk * 0.03f && (float)uniqTCov / uniqT < 0.45f && candRaw + 2 >= targetRaw)
+            {
+                flagged = true;
+                reason = $"목표 고유 부위 {(float)uniqTCov / uniqT:P0}만 덮음";
+            }
+            // 2) 후보에만 있는 부위를 뚜렷하게 추가로 씀 (여분 획)
+            else if (uniqC >= candInk * 0.03f && (float)uniqCCov / uniqC > 0.6f)
+            {
+                flagged = true;
+                reason = $"후보 고유 부위를 {(float)uniqCCov / uniqC:P0} 덮음";
+            }
+            // 3) 전반적으로 후보에 더 가까움
+            else if (candRaw > targetRaw + Mathf.Max(0, confusableMargin))
+            {
+                flagged = true;
+                reason = $"원점수 {targetRaw} < {candRaw}";
+            }
+
+            if (flagged && candRaw > bestRaw)
+            {
+                bestRaw = candRaw;
                 best = cand[0];
+                bestReason = reason;
             }
         }
 
         if (best != '\0')
-            Debug.Log($"[TemplateEval] 혼동 판정: 목표 '{target}' {targetScore}점 < '{best}' {bestScore}점 → 불통과");
+            Debug.Log($"[TemplateEval] 혼동 판정: 목표 '{target}' 대신 '{best}'로 보임 ({bestReason}) → 불통과");
         return best;
+    }
+
+    // 곡선·감점 보정 없는 원시 유사도 (F1, 절반 허용 오차) — 혼동 글자 판별 전용
+    int RawSimilarity(bool[,] user, bool[,] templ)
+    {
+        int r = Mathf.Max(1, Mathf.RoundToInt(tolerance * 0.5f * gridSize));
+        bool[,] userFat = Dilate(user, r);
+        bool[,] templFat = Dilate(templ, r);
+
+        int userInk = 0, templInk = 0, userHit = 0, templHit = 0;
+        for (int y = 0; y < gridSize; y++)
+        {
+            for (int x = 0; x < gridSize; x++)
+            {
+                if (user[y, x]) { userInk++; if (templFat[y, x]) userHit++; }
+                if (templ[y, x]) { templInk++; if (userFat[y, x]) templHit++; }
+            }
+        }
+        if (userInk == 0 || templInk == 0) return 0;
+
+        float p = (float)userHit / userInk;
+        float rc = (float)templHit / templInk;
+        return Mathf.RoundToInt(200f * p * rc / Mathf.Max(p + rc, 1e-4f)); // F1 × 100
     }
 
     // ── 교정 겹쳐보기: 마지막 평가의 비교 결과를 색깔 텍스처로 만든다 ──────
@@ -301,12 +373,12 @@ public class TemplateSimilarityEvaluator : HandwritingEvaluator
         if (expected > 0 && actual < expected)
         {
             mult *= Mathf.Pow(0.55f, expected - actual); // 모자란 획 하나당 큰 감점
-            warn = $"획을 이어서 쓰신 것 같아요. 한 획씩 또박또박 써볼까요? (약 {expected}획)";
+            warn = string.Format(LocalizationManager.Get("writing_feedback.neat_stroke_joined"), expected);
         }
         else if (expected > 0 && actual > expected + 2)
         {
             mult *= 0.7f;
-            warn = "획 수가 너무 많아요. 차분히 다시 써볼까요?";
+            warn = LocalizationManager.Get("writing_feedback.neat_too_many_strokes");
         }
 
         // 2) 흘림 검사 — 직선/한 번 꺾임이어야 할 획이 심하게 구불거리면 감점
@@ -331,7 +403,7 @@ public class TemplateSimilarityEvaluator : HandwritingEvaluator
         if (wiggly > 0)
         {
             mult *= Mathf.Pow(0.6f, wiggly);
-            if (warn == null) warn = "선이 많이 구불거려요. 천천히 곧게 그어볼까요?";
+            if (warn == null) warn = LocalizationManager.Get("writing_feedback.neat_wobbly_line");
         }
 
         int adjusted = Mathf.RoundToInt(score * mult);
