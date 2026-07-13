@@ -1,8 +1,9 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 /// <summary>
-/// 도전 모드 화면 하단 바 HUD - 플레이어 체력(하트, Fill/Null 스프라이트)과
+/// 도전 모드 화면 최상단 바 HUD - 플레이어 체력(하트, Fill/Null 스프라이트)과
 /// 시간 제한 게이지를 절차적으로 만들어 표시한다.
 /// PlayerHp.OnHpChanged / ChallengeSurvivalController.OnTimeChanged를 구독해서
 /// 값이 바뀔 때마다 갱신하며, 하트 개수는 PlayerHp.maxHp에 맞춰 자동으로 정해진다.
@@ -15,6 +16,10 @@ public class ChallengeHudController : MonoBehaviour
     [Header("참조")]
     [SerializeField] PlayerHp playerHp;
     [SerializeField] ChallengeSurvivalController survival;
+    [Tooltip("초기화 버튼이 획을 지울 때 사용")]
+    [SerializeField] DrowLine drawLine;
+    [Tooltip("되돌리기/초기화 버튼을 이 글쓰기 카드 좌상단에 붙인다 - 비워두면 화면 좌상단 모서리에 붙는다")]
+    [SerializeField] WritingCell writingCell;
 
     [Header("체력 하트 (Assets/7_Sprites) - 크기는 baseHeartSize에 화면 크기 배율을 곱해서 정한다")]
     [SerializeField] Sprite heartFillSprite;
@@ -29,6 +34,24 @@ public class ChallengeHudController : MonoBehaviour
     [SerializeField] float baseTimeBarHeight = 64f;
     [SerializeField] float baseTimeBarBorder = 4f;
 
+    [Header("위치")]
+    [Tooltip("상단 세이프에어리어 바로 아래에 추가로 두는 여백 - 화면 맨 위에 붙는다")]
+    [SerializeField] float baseTopOffset = 20f;
+
+    [Header("나가기 버튼")]
+    [SerializeField] string lobbySceneName = "LobbyScene";
+    [SerializeField] float baseExitButtonSize = 100f;
+    [SerializeField] Color exitButtonColor = new Color(0.47f, 0.47f, 0.47f, 0.9f);
+
+    [Header("되돌리기 / 초기화 버튼 - 정밀쓰기 씬과 다르게 반투명하게")]
+    [SerializeField] float baseUndoResetButtonSize = 100f;
+    [Tooltip("되돌리기-초기화 버튼 사이 간격 - 좁을수록 두 버튼이 붙어서 손이 덜 왔다갔다한다")]
+    [SerializeField] float baseUndoResetGap = 16f;
+    [Tooltip("글쓰기 카드 좌상단 모서리에서 안쪽으로 얼마나 들어와 겹치게 둘지")]
+    [SerializeField] float baseUndoResetCardInset = 14f;
+    [SerializeField] Color undoButtonColor = new Color(0.59f, 0.44f, 0.28f, 0.5f);
+    [SerializeField] Color resetButtonColor = new Color(0.47f, 0.47f, 0.47f, 0.5f);
+
     // Canvas가 Constant Pixel Size라 실제 기기 해상도와 무관하게 1px=1px로 그려진다.
     // 디자인 기준 폭(1080px, 일반적인 세로 모바일 폭)을 기준으로 실제 화면 폭에 맞춰
     // 크기를 비례시킨다 - 안 그러면 고해상도 기기에서 하트/바가 화면에 비해 너무 작아진다.
@@ -39,11 +62,19 @@ public class ChallengeHudController : MonoBehaviour
     float HeartSpacing => baseHeartSpacing * UiScale;
     float TimeBarHeight => baseTimeBarHeight * UiScale;
     float TimeBarBorder => baseTimeBarBorder * UiScale;
+    float TopOffset => baseTopOffset * UiScale;
+    float ExitButtonSize => baseExitButtonSize * UiScale;
+    float UndoResetButtonSize => baseUndoResetButtonSize * UiScale;
+    float UndoResetGap => baseUndoResetGap * UiScale;
+    float UndoResetCardInset => baseUndoResetCardInset * UiScale;
 
     RectTransform bottomBar;
     RectTransform timeBarBorderRt;
     RectTransform timeBarBgRt;
     RectTransform timeBarFillRt;
+    RectTransform exitButtonRt;
+    RectTransform undoButtonRt;
+    RectTransform resetButtonRt;
     Image[] hearts;
     Image timeBarFill;
     Text timeBarLabel;
@@ -86,25 +117,28 @@ public class ChallengeHudController : MonoBehaviour
         if (survival != null) HandleTimeChanged(survival.Remaining, survival.StartTime);
     }
 
-    // 화면 최하단에 고정되는 바 컨테이너 + 시간 게이지(배경/채움)를 만든다.
+    // 화면 최상단에 고정되는 바 컨테이너 + 시간 게이지(배경/채움)를 만든다.
     // 하트는 최대 체력을 알아야 개수를 정할 수 있어 HandleHpChanged에서 만든다.
     void BuildBar()
     {
-        var bar = new GameObject("ChallengeBottomBar", typeof(RectTransform));
+        var bar = new GameObject("ChallengeTopBar", typeof(RectTransform));
         bar.transform.SetParent(transform, false);
         bottomBar = bar.GetComponent<RectTransform>();
-        bottomBar.anchorMin = new Vector2(0f, 0f);
-        bottomBar.anchorMax = new Vector2(1f, 0f);
-        bottomBar.pivot = new Vector2(0.5f, 0f);
+        // 화면 맨 위에 붙인다 (예전엔 하단에 붙였음 - 요청에 따라 최상단으로 변경).
+        bottomBar.anchorMin = new Vector2(0f, 1f);
+        bottomBar.anchorMax = new Vector2(1f, 1f);
+        bottomBar.pivot = new Vector2(0.5f, 1f);
 
         // 밝은 테두리 - 시간이 다 차 있어(fillAmount=1) 트랙이 안 보일 때도 바 전체 길이가
         // 뚜렷하게 인식되도록 배경보다 살짝 크게 감싼다.
+        // 요청에 따라 체력 슬라이드(시간바)가 스프라이트 체력(하트)보다 위에 오도록
+        // 컨테이너 상단에 붙인다 (하트는 아래쪽, BuildHearts 참고).
         var border = new GameObject("TimeBarBorder", typeof(RectTransform), typeof(Image));
         border.transform.SetParent(bar.transform, false);
         timeBarBorderRt = border.GetComponent<RectTransform>();
-        timeBarBorderRt.anchorMin = new Vector2(0f, 0f);
-        timeBarBorderRt.anchorMax = new Vector2(1f, 0f);
-        timeBarBorderRt.pivot = new Vector2(0.5f, 0f);
+        timeBarBorderRt.anchorMin = new Vector2(0f, 1f);
+        timeBarBorderRt.anchorMax = new Vector2(1f, 1f);
+        timeBarBorderRt.pivot = new Vector2(0.5f, 1f);
         timeBarBorderRt.anchoredPosition = new Vector2(0f, 0f);
         border.GetComponent<Image>().color = timeBarBorderColor;
 
@@ -148,23 +182,77 @@ public class ChallengeHudController : MonoBehaviour
         timeBarLabel.raycastTarget = false;
         timeBarLabel.text = "";
 
+        // 나가기 버튼 - 화면 우상단 고정, HUD 바와는 별개로 독립 배치한다.
+        exitButtonRt = CreateCornerButton("ExitButton", "나가기", exitButtonColor, new Vector2(1f, 1f), OnExitClicked);
+
+        // 되돌리기 / 초기화 버튼 - 화면 좌상단, 정밀쓰기 씬과 달리 반투명하게.
+        undoButtonRt = CreateCornerButton("UndoButton", "되돌리기", undoButtonColor, new Vector2(0f, 1f), OnUndoClicked);
+        resetButtonRt = CreateCornerButton("ResetButton", "초기화", resetButtonColor, new Vector2(0f, 1f), OnResetClicked);
+
         lastScreenSize = new Vector2Int(Screen.width, Screen.height);
         LayoutBar();
     }
 
-    // Screen.safeArea 기준으로 하단/좌우 여백을 다시 계산한다 - 둥근 모서리/홈 인디케이터에
+    // 화면 모서리에 붙는 정사각형 아이콘 버튼(배경 + 흰 글씨 라벨) 하나를 만든다.
+    // corner: (0,1)=좌상단, (1,1)=우상단처럼 anchor/pivot으로 어느 모서리에 붙을지 정한다.
+    RectTransform CreateCornerButton(string name, string label, Color color, Vector2 corner, UnityEngine.Events.UnityAction onClick)
+    {
+        var go = new GameObject(name, typeof(RectTransform), typeof(Image), typeof(Button));
+        go.transform.SetParent(transform, false);
+        var rt = go.GetComponent<RectTransform>();
+        rt.anchorMin = corner;
+        rt.anchorMax = corner;
+        rt.pivot = corner;
+        go.GetComponent<Image>().color = color;
+        go.GetComponent<Button>().onClick.AddListener(onClick);
+
+        var labelGo = new GameObject("Label", typeof(RectTransform), typeof(Text));
+        labelGo.transform.SetParent(go.transform, false);
+        var labelRt = labelGo.GetComponent<RectTransform>();
+        labelRt.anchorMin = Vector2.zero;
+        labelRt.anchorMax = Vector2.one;
+        labelRt.offsetMin = Vector2.zero;
+        labelRt.offsetMax = Vector2.zero;
+        var text = labelGo.GetComponent<Text>();
+        text.text = label;
+        text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+        text.alignment = TextAnchor.MiddleCenter;
+        text.color = Color.white;
+        text.fontStyle = FontStyle.Bold;
+        text.raycastTarget = false;
+        text.horizontalOverflow = HorizontalWrapMode.Wrap;
+        text.verticalOverflow = VerticalWrapMode.Overflow;
+
+        return rt;
+    }
+
+    void OnExitClicked() => SceneManager.LoadScene(lobbySceneName);
+
+    void OnUndoClicked() => UndoManager.Instance?.Undo();
+
+    void OnResetClicked()
+    {
+        drawLine?.ClearAll();
+        UndoManager.Instance?.Clear();
+    }
+
+    // Screen.safeArea 기준으로 상단/좌우 여백을 다시 계산한다 - 노치/둥근 모서리에
     // 하트나 시간 바가 가려지지 않도록. 화면 크기가 바뀔 때마다(Update에서) 다시 호출된다.
     void LayoutBar()
     {
         if (bottomBar == null) return;
 
         var sa = Screen.safeArea;
-        float bottomInset = sa.yMin;
+        float topInset = Screen.height - sa.yMax; // 상단 세이프에어리어(노치 등) 높이
         float sideInset = Mathf.Max(sa.xMin, Screen.width - sa.xMax);
         float margin = HeartSpacing;
 
-        bottomBar.sizeDelta = new Vector2(-sideInset * 2f, HeartSize + TimeBarHeight + margin * 3f);
-        bottomBar.anchoredPosition = new Vector2(0f, bottomInset + margin);
+        // 나가기 버튼이 우상단에 따로 떠 있어서, 시간바/하트 바 오른쪽을 그만큼 당겨 겹치지 않게 한다
+        // (되돌리기/초기화는 이제 글쓰기 카드 쪽에 붙으므로 왼쪽은 더 이상 좁힐 필요 없음).
+        float rightGap = ExitButtonSize + margin;
+        bottomBar.sizeDelta = new Vector2(-sideInset * 2f - rightGap, HeartSize + TimeBarHeight + margin * 3f);
+        // 위쪽 앵커/피벗이라 아래로 내려가는 방향(음수)으로 오프셋을 준다.
+        bottomBar.anchoredPosition = new Vector2(-rightGap * 0.5f, -(topInset + TopOffset));
 
         if (timeBarBorderRt != null)
         {
@@ -179,7 +267,66 @@ public class ChallengeHudController : MonoBehaviour
         if (timeBarLabel != null)
             timeBarLabel.fontSize = Mathf.RoundToInt(32f * UiScale);
 
+        if (exitButtonRt != null)
+        {
+            float rightInset = Screen.width - sa.xMax;
+            exitButtonRt.sizeDelta = new Vector2(ExitButtonSize, ExitButtonSize);
+            exitButtonRt.anchoredPosition = new Vector2(-(rightInset + TopOffset), -(topInset + TopOffset));
+
+            var label = exitButtonRt.GetComponentInChildren<Text>();
+            if (label != null) label.fontSize = Mathf.RoundToInt(26f * UiScale);
+        }
+
+        // 되돌리기 + 초기화를 나란히 배치한다 - 글쓰기 카드가 있으면 그 좌상단 모서리에
+        // 살짝 겹치게 붙이고(정밀쓰기 씬과 같은 방식), 없으면 화면 좌상단 모서리를 쓴다.
+        if (undoButtonRt != null && resetButtonRt != null)
+        {
+            float ursize = UndoResetButtonSize;
+            float startX, startY;
+            if (TryGetCardTopLeft(out float cardLeft, out float cardTop))
+            {
+                startX = cardLeft + UndoResetCardInset;
+                startY = cardTop + UndoResetCardInset;
+            }
+            else
+            {
+                startX = sideInset + TopOffset;
+                startY = topInset + TopOffset;
+            }
+
+            undoButtonRt.sizeDelta = new Vector2(ursize, ursize);
+            undoButtonRt.anchoredPosition = new Vector2(startX, -startY);
+
+            resetButtonRt.sizeDelta = new Vector2(ursize, ursize);
+            resetButtonRt.anchoredPosition = new Vector2(startX + ursize + UndoResetGap, -startY);
+
+            var undoLabel = undoButtonRt.GetComponentInChildren<Text>();
+            if (undoLabel != null) undoLabel.fontSize = Mathf.RoundToInt(22f * UiScale);
+            var resetLabel = resetButtonRt.GetComponentInChildren<Text>();
+            if (resetLabel != null) resetLabel.fontSize = Mathf.RoundToInt(22f * UiScale);
+        }
+
         PositionHearts();
+    }
+
+    // writingCell의 월드 사각형 좌상단 모서리를 화면 기준 "왼쪽에서부터 거리"/"위에서부터 거리"로
+    // 변환한다 - 정밀쓰기의 SyncWritingCellToGuideBox()와 반대 방향 변환.
+    bool TryGetCardTopLeft(out float distFromLeft, out float distFromTop)
+    {
+        distFromLeft = 0f;
+        distFromTop = 0f;
+
+        var cam = Camera.main;
+        if (writingCell == null || cam == null) return false;
+
+        Rect r = writingCell.WorldRect;
+        Vector3 screenPos = cam.WorldToScreenPoint(new Vector3(r.xMin, r.yMax, 0f));
+
+        // WorldToScreenPoint는 화면 픽셀(왼쪽 아래 원점)을 반환하므로, "위에서부터 거리"로
+        // 쓰려면 세로만 뒤집으면 된다 (가로는 원점이 이미 왼쪽이라 그대로 사용).
+        distFromLeft = screenPos.x;
+        distFromTop = Screen.height - screenPos.y;
+        return true;
     }
 
     void PositionHearts()
@@ -209,8 +356,9 @@ public class ChallengeHudController : MonoBehaviour
             var heartGo = new GameObject($"Heart_{i}", typeof(RectTransform), typeof(Image));
             heartGo.transform.SetParent(bottomBar, false);
             var rt = heartGo.GetComponent<RectTransform>();
-            rt.anchorMin = rt.anchorMax = new Vector2(0f, 1f);
-            rt.pivot = new Vector2(0f, 1f);
+            // 시간바(위)보다 아래쪽에 오도록 컨테이너 하단에 붙인다.
+            rt.anchorMin = rt.anchorMax = new Vector2(0f, 0f);
+            rt.pivot = new Vector2(0f, 0f);
 
             var img = heartGo.GetComponent<Image>();
             img.sprite = heartFillSprite;

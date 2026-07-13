@@ -103,35 +103,36 @@ public class ChallengeResultScreenController : MonoBehaviour
         box.transform.SetParent(overlay.transform, false);
         var boxRt = box.GetComponent<RectTransform>();
         boxRt.anchorMin = boxRt.anchorMax = new Vector2(0.5f, 0.5f);
-        boxRt.sizeDelta = new Vector2(560, 440);
+        boxRt.sizeDelta = new Vector2(760, 700);
         boxRt.anchoredPosition = Vector2.zero;
         box.GetComponent<Image>().color = new Color(1f, 0.99f, 0.97f, 1f);
 
-        var titleLabel = CreateLabel(box.transform, "게임 오버", font, 44, FontStyle.Bold, new Color(0.35f, 0.24f, 0.16f));
-        titleLabel.rectTransform.anchoredPosition = new Vector2(0, 160);
+        var titleLabel = CreateLabel(box.transform, "게임 오버", font, 90, FontStyle.Bold, new Color(0.35f, 0.24f, 0.16f), new Vector2(680, 110));
+        titleLabel.rectTransform.anchoredPosition = new Vector2(0, 260);
 
-        scoreLabel = CreateLabel(box.transform, "", font, 32, FontStyle.Normal, new Color(0.35f, 0.24f, 0.16f));
-        scoreLabel.rectTransform.anchoredPosition = new Vector2(0, 60);
+        scoreLabel = CreateLabel(box.transform, "", font, 60, FontStyle.Normal, new Color(0.35f, 0.24f, 0.16f), new Vector2(680, 80));
+        scoreLabel.rectTransform.anchoredPosition = new Vector2(0, 100);
 
-        bestLabel = CreateLabel(box.transform, "", font, 32, FontStyle.Bold, new Color(0.84f, 0.42f, 0.23f));
-        bestLabel.rectTransform.anchoredPosition = new Vector2(0, 0);
+        // "신기록! 최고 점수: N"처럼 길어질 수 있어 두 줄까지 접히도록 높이를 넉넉히 둔다.
+        bestLabel = CreateLabel(box.transform, "", font, 55, FontStyle.Bold, new Color(0.84f, 0.42f, 0.23f), new Vector2(680, 130));
+        bestLabel.rectTransform.anchoredPosition = new Vector2(0, -60);
 
-        var retryBtn = CreateButton(box.transform, "다시하기", font, new Vector2(-130, -160), new Color(0.84f, 0.42f, 0.23f));
+        var retryBtn = CreateButton(box.transform, "다시하기", font, new Vector2(-180, -280), new Color(0.84f, 0.42f, 0.23f));
         retryBtn.onClick.AddListener(OnRetry);
 
-        var exitBtn = CreateButton(box.transform, "나가기", font, new Vector2(130, -160), new Color(0.47f, 0.47f, 0.47f));
+        var exitBtn = CreateButton(box.transform, "나가기", font, new Vector2(180, -280), new Color(0.47f, 0.47f, 0.47f));
         exitBtn.onClick.AddListener(OnExit);
 
         overlay.SetActive(false);
     }
 
-    static Text CreateLabel(Transform parent, string text, Font font, int fontSize, FontStyle style, Color color)
+    static Text CreateLabel(Transform parent, string text, Font font, int fontSize, FontStyle style, Color color, Vector2? size = null)
     {
         var go = new GameObject("Label", typeof(RectTransform), typeof(Text));
         go.transform.SetParent(parent, false);
         var rt = go.GetComponent<RectTransform>();
         rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 0.5f);
-        rt.sizeDelta = new Vector2(520, 60);
+        rt.sizeDelta = size ?? new Vector2(520, 60);
 
         var label = go.GetComponent<Text>();
         label.text = text;
@@ -141,6 +142,9 @@ public class ChallengeResultScreenController : MonoBehaviour
         label.color = color;
         label.alignment = TextAnchor.MiddleCenter;
         label.raycastTarget = false;
+        // 글씨가 폭보다 길어지면 잘리는 대신 다음 줄로 접히게 한다 (긴 점수 문구 대비).
+        label.horizontalOverflow = HorizontalWrapMode.Wrap;
+        label.verticalOverflow = VerticalWrapMode.Overflow;
         return label;
     }
 
@@ -150,7 +154,7 @@ public class ChallengeResultScreenController : MonoBehaviour
         go.transform.SetParent(parent, false);
         var rt = go.GetComponent<RectTransform>();
         rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 0.5f);
-        rt.sizeDelta = new Vector2(220, 80);
+        rt.sizeDelta = new Vector2(260, 100);
         rt.anchoredPosition = pos;
 
         var image = go.GetComponent<Image>();
@@ -158,7 +162,7 @@ public class ChallengeResultScreenController : MonoBehaviour
 
         var button = go.GetComponent<Button>();
 
-        var label = CreateLabel(go.transform, text, font, 30, FontStyle.Bold, Color.white);
+        var label = CreateLabel(go.transform, text, font, 50, FontStyle.Bold, Color.white);
         label.rectTransform.anchorMin = Vector2.zero;
         label.rectTransform.anchorMax = Vector2.one;
         label.rectTransform.sizeDelta = Vector2.zero;
