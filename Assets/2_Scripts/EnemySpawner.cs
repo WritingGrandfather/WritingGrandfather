@@ -14,9 +14,14 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private UIDocument uiDocument;
     [SerializeField] private FontAsset gungseoFont; // 궁서체 FontAsset (없으면 USS 클래스로 지정)
 
+    [Header("난이도 (시작 → 최대, 완만한 곡선으로 상승)")]
+    [SerializeField] private float startSpawnInterval = 2.5f; // 초기 스폰 간격(초)
+    [SerializeField] private float minSpawnInterval = 0.9f;   // 최대 난이도일 때 간격
+    [SerializeField] private float startFallSpeed = 80f;      // 초기 낙하 속도(px/sec)
+    [SerializeField] private float maxFallSpeed = 240f;       // 최대 낙하 속도
+    [SerializeField] private float rampDuration = 180f;       // 이 시간(초)쯤에 최대 난이도의 약 95% 도달
+
     [Header("스폰")]
-    [SerializeField] private float spawnInterval = 2f;
-    [SerializeField] private float fallSpeed = 120f; // px/sec
     [SerializeField] private int fontSize = 72;
 
     [Header("위치")]
@@ -27,13 +32,22 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private string choseongPool = "ㄱㄴㄷㄹㅁㅂㅅㅇㅈㅊㅋㅌㅍㅎ";
     [SerializeField] private string jungseongPool = "ㅏㅑㅓㅕㅗㅛㅜㅠㅡㅣㅐㅔ";
     [SerializeField] private string jongseongPool = "ㄱㄴㄹㅁㅂㅅㅇ";
-    [Range(0f, 1f)][SerializeField] private float jongseongChance = 0.4f; // 받침이 붙을 확률
+    [Range(0f, 1f)][SerializeField] private float startJongseongChance = 0.2f; // 초기 받침 확률
+    [Range(0f, 1f)][SerializeField] private float maxJongseongChance = 0.6f;   // 최대 난이도일 때 받침 확률
 
     private readonly List<Enemy> activeEnemies = new List<Enemy>();
     private readonly List<Enemy> toRemove = new List<Enemy>();
     private float timer;
+    private float elapsed; // 게임 시작 후 경과 시간
 
     public IReadOnlyList<Enemy> ActiveEnemies => activeEnemies;
+
+    /// <summary>난이도 진행도 0~1. 지수 곡선이라 초반엔 천천히, 갈수록 최대치에 수렴.</summary>
+    private float Progress => 1f - Mathf.Exp(-3f * elapsed / rampDuration);
+
+    private float CurrentFallSpeed => Mathf.Lerp(startFallSpeed, maxFallSpeed, Progress);
+    private float CurrentSpawnInterval => Mathf.Lerp(startSpawnInterval, minSpawnInterval, Progress);
+    private float CurrentJongseongChance => Mathf.Lerp(startJongseongChance, maxJongseongChance, Progress);
 
     // 캐시하지 않고 매번 가져온다 (UIDocument가 패널을 재생성하면 캐시가 무효화됨)
     private VisualElement Root => uiDocument.rootVisualElement;
@@ -50,8 +64,10 @@ public class EnemySpawner : MonoBehaviour
         if (float.IsNaN(Root.resolvedStyle.width) || Root.resolvedStyle.width <= 0f)
             return;
 
+        elapsed += Time.deltaTime;
+
         timer += Time.deltaTime;
-        if (timer >= spawnInterval)
+        if (timer >= CurrentSpawnInterval)
         {
             timer = 0f;
             Spawn();
@@ -81,7 +97,7 @@ public class EnemySpawner : MonoBehaviour
         float startY = -fontSize; // 화면 위쪽 밖에서 시작
         float deadlineY = Root.resolvedStyle.height * deadlineRatio;
 
-        var enemy = new Enemy(letter, x, startY, fallSpeed, deadlineY);
+        var enemy = new Enemy(letter, x, startY, CurrentFallSpeed, deadlineY);
         enemy.Element.style.fontSize = fontSize;
         enemy.Element.style.color = Color.white; // 테마 기본색(검정)이 배경에 묻히는 것 방지
         if (gungseoFont != null)
@@ -106,7 +122,7 @@ public class EnemySpawner : MonoBehaviour
         {
             char cho = choseongPool[Random.Range(0, choseongPool.Length)];
             char jung = jungseongPool[Random.Range(0, jungseongPool.Length)];
-            char jong = (jongseongPool.Length > 0 && Random.value < jongseongChance)
+            char jong = (jongseongPool.Length > 0 && Random.value < CurrentJongseongChance)
                 ? jongseongPool[Random.Range(0, jongseongPool.Length)]
                 : '\0';
 
