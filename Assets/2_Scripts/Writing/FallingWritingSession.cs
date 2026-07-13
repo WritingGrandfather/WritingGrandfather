@@ -46,6 +46,9 @@ public class FallingWritingSession : MonoBehaviour
     [Tooltip("조건 충족 후 펜을 뗀 뒤 판정까지 대기 시간(초) — 쓰는 도중 성급한 판정 방지")]
     [SerializeField] float autoEvaluateDelay = 0.4f;
 
+    [Tooltip("예외 처리: 두 조건 다 못 채운 채 이 시간(초) 동안 아무것도 안 쓰면 그냥 판정 (대부분 불통과 → 다시 쓰기)")]
+    [SerializeField] float idleEvaluateTimeout = 2.5f;
+
     [Header("UI가 구독할 이벤트")]
     public FeedbackEvent onResult;
     public StatusEvent onStatus;
@@ -67,6 +70,8 @@ public class FallingWritingSession : MonoBehaviour
 
     float autoCheckTimer;
     float strokeStableTime;
+    float idleTime;
+    int lastStrokeCount;
 
     void Update()
     {
@@ -92,7 +97,16 @@ public class FallingWritingSession : MonoBehaviour
         if (norm.Count == 0)
         {
             strokeStableTime = 0f;
+            idleTime = 0f;
+            lastStrokeCount = 0;
             return;
+        }
+
+        // 획이 늘거나 지워지면 방치 타이머 리셋 (아직 쓰는 중)
+        if (norm.Count != lastStrokeCount)
+        {
+            lastStrokeCount = norm.Count;
+            idleTime = 0f;
         }
 
         // 조건: 1차 채움 비율 (벗어난 잉크 무시) 또는 2차 획수 (표준 획수 완료)
@@ -101,18 +115,32 @@ public class FallingWritingSession : MonoBehaviour
         bool conditionMet = coverage >= autoFillThreshold
                          || (expected > 0 && norm.Count >= expected);
 
-        // 어느 조건이든, 펜을 뗀 상태로 대기 시간이 지나야 판정 (쓰는 도중 성급한 판정 방지)
         bool drawing = Pointer.current != null && Pointer.current.press.isPressed;
-        if (!conditionMet || drawing)
+        if (drawing)
         {
             strokeStableTime = 0f;
+            idleTime = 0f;
             return;
         }
 
-        strokeStableTime += autoCheckInterval;
-        if (strokeStableTime < autoEvaluateDelay) return;
+        if (conditionMet)
+        {
+            // 펜을 뗀 상태로 대기 시간이 지나야 판정 (쓰는 도중 성급한 판정 방지)
+            idleTime = 0f;
+            strokeStableTime += autoCheckInterval;
+            if (strokeStableTime < autoEvaluateDelay) return;
+        }
+        else
+        {
+            // 예외 처리: 두 조건 다 못 채운 채 한참 방치하면 그냥 판정 (불통과 피드백 → 다시 쓰기)
+            strokeStableTime = 0f;
+            idleTime += autoCheckInterval;
+            if (idleTime < idleEvaluateTimeout) return;
+        }
 
         strokeStableTime = 0f;
+        idleTime = 0f;
+        lastStrokeCount = 0;
 
         // 판정! (Evaluate가 그리는 중인 획까지 포함해 캡처한 뒤 획을 정리한다)
         Evaluate();
