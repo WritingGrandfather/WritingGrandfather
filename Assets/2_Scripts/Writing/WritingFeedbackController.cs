@@ -120,6 +120,17 @@ public class WritingFeedbackController : MonoBehaviour
         if (feedback == null)
             feedback = HandwritingFeedback.Error("No evaluation result received.");
 
+        // 글자 유사도 = AI가 판단한 원점수. 아래에서 통과/불통과 판정에 따라 feedback.score가
+        // 재조정(클램프)되므로, "닮은 정도" 표시용으로 원래 값을 먼저 따로 보관해둔다.
+        feedback.similarityScore = feedback.score;
+
+        // 글자 크기·위치 정확도 — AI/획순과 독립적으로 칸 대비 잉크 좌표만으로 계산
+        if (strokeCapture != null && targetCell != null)
+        {
+            var cellStrokes = strokeCapture.GetCellNormalizedStrokes(targetCell);
+            feedback.positionScore = PositionAccuracyScorer.Score(cellStrokes);
+        }
+
         // ★ 목표 비교는 AI가 아니라 여기서 한다.
         //   (AI에게 목표를 알려주면 선입견으로 오답도 목표로 인식하므로, AI는 순수 인식만 수행)
         if (targetCell != null && !string.IsNullOrEmpty(targetCell.targetText))
@@ -152,7 +163,8 @@ public class WritingFeedbackController : MonoBehaviour
             var local = StrokeOrderValidator.Validate(target2[0], strokeCapture.GetNormalizedStrokes(targetCell));
             if (local.supported)
             {
-                Debug.Log($"[StrokeOrder/로컬] {(local.ok ? "정상" : "오류")} {local.message}");
+                feedback.strokeOrderScore = local.score;
+                Debug.Log($"[StrokeOrder/로컬] {(local.ok ? "정상" : "오류")} {local.message} (점수 {local.score})");
                 if (!local.ok && failOnWrongOrder)
                 {
                     feedback.passed = false;
@@ -170,6 +182,8 @@ public class WritingFeedbackController : MonoBehaviour
                 HandwritingFeedback fb = feedback;
                 strokeOrderChecker.Check(target2, lastStrokesJson, (orderOk, orderMsg) =>
                 {
+                    // AI 획순 검사는 참/거짓만 주므로 점수는 근사치로 환산
+                    fb.strokeOrderScore = orderOk ? 90 : 55;
                     if (!orderOk && failOnWrongOrder)
                     {
                         fb.passed = false;

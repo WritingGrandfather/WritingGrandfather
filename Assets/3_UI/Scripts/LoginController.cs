@@ -144,7 +144,6 @@ public class LoginController : MonoBehaviour
 
     void OnGuest()
     {
-         Debug.LogError("OnGuest Call");
         SetMsg(_msg, LocalizationManager.Get("auth.starting"));
         Auth()?.SignInGuest((ok, m) =>
         {

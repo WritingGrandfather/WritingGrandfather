@@ -278,15 +278,18 @@ namespace WritingGrandfather.UI.PreciseWriting
         }
 
         // WritingFeedbackController.onFeedback 콜백 — 실제 AI 채점 결과가 도착하면 호출된다.
-        // HandwritingFeedback엔 종합 score 하나뿐이라 3항목 모두 같은 점수를 표시한다.
+        // 세 항목은 각각 다른 방식으로 계산된 독립적인 점수다 (-1 = 이번엔 계산 안 됨 → 종합 점수로 대체 표시).
         private void OnFeedbackReceived(HandwritingFeedback feedback)
         {
             if (feedback == null) return;
 
-            string scoreText = $"{feedback.score}%";
-            if (resultStrokeOrderScoreLabel != null) resultStrokeOrderScoreLabel.text = scoreText;
-            if (resultSimilarityScoreLabel != null) resultSimilarityScoreLabel.text = scoreText;
-            if (resultPositionScoreLabel != null) resultPositionScoreLabel.text = scoreText;
+            int similarity = feedback.similarityScore >= 0 ? feedback.similarityScore : feedback.score;
+            int strokeOrder = feedback.strokeOrderScore >= 0 ? feedback.strokeOrderScore : feedback.score;
+            int position = feedback.positionScore >= 0 ? feedback.positionScore : feedback.score;
+
+            if (resultStrokeOrderScoreLabel != null) resultStrokeOrderScoreLabel.text = $"{strokeOrder}%";
+            if (resultSimilarityScoreLabel != null) resultSimilarityScoreLabel.text = $"{similarity}%";
+            if (resultPositionScoreLabel != null) resultPositionScoreLabel.text = $"{position}%";
             if (resultMessageLabel != null) resultMessageLabel.text = feedback.message;
 
             Show(resultScreen);

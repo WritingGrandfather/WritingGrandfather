@@ -17,6 +17,7 @@ public static class StrokeOrderValidator
         public bool supported; // false면 판정 보류 (지원 안 되는 자모, 획수 차이 과다 등)
         public bool ok = true;
         public string message;
+        public int score = 100; // 0~100. 위반 하나당 감점 (방향 오류·순서 역전 각각 카운트)
     }
 
     class PlanStroke
@@ -182,15 +183,21 @@ public static class StrokeOrderValidator
             dbg.Append($"{i + 1}번획→{plan[seq[i]].jamo}(순서{seq[i]}){(reversed[i] ? "[역방향]" : "")}  ");
         Debug.Log(dbg.ToString());
 
+        // 위반을 전부 세어 점수화한다 (첫 건에서 멈추지 않음 — "정확도 %"를 위해 필요).
+        // message는 사용자에게 보여줄 한 문장만 필요하므로 처음 발견한 위반의 설명을 그대로 쓴다.
+        int violations = 0;
+
         // 1) 방향 검사 — 긴 획이 반대 방향이면 오류
         for (int i = 0; i < seq.Count; i++)
         {
             if (reversed[i] && seqLens[i] > 0.4f)
             {
-                char jamo = plan[seq[i]].jamo;
-                res.ok = false;
-                res.message = $"'{jamo}'의 획 방향이 반대예요. 가로는 왼쪽→오른쪽, 세로는 위→아래로 그어볼까요?";
-                return res;
+                violations++;
+                if (res.message == null)
+                {
+                    char jamo = plan[seq[i]].jamo;
+                    res.message = $"'{jamo}'의 획 방향이 반대예요. 가로는 왼쪽→오른쪽, 세로는 위→아래로 그어볼까요?";
+                }
             }
         }
 
@@ -201,17 +208,21 @@ public static class StrokeOrderValidator
             {
                 if (seq[i] > seq[j])
                 {
-                    char earlier = plan[seq[j]].jamo; // 먼저 썼어야 하는 획의 자모
-                    char later = plan[seq[i]].jamo;   // 실제로 먼저 쓴 획의 자모
-                    res.ok = false;
-                    res.message = earlier == later
-                        ? $"'{earlier}'의 획 순서가 표준과 달라요. 위에서 아래, 왼쪽에서 오른쪽 순서로 써볼까요?"
-                        : $"'{earlier}'를 먼저 쓰고 '{later}'를 써볼까요?";
-                    return res;
+                    violations++;
+                    if (res.message == null)
+                    {
+                        char earlier = plan[seq[j]].jamo; // 먼저 썼어야 하는 획의 자모
+                        char later = plan[seq[i]].jamo;   // 실제로 먼저 쓴 획의 자모
+                        res.message = earlier == later
+                            ? $"'{earlier}'의 획 순서가 표준과 달라요. 위에서 아래, 왼쪽에서 오른쪽 순서로 써볼까요?"
+                            : $"'{earlier}'를 먼저 쓰고 '{later}'를 써볼까요?";
+                    }
                 }
             }
         }
 
+        res.ok = violations == 0;
+        res.score = Mathf.Clamp(100 - violations * 25, 0, 100);
         return res;
     }
 
