@@ -139,9 +139,26 @@ namespace WritingGrandfather.UI.PreciseWriting
             safeArea?.RegisterCallback<GeometryChangedEvent>(OnLayoutGeo);
             writingScreen?.RegisterCallback<GeometryChangedEvent>(OnLayoutGeo);
             guideBox?.RegisterCallback<GeometryChangedEvent>(OnGuideBoxGeo);
-            root.RegisterCallback<PointerMoveEvent>(OnPointerMoveOverRoot, TrickleDown.TrickleDown);
             feedbackController?.onFeedback?.AddListener(OnFeedbackReceived);
             root.schedule.Execute(ApplyLayout).StartingIn(0);
+
+            // PointerMoveEvent로 미리 계산해 둔 값 대신, 실제로 그리기를 시작하려는 그
+            // 순간 DrowLine이 직접 이 델리게이트를 호출해 판정하게 한다 - 자세한 이유는
+            // CanDrawAtScreenPoint 주석 참고. drawingEnabled는 더 이상 위치별로 매 프레임
+            // 갱신하지 않으므로(그 역할을 canDrawAt이 대신함), OnDisable에서 꺼뒀던 것을
+            // 다시 켜서 "전체 그리기 허용" 스위치로만 사용한다.
+            if (drawLine != null)
+            {
+                drawLine.drawingEnabled = true;
+                drawLine.canDrawAt = CanDrawAtScreenPoint;
+            }
+
+            // UndoManager.Awake()가 이 컴포넌트의 OnEnable()보다 먼저 실행된다는
+            // 보장이 없다(Unity는 서로 다른 GameObject 간 실행 순서를 보장하지
+            // 않음) - 여기서 바로 UndoManager.Instance를 구독하면 아직 null이라
+            // 구독 자체가 실패하고, 되돌리기 버튼이 영원히 비활성 상태로 굳어버렸다.
+            // 한 프레임 미뤄서 씬의 모든 Awake가 끝난 뒤에 구독하도록 한다.
+            root.schedule.Execute(SubscribeUndoManager).StartingIn(0);
         }
 
         private void OnDisable()
@@ -149,10 +166,32 @@ namespace WritingGrandfather.UI.PreciseWriting
             safeArea?.UnregisterCallback<GeometryChangedEvent>(OnLayoutGeo);
             writingScreen?.UnregisterCallback<GeometryChangedEvent>(OnLayoutGeo);
             guideBox?.UnregisterCallback<GeometryChangedEvent>(OnGuideBoxGeo);
-            root?.UnregisterCallback<PointerMoveEvent>(OnPointerMoveOverRoot, TrickleDown.TrickleDown);
             feedbackController?.onFeedback?.RemoveListener(OnFeedbackReceived);
             LocalizationManager.OnLanguageChanged -= ApplyLocalization;
-            if (drawLine != null) drawLine.drawingEnabled = false;
+            if (drawLine != null)
+            {
+                drawLine.drawingEnabled = false;
+                drawLine.canDrawAt = null;
+            }
+            if (UndoManager.Instance != null)
+                UndoManager.Instance.OnStateChanged -= RefreshUndoButton;
+        }
+
+        private void SubscribeUndoManager()
+        {
+            if (UndoManager.Instance == null) return;
+            UndoManager.Instance.OnStateChanged += RefreshUndoButton;
+            RefreshUndoButton();
+        }
+
+        // 되돌릴 획이 없을 때는 되돌리기 버튼을 비활성화해서, 이미 비어있는 히스토리를
+        // 향해 눌러도 아무 반응 없어 보이는 대신 명확하게 눌리지 않게 한다.
+        // UndoManager.Instance가 아직 없을 때는(초기화 순서 문제) 섣불리 비활성화하지
+        // 않고 그대로 둔다 - 클릭 시점엔 Instance가 다시 지연 평가되므로 문제없다.
+        private void RefreshUndoButton()
+        {
+            if (undoButton == null || UndoManager.Instance == null) return;
+            undoButton.SetEnabled(UndoManager.Instance.CanUndo);
         }
 
         // guide-box의 화면상 위치/크기가 바뀔 때마다 WritingCell의 월드 좌표를 그대로 따라가게 해서
@@ -200,15 +239,36 @@ namespace WritingGrandfather.UI.PreciseWriting
                 Mathf.Abs(worldA.y - worldB.y));
         }
 
-        // guide-box와 safe-area 밖에서는 손글씨가 그려지지 않도록, 포인터가 둘 다 안에 있을 때만
-        // DrowLine.drawingEnabled를 켠다 (카드/safe-area 밖으로 그려지던 버그 수정).
-        private void OnPointerMoveOverRoot(PointerMoveEvent evt)
+        // DrowLine.OnDrawStart()/DrawLoop()가 "지금 이 화면 좌표에서 그려도 되는가"를 물어볼 때마다
+        // 호출된다 - guide-box/safe-area 밖이거나 버튼(되돌리기/초기화) 위면 거부한다.
+        // 예전에는 이 판정을 PointerMoveEvent로 미리 계산해 둔 drawingEnabled 값으로 대신했는데,
+        // 새 Input System의 액션 콜백(OnDrawStart)과 UI Toolkit의 PointerMoveEvent 처리가 같은
+        // 프레임 안에서 어느 쪽이 먼저 실행되는지 보장이 없어, 버튼을 막 눌렀을 때 아직 갱신되지
+        // 않은(한 프레임 전) 값을 참조해 클릭이 씹히거나 반대로 버튼 위에서 그림이 같이 그려지는
+        // 문제가 있었다. 이 메서드는 물어보는 그 순간 직접 새로 계산하므로 그런 지연이 없다.
+        private bool CanDrawAtScreenPoint(Vector2 screenPos)
         {
-            if (drawLine == null || guideBox == null) return;
+            if (guideBox == null || root == null || root.panel == null) return false;
 
             bool onWritingScreen = writingScreen != null && !writingScreen.ClassListContains("hidden");
-            bool insideSafeArea = safeArea == null || safeArea.worldBound.Contains(evt.position);
-            drawLine.drawingEnabled = onWritingScreen && insideSafeArea && guideBox.worldBound.Contains(evt.position);
+            if (!onWritingScreen) return false;
+
+            var panel = root.panel;
+            float panelW = panel.visualTree.resolvedStyle.width;
+            float panelH = panel.visualTree.resolvedStyle.height;
+            if (panelW <= 0f || panelH <= 0f || Screen.width <= 0 || Screen.height <= 0) return false;
+
+            // screenPos(Pointer.current 기준, bottom-left 원점) → 패널 좌표(top-left 원점).
+            // SyncWritingCellToGuideBox()의 반대 방향 변환.
+            float sx = Screen.width / panelW;
+            float sy = Screen.height / panelH;
+            Vector2 panelPos = new Vector2(screenPos.x / sx, (Screen.height - screenPos.y) / sy);
+
+            bool insideSafeArea = safeArea == null || safeArea.worldBound.Contains(panelPos);
+            bool insideGuideBox = guideBox.worldBound.Contains(panelPos);
+            if (!insideSafeArea || !insideGuideBox) return false;
+
+            return !(panel.Pick(panelPos) is Button);
         }
 
         private void Cache()
@@ -293,10 +353,13 @@ namespace WritingGrandfather.UI.PreciseWriting
                 UnityEngine.SceneManagement.SceneManager.LoadScene("LobbyScene"));
         }
 
-        // 그려진 획을 모두 지운다 (단어 전환·다시 시작·완료 후). drawLine 미연결이어도 안전.
+        // 획을 전부 지울 때(초기화/다음 단어/다시 하기)는 UndoManager 히스토리도 같이
+        // 비워야 한다 - 안 그러면 되돌리기 버튼이 이미 풀로 반환된(사라진) 이전 단어의
+        // 획을 되살리려다 어긋난 동작을 하게 된다.
         private void ClearStrokes()
         {
             drawLine?.ClearAll();
+            UndoManager.Instance?.Clear();
         }
 
         // 완료 클릭: 다음 단어가 있으면 넘어가고, 마지막 단어면 분석 후 결과를 보여준다.

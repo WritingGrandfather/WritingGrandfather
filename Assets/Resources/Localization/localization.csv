@@ -26,6 +26,12 @@ lobby.settings.sfx_label,효과음,SFX
 lobby.settings.language_label,언어 선택,Language
 lobby.settings.lang_korean,한국어,한국어
 lobby.settings.lang_english,English,English
+lobby.settings.tab_mypage,마이페이지,My Page
+lobby.settings.tab_misc,기타,Other
+lobby.settings.logout_button,로그아웃,Log Out
+lobby.settings.adult_child_label,연령,Age
+lobby.settings.adult_label,성인,Adult
+lobby.settings.child_label,어린이,Child
 login.title,글씨 쓰는 할배,Handwriting Grandpa
 login.subtitle,로그인하고 시작하세요,Log in to get started
 login.btn_email,이메일로 로그인,Sign in with Email
@@ -46,7 +52,7 @@ mod_select.challenge_button,도전 모드,Challenge Mode
 mod_select.challenge_desc,떨어지는 글자를 빠르고 정확하게 써봐요,Write falling characters quickly and accurately
 mod_select.back_button,뒤로,Back
 precise_writing.reset_button,초기화,Reset
-precise_writing.undo_button,취소,Undo
+precise_writing.undo_button,되돌리기,Undo
 precise_writing.complete_button,완료,Done
 precise_writing.analyzing_label,AI가 결과를 분석중...,Analyzing with AI...
 precise_writing.result_title,결과,Result

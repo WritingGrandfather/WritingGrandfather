@@ -7,6 +7,8 @@ using UnityEngine.UIElements;
 public class LobbyController : MonoBehaviour
 {
     [SerializeField] float baseMargin = 32f;
+    [Tooltip("로그아웃 시 이동할 씬 이름 (Build Settings에 등록되어 있어야 함)")]
+    [SerializeField] string loginScene = "LoginScene";
 
     // Text elements that shrink together with the content box when SafeArea
     // insets eat into it, so text never gets clipped instead of just resized.
@@ -59,22 +61,30 @@ public class LobbyController : MonoBehaviour
     Button _settingsCloseButton;
     TextElement[] _settingsSectionTitles;
     TextElement[] _settingsRowLabels;
-    // _settingsRowLabels는 이름이 아니라 UXML 문서 순서(화질/프레임/전체 볼륨/배경음/
-    // 효과음/언어 선택)로 모은 것이라, 이 배열도 그 순서와 반드시 일치해야 한다 -
-    // Lobby.uxml에서 행 라벨 순서가 바뀌면 여기도 같이 바꿔야 한다.
+    // _settingsRowLabels는 이름이 아니라 UXML 문서 순서(이메일/비밀번호/화질/프레임/
+    // 전체 볼륨/배경음/효과음/언어 선택/연령)로 모은 것이라, 이 배열도 그 순서와
+    // 반드시 일치해야 한다 - Lobby.uxml에서 행 라벨 순서가 바뀌면 여기도 같이 바꿔야 한다.
     static readonly string[] SettingsRowLabelKeys =
     {
+        "login.field.email_label",
+        "login.field.password_label",
         "lobby.settings.quality_label",
         "lobby.settings.framerate_label",
         "lobby.settings.master_volume_label",
         "lobby.settings.bgm_label",
         "lobby.settings.sfx_label",
         "lobby.settings.language_label",
+        "lobby.settings.adult_child_label",
     };
 
     DropdownField _dropdownQuality;
     DropdownField _dropdownFramerate;
     RadioButtonGroup _radioLanguage;
+    RadioButtonGroup _radioAdultChild;
+
+    Label _mypageEmailValue;
+    VisualElement _mypagePasswordRow;
+    Button _btnLogout;
 
     void OnEnable()
     {
@@ -125,13 +135,15 @@ public class LobbyController : MonoBehaviour
         _settingsCloseButton = root.Q<Button>("btn-settings-close");
         _settingsCloseButton.clicked += OnSettingsCloseClicked;
 
-        // 비디오/오디오/언어 섹션 제목을 같은 순서로 모아, 인덱스만으로
+        // 마이페이지/비디오/오디오/언어/기타 섹션 제목을 같은 순서로 모아, 인덱스만으로
         // 로컬라이제이션 키와 매칭할 수 있게 함 - Lobby.uxml의 섹션 순서와 일치해야 함.
         _settingsSectionTitles = new TextElement[]
         {
+            root.Q<Label>("section-mypage-title"),
             root.Q<Label>("section-video-title"),
             root.Q<Label>("section-audio-title"),
             root.Q<Label>("section-language-title"),
+            root.Q<Label>("section-misc-title"),
         };
         // 화질/프레임/전체 볼륨 등 모든 섹션에 걸쳐 있는 행 라벨을 한 번에 모음 -
         // 이제 모든 섹션이 항상 같이 표시되므로 순서만 UXML 문서 순서와 맞으면 된다.
@@ -146,8 +158,16 @@ public class LobbyController : MonoBehaviour
         _radioLanguage.SetValueWithoutNotify(LocalizationManager.CurrentLanguage == Language.Korean ? 0 : 1);
         _radioLanguage.RegisterValueChangedCallback(OnLanguageRadioChanged);
 
+        _radioAdultChild = root.Q<RadioButtonGroup>("radio-adult-child");
+
+        _mypageEmailValue = root.Q<Label>("mypage-email-value");
+        _mypagePasswordRow = root.Q<VisualElement>("mypage-password-row");
+        _btnLogout = root.Q<Button>("btn-logout");
+        _btnLogout.clicked += OnLogoutClicked;
+
         LocalizationManager.OnLanguageChanged += OnLanguageChanged;
         ApplyLocalization();
+        RefreshMyPage();
 
         ApplySafeArea();
     }
@@ -181,9 +201,13 @@ public class LobbyController : MonoBehaviour
         _settingsTitle.text = LocalizationManager.Get("lobby.settings.title");
         _settingsCloseButton.text = LocalizationManager.Get("lobby.settings.close");
 
-        _settingsSectionTitles[0].text = LocalizationManager.Get("lobby.settings.tab_video");
-        _settingsSectionTitles[1].text = LocalizationManager.Get("lobby.settings.tab_audio");
-        _settingsSectionTitles[2].text = LocalizationManager.Get("lobby.settings.tab_language");
+        _settingsSectionTitles[0].text = LocalizationManager.Get("lobby.settings.tab_mypage");
+        _settingsSectionTitles[1].text = LocalizationManager.Get("lobby.settings.tab_video");
+        _settingsSectionTitles[2].text = LocalizationManager.Get("lobby.settings.tab_audio");
+        _settingsSectionTitles[3].text = LocalizationManager.Get("lobby.settings.tab_language");
+        _settingsSectionTitles[4].text = LocalizationManager.Get("lobby.settings.tab_misc");
+
+        _btnLogout.text = LocalizationManager.Get("lobby.settings.logout_button");
 
         for (int i = 0; i < _settingsRowLabels.Length; i++)
             _settingsRowLabels[i].text = LocalizationManager.Get(SettingsRowLabelKeys[i]);
@@ -221,6 +245,38 @@ public class LobbyController : MonoBehaviour
         // 생성된 것으로 교체돼서, 위치/크기를 맞춰주는 FixRadioButtonCheckmarks
         // 보정도 매번(언어가 바뀔 때마다) 다시 걸어줘야 한다.
         FixRadioButtonCheckmarks(_radioLanguage);
+
+        // 언어 라디오와 달리 성인/어린이는 고유명사가 아니라 UI 언어에 맞춰
+        // 번역돼야 하므로, dropdown들과 같은 방식으로 선택된 인덱스를
+        // 기억했다가 choices를 바꾼 뒤 그대로 복원한다.
+        int adultChildIndex = _radioAdultChild.value;
+        _radioAdultChild.choices = new List<string>
+        {
+            LocalizationManager.Get("lobby.settings.adult_label"),
+            LocalizationManager.Get("lobby.settings.child_label"),
+        };
+        _radioAdultChild.SetValueWithoutNotify(adultChildIndex);
+        FixRadioButtonCheckmarks(_radioAdultChild);
+    }
+
+    // AuthManager(로그인 씬과 공유하는 DontDestroyOnLoad 싱글톤)의 DisplayName을
+    // 그대로 가져와 보여준다 - 이메일 계정은 AuthManager.ApplyUser()에서 표시
+    // 이름이 없으면 이메일 자체를 DisplayName으로 채워두므로 이것으로 충분하다.
+    void RefreshMyPage()
+    {
+        if (_mypageEmailValue == null)
+            return;
+
+        var auth = AuthManager.Instance;
+        _mypageEmailValue.text = auth != null ? auth.DisplayName : "";
+
+        // 게스트 로그인은 계정/비밀번호 자체가 없으므로 비밀번호 행을 통째로 숨긴다.
+        bool isGuest = auth != null && auth.IsGuest;
+        if (_mypagePasswordRow != null)
+        {
+            if (isGuest) _mypagePasswordRow.AddToClassList("hidden");
+            else _mypagePasswordRow.RemoveFromClassList("hidden");
+        }
     }
 
     // DropdownField를 눌렀을 때 뜨는 선택지 목록(GenericDropdownMenu)은 UXML로
@@ -343,11 +399,24 @@ public class LobbyController : MonoBehaviour
         // are stale. Clear the cache so the next ApplySafeArea() (from the
         // very next Update()) recomputes them against real, laid-out sizes.
         _appliedPanelSize = default;
+
+        // 설정을 열 때마다 다시 채워서, 로그인 상태가 바뀐 뒤에도 이전 값이
+        // 남아있지 않게 한다.
+        RefreshMyPage();
     }
 
     void OnSettingsCloseClicked()
     {
         _settingsPanel.AddToClassList("hidden");
+    }
+
+    // AuthManager.SignOut()은 LoginController.cs가 아니라 씬 전환에도 유지되는
+    // AuthManager 싱글톤(Assets/2_Scripts/Auth/AuthManager.cs)에 이미 있는 공개
+    // 메서드라, 그 두 스크립트는 건드리지 않고 여기서 그대로 호출만 한다.
+    void OnLogoutClicked()
+    {
+        AuthManager.Instance?.SignOut();
+        SceneManager.LoadScene(loginScene);
     }
 
     void OnExitClicked()

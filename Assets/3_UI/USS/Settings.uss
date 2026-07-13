@@ -117,6 +117,65 @@
     overflow: hidden;
 }
 
+/* 마이페이지의 이메일/비밀번호처럼 값만 보여주고 조작은 안 되는 텍스트.
+   폭이 좁아지면 가운데 대신 끝을 "..."으로 잘라 보여준다 (긴 이메일 대비). */
+.settings-value-label {
+    width: 62%;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 44px;
+    color: rgb(60, 45, 35);
+    -unity-text-align: middle-right;
+    white-space: nowrap;
+}
+
+/* 설정 맨 아래 로그아웃 버튼. 나가기 버튼(menu-button--exit)과 같은 회색 톤이지만
+   설정 행 크기(다른 settings-control들과 비슷한 높이)에 맞춘 별도 스타일. */
+.settings-logout-button {
+    width: 100%;
+    height: 96px;
+    min-height: 0;
+    border-radius: 18px;
+    border-width: 0;
+    margin-top: 12px;
+    font-size: 40px;
+    color: rgb(255, 255, 255);
+    background-color: rgb(120, 120, 120);
+    -unity-text-align: middle-center;
+}
+
+.settings-logout-button:hover {
+    background-color: rgb(140, 140, 140);
+}
+
+/* 설정 콘텐츠가 넘칠 때 오른쪽에 표시되는 세로 스크롤바. 런타임 UI Toolkit은
+   기본 테마(런타임 테마 스타일시트)가 없으면 스크롤러의 트랙/손잡이가 투명해
+   전혀 안 보이므로, Toggle/RadioButton처럼 직접 색과 두께를 지정한다. */
+.unity-scroller--vertical {
+    width: 28px;
+    margin-left: 8px;
+}
+
+.unity-scroller__low-button,
+.unity-scroller__high-button {
+    display: none;
+}
+
+.unity-base-slider--vertical .unity-base-slider__tracker {
+    width: 10px;
+    border-width: 0;
+    border-radius: 5px;
+    background-color: rgb(230, 214, 189);
+}
+
+.unity-base-slider--vertical .unity-base-slider__dragger {
+    width: 20px;
+    border-width: 0;
+    border-radius: 10px;
+    background-color: rgb(150, 111, 71);
+}
+
 /* Restyle Unity's default Toggle/DropdownField/RadioButtonGroup skin to match
    the lobby's warm cream/brown/orange look instead of the default grey. */
 

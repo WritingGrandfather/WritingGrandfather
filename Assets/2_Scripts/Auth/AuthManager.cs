@@ -78,8 +78,11 @@ public class AuthManager : MonoBehaviour
 #if FIREBASE_ENABLED
     System.Collections.IEnumerator AutoLoginRoutine(Action<bool> onResult)
     {
+        // Firebase 초기화 대기. 콜드 스타트(앱 완전 종료 후 첫 실행)에서는 의존성 점검이
+        // 몇 초 이상 걸릴 수 있으므로 넉넉히(최대 20초) 기다린다. 너무 짧게 끊으면
+        // 실제로는 로그인돼 있는데도 로그인 화면으로 떨어져 "매번 다시 로그인" 현상이 생긴다.
         float t = 0f;
-        while (!ready && t < 5f) { t += Time.deltaTime; yield return null; } // Firebase 초기화 대기
+        while (!ready && t < 20f) { t += Time.deltaTime; yield return null; }
 
         if (ready && auth.CurrentUser != null)
         {

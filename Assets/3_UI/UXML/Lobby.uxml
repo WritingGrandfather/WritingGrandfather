@@ -34,7 +34,23 @@
             <ui:Button name="btn-settings-close" text="닫기" class="settings-close-button" />
         </ui:VisualElement>
 
-        <ui:ScrollView name="settings-content" class="settings-content" mode="Vertical">
+        <ui:ScrollView name="settings-content" class="settings-content" mode="Vertical" vertical-scroller-visibility="AlwaysVisible">
+            <ui:VisualElement name="section-mypage" class="settings-section">
+                <ui:VisualElement class="settings-section-header">
+                    <ui:VisualElement class="settings-section-line" />
+                    <ui:Label text="마이페이지" name="section-mypage-title" class="settings-section-title" />
+                    <ui:VisualElement class="settings-section-line" />
+                </ui:VisualElement>
+                <ui:VisualElement class="settings-row">
+                    <ui:Label text="이메일" class="settings-row-label" />
+                    <ui:Label text="" name="mypage-email-value" class="settings-value-label" />
+                </ui:VisualElement>
+                <ui:VisualElement name="mypage-password-row" class="settings-row">
+                    <ui:Label text="비밀번호" class="settings-row-label" />
+                    <ui:Label text="******" name="mypage-password-value" class="settings-value-label" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+
             <ui:VisualElement name="section-video" class="settings-section">
                 <ui:VisualElement class="settings-section-header">
                     <ui:VisualElement class="settings-section-line" />
@@ -81,6 +97,22 @@
                     <ui:Label text="언어 선택" class="settings-row-label" />
                     <ui:RadioButtonGroup name="radio-language" choices="한국어,English" value="0" class="settings-control" />
                 </ui:VisualElement>
+            </ui:VisualElement>
+
+            <ui:VisualElement name="section-misc" class="settings-section">
+                <ui:VisualElement class="settings-section-header">
+                    <ui:VisualElement class="settings-section-line" />
+                    <ui:Label text="기타" name="section-misc-title" class="settings-section-title" />
+                    <ui:VisualElement class="settings-section-line" />
+                </ui:VisualElement>
+                <ui:VisualElement class="settings-row">
+                    <ui:Label text="연령" class="settings-row-label" />
+                    <ui:RadioButtonGroup name="radio-adult-child" choices="성인,어린이" value="0" class="settings-control" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+
+            <ui:VisualElement name="section-logout" class="settings-section">
+                <ui:Button name="btn-logout" text="로그아웃" class="settings-logout-button" />
             </ui:VisualElement>
         </ui:ScrollView>
     </ui:VisualElement>
