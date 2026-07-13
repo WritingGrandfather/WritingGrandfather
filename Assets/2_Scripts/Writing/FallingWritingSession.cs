@@ -181,7 +181,7 @@ public class FallingWritingSession : MonoBehaviour
         var norm = strokeCapture.GetNormalizedStrokes(cell);
         if (norm.Count == 0)
         {
-            Finish(new HandwritingFeedback { recognizedText = "", score = 0, passed = false, message = "글씨를 먼저 써볼까요?" });
+            Finish(new HandwritingFeedback { recognizedText = "", score = 0, passed = false, message = LocalizationManager.Get("falling_writing.no_ink") });
             return;
         }
 
@@ -194,7 +194,7 @@ public class FallingWritingSession : MonoBehaviour
         if (target == null)
         {
             drawLine?.ClearAll();
-            Finish(new HandwritingFeedback { recognizedText = "", score = 0, passed = false, message = "떨어지는 글자가 없어요." });
+            Finish(new HandwritingFeedback { recognizedText = "", score = 0, passed = false, message = LocalizationManager.Get("falling_writing.no_target_word") });
             return;
         }
 
@@ -208,7 +208,7 @@ public class FallingWritingSession : MonoBehaviour
                 recognizedText = "",
                 score = 0,
                 passed = false,
-                message = $"획이 너무 많아요 ({norm.Count}획 — '{target.Text}'는 {expectedStrokes}획). 또박또박 다시 써볼까요?",
+                message = string.Format(LocalizationManager.Get("falling_writing.over_stroke"), norm.Count, target.Text, expectedStrokes),
             });
             return;
         }
@@ -224,7 +224,7 @@ public class FallingWritingSession : MonoBehaviour
         evaluator.Evaluate(request, r => fb = r); // TemplateSimilarityEvaluator는 즉시 콜백
         if (fb == null)
         {
-            Finish(HandwritingFeedback.Error("채점 결과를 받지 못했습니다."));
+            Finish(HandwritingFeedback.Error(LocalizationManager.Get("falling_writing.eval_no_response")));
             return;
         }
 
@@ -242,13 +242,16 @@ public class FallingWritingSession : MonoBehaviour
         if (fb.score < passScore)
         {
             drawLine?.ClearAll();
+            // fb.message가 그냥 "N% 닮았어요" 식의 일반 점수 메시지뿐이면 더 구체적인 안내로 바꿔준다.
+            // 문자열 자체(언어별로 달라짐) 대신 같은 점수로 다시 포맷한 결과와 비교해 판단한다.
+            bool isGenericScoreMessage = fb.message == string.Format(LocalizationManager.Get("writing_feedback.similarity_score"), fb.score);
             Finish(new HandwritingFeedback
             {
                 recognizedText = "",
                 score = fb.score,
                 passed = false,
-                message = string.IsNullOrEmpty(fb.message) || fb.message.Contains("닮았")
-                    ? $"'{target.Text}'와 달라 보여요. 또박또박 다시 써볼까요?"
+                message = string.IsNullOrEmpty(fb.message) || isGenericScoreMessage
+                    ? string.Format(LocalizationManager.Get("falling_writing.mismatch"), target.Text)
                     : fb.message,
             });
             return;
@@ -281,7 +284,7 @@ public class FallingWritingSession : MonoBehaviour
             recognizedText = target.Text,
             score = fb.score,
             passed = true,
-            message = $"'{target.Text}' 명중! ({fb.score}점)",
+            message = string.Format(LocalizationManager.Get("falling_writing.hit"), target.Text, fb.score),
         });
     }
 

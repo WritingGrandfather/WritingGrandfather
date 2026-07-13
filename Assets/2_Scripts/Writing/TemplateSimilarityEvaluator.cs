@@ -86,7 +86,7 @@ public class TemplateSimilarityEvaluator : HandwritingEvaluator
         catch (Exception e)
         {
             Debug.LogError("[TemplateEval] " + e);
-            onComplete?.Invoke(HandwritingFeedback.Error("채점 오류: " + e.Message));
+            onComplete?.Invoke(HandwritingFeedback.Error(string.Format(LocalizationManager.Get("writing_feedback.eval_error"), e.Message)));
         }
     }
 
@@ -94,11 +94,11 @@ public class TemplateSimilarityEvaluator : HandwritingEvaluator
     {
         string target = (request.targetText ?? "").Trim();
         if (string.IsNullOrEmpty(target))
-            return HandwritingFeedback.Error("목표 글자가 없습니다.");
+            return HandwritingFeedback.Error(LocalizationManager.Get("writing_feedback.no_target"));
         if (target.Length != 1)
-            return HandwritingFeedback.Error("따라쓰기 채점은 외자(한 글자)만 지원합니다.");
+            return HandwritingFeedback.Error(LocalizationManager.Get("writing_feedback.trace_single_only"));
         if (font == null)
-            return HandwritingFeedback.Error("TemplateSimilarityEvaluator에 폰트가 연결되지 않았습니다.");
+            return HandwritingFeedback.Error(LocalizationManager.Get("writing_feedback.no_font"));
 
         bool aligned = strokeCapture != null && cell != null; // 따라쓰기 정렬 채점 모드
 
@@ -116,13 +116,13 @@ public class TemplateSimilarityEvaluator : HandwritingEvaluator
         }
 
         if (CountInk(user) == 0 && outsideInk == 0)
-            return new HandwritingFeedback { recognizedText = "", score = 0, passed = false, message = "글씨가 없어요. 칸에 글자를 써볼까요?" };
+            return new HandwritingFeedback { recognizedText = "", score = 0, passed = false, message = LocalizationManager.Get("writing_feedback.empty_writing") };
 
         bool[,] templ = aligned
             ? PlaceTemplate(MaskFromFont(target[0]))
             : Normalize(MaskFromFont(target[0]));
         if (CountInk(templ) == 0)
-            return HandwritingFeedback.Error($"폰트에서 '{target}' 글자를 만들지 못했습니다.");
+            return HandwritingFeedback.Error(string.Format(LocalizationManager.Get("writing_feedback.font_glyph_missing"), target));
 
         // 교정 겹쳐보기용으로 마지막 비교 마스크 보관
         lastUserMask = user;
@@ -142,7 +142,7 @@ public class TemplateSimilarityEvaluator : HandwritingEvaluator
                     recognizedText = confChar.ToString(),
                     score = Mathf.Min(score, 40),
                     passed = false,
-                    message = $"'{target}'보다 '{confChar}'에 가까워 보여요. 다시 써볼까요?",
+                    message = string.Format(LocalizationManager.Get("writing_feedback.confusable_character"), target, confChar),
                 };
             }
         }
@@ -159,7 +159,7 @@ public class TemplateSimilarityEvaluator : HandwritingEvaluator
             recognizedText = target, // 유사도 방식이므로 목표 글자 기준으로 채점 (통과 여부는 컨트롤러가 점수로 판단)
             score = score,
             passed = false,
-            message = neatWarn ?? $"본보기 글자와 {score}% 닮았어요.",
+            message = neatWarn ?? string.Format(LocalizationManager.Get("writing_feedback.similarity_score"), score),
         };
     }
 
@@ -373,12 +373,12 @@ public class TemplateSimilarityEvaluator : HandwritingEvaluator
         if (expected > 0 && actual < expected)
         {
             mult *= Mathf.Pow(0.55f, expected - actual); // 모자란 획 하나당 큰 감점
-            warn = $"획을 이어서 쓰신 것 같아요. 한 획씩 또박또박 써볼까요? (약 {expected}획)";
+            warn = string.Format(LocalizationManager.Get("writing_feedback.neat_stroke_joined"), expected);
         }
         else if (expected > 0 && actual > expected + 2)
         {
             mult *= 0.7f;
-            warn = "획 수가 너무 많아요. 차분히 다시 써볼까요?";
+            warn = LocalizationManager.Get("writing_feedback.neat_too_many_strokes");
         }
 
         // 2) 흘림 검사 — 직선/한 번 꺾임이어야 할 획이 심하게 구불거리면 감점
@@ -403,7 +403,7 @@ public class TemplateSimilarityEvaluator : HandwritingEvaluator
         if (wiggly > 0)
         {
             mult *= Mathf.Pow(0.6f, wiggly);
-            if (warn == null) warn = "선이 많이 구불거려요. 천천히 곧게 그어볼까요?";
+            if (warn == null) warn = LocalizationManager.Get("writing_feedback.neat_wobbly_line");
         }
 
         int adjusted = Mathf.RoundToInt(score * mult);

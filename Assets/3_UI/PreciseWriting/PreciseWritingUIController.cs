@@ -422,7 +422,7 @@ namespace WritingGrandfather.UI.PreciseWriting
 
             // feedbackController가 연결 안 돼 있으면(테스트용) 데모 점수로 대체
             root.schedule.Execute(() =>
-                HandleScored(demoScorePercent, demoScorePercent, demoScorePercent, "(데모 점수 — 채점 미연결)", demoScorePercent >= 50)
+                HandleScored(demoScorePercent, demoScorePercent, demoScorePercent, LocalizationManager.Get("precise_writing.demo_score_message"), demoScorePercent >= 50)
             ).StartingIn(600);
         }
 
@@ -526,7 +526,7 @@ namespace WritingGrandfather.UI.PreciseWriting
             if (resultTitleLabel != null)
             {
                 resultTitleLabel.text = completedStageNum > 0
-                    ? $"{completedStageNum}단계 완료!"
+                    ? string.Format(LocalizationManager.Get("precise_writing.stage_clear_title"), completedStageNum)
                     : LocalizationManager.Get("precise_writing.result_title");
             }
 
@@ -647,7 +647,10 @@ namespace WritingGrandfather.UI.PreciseWriting
         {
             if (root == null) return;
 
-            var banner = new Label(string.IsNullOrEmpty(stageName) ? $"{stageNum}단계" : $"{stageNum}단계\n{stageName}");
+            string bannerText = string.IsNullOrEmpty(stageName)
+                ? string.Format(LocalizationManager.Get("precise_writing.stage_banner"), stageNum)
+                : string.Format(LocalizationManager.Get("precise_writing.stage_banner_named"), stageNum, stageName);
+            var banner = new Label(bannerText);
             banner.pickingMode = PickingMode.Ignore;
             banner.style.position = Position.Absolute;
             banner.style.left = 0;

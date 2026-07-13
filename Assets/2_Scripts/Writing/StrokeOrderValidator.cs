@@ -222,7 +222,7 @@ public static class StrokeOrderValidator
                 if (res.message == null)
                 {
                     char jamo = plan[seq[i]].jamo;
-                    res.message = $"'{jamo}'의 획 방향이 반대예요. 가로는 왼쪽→오른쪽, 세로는 위→아래로 그어볼까요?";
+                    res.message = string.Format(LocalizationManager.Get("writing_feedback.stroke_direction_wrong"), jamo);
                 }
             }
         }
@@ -240,8 +240,8 @@ public static class StrokeOrderValidator
                         char earlier = plan[seq[j]].jamo; // 먼저 썼어야 하는 획의 자모
                         char later = plan[seq[i]].jamo;   // 실제로 먼저 쓴 획의 자모
                         res.message = earlier == later
-                            ? $"'{earlier}'의 획 순서가 표준과 달라요. 위에서 아래, 왼쪽에서 오른쪽 순서로 써볼까요?"
-                            : $"'{earlier}'를 먼저 쓰고 '{later}'를 써볼까요?";
+                            ? string.Format(LocalizationManager.Get("writing_feedback.stroke_order_same_jamo"), earlier)
+                            : string.Format(LocalizationManager.Get("writing_feedback.stroke_order_different_jamo"), earlier, later);
                     }
                 }
             }
