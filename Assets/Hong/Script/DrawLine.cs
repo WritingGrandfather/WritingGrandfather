@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Pool;
 using UnityEngine.EventSystems;
+using Random = UnityEngine.Random;
 
 public class DrowLine : MonoBehaviour
 {
@@ -40,7 +41,11 @@ public class DrowLine : MonoBehaviour
     Camera cam;
 
     Coroutine drawCoroutine;
+    
+    public PencilSound pencilSound;
 
+    AudioSource currentSfxSource;
+    int lastSoundIndex = -1;
     // Awake : PlayerInput 컴포넌트에서 Action을 찾아 콜백 등록
     // PlayerInput의 Behavior가 "Invoke C Sharp Events" 여야 동작함
     void Awake()
@@ -51,6 +56,8 @@ public class DrowLine : MonoBehaviour
 
         // Click : 마우스 왼쪽 버튼 + 터치 press 바인딩
         var clickAction = playerInput.actions["Click"];
+        
+        pencilSound = GetComponent<PencilSound>();
         clickAction.started  += OnDrawStart;
         clickAction.canceled += OnDrawEnd;
     }
@@ -92,27 +99,6 @@ public class DrowLine : MonoBehaviour
 
         Vector2 startPos = cam.ScreenToWorldPoint(Pointer.current.position.ReadValue());
 
-        // 클릭 지점에 기존 선이 있으면 새 선 생성 대신 색만 변경
-        foreach (var hit in Physics2D.OverlapCircleAll(startPos, lineWidth * 0.5f))
-        {
-            if (!(hit is EdgeCollider2D)) continue;
-            var hitGO = hit.gameObject;
-            if (!lineHandles.ContainsKey(hitGO)) continue;
-
-            var hitLR       = hitGO.GetComponent<LineRenderer>();
-            var prevColor   = hitLR.startColor;
-            var nextColor   = lineColor;
-
-            hitLR.startColor = nextColor;
-            hitLR.endColor   = nextColor;
-
-            UndoManager.Instance.Record(
-                () => { hitLR.startColor = prevColor; hitLR.endColor = prevColor; },
-                () => { hitLR.startColor = nextColor; hitLR.endColor = nextColor; }
-            );
-            return;
-        }
-
         // out으로 핸들을 받아 저장 — 반환 시 Dispose()만 호출하면 됨
         GameObject currentLineGO = PoolManager.Instance.Spawn(linePoolId, Vector3.zero, transform, out currentHandle);
 
@@ -140,6 +126,7 @@ public class DrowLine : MonoBehaviour
         lr.SetPosition(0, startPos);
 
         isDrawing = true;
+        lastSoundIndex = PlayRandomPencilSound(-1);
         drawCoroutine = StartCoroutine(DrawLoop());
     }
 
@@ -152,7 +139,7 @@ public class DrowLine : MonoBehaviour
         {
             // 드래그 도중 drawingEnabled가 꺼지면(허용 영역 밖으로 나가면) 그 구간은 점을 추가하지 않고 건너뜀
             // — 다시 켜지면(허용 영역으로 복귀) 마지막 점과 이어 그리되, 두 점 모두 허용 영역 안이므로 안전함
-            if (!drawingEnabled)
+            if (!drawingEnabled || IsPointerOverUI())
             {
                 yield return null;
                 continue;
@@ -166,10 +153,14 @@ public class DrowLine : MonoBehaviour
                 lr.SetPosition(lr.positionCount - 1, pos);
                 collider2D.points = points.ToArray();
             }
+
+            // 재생 중인 사운드가 끝났으면 다른 소리로 이어서 재생
+            if (currentSfxSource == null || !currentSfxSource.isPlaying)
+                lastSoundIndex = PlayRandomPencilSound(lastSoundIndex);
+
             yield return null; // 다음 프레임까지 대기
         }
     }
-
     // canceled 콜백 : 마우스 왼쪽 버튼을 떼는 순간 호출
     // 드로우 루프를 중단하고 완성된 라인을 drawnLines에 보관함
     void OnDrawEnd(InputAction.CallbackContext ctx)
@@ -197,9 +188,26 @@ public class DrowLine : MonoBehaviour
                 () => { goRef[0] = CreateLine(capturedPoints, capturedWidth, capturedColor); }
             );
         }
+        currentSfxSource?.Stop();
+        currentSfxSource = null;
         currentHandle = default;
 
         points.Clear();
+    }
+
+    int PlayRandomPencilSound(int exclude)
+    {
+        var sounds = pencilSound.pencilSounds;
+        if (sounds == null || sounds.Count == 0) return -1;
+
+        int idx = exclude;
+        if (sounds.Count > 1)
+            while (idx == exclude) idx = Random.Range(0, sounds.Count);
+        else
+            idx = 0;
+
+        currentSfxSource = SoundManager.Instance.PlaySfx(sounds[idx]);
+        return idx;
     }
 
     // UI Slider의 OnValueChanged에 연결해서 두께를 실시간으로 조절

@@ -4,52 +4,77 @@ using UnityEngine;
 public class SoundManager : MonoBehaviour
 {
     public static SoundManager Instance;
-    
-    public Dictionary<string, AudioClip> audioClips = new Dictionary<string, AudioClip>();
+
     public List<AudioClip> audioList = new List<AudioClip>();
-    public AudioSource sfx = null;
     public AudioSource bgm = null;
-    public float sfxVolume = 1f;
-    public float bgmVolume = 1f;
+
+    public float sfxVolume    = 1f;
+    public float bgmVolume    = 1f;
     public float masterVolume = 1f;
-    public AudioClip currentSfx = null;
-    public AudioClip currentBgm = null;
+
+    [SerializeField] int sfxPoolSize = 8;
+
+    Dictionary<string, AudioClip> audioClips = new Dictionary<string, AudioClip>();
+    AudioSource[] sfxPool;
+    int poolIndex = 0;
 
     public void Awake()
     {
-        if (Instance == null)
+        if (Instance == null) { Instance = this; DontDestroyOnLoad(this); }
+        else { Destroy(gameObject); return; }
+
+        foreach (var clip in audioList)
+            audioClips[clip.name] = clip;
+
+        sfxPool = new AudioSource[sfxPoolSize];
+        for (int i = 0; i < sfxPoolSize; i++)
         {
-            Instance = this;
-            DontDestroyOnLoad(this);
+            var go = new GameObject($"SfxSource_{i}");
+            go.transform.SetParent(transform);
+            sfxPool[i] = go.AddComponent<AudioSource>();
         }
-        else if (Instance != this)
-        {
-            Destroy(gameObject);
-        }
-        
+
         PlayBgm("Lobby", bgmVolume * masterVolume);
-        foreach (AudioClip audioClip in audioList)
+    }
+
+    AudioSource GetFreeSource()
+    {
+        for (int i = 0; i < sfxPool.Length; i++)
         {
-            string id = audioClip.name;
-            audioClips.Add(id, audioClip);
+            int idx = (poolIndex + i) % sfxPool.Length;
+            if (!sfxPool[idx].isPlaying)
+            {
+                poolIndex = (idx + 1) % sfxPool.Length;
+                return sfxPool[idx];
+            }
         }
+        // 모두 사용 중이면 라운드로빈으로 하나 강제 점유
+        var stolen = sfxPool[poolIndex];
+        poolIndex = (poolIndex + 1) % sfxPool.Length;
+        return stolen;
     }
 
-    public void PlaySfx(string clipName, float volume = 1.0f)
+    public AudioSource PlaySfx(string clipName)
     {
-        volume = sfxVolume * masterVolume;
-        AudioClip clip = audioClips[clipName];
-        currentSfx = clip;
-        sfx.PlayOneShot(clip, volume);
+        if (!audioClips.TryGetValue(clipName, out var clip))
+        {
+            Debug.LogWarning($"[Sound] 클립 없음: {clipName}");
+            return null;
+        }
+
+        var source    = GetFreeSource();
+        source.clip   = clip;
+        source.volume = sfxVolume * masterVolume;
+        source.Play();
+        return source;
     }
 
-    public void PlayBgm(string clipName, float volume = 1.0f)
+    public void PlayBgm(string clipName, float volume = 1f)
     {
-        volume = bgmVolume * masterVolume;
-
-        AudioClip clip = audioClips[clipName];
-        currentBgm = clip;
-        bgm.loop = true;
-        bgm.PlayOneShot(clip, volume);
+        if (!audioClips.TryGetValue(clipName, out var clip)) return;
+        bgm.clip   = clip;
+        bgm.volume = bgmVolume * masterVolume;
+        bgm.loop   = true;
+        bgm.Play();
     }
 }
