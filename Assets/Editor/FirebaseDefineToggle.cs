@@ -11,6 +11,7 @@ public static class FirebaseDefineToggle
 {
     const string Firebase = "FIREBASE_ENABLED";
     const string Google = "GOOGLE_SIGNIN";
+    const string Firestore = "FIRESTORE_ENABLED";
 
     [MenuItem("Tools/Firebase/Enable FIREBASE_ENABLED")]
     static void EnableFirebase() => Set(Firebase, true);
@@ -23,6 +24,12 @@ public static class FirebaseDefineToggle
 
     [MenuItem("Tools/Firebase/Disable GOOGLE_SIGNIN")]
     static void DisableGoogle() => Set(Google, false);
+
+    [MenuItem("Tools/Firebase/Enable FIRESTORE_ENABLED")]
+    static void EnableFirestore() => Set(Firestore, true);
+
+    [MenuItem("Tools/Firebase/Disable FIRESTORE_ENABLED")]
+    static void DisableFirestore() => Set(Firestore, false);
 
     static void Set(string symbol, bool on)
     {
