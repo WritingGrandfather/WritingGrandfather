@@ -70,11 +70,13 @@ public class LobbyController : MonoBehaviour
         "lobby.settings.bgm_label",
         "lobby.settings.sfx_label",
         "lobby.settings.language_label",
+        "lobby.settings.adult_child_label",
     };
 
     DropdownField _dropdownQuality;
     DropdownField _dropdownFramerate;
     RadioButtonGroup _radioLanguage;
+    RadioButtonGroup _radioAdultChild;
 
     void OnEnable()
     {
@@ -125,13 +127,14 @@ public class LobbyController : MonoBehaviour
         _settingsCloseButton = root.Q<Button>("btn-settings-close");
         _settingsCloseButton.clicked += OnSettingsCloseClicked;
 
-        // 비디오/오디오/언어 섹션 제목을 같은 순서로 모아, 인덱스만으로
+        // 비디오/오디오/언어/기타 섹션 제목을 같은 순서로 모아, 인덱스만으로
         // 로컬라이제이션 키와 매칭할 수 있게 함 - Lobby.uxml의 섹션 순서와 일치해야 함.
         _settingsSectionTitles = new TextElement[]
         {
             root.Q<Label>("section-video-title"),
             root.Q<Label>("section-audio-title"),
             root.Q<Label>("section-language-title"),
+            root.Q<Label>("section-misc-title"),
         };
         // 화질/프레임/전체 볼륨 등 모든 섹션에 걸쳐 있는 행 라벨을 한 번에 모음 -
         // 이제 모든 섹션이 항상 같이 표시되므로 순서만 UXML 문서 순서와 맞으면 된다.
@@ -145,6 +148,8 @@ public class LobbyController : MonoBehaviour
         // 호출되며 SetLanguage를 한 번 더 트리거하는 걸 막는다.
         _radioLanguage.SetValueWithoutNotify(LocalizationManager.CurrentLanguage == Language.Korean ? 0 : 1);
         _radioLanguage.RegisterValueChangedCallback(OnLanguageRadioChanged);
+
+        _radioAdultChild = root.Q<RadioButtonGroup>("radio-adult-child");
 
         LocalizationManager.OnLanguageChanged += OnLanguageChanged;
         ApplyLocalization();
@@ -184,6 +189,7 @@ public class LobbyController : MonoBehaviour
         _settingsSectionTitles[0].text = LocalizationManager.Get("lobby.settings.tab_video");
         _settingsSectionTitles[1].text = LocalizationManager.Get("lobby.settings.tab_audio");
         _settingsSectionTitles[2].text = LocalizationManager.Get("lobby.settings.tab_language");
+        _settingsSectionTitles[3].text = LocalizationManager.Get("lobby.settings.tab_misc");
 
         for (int i = 0; i < _settingsRowLabels.Length; i++)
             _settingsRowLabels[i].text = LocalizationManager.Get(SettingsRowLabelKeys[i]);
@@ -221,6 +227,18 @@ public class LobbyController : MonoBehaviour
         // 생성된 것으로 교체돼서, 위치/크기를 맞춰주는 FixRadioButtonCheckmarks
         // 보정도 매번(언어가 바뀔 때마다) 다시 걸어줘야 한다.
         FixRadioButtonCheckmarks(_radioLanguage);
+
+        // 언어 라디오와 달리 성인/어린이는 고유명사가 아니라 UI 언어에 맞춰
+        // 번역돼야 하므로, dropdown들과 같은 방식으로 선택된 인덱스를
+        // 기억했다가 choices를 바꾼 뒤 그대로 복원한다.
+        int adultChildIndex = _radioAdultChild.value;
+        _radioAdultChild.choices = new List<string>
+        {
+            LocalizationManager.Get("lobby.settings.adult_label"),
+            LocalizationManager.Get("lobby.settings.child_label"),
+        };
+        _radioAdultChild.SetValueWithoutNotify(adultChildIndex);
+        FixRadioButtonCheckmarks(_radioAdultChild);
     }
 
     // DropdownField를 눌렀을 때 뜨는 선택지 목록(GenericDropdownMenu)은 UXML로
