@@ -2,18 +2,25 @@
     <Style src="../USS/ModSelect.uss" />
     <ui:VisualElement name="safe-area" class="safe-area">
         <ui:VisualElement name="modselect-root" class="modselect-root">
+            <ui:Button text="" name="btn-back" class="icon-button icon-button--back">
+                <ui:VisualElement class="icon-img icon-img--back" picking-mode="Ignore" />
+            </ui:Button>
+
             <ui:Label text="글쓰기 시작" name="title-label" class="title-label" />
+            <ui:Label text="버튼을 누르면 모드의 설명을 확인 가능합니다." name="hint-label" class="hint-label" />
+
             <ui:VisualElement name="button-area" class="button-area">
-                <ui:VisualElement name="precise-card" class="mode-card">
-                    <ui:Button text="정밀 쓰기" name="btn-precise" class="mode-button mode-button--primary" />
-                    <ui:Label text="한 글자씩 정확하게 따라 쓰며 연습해요" name="precise-desc" class="mode-desc" />
-                </ui:VisualElement>
-                <ui:VisualElement name="challenge-card" class="mode-card">
-                    <ui:Button text="도전 모드" name="btn-challenge" class="mode-button" />
-                    <ui:Label text="떨어지는 글자를 빠르고 정확하게 써봐요" name="challenge-desc" class="mode-desc" />
-                </ui:VisualElement>
+                <ui:Button text="" name="btn-precise" class="mode-icon-button mode-icon-button--primary">
+                    <ui:VisualElement class="mode-icon-img mode-icon-img--precise" picking-mode="Ignore" />
+                </ui:Button>
+                <ui:Button text="" name="btn-challenge" class="mode-icon-button mode-icon-button--secondary">
+                    <ui:VisualElement class="mode-icon-img mode-icon-img--challenge" picking-mode="Ignore" />
+                </ui:Button>
             </ui:VisualElement>
-            <ui:Button text="뒤로" name="btn-back" class="back-button" />
+
+            <ui:VisualElement name="mode-desc-card" class="mode-desc-card hidden">
+                <ui:Label text="" name="mode-desc-label" class="mode-desc-text" />
+            </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>
