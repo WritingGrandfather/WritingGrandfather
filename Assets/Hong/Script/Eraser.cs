@@ -80,10 +80,33 @@ public class Eraser : MonoBehaviour
 
     IEnumerator EraseLoop()
     {
+        Vector2 prevPos  = cam.ScreenToWorldPoint(Pointer.current.position.ReadValue());
+        bool    hasFirst = false;
+
         while (true)
         {
-            Vector2 worldPos = cam.ScreenToWorldPoint(Pointer.current.position.ReadValue());
-            EraseAt(worldPos);
+            Vector2 currentPos = cam.ScreenToWorldPoint(Pointer.current.position.ReadValue());
+
+            if (!hasFirst)
+            {
+                EraseAt(currentPos);
+                hasFirst = true;
+            }
+            else
+            {
+                float dist = Vector2.Distance(prevPos, currentPos);
+
+                // 이동 거리가 반지름보다 크면 중간 지점을 촘촘하게 보간해 연속 지우기
+                // 보간 간격을 반지름의 절반으로 유지해 빈틈이 생기지 않게 함
+                int steps = Mathf.Max(1, Mathf.CeilToInt(dist / (eraserRadius * 0.5f)));
+                for (int i = 1; i <= steps; i++)
+                {
+                    Vector2 samplePos = Vector2.Lerp(prevPos, currentPos, (float)i / steps);
+                    EraseAt(samplePos);
+                }
+            }
+
+            prevPos = currentPos;
             yield return null;
         }
     }
@@ -115,7 +138,8 @@ public class Eraser : MonoBehaviour
             Color color = lr.startColor;
 
             // 지우개 원과 겹치지 않는 구간들로 분리
-            var segments = SplitLine(original, center, eraserRadius);
+            // 반지름을 살짝 키워 부동소수점 오차로 생기는 미세 잔재를 방지
+            var segments = SplitLine(original, center, eraserRadius + 0.01f);
 
             // 원본 제거
             drawLine.RemoveLine(go);
@@ -179,7 +203,18 @@ public class Eraser : MonoBehaviour
         }
 
         if (current.Count >= 2) result.Add(current);
+
+        // 총 길이가 너무 짧은 구간은 미세 잔재이므로 제거
+        result.RemoveAll(seg => SegmentLength(seg) < 0.05f);
         return result;
+    }
+
+    float SegmentLength(List<Vector2> seg)
+    {
+        float len = 0f;
+        for (int i = 1; i < seg.Count; i++)
+            len += Vector2.Distance(seg[i - 1], seg[i]);
+        return len;
     }
 
     // 선분 p1→p2 와 원의 교차점 계산 (이차방정식 풀이)

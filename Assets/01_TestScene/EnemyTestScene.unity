@@ -152,19 +152,19 @@ MonoBehaviour:
   uiDocument: {fileID: 249968774}
   gungseoFont: {fileID: 12800000, guid: eeb8b184c61c3c743b0bd13837406ade, type: 3}
   mode: 1
-  startSpawnInterval: 2.5
-  minSpawnInterval: 0.9
-  startFallSpeed: 80
-  maxFallSpeed: 240
-  rampDuration: 180
+  stages:
+  - {fileID: 11400000, guid: 86a7e7c65bf7243f9964986964bcad04, type: 2}
+  - {fileID: 11400000, guid: f3bb46fd134234e869d7fcb3fbdd7f8f, type: 2}
+  - {fileID: 11400000, guid: 872f18239d65443629696302b7a9a0f8, type: 2}
+  - {fileID: 11400000, guid: 1e3352cf80830407f83fb53e6f4e13d5, type: 2}
+  - {fileID: 11400000, guid: e81ea5de933d84b87959a7d61c9b8c4f, type: 2}
   fontSize: 72
-  sideMarginPx: 80
-  deadlineRatio: 0.8
+  verticalRatio: 0.35
+  slideDuration: 0.4
   choseongPool: "\u3131\u3134\u3137\u3139\u3141\u3142\u3145\u3147\u3148\u314A\u314B\u314C\u314D\u314E"
   jungseongPool: "\u314F\u3151\u3153\u3155\u3157\u315B\u315C\u3160\u3161\u3163\u3150\u3154"
   jongseongPool: "\u3131\u3134\u3139\u3141\u3142\u3145\u3147"
-  startJongseongChance: 0.2
-  maxJongseongChance: 0.6
+  jongseongChance: 0.4
   wordPool:
   - "\uB098\uBB34"
   - "\uD558\uB298"

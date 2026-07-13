@@ -37,14 +37,14 @@ public class GrokHandwritingEvaluator : HandwritingEvaluator
     {
         if (string.IsNullOrEmpty(model))
         {
-            onComplete?.Invoke(HandwritingFeedback.Error("AI 모델이 설정되지 않았습니다. GrokHandwritingEvaluator의 model 필드를 채우세요."));
+            onComplete?.Invoke(HandwritingFeedback.Error("No AI model set. Fill the 'model' field on GrokHandwritingEvaluator."));
             yield break;
         }
 
         var config = ApiKeyConfig.Instance;
         if (config == null || string.IsNullOrEmpty(config.ApiKey))
         {
-            onComplete?.Invoke(HandwritingFeedback.Error("API 키가 없습니다. Assets/Resources/ApiKeyConfig.asset을 확인하세요."));
+            onComplete?.Invoke(HandwritingFeedback.Error("No API key. Check Assets/Resources/ApiKeyConfig.asset."));
             yield break;
         }
 
@@ -63,7 +63,7 @@ public class GrokHandwritingEvaluator : HandwritingEvaluator
 
             if (www.result != UnityWebRequest.Result.Success)
             {
-                onComplete?.Invoke(HandwritingFeedback.Error($"API 요청 실패: {www.responseCode} {www.error}\n{www.downloadHandler.text}"));
+                onComplete?.Invoke(HandwritingFeedback.Error($"API request failed: {www.responseCode} {www.error}\n{www.downloadHandler.text}"));
                 yield break;
             }
 
@@ -144,7 +144,7 @@ public class GrokHandwritingEvaluator : HandwritingEvaluator
     static HandwritingFeedback ParseFeedback(string aiText)
     {
         if (string.IsNullOrEmpty(aiText))
-            return HandwritingFeedback.Error("AI 응답이 비어 있습니다.");
+            return HandwritingFeedback.Error("Empty response from AI.");
 
         int open = aiText.IndexOf('{');
         int close = aiText.LastIndexOf('}');
@@ -153,7 +153,10 @@ public class GrokHandwritingEvaluator : HandwritingEvaluator
 
         try
         {
-            return JsonUtility.FromJson<HandwritingFeedback>(aiText);
+            var fb = JsonUtility.FromJson<HandwritingFeedback>(aiText);
+            // 최저 점수 보정 — 유저 기분 배려 (정상 채점 결과만, 60점 미만이면 60으로)
+            if (fb != null && fb.score < 60) fb.score = 60;
+            return fb;
         }
         catch
         {
