@@ -33,6 +33,15 @@ public class DrowLine : MonoBehaviour
     // false면 드로우 입력을 무시 — 지우개 모드일 때 Eraser에서 false로 설정
     public bool drawingEnabled = true;
 
+    // 특정 화면 좌표에서 지금 그리기를 시작해도 되는지 판단하는 델리게이트(선택, 비워두면 항상 허용).
+    // drawingEnabled는 PointerMoveEvent 등 다른 이벤트가 미리 계산해 둔 값을 그냥 읽는 것이라,
+    // 새 Input System의 액션 콜백(OnDrawStart/DrawLoop)과 그 이벤트가 같은 프레임 안에서 어느 쪽이
+    // 먼저 실행되는지 보장이 없어 한 프레임 지연된(아직 갱신 안 된) 값을 참조하는 경우가 있었다 -
+    // 그 결과 버튼을 눌러도 가끔 무시되거나, 버튼 위에서 그림이 같이 그려지는 문제가 생겼다.
+    // 이 델리게이트는 실제로 확인이 필요한 그 순간의 포인터 위치로 매번 새로 판정해서 그런
+    // 프레임 지연 없이 항상 정확하게 판단한다.
+    public Func<Vector2, bool> canDrawAt;
+
     // OnDrawStart가 정상적으로 완료됐을 때만 true — OnDrawEnd에서 핸들 저장 여부 판단
     bool isDrawing;
 
@@ -106,7 +115,10 @@ public class DrowLine : MonoBehaviour
         isDrawing = false;
         if (!drawingEnabled || IsPointerOverUI() || Pointer.current == null) return;
 
-        Vector2 startPos = cam.ScreenToWorldPoint(Pointer.current.position.ReadValue());
+        Vector2 pointerScreenPos = Pointer.current.position.ReadValue();
+        if (canDrawAt != null && !canDrawAt(pointerScreenPos)) return;
+
+        Vector2 startPos = cam.ScreenToWorldPoint(pointerScreenPos);
 
         // out으로 핸들을 받아 저장 — 반환 시 Dispose()만 호출하면 됨
         GameObject currentLineGO = PoolManager.Instance.Spawn(linePoolId, Vector3.zero, transform, out currentHandle);
@@ -148,13 +160,14 @@ public class DrowLine : MonoBehaviour
 
         while (true)
         {
-            if (!drawingEnabled || IsPointerOverUI())
+            Vector2 screenPos = Pointer.current.position.ReadValue();
+            if (!drawingEnabled || IsPointerOverUI() || (canDrawAt != null && !canDrawAt(screenPos)))
             {
                 yield return null;
                 continue;
             }
 
-            Vector2 pos = cam.ScreenToWorldPoint(Pointer.current.position.ReadValue());
+            Vector2 pos = cam.ScreenToWorldPoint(screenPos);
 
             // 드로잉 포인트 추가 (드로잉 전용 threshold)
             if (Vector2.Distance(points[points.Count - 1], pos) > 0.001f)
