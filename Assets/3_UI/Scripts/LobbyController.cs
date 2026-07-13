@@ -7,43 +7,47 @@ using UnityEngine.UIElements;
 [RequireComponent(typeof(UIDocument))]
 public class LobbyController : MonoBehaviour
 {
-    [SerializeField] float baseMargin = 32f;
-    [Tooltip("설정 아이콘을 세이프에어리어 구석에 바짝 붙일 때 쓰는 여백 (baseMargin보다 작게)")]
-    [SerializeField] float settingsIconMargin = 12f;
-    [Tooltip("로그아웃 시 이동할 씬 이름 (Build Settings에 등록되어 있어야 함)")]
-    [SerializeField] string loginScene = "LoginScene";
+    // 아래 값들은 전부 코드에서만 관리한다 (Inspector에 노출 안 함) - SerializeField로
+    // 두면 씬 파일에 그 시점 값이 저장돼서, 나중에 여기 기본값을 바꿔도 씬에 남은
+    // 예전 값이 계속 이겨버리는 문제가 반복됐었다 (랭킹 버튼 추가/타이틀 크기 변경
+    // 때 실제로 겪음). const/static readonly라 항상 이 파일의 값 그대로 적용된다.
+    const float baseMargin = 32f;
+    // 설정 아이콘을 세이프에어리어 구석에 바짝 붙일 때 쓰는 여백 (baseMargin보다 작게)
+    const float settingsIconMargin = 12f;
+    // 로그아웃 시 이동할 씬 이름 (Build Settings에 등록되어 있어야 함)
+    const string loginScene = "LoginScene";
 
     // Text elements that shrink together with the content box when SafeArea
     // insets eat into it, so text never gets clipped instead of just resized.
     // Matches the font-size values in Lobby.uss - keep both in sync.
-    [SerializeField] string[] titleLabelNames = { "title-label-line1", "title-label-line2" };
-    // titleLabelNames와 같은 순서(line1, line2)로 대응되는 localization.csv 키.
-    static readonly string[] TitleLabelKeys = { "lobby.title.line1", "lobby.title.line2" };
-    [SerializeField] float titleBaseFontSize = 68f;
-    // title-area의 margin-top(80) + height(230) + margin-bottom(40) + button-area
+    static readonly string[] titleLabelNames = { "title-label" };
+    // titleLabelNames와 같은 순서로 대응되는 localization.csv 키.
+    static readonly string[] TitleLabelKeys = { "lobby.title.full" };
+    const float titleBaseFontSize = 102f;
+    // title-area의 margin-top(110) + height(350) + margin-bottom(40) + button-area
     // (원형 아이콘 버튼 중 가장 큰 시작 버튼 높이 280px) in Lobby.uss. 타이틀과
     // 버튼 사이 간격은 이제 flex-spacer 두 개가 만들어주므로(화면이 넉넉하면
     // 늘어나고, 좁으면 0으로 줄어듦) 고정값 계산에는 안 넣는다. 메뉴 버튼은
     // 고정 크기 원형 아이콘이라(가변 길이 텍스트가 아님) 별도 텍스트
     // 스케일링이 필요 없다.
-    [SerializeField] float designContentHeight = 630f;
+    const float designContentHeight = 780f;
     // .title-area's own "padding: 0 40px" (both sides) in Lobby.uss.
-    [SerializeField] float titleAreaHorizontalPadding = 80f;
-    [SerializeField] float minFontScale = 0.5f;
+    const float titleAreaHorizontalPadding = 80f;
+    const float minFontScale = 0.5f;
 
     // Settings panel text also needs to shrink on narrow screens, same reason
     // as the lobby title/menu buttons above. Matches Settings.uss values.
-    [SerializeField] float settingsTitleBaseFontSize = 44f;
+    const float settingsTitleBaseFontSize = 44f;
     // .settings-section-title's font-size in Settings.uss (비디오/오디오/언어 등 분류 제목).
-    [SerializeField] float settingsSectionTitleBaseFontSize = 56f;
+    const float settingsSectionTitleBaseFontSize = 56f;
     // .settings-header's "padding: 24px 32px" (both sides) in Settings.uss.
-    [SerializeField] float settingsHeaderHorizontalPadding = 64f;
+    const float settingsHeaderHorizontalPadding = 64f;
     // .settings-row-label's font-size in Settings.uss.
-    [SerializeField] float settingsRowLabelBaseFontSize = 48f;
+    const float settingsRowLabelBaseFontSize = 48f;
     // .settings-content's "padding: 8px 40px 32px" (both sides) in Settings.uss.
-    [SerializeField] float settingsContentHorizontalPadding = 80f;
+    const float settingsContentHorizontalPadding = 80f;
     // .settings-row-label's "width: 32%" in Settings.uss.
-    [SerializeField] float settingsRowLabelWidthFraction = 0.32f;
+    const float settingsRowLabelWidthFraction = 0.32f;
 
     VisualElement _lobbyRoot;
     VisualElement _exitModal;
