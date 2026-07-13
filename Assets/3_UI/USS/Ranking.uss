@@ -20,7 +20,7 @@ Button:active {
     justify-content: flex-start;
     overflow: hidden;
     background-color: rgb(250, 240, 222);
-    padding: 48px 32px;
+    /* padding은 RankingScreenController.ApplySafeArea()에서 SafeArea 기준으로 동적 설정 */
 }
 
 .ranking-title {
@@ -145,4 +145,29 @@ Button:active {
 
 .ranking-back-button:hover {
     background-color: rgb(170, 128, 86);
+}
+
+/* 세로 스크롤바 — Settings.uss와 같은 톤으로 맞춤 */
+.unity-scroller--vertical {
+    width: 28px;
+    margin-left: 8px;
+}
+
+.unity-scroller__low-button,
+.unity-scroller__high-button {
+    display: none;
+}
+
+.unity-base-slider--vertical .unity-base-slider__tracker {
+    width: 10px;
+    border-width: 0;
+    border-radius: 5px;
+    background-color: rgb(230, 214, 189);
+}
+
+.unity-base-slider--vertical .unity-base-slider__dragger {
+    width: 20px;
+    border-width: 0;
+    border-radius: 10px;
+    background-color: rgb(150, 111, 71);
 }

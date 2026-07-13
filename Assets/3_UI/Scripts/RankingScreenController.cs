@@ -15,13 +15,21 @@ using UnityEngine.UIElements;
 [RequireComponent(typeof(UIDocument))]
 public class RankingScreenController : MonoBehaviour
 {
-    [Tooltip("뒤로가기 시 돌아갈 씬")]
+    // 랭킹 씬을 열기 전 호출한 씬이 여기에 저장됨 — 뒤로가기에서 그 씬으로 복귀
+    public static string CallerScene;
+
+    [Tooltip("CallerScene이 없을 때 fallback으로 돌아갈 씬")]
     [SerializeField] string lobbyScene = "LobbyScene";
 
     [Tooltip("순위를 조회할 랭킹 매니저 (비우면 씬에서 자동 검색)")]
     [SerializeField] RankingManager rankingManager;
 
+    // SafeArea 기준 최소 여백 — Ranking.uss의 .ranking-root padding 값과 맞춤
+    [SerializeField] float baseMarginH = 32f;
+    [SerializeField] float baseMarginV = 48f;
+
     VisualElement root;
+    VisualElement rankingRoot;
     Label title;
     Label headerRank;
     Label headerName;
@@ -30,10 +38,15 @@ public class RankingScreenController : MonoBehaviour
     Label emptyLabel;
     Button backButton;
 
+    Rect _appliedSafeArea;
+    Vector2Int _appliedScreenSize;
+    Vector2 _appliedPanelSize;
+
     void OnEnable()
     {
         root = GetComponent<UIDocument>().rootVisualElement;
 
+        rankingRoot = root.Q<VisualElement>("ranking-root");
         title = root.Q<Label>("ranking-title");
         headerRank = root.Q<Label>("header-rank");
         headerName = root.Q<Label>("header-name");
@@ -49,12 +62,48 @@ public class RankingScreenController : MonoBehaviour
 
         if (rankingManager == null) rankingManager = FindObjectOfType<RankingManager>();
         LoadRanking();
+
+        ApplySafeArea();
     }
 
     void OnDisable()
     {
         if (backButton != null) backButton.clicked -= OnBackClicked;
         LocalizationManager.OnLanguageChanged -= ApplyLocalization;
+    }
+
+    void Update()
+    {
+        ApplySafeArea();
+    }
+
+    void ApplySafeArea()
+    {
+        if (rankingRoot == null || rankingRoot.panel == null) return;
+
+        var safeArea  = Screen.safeArea;
+        var screenSize = new Vector2Int(Screen.width, Screen.height);
+        var panel     = rankingRoot.panel;
+        float panelW  = panel.visualTree.resolvedStyle.width;
+        float panelH  = panel.visualTree.resolvedStyle.height;
+        if (panelW <= 0f || panelH <= 0f) return;
+
+        var panelSize = new Vector2(panelW, panelH);
+        if (safeArea == _appliedSafeArea && screenSize == _appliedScreenSize && panelSize == _appliedPanelSize)
+            return;
+
+        // 스크린 좌표(좌하단 원점) → 패널 좌표(좌상단 원점) 변환
+        Vector2 topLeft     = RuntimePanelUtils.ScreenToPanel(panel, new Vector2(safeArea.xMin, screenSize.y - safeArea.yMax));
+        Vector2 bottomRight = RuntimePanelUtils.ScreenToPanel(panel, new Vector2(safeArea.xMax, screenSize.y - safeArea.yMin));
+
+        rankingRoot.style.paddingLeft   = Mathf.Max(0f, topLeft.x)            + baseMarginH;
+        rankingRoot.style.paddingRight  = Mathf.Max(0f, panelW - bottomRight.x) + baseMarginH;
+        rankingRoot.style.paddingTop    = Mathf.Max(0f, topLeft.y)            + baseMarginV;
+        rankingRoot.style.paddingBottom = Mathf.Max(0f, panelH - bottomRight.y) + baseMarginV;
+
+        _appliedSafeArea  = safeArea;
+        _appliedScreenSize = screenSize;
+        _appliedPanelSize  = panelSize;
     }
 
     void ApplyLocalization()
@@ -67,7 +116,12 @@ public class RankingScreenController : MonoBehaviour
         if (backButton != null) backButton.text = LocalizationManager.Get("ranking.back");
     }
 
-    void OnBackClicked() => SceneManager.LoadScene(lobbyScene);
+    void OnBackClicked()
+    {
+        string target = !string.IsNullOrEmpty(CallerScene) ? CallerScene : lobbyScene;
+        CallerScene = null;
+        SceneManager.LoadScene(target);
+    }
 
     void LoadRanking()
     {

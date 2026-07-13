@@ -29,6 +29,9 @@ public class TraceGuide : MonoBehaviour
     [Tooltip("획보다 뒤로 밀어낼 z 거리")]
     [SerializeField] float zOffset = 0.5f;
 
+    [Tooltip("정렬 순서 — 유저 획(0)보다 낮게. 쓰기 칸(WritingCellBox)이 있으면 칸보다는 높게 (예: 칸 -2 → 본보기 -1)")]
+    [SerializeField] int sortingOrder = -10;
+
     const int GlyphTexHeight = 256; // 구워낼 글자 텍스처 높이(px)
     const int FontBakeSize = 220;   // 폰트 아틀라스에 요청할 크기
 
@@ -40,7 +43,7 @@ public class TraceGuide : MonoBehaviour
         var go = new GameObject("TraceGuideSprite");
         go.transform.SetParent(transform, false);
         spriteRenderer = go.AddComponent<SpriteRenderer>();
-        spriteRenderer.sortingOrder = -10; // 유저 획(기본 0)보다 항상 뒤
+        spriteRenderer.sortingOrder = sortingOrder; // 유저 획(기본 0)보다 항상 뒤
     }
 
     void Update()

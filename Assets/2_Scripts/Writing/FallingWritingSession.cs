@@ -40,6 +40,24 @@ public class FallingWritingSession : MonoBehaviour
 
     bool isEvaluating;
 
+    /// <summary>현재 타겟 = 가장 먼저 소환된 외자 글자 (선입선출)</summary>
+    FallingWordSpawner.FallingWord CurrentTarget()
+    {
+        if (spawner == null) return null;
+        foreach (var word in spawner.ActiveWords)
+            if (!string.IsNullOrEmpty(word.Text) && word.Text.Length == 1)
+                return word;
+        return null;
+    }
+
+    void Update()
+    {
+        // 현재 타겟을 칸에 기록 → TraceGuide(본보기)가 자동으로 그 글자를 띄운다
+        if (cell == null) return;
+        var target = CurrentTarget();
+        cell.targetText = target != null ? target.Text : "";
+    }
+
     /// <summary>UI의 [평가] 버튼에서 호출</summary>
     public void Evaluate()
     {
@@ -64,15 +82,7 @@ public class FallingWritingSession : MonoBehaviour
         string strokesJson = strokeCapture.CaptureJson(cell);
 
         // 타겟 = 가장 먼저 소환된 글자 (선입선출 — 바닥에 제일 가까운 글자부터 처리)
-        FallingWordSpawner.FallingWord target = null;
-        foreach (var word in spawner.ActiveWords)
-        {
-            if (!string.IsNullOrEmpty(word.Text) && word.Text.Length == 1) // 외자만 지원
-            {
-                target = word;
-                break;
-            }
-        }
+        FallingWordSpawner.FallingWord target = CurrentTarget();
 
         if (target == null)
         {
