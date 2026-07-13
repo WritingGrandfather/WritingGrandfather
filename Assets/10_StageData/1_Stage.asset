@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78c0993b060164f419dadf9e7a01cf70, type: 3}
+  m_Name: 1_Stage
+  m_EditorClassIdentifier: Assembly-CSharp::StageData
+  stageName: 1
+  letters: "\uAC00\uB098\uB2E4\uB77C\uB9C8\uBC14\uC0AC\uC544\uC790\uCC28\uCE74\uD0C0\uD30C\uD558"
+  words:
+  - "\uC0AC\uACFC"
+  - "\uBC14\uC704"
+  - "\uC218\uBC15"
+  - "\uB098\uBB34"
+  - "\uCC45\uC0C1"
+  - "\uB178\uD2B8"
+  - "\uC885\uC774"
+  - "\uCE68\uB300"
+  - "\uBC30\uAC8C"
+  - "\uC2DC\uACC4"
+  - "\uC0AC\uC790"
+  - "\uB2E4\uB9AC"
+  - "\uC6B0\uBB3C"
+  - "\uC548\uACBD"
+  - "\uCEE4\uD2BC"
+  - "\uBC30\uAD6C"
+  - "\uC870\uBA85"
+  - "\uCC9C\uC7A5"
+  - "\uCC3D\uBB38"
+  - "\uD734\uC2DD"
