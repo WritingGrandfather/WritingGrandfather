@@ -86,6 +86,15 @@ Button:active {
     background-color: rgb(140, 140, 140);
 }
 
+/* 랭킹 버튼 - 설정(plain 갈색)과 구분되도록 트로피 느낌의 금빛 톤을 사용 */
+.menu-button--ranking {
+    background-color: rgb(196, 154, 61);
+}
+
+.menu-button--ranking:hover {
+    background-color: rgb(214, 172, 80);
+}
+
 .modal-overlay {
     position: absolute;
     width: 100%;
