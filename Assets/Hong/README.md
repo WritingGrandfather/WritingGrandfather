@@ -16,7 +16,9 @@ Assets/Hong/
     ├── PooledObject.cs
     ├── DrawLine.cs
     ├── ColorButton.cs
-    └── Eraser.cs
+    ├── Eraser.cs
+    ├── UndoManager.cs
+    └── DrawCursor.cs
 ```
 
 ---
@@ -99,6 +101,12 @@ Assets/Hong/InputAction/DrawAction.inputactions
    - `Value`: `0.1`
 3. `On Value Changed` → `DrowLine` 오브젝트 → `DrowLine.SetLineWidth`
 
+### 색상 변경 (ColorButton)
+1. `UI → Button` 생성
+2. `ColorButton` 컴포넌트 추가
+3. Inspector에서 `Draw Line` 연결, `Color` 설정
+4. 버튼 이미지가 지정 색으로 자동 변경됨
+
 ### 전체 초기화
 ```csharp
 GetComponent<DrowLine>().ClearAll(); // 그려진 라인 전부 풀로 반환
@@ -110,13 +118,13 @@ GetComponent<DrowLine>().ClearAll(); // 그려진 라인 전부 풀로 반환
 
 ---
 
----
-
 ## Eraser
 
 ### 개요
-드래그하면서 닿는 라인을 감지해 풀로 반환하는 지우개 컴포넌트입니다.  
-`Activate` / `Deactivate`로 펜 모드와 지우개 모드를 전환하며, 모드 전환 시 DrawLine의 드로우 입력이 자동으로 차단됩니다.
+드래그한 경로에서 라인의 닿은 부분만 잘라내는 부분 지우개입니다.  
+- 지우개가 지나간 구간만 제거되고, 나머지는 새 라인으로 유지됩니다.
+- 빠르게 드래그해도 프레임 사이를 보간해 끊김 없이 지워집니다.
+- `Activate` / `Deactivate`로 펜 모드와 지우개 모드를 전환합니다.
 
 ### 씬 설정
 
@@ -140,9 +148,42 @@ GetComponent<DrowLine>().ClearAll(); // 그려진 라인 전부 풀로 반환
 3. `On Value Changed` → `Eraser` 오브젝트 → `Eraser.SetEraserRadius`
 
 ### 동작 방식
-- 지우개 모드에서 드래그하면 `eraserRadius` 반경 안의 `EdgeCollider2D`를 감지
-- 감지된 라인을 `DrawLine.RemoveLine`으로 풀에 반환
-- UI 위에서는 지우개도 동작하지 않음
+- 드래그 시 이전 프레임 위치와 현재 위치 사이를 `eraserRadius * 0.5f` 간격으로 보간 샘플링
+- 각 샘플 위치에서 `Physics2D.OverlapCircleAll`로 `EdgeCollider2D` 감지
+- 지우개 원과 교차하는 구간만 잘라내고 나머지는 새 라인으로 재생성
+- 총 길이 `0.05f` 미만의 미세 잔재 구간은 자동 필터링
+- UI 위에서는 동작하지 않음
+
+---
+
+## UndoManager
+
+### 개요
+드로우와 지우개 조작을 되돌리는 undo 시스템입니다.  
+- 선 하나 그리기 = undo 스텝 1개
+- 지우개 드래그 한 번 = undo 스텝 1개 (드래그 중 여러 선을 지워도 하나로 묶임)
+
+### 씬 설정
+1. 빈 오브젝트 생성 → `UndoManager` 컴포넌트 추가
+2. `Max History` : 저장할 최대 undo 스텝 수 (기본값 `30`)
+3. UI 버튼 → `On Click` → `UndoManager.Undo`
+
+---
+
+## DrawCursor
+
+### 개요
+마우스/터치 위치에 현재 범위를 회색 반투명 원으로 표시합니다.  
+- 드로우 모드 : 선 두께(`lineWidth * 0.5f`) 기준
+- 지우개 모드 : 지우개 반지름(`eraserRadius`) 기준
+
+### 씬 설정
+1. 빈 오브젝트 생성 → 이름 `DrawCursor`
+2. `DrawCursor` 컴포넌트 추가
+3. Inspector 연결
+   - `Draw Line` → DrawLine 오브젝트
+   - `Eraser` → Eraser 컴포넌트 (DrawLine 오브젝트)
+4. 오브젝트 `Layer` → `Ignore Raycast` (지우개 감지에 영향주지 않도록)
 
 ---
 
@@ -153,12 +194,15 @@ Scene
 ├── Main Camera          (태그: MainCamera)
 ├── PoolManager          (PoolManager 컴포넌트)
 ├── DrawLine             (DrowLine + PlayerInput + Eraser 컴포넌트)
+├── DrawCursor           (DrawCursor 컴포넌트)
 └── Canvas
     ├── PenButton        (On Click → Eraser.Deactivate)
     ├── EraserButton     (On Click → Eraser.Activate)
+    ├── UndoButton       (On Click → UndoManager.Undo)
+    ├── ClearButton      (On Click → DrowLine.ClearAll)
     ├── WidthSlider      (On Value Changed → DrowLine.SetLineWidth)
     ├── EraserSlider     (On Value Changed → Eraser.SetEraserRadius)
-    └── ColorButtons     (ColorButton 컴포넌트, On Click → DrowLine.SetLineColor)
+    └── ColorButtons     (ColorButton 컴포넌트, 색상별 버튼)
 ```
 
 ---
