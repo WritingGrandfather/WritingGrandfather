@@ -317,6 +317,7 @@ GameObject:
   - component: {fileID: 75206299}
   - component: {fileID: 75206301}
   - component: {fileID: 75206310}
+  - component: {fileID: 75206314}
   m_Layer: 0
   m_Name: WritingCell
   m_TagString: Untagged
@@ -337,7 +338,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WritingCell
   size: {x: 5, y: 5}
-  targetText: "\uAC00"
+  targetText: 
 --- !u!4 &75206300
 Transform:
   m_ObjectHideFlags: 0
@@ -668,9 +669,9 @@ RectTransform:
   - {fileID: 1323767682}
   m_Father: {fileID: 714490625}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 179, y: -50}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!1 &226447234
@@ -1616,9 +1617,9 @@ RectTransform:
   - {fileID: 185735812}
   m_Father: {fileID: 1002916391}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 80, y: -80}
   m_SizeDelta: {x: 160, y: 160}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &599727272
@@ -1915,7 +1916,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &714490625
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2269,9 +2270,9 @@ RectTransform:
   - {fileID: 1078228343}
   m_Father: {fileID: 1002916391}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 80, y: -220}
   m_SizeDelta: {x: 160, y: 160}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &743984689
@@ -3133,6 +3134,173 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!1 &900000001
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 900000002}
+  - component: {fileID: 900000003}
+  m_Layer: 0
+  m_Name: PlayerHp
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &900000002
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 900000001}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &900000003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 900000001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55daf5bb39ec142afbe058a70eca9a9f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerHp
+  maxHp: 3
+--- !u!1 &900000011
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 900000012}
+  - component: {fileID: 900000013}
+  m_Layer: 0
+  m_Name: ChallengeSurvivalController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &900000012
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 900000011}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &900000013
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 900000011}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3cb9ebfa88a942aa20fa062001c4aad7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ChallengeSurvivalController
+  spawner: {fileID: 1287237631}
+  playerHp: {fileID: 900000003}
+  startTime: 120
+  bonusTimePerKill: 3
+  capAtStartTime: 1
+  speedRampInterval: 10
+  speedRampAmount: 0.5
+  hpLossOnMiss: 1
+--- !u!1 &900000021
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 900000022}
+  - component: {fileID: 900000023}
+  m_Layer: 5
+  m_Name: ChallengeHud
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &900000022
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 900000021}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2095564127}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &900000023
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 900000021}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae40eb3285d877e62bb8b30306fa81d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ChallengeHudController
+  playerHp: {fileID: 900000003}
+  survival: {fileID: 900000013}
+  drawLine: {fileID: 1346376305}
+  writingCell: {fileID: 75206299}
+  heartFillSprite: {fileID: -433881255743393065, guid: 11166f91a458c8b498633b87135a701c, type: 3}
+  heartNullSprite: {fileID: 2646518341357981494, guid: 405ac44a89faaf64ea6ef7b38ed4dc8f, type: 3}
+  baseHeartSize: 96
+  baseHeartSpacing: 16
+  timeBarColor: {r: 0.84, g: 0.42, b: 0.23, a: 1}
+  timeBarBgColor: {r: 0.12, g: 0.09, b: 0.07, a: 0.92}
+  timeBarBorderColor: {r: 1, g: 0.92, b: 0.75, a: 0.9}
+  baseTimeBarHeight: 64
+  baseTimeBarBorder: 4
+  baseTopOffset: 20
+  lobbySceneName: LobbyScene
+  baseExitButtonSize: 100
+  exitButtonColor: {r: 0.47, g: 0.47, b: 0.47, a: 0.9}
+  baseUndoResetButtonSize: 100
+  baseUndoResetGap: 16
+  baseUndoResetCardInset: 14
+  undoButtonColor: {r: 0.59, g: 0.44, b: 0.28, a: 0.5}
+  resetButtonColor: {r: 0.47, g: 0.47, b: 0.47, a: 0.5}
 --- !u!1 &913206369
 GameObject:
   m_ObjectHideFlags: 0
@@ -3205,6 +3373,7 @@ MonoBehaviour:
   candidates: []
   strokeOrderChecker: {fileID: 0}
   failOnWrongOrder: 1
+  compareOverlay: {fileID: 0}
 --- !u!4 &913206371
 Transform:
   m_ObjectHideFlags: 0
@@ -3291,7 +3460,11 @@ MonoBehaviour:
   gridSize: 96
   tolerance: 0.08
   strayPenalty: 2
+  strayForgiveness: 0.35
+  missForgiveness: 0.35
   requireNeatWriting: 1
+  checkConfusables: 1
+  confusableMargin: 4
   debugDump: 1
 --- !u!1 &992798058
 GameObject:
@@ -3443,7 +3616,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1002916391
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5114,6 +5287,7 @@ MonoBehaviour:
   cell: {fileID: 75206299}
   evaluator: {fileID: 936507628}
   drawLine: {fileID: 1346376305}
+  compareOverlay: {fileID: 0}
   passScore: 60
   checkStrokeOrder: 1
   requireNeatWriting: 1
@@ -7434,9 +7608,9 @@ RectTransform:
   - {fileID: 1039733148}
   m_Father: {fileID: 714490625}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 0, y: -50}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!1 &2080064806
@@ -7931,173 +8105,30 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!1 &900000001
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 900000002}
-  - component: {fileID: 900000003}
-  m_Layer: 0
-  m_Name: PlayerHp
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &900000002
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 900000001}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &900000003
+--- !u!114 &75206314
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 900000001}
+  m_GameObject: {fileID: 75206298}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 55daf5bb39ec142afbe058a70eca9a9f, type: 3}
-  m_Name:
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerHp
-  maxHp: 3
---- !u!1 &900000011
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 900000012}
-  - component: {fileID: 900000013}
-  m_Layer: 0
-  m_Name: ChallengeSurvivalController
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &900000012
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 900000011}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &900000013
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 900000011}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3cb9ebfa88a942aa20fa062001c4aad7, type: 3}
-  m_Name:
-  m_EditorClassIdentifier: Assembly-CSharp::ChallengeSurvivalController
+  m_Script: {fileID: 11500000, guid: 30240b9797c747b7bb84cc5cba5fe83c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   spawner: {fileID: 1287237631}
-  playerHp: {fileID: 900000003}
-  startTime: 120
-  bonusTimePerKill: 3
-  capAtStartTime: 1
-  speedRampInterval: 10
-  speedRampAmount: 0.5
-  hpLossOnMiss: 1
---- !u!1 &900000021
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 900000022}
-  - component: {fileID: 900000023}
-  m_Layer: 5
-  m_Name: ChallengeHud
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &900000022
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 900000021}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 2095564127}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &900000023
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 900000021}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ae40eb3285d877e62bb8b30306fa81d0, type: 3}
-  m_Name:
-  m_EditorClassIdentifier: Assembly-CSharp::ChallengeHudController
-  playerHp: {fileID: 900000003}
-  survival: {fileID: 900000013}
+  session: {fileID: 1369336976}
   drawLine: {fileID: 1346376305}
-  writingCell: {fileID: 75206299}
-  heartFillSprite: {fileID: -433881255743393065, guid: 11166f91a458c8b498633b87135a701c, type: 3}
-  heartNullSprite: {fileID: 2646518341357981494, guid: 405ac44a89faaf64ea6ef7b38ed4dc8f, type: 3}
-  baseHeartSize: 96
-  baseHeartSpacing: 16
-  timeBarColor: {r: 0.84, g: 0.42, b: 0.23, a: 1}
-  timeBarBgColor: {r: 0.12, g: 0.09, b: 0.07, a: 0.92}
-  timeBarBorderColor: {r: 1, g: 0.92, b: 0.75, a: 0.9}
-  baseTimeBarHeight: 64
-  baseTimeBarBorder: 4
-  baseTopOffset: 20
-  lobbySceneName: LobbyScene
-  baseExitButtonSize: 100
-  exitButtonColor: {r: 0.47, g: 0.47, b: 0.47, a: 0.9}
-  baseUndoResetButtonSize: 100
-  baseUndoResetGap: 16
-  baseUndoResetCardInset: 14
-  undoButtonColor: {r: 0.59, g: 0.44, b: 0.28, a: 0.5}
-  resetButtonColor: {r: 0.47, g: 0.47, b: 0.47, a: 0.5}
+  survival: {fileID: 900000013}
+  cell: {fileID: 75206299}
+  font: {fileID: 12800000, guid: e3265ab4bf004d28a9537516768c1c75, type: 3}
+  countFrom: 3
+  stepDuration: 1
+  startTextDuration: 0.7
+  startText: "시작!"
+  fontSizePx: 170
+  sortingOrder: 50
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
