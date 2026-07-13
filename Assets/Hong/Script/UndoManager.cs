@@ -6,11 +6,15 @@ public class UndoManager : MonoBehaviour
 {
     public static UndoManager Instance { get; private set; }
 
-    // 최대 저장 스텝 수 — 초과 시 가장 오래된 스텝 삭제
     [SerializeField] int maxHistory = 30;
 
-    // 각 스텝은 Action 리스트 — 지우개 드래그처럼 여러 조작이 하나의 스텝으로 묶임
-    LinkedList<List<Action>> history = new LinkedList<List<Action>>();
+    LinkedList<List<(Action undo, Action redo)>> history     = new LinkedList<List<(Action undo, Action redo)>>();
+    LinkedList<List<(Action undo, Action redo)>> redoHistory = new LinkedList<List<(Action undo, Action redo)>>();
+
+    public bool CanUndo => history.Count > 0;
+    public bool CanRedo => redoHistory.Count > 0;
+
+    public event Action OnStateChanged;
 
     void Awake()
     {
@@ -18,34 +22,56 @@ public class UndoManager : MonoBehaviour
         Instance = this;
     }
 
-    // 단일 조작을 하나의 스텝으로 기록 — 드로우 완료 시 사용
-    public void Record(Action undoAction)
+    public void Record(Action undoAction, Action redoAction)
     {
-        var step = new List<Action> { undoAction };
-        Push(step);
+        Push(new List<(Action, Action)> { (undoAction, redoAction) });
+        redoHistory.Clear();
+        OnStateChanged?.Invoke();
     }
 
-    // 여러 조작을 하나의 스텝으로 묶어 기록 — 지우개 드래그 세션 종료 시 사용
-    public void RecordBatch(List<Action> undoActions)
+    public void RecordBatch(List<(Action undo, Action redo)> actions)
     {
-        if (undoActions == null || undoActions.Count == 0) return;
-        Push(new List<Action>(undoActions));
+        if (actions == null || actions.Count == 0) return;
+        Push(new List<(Action, Action)>(actions));
+        redoHistory.Clear();
+        OnStateChanged?.Invoke();
     }
 
-    // 가장 최근 스텝을 되돌림 — UI 버튼 OnClick에 연결
     public void Undo()
     {
-        if (history.Count == 0) return;
+        if (!CanUndo) return;
 
         var step = history.Last.Value;
         history.RemoveLast();
 
-        // 스텝 안의 액션을 역순으로 실행 (나중에 생긴 것부터 되돌림)
         for (int i = step.Count - 1; i >= 0; i--)
-            step[i]?.Invoke();
+            step[i].undo?.Invoke();
+
+        redoHistory.AddLast(step);
+        if (redoHistory.Count > maxHistory)
+            redoHistory.RemoveFirst();
+
+        OnStateChanged?.Invoke();
     }
 
-    void Push(List<Action> step)
+    public void Redo()
+    {
+        if (!CanRedo) return;
+
+        var step = redoHistory.Last.Value;
+        redoHistory.RemoveLast();
+
+        for (int i = 0; i < step.Count; i++)
+            step[i].redo?.Invoke();
+
+        history.AddLast(step);
+        if (history.Count > maxHistory)
+            history.RemoveFirst();
+
+        OnStateChanged?.Invoke();
+    }
+
+    void Push(List<(Action, Action)> step)
     {
         history.AddLast(step);
         if (history.Count > maxHistory)

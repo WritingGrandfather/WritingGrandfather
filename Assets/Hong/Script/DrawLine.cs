@@ -149,15 +149,22 @@ public class DrowLine : MonoBehaviour
             drawCoroutine = null;
         }
 
-        // 정상적으로 그리기가 시작된 경우에만 핸들 저장 및 undo 기록
+        // 정상적으로 그리기가 시작된 경우에만 핸들 저장 및 undo/redo 기록
         if (isDrawing)
         {
             var capturedGO = lr.gameObject;
             lineHandles[capturedGO] = currentHandle;
             isDrawing = false;
 
-            // 이 라인을 제거하는 액션을 undo 스택에 기록
-            UndoManager.Instance.Record(() => RemoveLine(capturedGO));
+            var capturedPoints = new List<Vector2>(points);
+            var capturedWidth  = lineWidth;
+            var capturedColor  = lineColor;
+            var goRef          = new GameObject[] { capturedGO };
+
+            UndoManager.Instance.Record(
+                () => RemoveLine(goRef[0]),
+                () => { goRef[0] = CreateLine(capturedPoints, capturedWidth, capturedColor); }
+            );
         }
         currentHandle = default;
 

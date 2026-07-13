@@ -15,7 +15,7 @@ public class Eraser : MonoBehaviour
     Coroutine eraseCoroutine;
     bool isActive;
 
-    List<System.Action> sessionUndoActions;
+    List<(System.Action undo, System.Action redo)> sessionActions;
 
     void Awake()
     {
@@ -42,7 +42,7 @@ public class Eraser : MonoBehaviour
     void OnEraseStart(InputAction.CallbackContext ctx)
     {
         if (!isActive || IsPointerOverUI()) return;
-        sessionUndoActions = new List<System.Action>();
+        sessionActions = new List<(System.Action, System.Action)>();
         eraseCoroutine = StartCoroutine(EraseLoop());
     }
 
@@ -52,9 +52,9 @@ public class Eraser : MonoBehaviour
         StopCoroutine(eraseCoroutine);
         eraseCoroutine = null;
 
-        if (sessionUndoActions != null && sessionUndoActions.Count > 0)
-            UndoManager.Instance.RecordBatch(sessionUndoActions);
-        sessionUndoActions = null;
+        if (sessionActions != null && sessionActions.Count > 0)
+            UndoManager.Instance.RecordBatch(sessionActions);
+        sessionActions = null;
     }
 
     IEnumerator EraseLoop()
@@ -113,17 +113,32 @@ public class Eraser : MonoBehaviour
                 if (newGo != null) created.Add(newGo);
             }
 
-            var capturedOriginal = new List<Vector2>(original);
-            var capturedWidth    = width;
-            var capturedColor    = color;
-            var capturedCreated  = created;
+            var capturedOriginal  = new List<Vector2>(original);
+            var capturedWidth     = width;
+            var capturedColor     = color;
+            var capturedSegments  = segments;
+            var originalGoRef     = new GameObject[] { null };
+            var createdGoRefs     = new List<GameObject>(created);
 
-            sessionUndoActions?.Add(() =>
-            {
-                foreach (var seg in capturedCreated)
-                    drawLine.RemoveLine(seg);
-                drawLine.CreateLine(capturedOriginal, capturedWidth, capturedColor);
-            });
+            sessionActions?.Add((
+                undo: () =>
+                {
+                    foreach (var seg in createdGoRefs) drawLine.RemoveLine(seg);
+                    createdGoRefs.Clear();
+                    originalGoRef[0] = drawLine.CreateLine(capturedOriginal, capturedWidth, capturedColor);
+                },
+                redo: () =>
+                {
+                    drawLine.RemoveLine(originalGoRef[0]);
+                    originalGoRef[0] = null;
+                    createdGoRefs.Clear();
+                    foreach (var seg in capturedSegments)
+                    {
+                        var newGo = drawLine.CreateLine(seg, capturedWidth, capturedColor);
+                        if (newGo != null) createdGoRefs.Add(newGo);
+                    }
+                }
+            ));
         }
     }
 
