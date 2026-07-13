@@ -3,6 +3,13 @@ lobby.title.line1,글씨 쓰는,Handwriting
 lobby.title.line2,할배,Grandpa
 lobby.btn.start,글쓰기 시작,Start Writing
 lobby.btn.ranking,랭킹,Ranking
+ranking.title,랭킹,Ranking
+ranking.header_rank,순위,Rank
+ranking.header_name,이름,Name
+ranking.header_score,점수,Score
+ranking.empty,아직 기록이 없습니다,No records yet
+ranking.back,뒤로,Back
+ranking.me,나,Me
 lobby.btn.settings,설정,Settings
 lobby.btn.exit,나가기,Exit
 lobby.exit.confirm_line1,정말,Are you sure
