@@ -8,7 +8,7 @@ using UnityEngine;
 public class CellCapture : MonoBehaviour
 {
     [Tooltip("캡처 이미지 한 변의 해상도(px). 정사각 기준. 커질수록 인식 정확도↑, 용량↑")]
-    public int resolution = 256;
+    public int resolution = 512;
 
     [Tooltip("캡처 배경색 (인식용으로 보통 흰색 권장)")]
     public Color backgroundColor = Color.white;
