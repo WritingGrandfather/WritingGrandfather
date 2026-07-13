@@ -19,10 +19,19 @@ namespace WritingGrandfather.UI.PreciseWriting
 
         [SerializeField] private Font koreanFont;
 
+        [Tooltip("단어가 바뀌거나 다시 시작할 때 이전 획을 지우기 위한 참조")]
+        [SerializeField] private DrowLine drawLine;
+
+        [Tooltip("AI 채점 파이프라인 (WritingCell + StrokeCapture + CellCapture + Evaluator를 조율). 비워두면 데모 점수로 대체.")]
+        [SerializeField] private WritingFeedbackController feedbackController;
+
+        [Tooltip("실제 캡처 영역을 정의하는 WritingCell — guide-box와 매 프레임 위치/크기를 맞춘다.")]
+        [SerializeField] private WritingCell writingCell;
+
         [Tooltip("데모용 연습 단어 목록 — 실제 출제 시스템 연동 전까지 임시로 사용")]
         [SerializeField] private string[] practiceWords = { "가", "나", "다" };
 
-        [Tooltip("결과 화면에 표시할 데모 점수(%) — 실제 AI 평가 연동 전까지 임시로 사용")]
+        [Tooltip("결과 화면에 표시할 데모 점수(%) — feedbackController가 비어있을 때만 사용")]
         [SerializeField] private int demoScorePercent = 85;
 
         private VisualElement root;
@@ -33,6 +42,10 @@ namespace WritingGrandfather.UI.PreciseWriting
         private VisualElement topBar;
         private VisualElement guideBox;
         private VisualElement bottomBar;
+        private VisualElement drawMaskTop;
+        private VisualElement drawMaskBottom;
+        private VisualElement drawMaskLeft;
+        private VisualElement drawMaskRight;
         private Label ghostCharacterLabel;
         private VisualElement strokeOrderLayer;
         private Toggle toggleShowCharacter;
@@ -40,6 +53,7 @@ namespace WritingGrandfather.UI.PreciseWriting
         private Button completeButton;
         private Button retryButton;
         private Button exitButton;
+        private Button resetButton;
         private Label currentWordLabel;
         private Label wordProgressLabel;
         private VisualElement guideCrossH;
@@ -47,6 +61,7 @@ namespace WritingGrandfather.UI.PreciseWriting
         private Label resultStrokeOrderScoreLabel;
         private Label resultSimilarityScoreLabel;
         private Label resultPositionScoreLabel;
+        private Label resultMessageLabel;
 
         private int wordIndex;
 
@@ -66,6 +81,9 @@ namespace WritingGrandfather.UI.PreciseWriting
 
             safeArea?.RegisterCallback<GeometryChangedEvent>(OnLayoutGeo);
             writingScreen?.RegisterCallback<GeometryChangedEvent>(OnLayoutGeo);
+            guideBox?.RegisterCallback<GeometryChangedEvent>(OnGuideBoxGeo);
+            root.RegisterCallback<PointerMoveEvent>(OnPointerMoveOverRoot, TrickleDown.TrickleDown);
+            feedbackController?.onFeedback?.AddListener(OnFeedbackReceived);
             root.schedule.Execute(ApplyLayout).StartingIn(0);
         }
 
@@ -73,6 +91,48 @@ namespace WritingGrandfather.UI.PreciseWriting
         {
             safeArea?.UnregisterCallback<GeometryChangedEvent>(OnLayoutGeo);
             writingScreen?.UnregisterCallback<GeometryChangedEvent>(OnLayoutGeo);
+            guideBox?.UnregisterCallback<GeometryChangedEvent>(OnGuideBoxGeo);
+            root?.UnregisterCallback<PointerMoveEvent>(OnPointerMoveOverRoot, TrickleDown.TrickleDown);
+            feedbackController?.onFeedback?.RemoveListener(OnFeedbackReceived);
+            if (drawLine != null) drawLine.drawingEnabled = false;
+        }
+
+        // guide-box의 화면상 위치/크기가 바뀔 때마다 WritingCell의 월드 좌표를 그대로 따라가게 해서
+        // AI 캡처(CellCapture/StrokeCapture)가 실제 손글씨가 그려지는 영역과 정확히 일치하도록 한다.
+        // guide-box 스크린 좌표 → Camera.main.ScreenToWorldPoint 변환은 DrowLine이 잉크를 찍을 때 쓰는 것과
+        // 동일한 방식이라 서로 어긋나지 않는다.
+        private void OnGuideBoxGeo(GeometryChangedEvent evt) => SyncWritingCellToGuideBox();
+
+        private void SyncWritingCellToGuideBox()
+        {
+            if (writingCell == null || guideBox == null) return;
+            var cam = Camera.main;
+            if (cam == null) return;
+
+            Rect r = guideBox.worldBound;
+            if (r.width <= 0f || r.height <= 0f) return;
+
+            Vector3 topLeft = cam.ScreenToWorldPoint(new Vector3(r.xMin, r.yMin, 0));
+            Vector3 bottomRight = cam.ScreenToWorldPoint(new Vector3(r.xMax, r.yMax, 0));
+
+            writingCell.transform.position = new Vector3(
+                (topLeft.x + bottomRight.x) * 0.5f,
+                (topLeft.y + bottomRight.y) * 0.5f,
+                writingCell.transform.position.z);
+            writingCell.size = new Vector2(
+                Mathf.Abs(bottomRight.x - topLeft.x),
+                Mathf.Abs(bottomRight.y - topLeft.y));
+        }
+
+        // guide-box와 safe-area 밖에서는 손글씨가 그려지지 않도록, 포인터가 둘 다 안에 있을 때만
+        // DrowLine.drawingEnabled를 켠다 (카드/safe-area 밖으로 그려지던 버그 수정).
+        private void OnPointerMoveOverRoot(PointerMoveEvent evt)
+        {
+            if (drawLine == null || guideBox == null) return;
+
+            bool onWritingScreen = writingScreen != null && !writingScreen.ClassListContains("hidden");
+            bool insideSafeArea = safeArea == null || safeArea.worldBound.Contains(evt.position);
+            drawLine.drawingEnabled = onWritingScreen && insideSafeArea && guideBox.worldBound.Contains(evt.position);
         }
 
         private void Cache()
@@ -84,6 +144,10 @@ namespace WritingGrandfather.UI.PreciseWriting
             topBar = root.Q("top-bar");
             guideBox = root.Q("guide-box");
             bottomBar = root.Q("bottom-bar");
+            drawMaskTop = root.Q("draw-mask-top");
+            drawMaskBottom = root.Q("draw-mask-bottom");
+            drawMaskLeft = root.Q("draw-mask-left");
+            drawMaskRight = root.Q("draw-mask-right");
             ghostCharacterLabel = root.Q<Label>("ghost-character-label");
             strokeOrderLayer = root.Q("stroke-order-layer");
             toggleShowCharacter = root.Q<Toggle>("toggle-show-character");
@@ -91,6 +155,7 @@ namespace WritingGrandfather.UI.PreciseWriting
             completeButton = root.Q<Button>("complete-button");
             retryButton = root.Q<Button>("retry-button");
             exitButton = root.Q<Button>("exit-button");
+            resetButton = root.Q<Button>("reset-button");
             currentWordLabel = root.Q<Label>("current-word-label");
             wordProgressLabel = root.Q<Label>("word-progress-label");
             guideCrossH = root.Q("guide-cross-h");
@@ -98,6 +163,7 @@ namespace WritingGrandfather.UI.PreciseWriting
             resultStrokeOrderScoreLabel = root.Q<Label>("result-stroke-order-score");
             resultSimilarityScoreLabel = root.Q<Label>("result-similarity-score");
             resultPositionScoreLabel = root.Q<Label>("result-position-score");
+            resultMessageLabel = root.Q<Label>("result-message");
         }
 
         private void ApplyFont()
@@ -113,10 +179,12 @@ namespace WritingGrandfather.UI.PreciseWriting
             toggleShowCharacter?.RegisterValueChangedCallback(_ => ApplyToggles());
             toggleShowStrokeOrder?.RegisterValueChangedCallback(_ => ApplyToggles());
             completeButton?.RegisterCallback<ClickEvent>(_ => OnCompleteClicked());
+            resetButton?.RegisterCallback<ClickEvent>(_ => drawLine?.ClearAll());
             retryButton?.RegisterCallback<ClickEvent>(_ =>
             {
                 wordIndex = 0;
                 UpdateWordLabel();
+                drawLine?.ClearAll();
                 Show(writingScreen);
             });
             exitButton?.RegisterCallback<ClickEvent>(_ =>
@@ -124,25 +192,52 @@ namespace WritingGrandfather.UI.PreciseWriting
         }
 
         // 완료 클릭: 다음 단어가 있으면 넘어가고, 마지막 단어면 분석 후 결과를 보여준다.
-        // (실제 AI 채점 연동 전까지 데모 점수를 사용하는 목업)
         private void OnCompleteClicked()
         {
             if (practiceWords != null && wordIndex < practiceWords.Length - 1)
             {
                 wordIndex++;
                 UpdateWordLabel();
+                drawLine?.ClearAll();
                 return;
             }
 
             Show(analyzingScreen);
+
+            if (feedbackController != null && writingCell != null)
+            {
+                writingCell.targetText = practiceWords != null && practiceWords.Length > 0
+                    ? practiceWords[wordIndex]
+                    : "";
+                feedbackController.RequestFeedback();
+                return;
+            }
+
+            // feedbackController가 연결 안 돼 있으면(테스트용) 데모 점수로 대체
             root.schedule.Execute(() =>
             {
                 string scoreText = $"{demoScorePercent}%";
                 if (resultStrokeOrderScoreLabel != null) resultStrokeOrderScoreLabel.text = scoreText;
                 if (resultSimilarityScoreLabel != null) resultSimilarityScoreLabel.text = scoreText;
                 if (resultPositionScoreLabel != null) resultPositionScoreLabel.text = scoreText;
+                if (resultMessageLabel != null) resultMessageLabel.text = "(데모 점수 — AI 채점 미연결)";
                 Show(resultScreen);
             }).StartingIn(1200);
+        }
+
+        // WritingFeedbackController.onFeedback 콜백 — 실제 AI 채점 결과가 도착하면 호출된다.
+        // HandwritingFeedback엔 종합 score 하나뿐이라 3항목 모두 같은 점수를 표시한다.
+        private void OnFeedbackReceived(HandwritingFeedback feedback)
+        {
+            if (feedback == null) return;
+
+            string scoreText = $"{feedback.score}%";
+            if (resultStrokeOrderScoreLabel != null) resultStrokeOrderScoreLabel.text = scoreText;
+            if (resultSimilarityScoreLabel != null) resultSimilarityScoreLabel.text = scoreText;
+            if (resultPositionScoreLabel != null) resultPositionScoreLabel.text = scoreText;
+            if (resultMessageLabel != null) resultMessageLabel.text = feedback.message;
+
+            Show(resultScreen);
         }
 
         private void UpdateWordLabel()
@@ -204,8 +299,16 @@ namespace WritingGrandfather.UI.PreciseWriting
 
             float guideTop = topBarTop + topBarHeight + GuideGapFrac * h;
             float guideSize = w * GuideWidthFrac;
-            PlaceRect(guideBox, (w - guideSize) * 0.5f, guideTop, guideSize, guideSize);
+            float guideLeft = (w - guideSize) * 0.5f;
+            PlaceRect(guideBox, guideLeft, guideTop, guideSize, guideSize);
             float guideBottom = guideTop + guideSize;
+            float guideRight = guideLeft + guideSize;
+
+            // guide-box 밖으로 삐져나온 손글씨를 가리는 4방향 마스크 (위/아래는 화면 전체 폭, 좌/우는 guide-box 높이만큼만)
+            PlaceRect(drawMaskTop, 0, 0, w, guideTop);
+            PlaceRect(drawMaskBottom, 0, guideBottom, w, h - guideBottom);
+            PlaceRect(drawMaskLeft, 0, guideTop, guideLeft, guideSize);
+            PlaceRect(drawMaskRight, guideRight, guideTop, w - guideRight, guideSize);
 
             float completeTop = guideBottom + ButtonGapFrac * h;
             float completeHeight = CompleteHeightFrac * h;

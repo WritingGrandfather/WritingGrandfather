@@ -89,6 +89,30 @@ public class DrowLine : MonoBehaviour
         // 지우개 모드이거나 UI 조작 중에는 드로우 차단
         isDrawing = false;
         if (!drawingEnabled || IsPointerOverUI()) return;
+
+        Vector2 startPos = cam.ScreenToWorldPoint(Pointer.current.position.ReadValue());
+
+        // 클릭 지점에 기존 선이 있으면 새 선 생성 대신 색만 변경
+        foreach (var hit in Physics2D.OverlapCircleAll(startPos, lineWidth * 0.5f))
+        {
+            if (!(hit is EdgeCollider2D)) continue;
+            var hitGO = hit.gameObject;
+            if (!lineHandles.ContainsKey(hitGO)) continue;
+
+            var hitLR       = hitGO.GetComponent<LineRenderer>();
+            var prevColor   = hitLR.startColor;
+            var nextColor   = lineColor;
+
+            hitLR.startColor = nextColor;
+            hitLR.endColor   = nextColor;
+
+            UndoManager.Instance.Record(
+                () => { hitLR.startColor = prevColor; hitLR.endColor = prevColor; },
+                () => { hitLR.startColor = nextColor; hitLR.endColor = nextColor; }
+            );
+            return;
+        }
+
         // out으로 핸들을 받아 저장 — 반환 시 Dispose()만 호출하면 됨
         GameObject currentLineGO = PoolManager.Instance.Spawn(linePoolId, Vector3.zero, transform, out currentHandle);
 
@@ -111,7 +135,6 @@ public class DrowLine : MonoBehaviour
         lr.startColor  = lineColor;
         lr.endColor    = lineColor;
 
-        Vector2 startPos = cam.ScreenToWorldPoint(Pointer.current.position.ReadValue());
         points.Add(startPos);
         lr.positionCount = 1;
         lr.SetPosition(0, startPos);
@@ -127,6 +150,14 @@ public class DrowLine : MonoBehaviour
     {
         while (true)
         {
+            // 드래그 도중 drawingEnabled가 꺼지면(허용 영역 밖으로 나가면) 그 구간은 점을 추가하지 않고 건너뜀
+            // — 다시 켜지면(허용 영역으로 복귀) 마지막 점과 이어 그리되, 두 점 모두 허용 영역 안이므로 안전함
+            if (!drawingEnabled)
+            {
+                yield return null;
+                continue;
+            }
+
             Vector2 pos = cam.ScreenToWorldPoint(Pointer.current.position.ReadValue());
             if (Vector2.Distance(points[points.Count - 1], pos) > 0.001f)
             {

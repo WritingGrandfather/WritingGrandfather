@@ -2,6 +2,10 @@
     <Style src="../USS/PreciseWriting.uss" />
     <ui:VisualElement name="safe-area" class="safe-area">
         <ui:VisualElement name="writing-screen" class="screen">
+            <ui:VisualElement name="draw-mask-top" class="draw-mask" />
+            <ui:VisualElement name="draw-mask-bottom" class="draw-mask" />
+            <ui:VisualElement name="draw-mask-left" class="draw-mask" />
+            <ui:VisualElement name="draw-mask-right" class="draw-mask" />
             <ui:VisualElement name="top-bar" class="top-bar">
                 <ui:VisualElement class="word-progress-row">
                     <ui:Label text="가" name="current-word-label" class="current-word-label" />
@@ -13,6 +17,7 @@
                 <ui:VisualElement name="guide-cross-v" class="guide-cross guide-cross--v" />
                 <ui:Label text="가" name="ghost-character-label" class="ghost-character-label" />
                 <ui:VisualElement name="stroke-order-layer" class="stroke-order-layer hidden" />
+                <ui:Button text="초기화" name="reset-button" class="reset-button" />
             </ui:VisualElement>
             <ui:Button text="완료" name="complete-button" class="primary-button" />
             <ui:VisualElement name="bottom-bar" class="bottom-bar">
@@ -40,6 +45,7 @@
                     <ui:Label text="글자 크기 위치 정확도" class="result-label" />
                     <ui:Label text="85%" name="result-position-score" class="result-value" />
                 </ui:VisualElement>
+                <ui:Label text="" name="result-message" class="result-message" />
                 <ui:VisualElement class="result-button-row">
                     <ui:Button text="다시 하기" name="retry-button" class="modal-button modal-button--confirm" />
                     <ui:Button text="나가기" name="exit-button" class="modal-button modal-button--cancel" />

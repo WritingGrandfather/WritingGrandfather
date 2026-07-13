@@ -2,60 +2,75 @@
     display: none;
 }
 
-/* 화면 전체 (SafeAreaFitter가 패딩을 줌). 세로 가운데 정렬 */
+/* 화면 전체 (SafeAreaFitter가 패딩 적용). 위/가운데/아래 3분할 */
 .login-root {
     position: absolute;
     width: 100%;
     height: 100%;
     background-color: rgb(250, 240, 222);
     flex-direction: column;
-    justify-content: center;
     align-items: center;
+    justify-content: space-between;
 }
 
-/* 실제 내용: 가운데 + 최대폭(태블릿에서 너무 안 퍼지게). 화면에 맞춰 스케일 */
-.content {
-    width: 90%;
+/* 위: 제목 */
+.header {
+    width: 100%;
     max-width: 560px;
-    flex-direction: column;
-    align-items: stretch;
-    padding: 20px;
+    align-items: center;
+    margin-top: 40px;
+    flex-shrink: 0;
 }
 
 .title-label {
-    font-size: 34px;
+    font-size: 30px;
     -unity-font-style: bold;
     color: rgb(90, 62, 40);
     -unity-text-align: middle-center;
-    white-space: nowrap;
-    margin-bottom: 6px;
+    white-space: normal;
+    margin-bottom: 10px;
 }
 
 .subtitle {
     font-size: 18px;
     color: rgb(140, 115, 90);
     -unity-text-align: middle-center;
-    margin-bottom: 28px;
 }
 
-/* 로그인 입력 묶는 카드 */
+/* 가운데: 구글 / 로그인 / 게스트 (남는 공간 차지하며 세로 중앙) */
+.middle {
+    width: 90%;
+    max-width: 560px;
+    flex-grow: 1;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+    padding: 20px 0;
+}
+
+/* 로그인 입력 카드 */
 .card {
     background-color: rgb(255, 253, 248);
     border-radius: 22px;
-    padding: 24px 20px 20px 20px;
-    margin-bottom: 22px;
+    padding: 22px 20px 18px 20px;
+    margin-top: 14px;
+    margin-bottom: 14px;
     align-items: stretch;
 }
 
 .input {
     margin-bottom: 14px;
     font-size: 20px;
+    flex-direction: column;   /* 라벨을 입력칸 위로 */
+    align-items: stretch;
 }
 
 .input .unity-base-field__label {
     color: rgb(90, 62, 40);
-    min-width: 84px;
+    min-width: auto;          /* 좌측 고정폭 해제 */
     font-size: 17px;
+    margin-bottom: 6px;
+    -unity-text-align: middle-left;
 }
 
 .input .unity-base-text-field__input {
@@ -70,7 +85,6 @@
 .menu-button {
     height: 66px;
     flex-shrink: 0;
-    margin-bottom: 12px;
     border-radius: 18px;
     border-width: 0;
     font-size: 22px;
@@ -86,7 +100,6 @@
 .menu-button--primary {
     background-color: rgb(214, 108, 58);
     margin-top: 4px;
-    margin-bottom: 0;
 }
 
 .menu-button--primary:hover {
@@ -109,35 +122,32 @@
     background-color: rgb(140, 140, 140);
 }
 
-/* "또는" 구분선 */
-.divider {
-    font-size: 16px;
-    color: rgb(160, 140, 120);
-    -unity-text-align: middle-center;
-    margin-top: 4px;
-    margin-bottom: 14px;
-}
-
 .msg {
     font-size: 17px;
     color: rgb(190, 60, 40);
     -unity-text-align: middle-center;
     white-space: normal;
-    margin-top: 8px;
+    margin-top: 12px;
 }
 
-/* 회원가입 유도 줄 */
-.signup-row {
+/* 아래: 회원가입 */
+.footer {
+    width: 92%;
+    max-width: 560px;
     flex-direction: row;
+    flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    margin-top: 18px;
+    flex-shrink: 0;
+    margin-bottom: 70px;
 }
 
 .hint {
-    font-size: 17px;
+    font-size: 16px;
     color: rgb(120, 100, 80);
     -unity-text-align: middle-center;
+    white-space: normal;
+    flex-shrink: 1;
 }
 
 .link-button {
@@ -164,7 +174,7 @@
 }
 
 .modal-box {
-    width: 86%;
+    width: 100%;
     max-width: 520px;
     background-color: rgb(255, 253, 248);
     border-radius: 28px;
@@ -178,7 +188,7 @@
     color: rgb(60, 45, 35);
     margin-bottom: 22px;
     -unity-text-align: middle-center;
-    white-space: nowrap;
+    white-space: normal;
 }
 
 .modal-button-row {
@@ -190,7 +200,9 @@
 
 .modal-button {
     flex-grow: 1;
-    height: 76px;
+    flex-basis: 0;
+    flex-shrink: 1;
+    height: 50px;
     margin: 0 8px;
     border-radius: 18px;
     border-width: 0;

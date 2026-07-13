@@ -14,6 +14,12 @@
     height: 100%;
 }
 
+/* guide-box 밖으로 삐져나온 손글씨(월드 스페이스)를 카메라 배경색으로 덮어 가린다 */
+.draw-mask {
+    position: absolute;
+    background-color: rgb(251, 243, 227);
+}
+
 /* ---- 상단 바 ---- */
 
 .top-bar {
@@ -50,7 +56,7 @@
 /* ---- 가이드 박스 ---- */
 
 .guide-box {
-    background-color: rgba(255, 253, 248, 0.55);
+    background-color: rgba(255, 253, 248, 0);
     border-width: 3px;
     border-color: rgb(150, 111, 71);
     border-radius: 24px;
@@ -93,6 +99,24 @@
     height: 8px;
     background-color: rgba(150, 111, 71, 0.6);
     border-radius: 4px;
+}
+
+.reset-button {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    height: 100px;
+    padding: 0 24px;
+    border-radius: 30px;
+    border-width: 0;
+    font-size: 40px;
+    color: rgb(255, 255, 255);
+    background-color: rgba(120, 120, 120, 0.85);
+    -unity-text-align: middle-center;
+}
+
+.reset-button:hover {
+    background-color: rgba(140, 140, 140, 0.9);
 }
 
 /* ---- 획순 레이어 ---- */
@@ -199,6 +223,13 @@
     font-size: 60px;
     -unity-font-style: bold;
     color: rgb(214, 108, 58);
+}
+
+.result-message {
+    font-size: 32px;
+    color: rgb(90, 62, 40);
+    white-space: normal;
+    -unity-text-align: middle-center;
 }
 
 .result-button-row {
