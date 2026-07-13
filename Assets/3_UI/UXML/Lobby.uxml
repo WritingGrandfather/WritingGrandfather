@@ -58,11 +58,11 @@
                     <ui:Slider name="slider-master-volume" low-value="0" high-value="100" value="80" show-input-field="true" class="settings-control" />
                 </ui:VisualElement>
                 <ui:VisualElement class="settings-row">
-                    <ui:Label text="배경음 (BGM)" class="settings-row-label" />
+                    <ui:Label text="배경음" class="settings-row-label" />
                     <ui:Slider name="slider-bgm-volume" low-value="0" high-value="100" value="70" show-input-field="true" class="settings-control" />
                 </ui:VisualElement>
                 <ui:VisualElement class="settings-row">
-                    <ui:Label text="효과음 (SFX)" class="settings-row-label" />
+                    <ui:Label text="효과음" class="settings-row-label" />
                     <ui:Slider name="slider-sfx-volume" low-value="0" high-value="100" value="80" show-input-field="true" class="settings-control" />
                 </ui:VisualElement>
             </ui:VisualElement>

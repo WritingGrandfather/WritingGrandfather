@@ -16,7 +16,7 @@
     align-items: center;
     flex-shrink: 0;
     overflow: hidden;
-    padding: 24px 32px;
+    padding: 24px 28px;
 }
 
 /* flex-shrink/min-width/overflow: 좁은 화면에서 닫기 버튼이 밀려나거나
@@ -36,7 +36,7 @@
    유지해 좁은 화면에서도 버튼이 잘리지 않게 함 */
 .settings-close-button {
     flex-shrink: 0;
-    height: 80px;
+    height: 40px;
     padding: 0 28px;
     border-radius: 14px;
     border-width: 0;
