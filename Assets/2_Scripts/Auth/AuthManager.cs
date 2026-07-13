@@ -100,6 +100,10 @@ public class AuthManager : MonoBehaviour
         IsSignedIn = true; IsGuest = true;
         UserId = SystemInfo.deviceUniqueIdentifier; DisplayName = LocalizationManager.Get("auth.guest_display_name");
         PlayerPrefs.SetInt(GuestKey, 1);
+        // 모바일에서는 OS가 앱을 강제 종료할 때 OnApplicationQuit이 항상 호출된다는 보장이
+        // 없어서, Save()를 명시적으로 안 하면 방금 쓴 값이 디스크에 반영 안 된 채 날아갈 수
+        // 있다 - 이게 "다시 켜면 로그인이 풀려있음" 버그의 원인이었다.
+        PlayerPrefs.Save();
     }
 
     // ── 이메일 회원가입 ─────────────────────────────────────────────
@@ -163,6 +167,15 @@ public class AuthManager : MonoBehaviour
 #endif
         IsSignedIn = false; IsGuest = false; UserId = ""; DisplayName = "";
         PlayerPrefs.DeleteKey(GuestKey);
+        PlayerPrefs.Save();
+    }
+
+    // 모바일 OS가 백그라운드로 넘어간 앱을 아무 예고 없이 종료시킬 수 있으므로, 포그라운드를
+    // 벗어나는 시점(pauseStatus==true)마다 저장 안 된 PlayerPrefs 변경 사항을 한 번 더
+    // 디스크에 반영해 둔다 - 로그인 상태가 날아가지 않게 하는 마지막 안전망.
+    void OnApplicationPause(bool pauseStatus)
+    {
+        if (pauseStatus) PlayerPrefs.Save();
     }
 
     // ── 내부 헬퍼 ───────────────────────────────────────────────────
@@ -191,6 +204,7 @@ public class AuthManager : MonoBehaviour
             ? user.DisplayName
             : (guest ? LocalizationManager.Get("auth.guest_display_name") : (user != null ? user.Email : ""));
         PlayerPrefs.SetInt(GuestKey, guest ? 1 : 0); // 게스트=로컬저장, 실제계정=클라우드
+        PlayerPrefs.Save();
     }
 
     static string FirebaseError(System.Threading.Tasks.Task t)
