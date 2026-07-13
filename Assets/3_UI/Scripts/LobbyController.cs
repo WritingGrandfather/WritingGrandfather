@@ -141,6 +141,10 @@ public class LobbyController : MonoBehaviour
         _menuButtons = System.Array.ConvertAll(menuButtonNames, name => _lobbyRoot.Q<TextElement>(name));
         _lobbyRoot.RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
 
+        var versionLabel = root.Q<Label>("version-label");
+        if (versionLabel != null)
+            versionLabel.text = "v" + Application.version;
+
         _settingsPanel = root.Q<VisualElement>("settings-panel");
         _settingsTitle = root.Q<TextElement>("settings-title");
         _settingsCloseButton = root.Q<Button>("btn-settings-close");
