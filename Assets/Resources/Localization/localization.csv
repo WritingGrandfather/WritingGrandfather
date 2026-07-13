@@ -35,6 +35,7 @@ lobby.settings.language_label,언어 선택,Language
 lobby.settings.lang_korean,한국어,한국어
 lobby.settings.lang_english,English,English
 lobby.settings.tab_mypage,마이페이지,My Page
+lobby.settings.nickname_label,닉네임,Nickname
 lobby.settings.tab_misc,기타,Other
 lobby.settings.logout_button,로그아웃,Log Out
 lobby.settings.adult_child_label,연령,Age

@@ -43,6 +43,10 @@
                     <ui:VisualElement class="settings-section-line" />
                 </ui:VisualElement>
                 <ui:VisualElement class="settings-row">
+                    <ui:Label text="닉네임" class="settings-row-label" />
+                    <ui:TextField name="mypage-nickname-field" class="settings-control" />
+                </ui:VisualElement>
+                <ui:VisualElement class="settings-row">
                     <ui:Label text="이메일" class="settings-row-label" />
                     <ui:Label text="" name="mypage-email-value" class="settings-value-label" />
                 </ui:VisualElement>

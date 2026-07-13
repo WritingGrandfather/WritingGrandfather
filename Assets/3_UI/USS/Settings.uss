@@ -201,6 +201,21 @@
     background-color: rgb(214, 108, 58);
 }
 
+/* 닉네임 입력칸(TextField) - DropdownField와 같은 높이/폰트로 톤을 맞춘다. */
+.unity-base-text-field__input {
+    height: 92px;
+    border-radius: 16px;
+    border-width: 0;
+    padding: 0 24px;
+    background-color: rgb(255, 253, 248);
+    font-size: 44px;
+    color: rgb(60, 45, 35);
+}
+
+.unity-base-text-field__input:hover {
+    background-color: rgb(245, 235, 218);
+}
+
 /* DropdownField(해상도, 언어 등 선택) 전체 높이 */
 .unity-base-popup-field {
     height: 92px;
