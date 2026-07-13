@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UIElements;
+using UnityEngine.UIElements.Experimental;
 
 namespace WritingGrandfather.UI.PreciseWriting
 {
@@ -28,7 +29,13 @@ namespace WritingGrandfather.UI.PreciseWriting
         [Tooltip("실제 캡처 영역을 정의하는 WritingCell — guide-box와 매 프레임 위치/크기를 맞춘다.")]
         [SerializeField] private WritingCell writingCell;
 
-        [Tooltip("데모용 연습 단어 목록 — 실제 출제 시스템 연동 전까지 임시로 사용")]
+        [Tooltip("연습할 스테이지 데이터 — 연결하면 아래 데모 단어 대신 스테이지 글자들을 순서대로 출제")]
+        [SerializeField] private StageData[] stages;
+
+        [Tooltip("스테이지에서 낱말(Letter)/단어(Word) 중 어느 목록을 쓸지")]
+        [SerializeField] private GameMode stageMode = GameMode.Letter;
+
+        [Tooltip("데모용 연습 단어 목록 — 스테이지가 비어 있을 때만 사용")]
         [SerializeField] private string[] practiceWords = { "가", "나", "다" };
 
         [Tooltip("결과 화면에 표시할 데모 점수(%) — feedbackController가 비어있을 때만 사용")]
@@ -73,6 +80,11 @@ namespace WritingGrandfather.UI.PreciseWriting
 
         private int wordIndex;
 
+        // 스테이지 전환 연출용 — practiceWords[i]가 속한 스테이지 번호(1부터)와 이름
+        private int[] wordStageNums;
+        private string[] wordStageNames;
+        private int lastBannerStage = -1;
+
         private void OnEnable()
         {
             root = GetComponent<UIDocument>().rootVisualElement;
@@ -84,7 +96,41 @@ namespace WritingGrandfather.UI.PreciseWriting
             ApplyToggles();
             BuildGuideCross();
 
+            // 스테이지 데이터가 연결돼 있으면 데모 단어 대신 스테이지 글자들로 교체
+            // (스테이지 순서는 유지, 각 스테이지 안에서는 셔플. 단어별 소속 스테이지를 기록해 전환 연출에 사용)
+            if (stages != null && stages.Length > 0)
+            {
+                var list = new System.Collections.Generic.List<string>();
+                var nums = new System.Collections.Generic.List<int>();
+                var names = new System.Collections.Generic.List<string>();
+
+                for (int si = 0; si < stages.Length; si++)
+                {
+                    if (stages[si] == null) continue;
+                    var texts = new System.Collections.Generic.List<string>(stages[si].GetTexts(stageMode));
+                    for (int i = texts.Count - 1; i > 0; i--) // Fisher-Yates 셔플
+                    {
+                        int k = Random.Range(0, i + 1);
+                        (texts[i], texts[k]) = (texts[k], texts[i]);
+                    }
+                    foreach (var t in texts)
+                    {
+                        list.Add(t);
+                        nums.Add(si + 1);
+                        names.Add(stages[si].stageName);
+                    }
+                }
+
+                if (list.Count > 0)
+                {
+                    practiceWords = list.ToArray();
+                    wordStageNums = nums.ToArray();
+                    wordStageNames = names.ToArray();
+                }
+            }
+
             wordIndex = 0;
+            lastBannerStage = -1;
             UpdateWordLabel();
 
             ApplyLocalization();
@@ -376,6 +422,53 @@ namespace WritingGrandfather.UI.PreciseWriting
             if (currentWordLabel != null) currentWordLabel.text = word;
             if (ghostCharacterLabel != null) ghostCharacterLabel.text = word;
             if (wordProgressLabel != null) wordProgressLabel.text = $"{wordIndex + 1} / {practiceWords.Length}";
+
+            // 스테이지가 바뀌는 첫 글자에서 전환 연출
+            if (wordStageNums != null && wordIndex < wordStageNums.Length && wordStageNums[wordIndex] != lastBannerStage)
+            {
+                lastBannerStage = wordStageNums[wordIndex];
+                ShowStageBanner(lastBannerStage, wordStageNames[wordIndex]);
+            }
+        }
+
+        // 스테이지 전환 배너: 살짝 확대되며 페이드 인 → 잠시 유지 → 페이드 아웃
+        private void ShowStageBanner(int stageNum, string stageName)
+        {
+            if (root == null) return;
+
+            var banner = new Label(string.IsNullOrEmpty(stageName) ? $"{stageNum}단계" : $"{stageNum}단계\n{stageName}");
+            banner.pickingMode = PickingMode.Ignore;
+            banner.style.position = Position.Absolute;
+            banner.style.left = 0;
+            banner.style.right = 0;
+            banner.style.top = Length.Percent(38);
+            banner.style.unityTextAlign = TextAnchor.MiddleCenter;
+            banner.style.whiteSpace = WhiteSpace.Normal;
+            banner.style.fontSize = 64;
+            banner.style.color = new Color(0.45f, 0.32f, 0.24f); // 테마에 맞는 짙은 갈색
+            banner.style.opacity = 0f;
+            if (koreanFont != null)
+                banner.style.unityFontDefinition = new StyleFontDefinition(koreanFont);
+            root.Add(banner);
+
+            const int fadeMs = 300;
+            const int holdMs = 1000;
+
+            banner.experimental.animation
+                .Start(0f, 1f, fadeMs, (ve, t) =>
+                {
+                    ve.style.opacity = t;
+                    ve.style.scale = new Scale(Vector2.one * (0.85f + 0.15f * t));
+                })
+                .OnCompleted(() =>
+                {
+                    banner.schedule.Execute(() =>
+                    {
+                        banner.experimental.animation
+                            .Start(0f, 1f, fadeMs, (ve, t) => ve.style.opacity = 1f - t)
+                            .OnCompleted(() => banner.RemoveFromHierarchy());
+                    }).StartingIn(holdMs);
+                });
         }
 
         // Toggle의 기본 체크박스 비주얼은 USS만으로는 완전히 숨기기 어려워(내부 구조가 테마에 따라 달라짐)

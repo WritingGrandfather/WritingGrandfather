@@ -167,6 +167,7 @@ GameObject:
   - component: {fileID: 918817555}
   - component: {fileID: 2091857815}
   - component: {fileID: 676139461}
+  - component: {fileID: 2091857816}
   m_Layer: 0
   m_Name: AIEvaluation
   m_TagString: Untagged
@@ -217,7 +218,7 @@ MonoBehaviour:
   targetCell: {fileID: 1261887764}
   strokeCapture: {fileID: 1764770114}
   imageCapture: {fileID: 0}
-  evaluator: {fileID: 2091857815}
+  evaluator: {fileID: 2091857816}
   passScore: 70
   criteria: "\uBAA9\uD45C \uAE00\uC790\uB97C \uC815\uD655\uD55C \uD68D\uC21C\uACFC
     \uBAA8\uC591\uC73C\uB85C \uC37C\uB294\uC9C0 \uD3C9\uAC00\uD574\uC918. \uB2E4\uC74C
@@ -321,6 +322,13 @@ MonoBehaviour:
   drawLine: {fileID: 1155924613}
   feedbackController: {fileID: 676139461}
   writingCell: {fileID: 1261887764}
+  stages:
+  - {fileID: 11400000, guid: 86a7e7c65bf7243f9964986964bcad04, type: 2}
+  - {fileID: 11400000, guid: f3bb46fd134234e869d7fcb3fbdd7f8f, type: 2}
+  - {fileID: 11400000, guid: 872f18239d65443629696302b7a9a0f8, type: 2}
+  - {fileID: 11400000, guid: 1e3352cf80830407f83fb53e6f4e13d5, type: 2}
+  - {fileID: 11400000, guid: e81ea5de933d84b87959a7d61c9b8c4f, type: 2}
+  stageMode: 0
   practiceWords:
   - "\uAC00"
   - "\uB098"
@@ -696,6 +704,30 @@ MonoBehaviour:
   maxTokens: 1024
   votes: 1
   reasoningEffort: none
+--- !u!114 &2091857816
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 340074031}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 019013826376c464fa5a9ed78055b184, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TemplateSimilarityEvaluator
+  strokeCapture: {fileID: 1764770114}
+  cell: {fileID: 1261887764}
+  traceGuide: {fileID: 0}
+  font: {fileID: 12800000, guid: eeb8b184c61c3c743b0bd13837406ade, type: 3}
+  templateHeightRatio: 0.55
+  templateOffsetY: 0
+  fontRenderSize: 192
+  gridSize: 96
+  tolerance: 0.08
+  strayPenalty: 2
+  requireNeatWriting: 1
+  debugDump: 1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
