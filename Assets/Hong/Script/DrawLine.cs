@@ -4,11 +4,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Pool;
+using UnityEngine.EventSystems;
 
 public class DrowLine : MonoBehaviour
 {
     // Resources/Prefabs/Line.prefab 의 파일명이 그대로 id가 됨
     const string linePoolId = "Line";
+
+    // 선 두께 — Inspector 또는 UI Slider에서 조절 가능
+    [Range(0.01f, 1f)]
+    public float lineWidth = 0.1f;
 
     LineRenderer lr;
     EdgeCollider2D collider2D;
@@ -53,10 +58,27 @@ public class DrowLine : MonoBehaviour
         clickAction.canceled -= OnDrawEnd;
     }
 
+    // UI 위에서 입력 중인지 확인 — 마우스와 터치 모두 처리
+    bool IsPointerOverUI()
+    {
+        if (EventSystem.current == null) return false;
+
+        // 마우스
+        if (EventSystem.current.IsPointerOverGameObject()) return true;
+
+        // 터치 (fingerId 0 = 첫 번째 손가락)
+        if (Touchscreen.current != null && Touchscreen.current.primaryTouch.press.isPressed)
+            return EventSystem.current.IsPointerOverGameObject(0);
+
+        return false;
+    }
+
     // started 콜백 : 마우스 왼쪽 버튼을 누르는 순간 호출
     // 풀에서 라인 오브젝트를 꺼내 초기화한 뒤 드로우 루프를 시작함
     void OnDrawStart(InputAction.CallbackContext ctx)
     {
+        // 슬라이더 등 UI 조작 중에는 드로우 차단
+        if (IsPointerOverUI()) return;
         // out으로 핸들을 받아 저장 — 반환 시 Dispose()만 호출하면 됨
         GameObject currentLineGO = PoolManager.Instance.Spawn(linePoolId, Vector3.zero, transform, out currentHandle);
 
@@ -72,6 +94,10 @@ public class DrowLine : MonoBehaviour
         // 풀에서 꺼낸 오브젝트는 이전 사용 흔적이 남아있을 수 있으므로 초기화
         lr.positionCount = 0;
         collider2D.points = new Vector2[0];
+
+        // 현재 설정된 두께 적용
+        lr.startWidth = lineWidth;
+        lr.endWidth   = lineWidth;
 
         Vector2 startPos = cam.ScreenToWorldPoint(Pointer.current.position.ReadValue());
         points.Add(startPos);
@@ -115,6 +141,12 @@ public class DrowLine : MonoBehaviour
         currentHandle = default;
 
         points.Clear();
+    }
+
+    // UI Slider의 OnValueChanged에 연결해서 두께를 실시간으로 조절
+    public void SetLineWidth(float width)
+    {
+        lineWidth = width;
     }
 
     // 그려진 모든 라인을 풀로 반환하고 화면을 초기화
