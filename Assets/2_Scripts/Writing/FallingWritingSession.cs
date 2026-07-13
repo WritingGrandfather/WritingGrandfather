@@ -20,14 +20,14 @@ public class FallingWritingSession : MonoBehaviour
     [SerializeField] WritingCell cell;
     [Tooltip("모양 채점기 — Stroke Capture/Cell 참조를 비운 별도 인스턴스 권장")]
     [SerializeField] TemplateSimilarityEvaluator evaluator;
-    [SerializeField] DrowLine drawLine;
+    [SerializeField] DrawLine drawLine;
 
     [Tooltip("판정 직후 맞음/빠뜨림/벗어남을 색으로 보여줄 교정 겹쳐보기 (선택)")]
     [SerializeField] CompareOverlay compareOverlay;
 
     [Header("판정")]
-    [Tooltip("이 점수 이상으로 닮은 낙하 글자가 있으면 격추")]
-    [SerializeField] int passScore = 60;
+    [Tooltip("이 점수 이상으로 닮은 낙하 글자가 있으면 격추 (다른 채점 흐름과 동일한 기준)")]
+    [SerializeField] int passScore = 50;
 
     [Tooltip("격추 전에 획순도 검사 (로컬)")]
     [SerializeField] bool checkStrokeOrder = true;
@@ -256,7 +256,9 @@ public class FallingWritingSession : MonoBehaviour
             if (!string.IsNullOrEmpty(neatWarn)) fb.message = neatWarn;
         }
 
-        if (fb.score < passScore)
+        // 어린이 모드는 정확한 모양보다 "쓰는 재미"가 우선이라 통과 기준을 낮춘다 (최소 30점).
+        int effectivePassScore = UserProfile.IsChildMode ? Mathf.Max(30, passScore - 15) : passScore;
+        if (fb.score < effectivePassScore)
         {
             drawLine?.ClearAll();
             // fb.message가 그냥 "N% 닮았어요" 식의 일반 점수 메시지뿐이면 더 구체적인 안내로 바꿔준다.
@@ -274,8 +276,8 @@ public class FallingWritingSession : MonoBehaviour
             return;
         }
 
-        // 획순 검사 (로컬, 지원 자모만)
-        if (checkStrokeOrder)
+        // 획순 검사 (로컬, 지원 자모만) — 어린이 모드는 획순만으로 불통과시키지 않는다.
+        if (checkStrokeOrder && !UserProfile.IsChildMode)
         {
             var order = StrokeOrderValidator.Validate(target.Text[0], norm);
             if (order.supported && !order.ok)

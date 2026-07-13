@@ -9,14 +9,22 @@ using UnityEngine.Networking;
 /// OpenAI API로 "획 좌표 데이터"를 인식·평가하는 평가기. (PNG 이미지가 아니라 라인렌더러 기반)
 /// 획 순서·획 개수 정보가 담기므로 획순 피드백까지 요청할 수 있다.
 ///
-///  - 엔드포인트: https://api.openai.com/v1/chat/completions
-///  - 인증 헤더: Authorization: Bearer <key>
-///  - 입력: 텍스트(획 좌표 JSON + 기준)
+/// ⚠️ 진짜 OpenAI 키는 클라이언트에 절대 넣지 않는다 — 빌드된 앱에 박힌 키는 누구나 뜯어볼 수
+/// 있어 그대로 유출·도용된다. 대신 Firebase Cloud Functions 프록시(functions/index.js의
+/// openaiProxy)를 거친다: 이 앱은 프록시 전용 공유 비밀값(X-Proxy-Key)만 보내고, 실제
+/// OpenAI 키는 서버 쪽 Secret Manager에만 있다. 배포/설정 방법은 functions/README.md 참고.
 ///
-/// API 키(sk-...)는 ApiKeyConfig(Assets/Resources/ApiKeyConfig.asset)에서 가져온다.
+///  - 엔드포인트: proxyUrl (배포된 openaiProxy 함수 URL, 인스펙터에서 지정)
+///  - 인증 헤더: X-Proxy-Key: <공유 비밀값> (ApiKeyConfig.asset에서 가져옴)
+///  - 입력: 텍스트(획 좌표 JSON + 기준) — OpenAI로 그대로 중계됨
 /// </summary>
 public class OpenAIHandwritingEvaluator : HandwritingEvaluator
 {
+    [Header("프록시 서버 (Firebase Cloud Functions)")]
+    [Tooltip("배포된 openaiProxy 함수의 URL (2세대 함수라 Cloud Run 형식: https://openaiproxy-XXXXXXXXXX-uc.a.run.app).\n" +
+        "firebase deploy --only functions 실행 후 터미널에 출력되는 실제 Function URL로 반드시 교체할 것.")]
+    public string proxyUrl = "https://REPLACE-WITH-DEPLOYED-OPENAIPROXY-URL";
+
     // ── AI 모델 칸 ────────────────────────────────────────────────────
     [Header("AI 모델 설정")]
     [Tooltip("사용할 OpenAI 모델 ID.\n추천: gpt-5.4-mini (빠르고 정확, 저렴) / gpt-5.4 (더 정확) / gpt-4o (구형, 다수결 투표 사용)")]
@@ -39,8 +47,6 @@ public class OpenAIHandwritingEvaluator : HandwritingEvaluator
          model.StartsWith("o", StringComparison.OrdinalIgnoreCase));
     // ────────────────────────────────────────────────────────────────
 
-    const string Endpoint = "https://api.openai.com/v1/chat/completions";
-
     public override void Evaluate(HandwritingEvaluationRequest request, Action<HandwritingFeedback> onComplete)
     {
         StartCoroutine(SendRequest(request, onComplete));
@@ -50,14 +56,23 @@ public class OpenAIHandwritingEvaluator : HandwritingEvaluator
     {
         if (string.IsNullOrEmpty(model))
         {
-            onComplete?.Invoke(HandwritingFeedback.Error("No AI model set. Fill the 'model' field on OpenAIHandwritingEvaluator."));
+            Debug.LogError("No AI model set. Fill the 'model' field on OpenAIHandwritingEvaluator.");
+            onComplete?.Invoke(FailOpen(request));
+            yield break;
+        }
+
+        if (string.IsNullOrEmpty(proxyUrl) || proxyUrl.Contains("REPLACE-WITH"))
+        {
+            Debug.LogError("No proxy URL set. Deploy functions/index.js and fill 'proxyUrl' on OpenAIHandwritingEvaluator (see functions/README.md).");
+            onComplete?.Invoke(FailOpen(request));
             yield break;
         }
 
         var config = ApiKeyConfig.Instance;
         if (config == null || string.IsNullOrEmpty(config.ApiKey))
         {
-            onComplete?.Invoke(HandwritingFeedback.Error("No API key. Check Assets/Resources/ApiKeyConfig.asset."));
+            Debug.LogError("No proxy shared secret. Check Assets/Resources/ApiKeyConfig.asset (functions/README.md).");
+            onComplete?.Invoke(FailOpen(request));
             yield break;
         }
 
@@ -75,7 +90,7 @@ public class OpenAIHandwritingEvaluator : HandwritingEvaluator
 
         for (int i = 0; i < parallel; i++)
         {
-            StartCoroutine(SendOne(body, config.ApiKey, (texts, error) =>
+            StartCoroutine(SendOne(body, config.ApiKey, proxyUrl, (texts, error) =>
             {
                 done++;
                 if (error != null) lastError = error;
@@ -87,7 +102,8 @@ public class OpenAIHandwritingEvaluator : HandwritingEvaluator
 
         if (aiTexts.Count == 0)
         {
-            onComplete?.Invoke(HandwritingFeedback.Error(lastError ?? "Could not read AI content (see Console)."));
+            Debug.LogError("[OpenAI] " + (lastError ?? "Could not read AI content (see Console)."));
+            onComplete?.Invoke(FailOpen(request));
             yield break;
         }
 
@@ -103,15 +119,16 @@ public class OpenAIHandwritingEvaluator : HandwritingEvaluator
         onComplete?.Invoke(feedback);
     }
 
-    // 요청 1개 전송. 성공 시 choices의 content들, 실패 시 error 문자열을 콜백으로 전달.
-    IEnumerator SendOne(string body, string apiKey, Action<List<string>, string> callback)
+    // 요청 1개 전송(우리 프록시로). 성공 시 choices의 content들, 실패 시 error 문자열을 콜백으로 전달.
+    IEnumerator SendOne(string body, string proxySharedSecret, string url, Action<List<string>, string> callback)
     {
-        using (var www = new UnityWebRequest(Endpoint, "POST"))
+        using (var www = new UnityWebRequest(url, "POST"))
         {
             www.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(body));
             www.downloadHandler = new DownloadHandlerBuffer();
             www.SetRequestHeader("content-type", "application/json");
-            www.SetRequestHeader("Authorization", "Bearer " + apiKey);
+            // 진짜 OpenAI 키가 아니라 프록시 전용 공유 비밀값 - 서버(functions/index.js)가 검증한다.
+            www.SetRequestHeader("X-Proxy-Key", proxySharedSecret);
 
             yield return www.SendWebRequest();
 
@@ -197,9 +214,14 @@ public class OpenAIHandwritingEvaluator : HandwritingEvaluator
         // message는 UI에 그대로 노출되는 문장이라, 앱에 설정된 언어(한국어/영어)에 맞춰
         // AI가 그 언어로 답하도록 지시한다 - 그래야 영어로 전환했을 때 이 문장도 영어로 나온다.
         string messageLanguage = LocalizationManager.CurrentLanguage == Language.Korean ? "Korean" : "English";
+        // 로비 설정의 성인/어린이 선택에 따라 메시지 톤을 다르게 요청한다 - 어린이는
+        // 쉬운 낱말과 칭찬 위주로, 성인은 담백하게.
+        string tone = UserProfile.IsChildMode
+            ? "very warm and playful, like praising a young child learning to write for the first time — simple words, an exclamation mark, always find something to praise even when the score is low"
+            : "warm and encouraging, like a patient teacher";
         sb.AppendLine("OUTPUT FORMAT:");
         sb.AppendLine("First: AT MOST 2 short analysis lines (stroke grouping + composition). No braces, no markdown.");
-        sb.AppendLine($"Then on the LAST line output exactly this JSON (message = one friendly sentence in {messageLanguage} about the writing):");
+        sb.AppendLine($"Then on the LAST line output exactly this JSON (message = one sentence in {messageLanguage}, tone: {tone}):");
         sb.AppendLine("{\"recognizedText\":\"...\",\"score\":0-100 integer,\"message\":\"...\"}");
         return sb.ToString();
     }
@@ -345,6 +367,20 @@ public class OpenAIHandwritingEvaluator : HandwritingEvaluator
         Debug.Log($"[OpenAI] 다수결: {best.Count}/{samples.Count}표 → '{result.recognizedText}' (평균 {result.score}점)");
         return result;
     }
+
+    // 설정 누락/네트워크 오류 등 "AI 자체의 잘못"으로 판정이 불가능할 때 쓰는 처리.
+    // StrokeOrderChecker와 같은 정책: 이런 인프라성 실패로 사용자의 진행을 막지 않고
+    // 그냥 통과시킨다(fail-open) - 손글씨가 나쁜 것과 서버가 응답하지 않는 것은 다른 문제이므로,
+    // AI가 응답 못 했다는 이유로 노인 학습자에게 채점 실패 화면을 보여주는 건 불친절하다.
+    // recognizedText를 목표 글자와 동일하게 채워서, 이후 WritingFeedbackController의
+    // 목표-비교 로직이 자연스럽게 통과 처리하도록 한다.
+    static HandwritingFeedback FailOpen(HandwritingEvaluationRequest request) => new HandwritingFeedback
+    {
+        recognizedText = request?.targetText ?? "",
+        score = 75,
+        passed = true,
+        message = LocalizationManager.Get("writing_feedback.ai_unavailable"),
+    };
 
     // AI가 돌려준 JSON 텍스트 → HandwritingFeedback
     static HandwritingFeedback ParseFeedback(string aiText)

@@ -6,7 +6,7 @@ using UnityEngine;
 ///
 ///  - 시각화: 미색 배경 + 테두리 + 십자 점선(가로/세로 중앙)을 런타임에 텍스처로 생성해
 ///            SpriteRenderer로 표시 (에셋 불필요, WritingPracticeScene의 칸과 같은 모양)
-///  - 제한:   DrowLine.canDrawAt에 "칸 안인가?" 판정을 연결 → 칸 밖에서는
+///  - 제한:   DrawLine.canDrawAt에 "칸 안인가?" 판정을 연결 → 칸 밖에서는
 ///            그리기 시작도 안 되고, 그리던 중 칸을 벗어나면 획이 이어지지 않는다.
 ///
 /// 사용법: WritingCell이 있는 오브젝트에 추가하고 cell / drawLine만 연결.
@@ -17,8 +17,8 @@ public class WritingCellBox : MonoBehaviour
     [Tooltip("칸 영역 기준이 되는 WritingCell (비우면 같은 오브젝트에서 찾음)")]
     [SerializeField] WritingCell cell;
 
-    [Tooltip("필기 제한을 걸 DrowLine")]
-    [SerializeField] DrowLine drawLine;
+    [Tooltip("필기 제한을 걸 DrawLine")]
+    [SerializeField] DrawLine drawLine;
 
     [Tooltip("끄면 시각화만 하고 필기 제한은 하지 않음")]
     [SerializeField] bool restrictDrawing = true;
@@ -105,7 +105,7 @@ public class WritingCellBox : MonoBehaviour
         cell.transform.position = p;
     }
 
-    /// <summary>화면 좌표가 칸 안인지 — DrowLine이 그리기 시작/진행 때마다 호출</summary>
+    /// <summary>화면 좌표가 칸 안인지 — DrawLine이 그리기 시작/진행 때마다 호출</summary>
     bool CanDrawAt(Vector2 screenPos)
     {
         if (cell == null) return true;

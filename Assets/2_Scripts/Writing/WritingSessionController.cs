@@ -29,12 +29,12 @@ public class WritingSessionController : MonoBehaviour
     [Tooltip("캡처+채점 컨트롤러")]
     [SerializeField] WritingFeedbackController feedback;
 
-    [Tooltip("통과/다음으로 넘어갈 때 획을 지울 DrowLine (선택)")]
-    [SerializeField] DrowLine drawLine;
+    [Tooltip("통과/다음으로 넘어갈 때 획을 지울 DrawLine (선택)")]
+    [SerializeField] DrawLine drawLine;
 
     [Header("통과 기준")]
-    [Tooltip("이 점수 이상이면 통과로 보고 다음 글자로 넘어간다")]
-    [SerializeField] int passScore = 70;
+    [Tooltip("이 점수 이상이면 통과로 보고 다음 글자로 넘어간다 (WritingFeedbackController.passScore와 동일한 기준)")]
+    [SerializeField] int passScore = 50;
 
     [Tooltip("불통과일 때도 쓴 획을 모두 지운다 (깨끗한 상태로 다시 쓰기)")]
     [SerializeField] bool clearOnFail = true;

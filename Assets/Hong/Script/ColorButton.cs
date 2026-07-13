@@ -3,13 +3,13 @@ using UnityEngine.UI;
 
 public class ColorButton : MonoBehaviour
 {
-    public DrowLine drawLine;
+    public DrawLine drawLine;
     public Color color;
 
     void Awake()
     {
         if (drawLine == null)
-            drawLine = GameObject.FindWithTag("DrowLine").GetComponent<DrowLine>();
+            drawLine = GameObject.FindWithTag("DrawLine").GetComponent<DrawLine>();
         
         // 버튼 이미지를 지정한 색으로 설정해서 어떤 색인지 시각적으로 표시
         GetComponent<Image>().color = color;

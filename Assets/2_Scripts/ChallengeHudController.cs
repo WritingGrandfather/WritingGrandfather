@@ -17,7 +17,7 @@ public class ChallengeHudController : MonoBehaviour
     [SerializeField] PlayerHp playerHp;
     [SerializeField] ChallengeSurvivalController survival;
     [Tooltip("초기화 버튼이 획을 지울 때 사용")]
-    [SerializeField] DrowLine drawLine;
+    [SerializeField] DrawLine drawLine;
     [Tooltip("되돌리기/초기화 버튼을 이 글쓰기 카드 좌상단에 붙인다 - 비워두면 화면 좌상단 모서리에 붙는다")]
     [SerializeField] WritingCell writingCell;
 

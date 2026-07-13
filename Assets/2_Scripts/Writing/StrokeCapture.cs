@@ -4,7 +4,7 @@ using System.Text;
 using UnityEngine;
 
 /// <summary>
-/// DrowLine이 그린 획(LineRenderer)들을 읽어 "획 좌표 데이터(JSON)"로 만든다.
+/// DrawLine이 그린 획(LineRenderer)들을 읽어 "획 좌표 데이터(JSON)"로 만든다.
 ///
 /// AI가 판독하기 쉽도록 원시 좌표 외에 획별 특징을 미리 계산해서 담는다:
 ///  - strokeCount: 총 획수
@@ -16,8 +16,8 @@ using UnityEngine;
 /// </summary>
 public class StrokeCapture : MonoBehaviour
 {
-    [Tooltip("획을 읽어올 DrowLine (획들은 이 오브젝트의 자식 LineRenderer로 존재)")]
-    [SerializeField] DrowLine drawLine;
+    [Tooltip("획을 읽어올 DrawLine (획들은 이 오브젝트의 자식 LineRenderer로 존재)")]
+    [SerializeField] DrawLine drawLine;
 
     [Tooltip("좌표 소수 자릿수 (작을수록 토큰 절약)")]
     public int decimals = 3;
@@ -28,7 +28,7 @@ public class StrokeCapture : MonoBehaviour
     [Tooltip("방향 전환으로 인정할 최소 각도 변화 (도)")]
     public float turnAngle = 50f;
 
-    public void SetDrawLine(DrowLine dl) => drawLine = dl;
+    public void SetDrawLine(DrawLine dl) => drawLine = dl;
 
     /// <summary>
     /// 잉크 영역 기준으로 0~1 정규화(다운샘플링 포함)한 획 좌표들을 반환한다. (y: 위→아래)
