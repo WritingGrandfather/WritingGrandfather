@@ -247,6 +247,12 @@ namespace WritingGrandfather.UI.PreciseWriting
                 UnityEngine.SceneManagement.SceneManager.LoadScene("LobbyScene"));
         }
 
+        // 그려진 획을 모두 지운다 (단어 전환·다시 시작·완료 후). drawLine 미연결이어도 안전.
+        private void ClearStrokes()
+        {
+            drawLine?.ClearAll();
+        }
+
         // 완료 클릭: 다음 단어가 있으면 넘어가고, 마지막 단어면 분석 후 결과를 보여준다.
         private void OnCompleteClicked()
         {
