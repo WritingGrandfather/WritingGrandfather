@@ -14,7 +14,7 @@ using UnityEngine.SceneManagement;
 public class LoginController : MonoBehaviour
 {
     [Tooltip("로그인 성공 후 이동할 씬 이름 (Build Settings에 등록되어 있어야 함)")]
-    [SerializeField] string nextScene = "UIScene";
+    [SerializeField] string nextScene = "LobbyScene";
 
     Label _msg;
 
