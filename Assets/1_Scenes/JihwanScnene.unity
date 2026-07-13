@@ -4544,6 +4544,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Eraser
   drawLine: {fileID: 1346376305}
   eraserRadius: 0.2
+  eraserSoundName: EraserSound
 --- !u!114 &1346376309
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6204,6 +6205,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: c5e236d940cd742908665025c6660528, type: 3}
   - {fileID: 8300000, guid: ac265f96c936249b7a842c7fdb6128d6, type: 3}
   bgm: {fileID: 0}
+  sfxMixerGroup: {fileID: 0}
   sfxVolume: 1
   bgmVolume: 1
   masterVolume: 1
