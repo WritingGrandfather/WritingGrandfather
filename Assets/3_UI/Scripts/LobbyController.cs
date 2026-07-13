@@ -85,7 +85,10 @@ public class LobbyController : MonoBehaviour
 
     Label _mypageEmailValue;
     VisualElement _mypagePasswordRow;
+    VisualElement _mypageNicknameRow;
+    Button _btnMypageLogin;
     Button _btnLogout;
+    VisualElement _sectionLogout;
 
     // 닉네임은 계정 인증 정보가 아니라 이 화면(랭킹 표시용)만의 로컬 설정이라
     // AuthManager를 건드리지 않고 PlayerPrefs에 직접 저장한다. 랭킹에 실제로
@@ -170,12 +173,20 @@ public class LobbyController : MonoBehaviour
 
         _mypageEmailValue = root.Q<Label>("mypage-email-value");
         _mypagePasswordRow = root.Q<VisualElement>("mypage-password-row");
+        _mypageNicknameRow = root.Q<VisualElement>("mypage-nickname-row");
+        _btnMypageLogin = root.Q<Button>("btn-mypage-login");
         _btnLogout = root.Q<Button>("btn-logout");
+        _sectionLogout = root.Q<VisualElement>("section-logout");
 
         _nicknameField = root.Q<TextField>("mypage-nickname-field");
         _nicknameField.SetValueWithoutNotify(PlayerPrefs.GetString(NicknamePrefsKey, ""));
         _nicknameField.RegisterValueChangedCallback(OnNicknameChanged);
         _btnLogout.clicked += OnLogoutClicked;
+        // 게스트가 닉네임 칸 대신 보는 "로그인 하기" 버튼도 로그아웃과 똑같이
+        // 게스트 세션을 정리하고 로그인 화면으로 보내면 된다 (재로그인 시
+        // 자동 로그인이 다시 게스트로 튕기지 않으려면 SignOut으로 게스트
+        // PlayerPrefs 플래그를 지워야 한다).
+        _btnMypageLogin.clicked += OnLogoutClicked;
 
         LocalizationManager.OnLanguageChanged += OnLanguageChanged;
         ApplyLocalization();
@@ -226,6 +237,7 @@ public class LobbyController : MonoBehaviour
         _settingsSectionTitles[4].text = LocalizationManager.Get("lobby.settings.tab_misc");
 
         _btnLogout.text = LocalizationManager.Get("lobby.settings.logout_button");
+        _btnMypageLogin.text = LocalizationManager.Get("lobby.settings.login_button");
 
         for (int i = 0; i < _settingsRowLabels.Length; i++)
             _settingsRowLabels[i].text = LocalizationManager.Get(SettingsRowLabelKeys[i]);
@@ -294,6 +306,26 @@ public class LobbyController : MonoBehaviour
         {
             if (isGuest) _mypagePasswordRow.AddToClassList("hidden");
             else _mypagePasswordRow.RemoveFromClassList("hidden");
+        }
+
+        // 게스트는 닉네임도 계정에 묶여있지 않은 임시 상태라 편집칸 대신
+        // "로그인 하기" 버튼을 보여주고, 실제 계정으로 로그인했으면 반대로 한다.
+        if (_mypageNicknameRow != null)
+        {
+            if (isGuest) _mypageNicknameRow.AddToClassList("hidden");
+            else _mypageNicknameRow.RemoveFromClassList("hidden");
+        }
+        if (_btnMypageLogin != null)
+        {
+            if (isGuest) _btnMypageLogin.RemoveFromClassList("hidden");
+            else _btnMypageLogin.AddToClassList("hidden");
+        }
+
+        // 게스트는 로그아웃할 계정이 없으니 맨 아래 로그아웃 섹션 자체를 숨긴다.
+        if (_sectionLogout != null)
+        {
+            if (isGuest) _sectionLogout.AddToClassList("hidden");
+            else _sectionLogout.RemoveFromClassList("hidden");
         }
     }
 

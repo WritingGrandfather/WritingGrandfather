@@ -35,17 +35,18 @@
             <ui:Button name="btn-settings-close" text="닫기" class="settings-close-button" />
         </ui:VisualElement>
 
-        <ui:ScrollView name="settings-content" class="settings-content" mode="Vertical" vertical-scroller-visibility="AlwaysVisible">
+        <ui:ScrollView name="settings-content" class="settings-content" mode="Vertical" vertical-scroller-visibility="AlwaysVisible" horizontal-scroller-visibility="Hidden">
             <ui:VisualElement name="section-mypage" class="settings-section">
                 <ui:VisualElement class="settings-section-header">
                     <ui:VisualElement class="settings-section-line" />
                     <ui:Label text="마이페이지" name="section-mypage-title" class="settings-section-title" />
                     <ui:VisualElement class="settings-section-line" />
                 </ui:VisualElement>
-                <ui:VisualElement class="settings-row">
+                <ui:VisualElement name="mypage-nickname-row" class="settings-row">
                     <ui:Label text="닉네임" class="settings-row-label" />
                     <ui:TextField name="mypage-nickname-field" class="settings-control" />
                 </ui:VisualElement>
+                <ui:Button name="btn-mypage-login" text="로그인 하기" class="settings-logout-button hidden" />
                 <ui:VisualElement class="settings-row">
                     <ui:Label text="이메일" class="settings-row-label" />
                     <ui:Label text="" name="mypage-email-value" class="settings-value-label" />

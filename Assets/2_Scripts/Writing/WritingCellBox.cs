@@ -54,7 +54,7 @@ public class WritingCellBox : MonoBehaviour
     [SerializeField] int textureSize = 512;
 
     [Tooltip("스프라이트 정렬 순서 — 획(LineRenderer, 기본 0)보다 낮아야 칸이 뒤에 깔린다")]
-    [SerializeField] int sortingOrder = -10;
+    [SerializeField] int sortingOrder = -2;
 
     Camera cam;
     Texture2D tex;
