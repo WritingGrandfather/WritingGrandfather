@@ -24,7 +24,7 @@ using UnityEngine.SceneManagement;
 public class ChallengeScoreTracker : MonoBehaviour
 {
     // 도전 씬 이름 — 이 씬이 로드되면 트래커를 자동 생성한다.
-    const string ChallengeSceneName = "도전씬";
+    const string ChallengeSceneName = "ChallengeScene";
 
     // 게임 시작 시 1회 등록. 도전 씬이 열릴 때마다 트래커 오브젝트를 자동으로 만들어 준다.
     // (씬에 수동으로 오브젝트를 넣지 않아도 동작하도록)

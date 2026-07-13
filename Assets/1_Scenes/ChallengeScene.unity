@@ -4612,6 +4612,7 @@ MonoBehaviour:
   drawLine: {fileID: 1346376305}
   passScore: 60
   checkStrokeOrder: 1
+  requireNeatWriting: 1
   onResult:
     m_PersistentCalls:
       m_Calls: []
