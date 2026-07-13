@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
 [RequireComponent(typeof(UIDocument))]
@@ -121,8 +122,8 @@ public class LobbyController : MonoBehaviour
 
     void OnStartClicked()
     {
-        // TODO: 모드 선택 화면(정밀 쓰기 / 도전 모드)으로 전환
-        Debug.Log("글쓰기 시작 클릭");
+        // Build Settings에 등록된 실제 씬 파일명이 "MainScnene"(오타)라 그대로 사용.
+        SceneManager.LoadScene("MainScnene");
     }
 
     // 설정 패널은 항상 트리에 존재하고 .hidden 클래스(Lobby.uss)로만 표시 여부를
