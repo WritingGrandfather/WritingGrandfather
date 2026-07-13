@@ -150,6 +150,14 @@ public class DrowLine : MonoBehaviour
     {
         while (true)
         {
+            // 드래그 도중 drawingEnabled가 꺼지면(허용 영역 밖으로 나가면) 그 구간은 점을 추가하지 않고 건너뜀
+            // — 다시 켜지면(허용 영역으로 복귀) 마지막 점과 이어 그리되, 두 점 모두 허용 영역 안이므로 안전함
+            if (!drawingEnabled)
+            {
+                yield return null;
+                continue;
+            }
+
             Vector2 pos = cam.ScreenToWorldPoint(Pointer.current.position.ReadValue());
             if (Vector2.Distance(points[points.Count - 1], pos) > 0.001f)
             {

@@ -19,6 +19,9 @@ namespace WritingGrandfather.UI.PreciseWriting
 
         [SerializeField] private Font koreanFont;
 
+        [Tooltip("단어가 바뀌거나 다시 시작할 때 이전 획을 지우기 위한 참조")]
+        [SerializeField] private DrowLine drawLine;
+
         [Tooltip("데모용 연습 단어 목록 — 실제 출제 시스템 연동 전까지 임시로 사용")]
         [SerializeField] private string[] practiceWords = { "가", "나", "다" };
 
@@ -33,6 +36,10 @@ namespace WritingGrandfather.UI.PreciseWriting
         private VisualElement topBar;
         private VisualElement guideBox;
         private VisualElement bottomBar;
+        private VisualElement drawMaskTop;
+        private VisualElement drawMaskBottom;
+        private VisualElement drawMaskLeft;
+        private VisualElement drawMaskRight;
         private Label ghostCharacterLabel;
         private VisualElement strokeOrderLayer;
         private Toggle toggleShowCharacter;
@@ -40,6 +47,7 @@ namespace WritingGrandfather.UI.PreciseWriting
         private Button completeButton;
         private Button retryButton;
         private Button exitButton;
+        private Button resetButton;
         private Label currentWordLabel;
         private Label wordProgressLabel;
         private VisualElement guideCrossH;
@@ -66,6 +74,7 @@ namespace WritingGrandfather.UI.PreciseWriting
 
             safeArea?.RegisterCallback<GeometryChangedEvent>(OnLayoutGeo);
             writingScreen?.RegisterCallback<GeometryChangedEvent>(OnLayoutGeo);
+            root.RegisterCallback<PointerMoveEvent>(OnPointerMoveOverRoot, TrickleDown.TrickleDown);
             root.schedule.Execute(ApplyLayout).StartingIn(0);
         }
 
@@ -73,6 +82,19 @@ namespace WritingGrandfather.UI.PreciseWriting
         {
             safeArea?.UnregisterCallback<GeometryChangedEvent>(OnLayoutGeo);
             writingScreen?.UnregisterCallback<GeometryChangedEvent>(OnLayoutGeo);
+            root?.UnregisterCallback<PointerMoveEvent>(OnPointerMoveOverRoot, TrickleDown.TrickleDown);
+            if (drawLine != null) drawLine.drawingEnabled = false;
+        }
+
+        // guide-box와 safe-area 밖에서는 손글씨가 그려지지 않도록, 포인터가 둘 다 안에 있을 때만
+        // DrowLine.drawingEnabled를 켠다 (카드/safe-area 밖으로 그려지던 버그 수정).
+        private void OnPointerMoveOverRoot(PointerMoveEvent evt)
+        {
+            if (drawLine == null || guideBox == null) return;
+
+            bool onWritingScreen = writingScreen != null && !writingScreen.ClassListContains("hidden");
+            bool insideSafeArea = safeArea == null || safeArea.worldBound.Contains(evt.position);
+            drawLine.drawingEnabled = onWritingScreen && insideSafeArea && guideBox.worldBound.Contains(evt.position);
         }
 
         private void Cache()
@@ -84,6 +106,10 @@ namespace WritingGrandfather.UI.PreciseWriting
             topBar = root.Q("top-bar");
             guideBox = root.Q("guide-box");
             bottomBar = root.Q("bottom-bar");
+            drawMaskTop = root.Q("draw-mask-top");
+            drawMaskBottom = root.Q("draw-mask-bottom");
+            drawMaskLeft = root.Q("draw-mask-left");
+            drawMaskRight = root.Q("draw-mask-right");
             ghostCharacterLabel = root.Q<Label>("ghost-character-label");
             strokeOrderLayer = root.Q("stroke-order-layer");
             toggleShowCharacter = root.Q<Toggle>("toggle-show-character");
@@ -91,6 +117,7 @@ namespace WritingGrandfather.UI.PreciseWriting
             completeButton = root.Q<Button>("complete-button");
             retryButton = root.Q<Button>("retry-button");
             exitButton = root.Q<Button>("exit-button");
+            resetButton = root.Q<Button>("reset-button");
             currentWordLabel = root.Q<Label>("current-word-label");
             wordProgressLabel = root.Q<Label>("word-progress-label");
             guideCrossH = root.Q("guide-cross-h");
@@ -113,10 +140,12 @@ namespace WritingGrandfather.UI.PreciseWriting
             toggleShowCharacter?.RegisterValueChangedCallback(_ => ApplyToggles());
             toggleShowStrokeOrder?.RegisterValueChangedCallback(_ => ApplyToggles());
             completeButton?.RegisterCallback<ClickEvent>(_ => OnCompleteClicked());
+            resetButton?.RegisterCallback<ClickEvent>(_ => drawLine?.ClearAll());
             retryButton?.RegisterCallback<ClickEvent>(_ =>
             {
                 wordIndex = 0;
                 UpdateWordLabel();
+                drawLine?.ClearAll();
                 Show(writingScreen);
             });
             exitButton?.RegisterCallback<ClickEvent>(_ =>
@@ -131,6 +160,7 @@ namespace WritingGrandfather.UI.PreciseWriting
             {
                 wordIndex++;
                 UpdateWordLabel();
+                drawLine?.ClearAll();
                 return;
             }
 
@@ -204,8 +234,16 @@ namespace WritingGrandfather.UI.PreciseWriting
 
             float guideTop = topBarTop + topBarHeight + GuideGapFrac * h;
             float guideSize = w * GuideWidthFrac;
-            PlaceRect(guideBox, (w - guideSize) * 0.5f, guideTop, guideSize, guideSize);
+            float guideLeft = (w - guideSize) * 0.5f;
+            PlaceRect(guideBox, guideLeft, guideTop, guideSize, guideSize);
             float guideBottom = guideTop + guideSize;
+            float guideRight = guideLeft + guideSize;
+
+            // guide-box 밖으로 삐져나온 손글씨를 가리는 4방향 마스크 (위/아래는 화면 전체 폭, 좌/우는 guide-box 높이만큼만)
+            PlaceRect(drawMaskTop, 0, 0, w, guideTop);
+            PlaceRect(drawMaskBottom, 0, guideBottom, w, h - guideBottom);
+            PlaceRect(drawMaskLeft, 0, guideTop, guideLeft, guideSize);
+            PlaceRect(drawMaskRight, guideRight, guideTop, w - guideRight, guideSize);
 
             float completeTop = guideBottom + ButtonGapFrac * h;
             float completeHeight = CompleteHeightFrac * h;

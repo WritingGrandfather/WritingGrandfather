@@ -43,12 +43,8 @@ public static class LoginSceneBuilder
         doc.panelSettings = panel;
         doc.visualTreeAsset = uxml;
 
-        // 세이프에어리어(노치/펀치홀) 자동 회피 — login-root에 패딩
-        var safe = uiGO.AddComponent<SafeAreaFitter>();
-        var safeSO = new SerializedObject(safe);
-        safeSO.FindProperty("targetElementName").stringValue = "login-root";
-        safeSO.ApplyModifiedPropertiesWithoutUndo();
-
+        // TODO: SafeAreaFitter가 제거되어 로그인 화면의 세이프에어리어(노치/펀치홀) 대응이 빠졌습니다.
+        // 로그인 화면 작업 시 LobbyController의 세이프에어리어 처리 방식을 참고해 다시 추가해주세요.
         uiGO.AddComponent<LoginController>();
 
         // UI Toolkit 런타임 입력용 EventSystem
