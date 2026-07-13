@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 using UnityEngine;
-#if FIREBASE_ENABLED
+#if FIRESTORE_ENABLED
 using Firebase.Firestore;
 using Firebase.Extensions;
 #endif
@@ -79,7 +79,7 @@ public class SaveManager : MonoBehaviour
     // ── 클라우드 (Firestore) ────────────────────────────────────────
     void SaveCloud(PlayerData data, Action<bool, string> onDone)
     {
-#if FIREBASE_ENABLED
+#if FIRESTORE_ENABLED
         string uid = AuthManager.Instance.UserId;
         var dict = new System.Collections.Generic.Dictionary<string, object>
         {
@@ -101,7 +101,7 @@ public class SaveManager : MonoBehaviour
 
     void LoadCloud(Action<PlayerData> onLoaded)
     {
-#if FIREBASE_ENABLED
+#if FIRESTORE_ENABLED
         string uid = AuthManager.Instance.UserId;
         FirebaseFirestore.DefaultInstance.Collection("users").Document(uid)
             .GetSnapshotAsync().ContinueWithOnMainThread(t =>
@@ -125,7 +125,7 @@ public class SaveManager : MonoBehaviour
 #endif
     }
 
-#if FIREBASE_ENABLED
+#if FIRESTORE_ENABLED
     static int GetInt(System.Collections.Generic.IDictionary<string, object> d, string key)
         => d.TryGetValue(key, out var v) && v != null ? Convert.ToInt32(v) : 0;
 #endif
