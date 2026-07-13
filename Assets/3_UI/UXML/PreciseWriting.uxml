@@ -1,7 +1,12 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
     <Style src="project://database/Assets/3_UI/USS/PreciseWriting.uss?fileID=7433441132597879392&amp;guid=fd3000cab2f972e1dde94ea5dc9102b0&amp;type=3#PreciseWriting"/>
     <ui:VisualElement name="safe-area" class="safe-area">
-        <ui:VisualElement name="writing-screen" class="screen" style="display: flex;">
+        <!-- FIX(2026-07-14): 인라인 style="display:..."이 PreciseWritingUIController.Show()가
+             토글하는 .hidden 클래스(USS)보다 우선순위가 높아서, "그만하기"를 눌러도
+             analyzing-screen/result-screen이 절대 안 보이던 버그의 원인이었음.
+             writing-screen/analyzing-screen/result-screen 3곳의 인라인 display만 지움
+             (다른 인라인 스타일이나 로직은 그대로). -->
+        <ui:VisualElement name="writing-screen" class="screen">
             <ui:VisualElement name="draw-mask-top" class="draw-mask"/>
             <ui:VisualElement name="draw-mask-bottom" class="draw-mask"/>
             <ui:VisualElement name="draw-mask-left" class="draw-mask"/>
@@ -26,12 +31,12 @@
             </ui:VisualElement>
             <ui:Label text="" name="stroke-feedback-label" class="stroke-feedback-label hidden" style="font-size: 50px;"/>
         </ui:VisualElement>
-        <ui:VisualElement name="analyzing-screen" class="screen overlay hidden" style="display: none;">
+        <ui:VisualElement name="analyzing-screen" class="screen overlay hidden">
             <ui:VisualElement class="overlay-box">
                 <ui:Label text="AI가 결과를 분석중..." name="analyzing-label" class="overlay-title"/>
             </ui:VisualElement>
         </ui:VisualElement>
-        <ui:VisualElement name="result-screen" class="screen overlay hidden" style="display: none;">
+        <ui:VisualElement name="result-screen" class="screen overlay hidden">
             <ui:VisualElement class="overlay-box">
                 <ui:VisualElement name="result-stars-row" class="result-stars-row"/>
                 <ui:Label text="결과" name="result-title-label" class="overlay-title"/>
