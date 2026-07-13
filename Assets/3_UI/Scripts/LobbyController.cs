@@ -83,6 +83,21 @@ public class LobbyController : MonoBehaviour
     {
         var root = GetComponent<UIDocument>().rootVisualElement;
 
+        // 이전 씬(로그인 등)에서 누른 클릭의 포인터-업이 씬 전환 도중/직후에
+        // 도착하면, 그 자리에 새로 생긴 이 씬의 버튼(예: 로그인의 "게스트로
+        // 시작"과 같은 화면 위치에 오는 "설정")이 즉시 눌려버리는 문제가
+        // 있었다 - 로비로 들어오자마자 설정 화면이 바로 열려 보이는 원인.
+        // 씬이 뜨자마자 아주 짧은 시간 동안 화면 전체를 덮는 투명 오버레이로
+        // 포인터 입력을 흡수해서, 그 시점의 클릭이 실제 버튼에 닿지 않게 막는다.
+        var inputGuard = new VisualElement();
+        inputGuard.style.position = Position.Absolute;
+        inputGuard.style.left = 0;
+        inputGuard.style.top = 0;
+        inputGuard.style.right = 0;
+        inputGuard.style.bottom = 0;
+        root.Add(inputGuard);
+        root.schedule.Execute(() => inputGuard.RemoveFromHierarchy()).StartingIn(250);
+
         // root.panel은 최소 한 프레임의 레이아웃/어태치 과정을 거쳐야 값이
         // 채워지므로, 아직 비어 있으면 패널에 붙는 시점(AttachToPanelEvent)에
         // 다시 시도한다.

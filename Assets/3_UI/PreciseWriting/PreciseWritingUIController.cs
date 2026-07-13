@@ -67,6 +67,8 @@ namespace WritingGrandfather.UI.PreciseWriting
         private Label resultSimilarityCaptionLabel;
         private Label resultPositionCaptionLabel;
         private Label analyzingLabel;
+        private Label toggleShowCharacterLabel;
+        private Label toggleShowStrokeOrderLabel;
 
         private int wordIndex;
 
@@ -75,8 +77,8 @@ namespace WritingGrandfather.UI.PreciseWriting
             root = GetComponent<UIDocument>().rootVisualElement;
             Cache();
             ApplyFont();
-            SetupToggleButton(toggleShowCharacter, "안내선");
-            SetupToggleButton(toggleShowStrokeOrder, "획 순서");
+            toggleShowCharacterLabel = SetupToggleButton(toggleShowCharacter);
+            toggleShowStrokeOrderLabel = SetupToggleButton(toggleShowStrokeOrder);
             Bind();
             ApplyToggles();
             BuildGuideCross();
@@ -180,9 +182,6 @@ namespace WritingGrandfather.UI.PreciseWriting
             analyzingLabel = root.Q<Label>("analyzing-label");
         }
 
-        // reset-button/complete-button 등 UXML에 고정된 정적 텍스트만 대상으로 한다.
-        // toggle-btn 라벨("안내선"/"획 순서")은 SetupToggleButton()에서 코드로 직접
-        // 붙이는 런타임 문자열이라 이번 적용 범위에서는 제외했다.
         private void ApplyLocalization()
         {
             if (resetButton != null) resetButton.text = LocalizationManager.Get("precise_writing.reset_button");
@@ -196,6 +195,9 @@ namespace WritingGrandfather.UI.PreciseWriting
             if (resultStrokeOrderCaptionLabel != null) resultStrokeOrderCaptionLabel.text = LocalizationManager.Get("precise_writing.result_stroke_order_label");
             if (resultSimilarityCaptionLabel != null) resultSimilarityCaptionLabel.text = LocalizationManager.Get("precise_writing.result_similarity_label");
             if (resultPositionCaptionLabel != null) resultPositionCaptionLabel.text = LocalizationManager.Get("precise_writing.result_position_label");
+
+            if (toggleShowCharacterLabel != null) toggleShowCharacterLabel.text = LocalizationManager.Get("precise_writing.toggle_show_character");
+            if (toggleShowStrokeOrderLabel != null) toggleShowStrokeOrderLabel.text = LocalizationManager.Get("precise_writing.toggle_show_stroke_order");
         }
 
         private void ApplyFont()
@@ -284,17 +286,20 @@ namespace WritingGrandfather.UI.PreciseWriting
 
         // Toggle의 기본 체크박스 비주얼은 USS만으로는 완전히 숨기기 어려워(내부 구조가 테마에 따라 달라짐)
         // 체크박스 파트를 아예 계층에서 제거하고, 우리 라벨을 직접 붙여 버튼처럼 보이게 만든다.
-        private static void SetupToggleButton(Toggle toggle, string label)
+        // 텍스트는 여기서 바로 채우지 않고 ApplyLocalization()에서 채운다 - 만들어진
+        // Label을 돌려줘서 언어가 바뀔 때도 같은 요소의 text만 갱신하면 되게 한다.
+        private static Label SetupToggleButton(Toggle toggle)
         {
-            if (toggle == null) return;
+            if (toggle == null) return null;
 
             toggle.Q(className: Toggle.inputUssClassName)?.RemoveFromHierarchy();
             toggle.text = null;
 
-            var lbl = new Label(label);
+            var lbl = new Label();
             lbl.AddToClassList("toggle-btn-label");
             lbl.pickingMode = PickingMode.Ignore;
             toggle.Add(lbl);
+            return lbl;
         }
 
         // guide-box 안의 가로/세로 점선 십자를 작은 점 세그먼트로 절차적으로 구성한다.

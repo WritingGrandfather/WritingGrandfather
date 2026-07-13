@@ -54,6 +54,8 @@ precise_writing.result_similarity_label,글자 유사도,Character Similarity
 precise_writing.result_position_label,글자 크기 위치 정확도,Size & Position Accuracy
 precise_writing.retry_button,다시 하기,Try Again
 precise_writing.exit_button,나가기,Exit
+precise_writing.toggle_show_character,안내선,Guide Lines
+precise_writing.toggle_show_stroke_order,획 순서,Stroke Order
 writing_feedback.unrecognized,글자를 알아볼 수 없어요. '{0}'를 다시 써볼까요?,I couldn't recognize the character. Want to try writing '{0}' again?
 writing_feedback.wrong_character,'{0}'가 아니라 '{1}'로 보여요. 다시 한번 써볼까요?,That looks like '{1}' instead of '{0}'. Want to try again?
 auth.checking_auto_login,자동 로그인 확인 중...,Checking auto-login...
