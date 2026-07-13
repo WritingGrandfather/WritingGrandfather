@@ -11,7 +11,6 @@
         <ui:VisualElement class="spacer" />
 
         <ui:VisualElement name="middle" class="middle">
-            <ui:Button name="btn-google" text="구글로 로그인" class="menu-button menu-button--google" />
             <ui:Button name="btn-email-login" text="이메일로 로그인" class="menu-button menu-button--primary" />
             <ui:Button name="btn-guest" text="게스트로 시작" class="menu-button menu-button--guest" />
             <ui:Label name="msg" text="" class="msg" />

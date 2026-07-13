@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 /// <summary>
 /// 로그인 화면 컨트롤러 (UI Toolkit).
 ///
-/// 메인 버튼: 구글 로그인 / 이메일로 로그인(팝업) / 게스트로 시작
+/// 메인 버튼: 이메일로 로그인(팝업) / 게스트로 시작
 /// 하단: 회원가입(팝업)
 /// 이메일 로그인·회원가입은 각각 모달 팝업에서 처리한다.
 /// 성공하면 nextScene 으로 이동. 이전 로그인이 있으면 자동 이동.
@@ -45,8 +45,6 @@ public class LoginController : MonoBehaviour
         _suMsg = root.Q<Label>("signup-msg");
 
         // 메인 버튼
-        root.Q<Button>("btn-google").clicked += OnGoogle;
-       
         root.Q<Button>("btn-email-login").clicked += () => Show(_loginPanel, true);
         root.Q<Button>("btn-guest").clicked += OnGuest;
         root.Q<Button>("btn-signup").clicked += () => Show(_signupPanel, true);
@@ -93,19 +91,8 @@ public class LoginController : MonoBehaviour
         });
     }
 
-    void OnGoogle()
-    {
-        SetMsg(_msg, "구글 로그인 중...");
-        Auth()?.SignInGoogle((ok, m) =>
-        {
-            if (ok) SceneManager.LoadScene(nextScene);
-            else SetMsg(_msg, m);
-        });
-    }
-
     void OnGuest()
     {
-         Debug.LogError("OnGuest Call");
         SetMsg(_msg, "시작 중...");
         Auth()?.SignInGuest((ok, m) =>
         {

@@ -684,7 +684,7 @@ PlayerSettings:
   webWasm2023: 0
   webEnableSubmoduleStrippingCompatibility: 0
   scriptingDefineSymbols:
-    Android: FIREBASE_ENABLED;GOOGLE_SIGNIN
+    Android: FIREBASE_ENABLED
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend:
