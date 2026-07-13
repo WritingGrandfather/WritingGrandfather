@@ -1,5 +1,6 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
     <Style src="../USS/Lobby.uss" />
+    <Style src="../USS/Settings.uss" />
 
     <ui:VisualElement name="lobby-root" class="lobby-root">
         <ui:VisualElement name="title-area" class="title-area">
@@ -23,6 +24,54 @@
             <ui:VisualElement name="exit-modal-buttons" class="modal-button-row">
                 <ui:Button name="btn-exit-confirm" text="예" class="modal-button modal-button--confirm" />
                 <ui:Button name="btn-exit-cancel" text="아니오" class="modal-button modal-button--cancel" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+
+    <ui:VisualElement name="settings-panel" class="settings-panel hidden">
+        <ui:VisualElement name="settings-header" class="settings-header">
+            <ui:Label text="설정" name="settings-title" class="settings-title" />
+            <ui:Button name="btn-settings-close" text="닫기" class="settings-close-button" />
+        </ui:VisualElement>
+
+        <ui:VisualElement name="settings-tab-bar" class="settings-tab-bar">
+            <ui:Button name="tab-video" text="비디오" class="settings-tab settings-tab--active" />
+            <ui:Button name="tab-audio" text="오디오" class="settings-tab" />
+            <ui:Button name="tab-language" text="언어" class="settings-tab" />
+        </ui:VisualElement>
+
+        <ui:VisualElement name="settings-content" class="settings-content">
+            <ui:VisualElement name="video-panel" class="settings-tab-panel">
+                <ui:VisualElement class="settings-row">
+                    <ui:Label text="화질" class="settings-row-label" />
+                    <ui:DropdownField name="dropdown-quality" choices="낮음,보통,높음" index="1" class="settings-control" />
+                </ui:VisualElement>
+                <ui:VisualElement class="settings-row">
+                    <ui:Label text="프레임 제한" class="settings-row-label" />
+                    <ui:DropdownField name="dropdown-framerate" choices="30 FPS,60 FPS" index="1" class="settings-control" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+
+            <ui:VisualElement name="audio-panel" class="settings-tab-panel hidden">
+                <ui:VisualElement class="settings-row">
+                    <ui:Label text="전체 볼륨" class="settings-row-label" />
+                    <ui:Slider name="slider-master-volume" low-value="0" high-value="100" value="80" show-input-field="true" class="settings-control" />
+                </ui:VisualElement>
+                <ui:VisualElement class="settings-row">
+                    <ui:Label text="배경음 (BGM)" class="settings-row-label" />
+                    <ui:Slider name="slider-bgm-volume" low-value="0" high-value="100" value="70" show-input-field="true" class="settings-control" />
+                </ui:VisualElement>
+                <ui:VisualElement class="settings-row">
+                    <ui:Label text="효과음 (SFX)" class="settings-row-label" />
+                    <ui:Slider name="slider-sfx-volume" low-value="0" high-value="100" value="80" show-input-field="true" class="settings-control" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+
+            <ui:VisualElement name="language-panel" class="settings-tab-panel hidden">
+                <ui:VisualElement class="settings-row">
+                    <ui:Label text="언어 선택" class="settings-row-label" />
+                    <ui:RadioButtonGroup name="radio-language" choices="한국어,English" value="0" class="settings-control" />
+                </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
