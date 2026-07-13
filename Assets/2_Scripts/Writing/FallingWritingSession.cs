@@ -64,6 +64,23 @@ public class FallingWritingSession : MonoBehaviour
 
     bool isEvaluating;
 
+    void OnEnable()
+    {
+        if (spawner != null) spawner.OnWordReachedBottom += HandleWordDropped;
+    }
+
+    void OnDisable()
+    {
+        if (spawner != null) spawner.OnWordReachedBottom -= HandleWordDropped;
+    }
+
+    // 글자가 바닥에 떨어져 사라지면 쓰고 있던 글씨도 함께 지운다
+    void HandleWordDropped(FallingWordSpawner.FallingWord word)
+    {
+        drawLine?.ClearAll();
+        drawLine?.CancelCurrentStroke();
+    }
+
     /// <summary>현재 타겟 = 가장 먼저 소환된 외자 글자 (선입선출)</summary>
     FallingWordSpawner.FallingWord CurrentTarget()
     {
