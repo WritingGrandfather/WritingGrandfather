@@ -42,6 +42,10 @@ public class DrowLine : MonoBehaviour
     // 프레임 지연 없이 항상 정확하게 판단한다.
     public Func<Vector2, bool> canDrawAt;
 
+    // 획 하나를 다 그렸을 때(펜을 뗀 순간) 그 획의 월드 좌표 목록을 전달한다.
+    // 실시간 획순 검사(PreciseWritingUIController)가 구독해서 즉시 판정한다.
+    public event Action<List<Vector2>> OnStrokeCompleted;
+
     // OnDrawStart가 정상적으로 완료됐을 때만 true — OnDrawEnd에서 핸들 저장 여부 판단
     bool isDrawing;
 
@@ -244,6 +248,8 @@ public class DrowLine : MonoBehaviour
                 () => RemoveLine(goRef[0]),
                 () => { goRef[0] = CreateLine(capturedPoints, capturedWidth, capturedColor); }
             );
+
+            OnStrokeCompleted?.Invoke(capturedPoints);
         }
         if (currentSfxSource != null) currentSfxSource.Stop();
         currentSfxSource = null;
@@ -369,5 +375,18 @@ public class DrowLine : MonoBehaviour
             ((IDisposable)handle).Dispose();
 
         lineHandles.Clear();
+    }
+
+    // 지금까지 그려진 모든 획의 색을 한 번에 바꾼다 - 실시간 획순 검사에서 획순을
+    // 틀렸을 때 글자 전체를 빨간색으로, 고쳐지면 다시 원래 색으로 되돌리는 데 사용.
+    public void SetInkColor(Color color)
+    {
+        foreach (var go in lineHandles.Keys)
+        {
+            var lineRenderer = go.GetComponent<LineRenderer>();
+            if (lineRenderer == null) continue;
+            lineRenderer.startColor = color;
+            lineRenderer.endColor = color;
+        }
     }
 }

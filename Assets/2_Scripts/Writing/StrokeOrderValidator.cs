@@ -27,6 +27,32 @@ public static class StrokeOrderValidator
         public Rect box;        // 자모 배치 영역 (위치 게이트용)
     }
 
+    /// <summary>실시간 획순 가이드(미리보기 화살표/교정)가 쓰는, 표준 필순 한 획의 정보.</summary>
+    public class PlanStep
+    {
+        public char jamo;
+        public Vector2 start; // 유닛 정사각형(0~1), y: 위→아래
+        public Vector2 end;
+        public Rect box;
+    }
+
+    /// <summary>
+    /// 글자의 표준 필순 계획을 그대로 외부에 공개한다 (실시간 미리보기/교정 화살표용).
+    /// 지원 안 되는 자모/조합이면 null.
+    /// </summary>
+    public static List<PlanStep> BuildStandardPlan(char syllable)
+    {
+        if (!HangulComposer.Decompose(syllable, out char cho, out char jung, out char jong)) return null;
+
+        List<PlanStroke> plan = BuildPlan(cho, jung, jong);
+        if (plan == null) return null;
+
+        var result = new List<PlanStep>(plan.Count);
+        foreach (var p in plan)
+            result.Add(new PlanStep { jamo = p.jamo, start = p.pts[0], end = p.pts[p.pts.Length - 1], box = p.box });
+        return result;
+    }
+
     // ────────────────────────────────────────────────────────────────
 
     public static Result Validate(char syllable, List<List<Vector2>> strokes)

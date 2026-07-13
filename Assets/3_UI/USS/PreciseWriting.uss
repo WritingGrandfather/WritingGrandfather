@@ -48,7 +48,7 @@ Button:active {
 }
 
 .current-word-label {
-    font-size: 76px;
+    font-size: 54px;
     -unity-font-style: bold;
     color: rgb(90, 62, 40);
     -unity-text-align: middle-center;
@@ -61,6 +61,25 @@ Button:active {
     margin-left: 12px;
     -unity-text-align: middle-center;
     white-space: nowrap;
+}
+
+/* 직전 글자의 채점 피드백(주로 획순 오류 안내)을 다음 글자를 쓰는 동안에도 계속 보여준다.
+   새 칸을 만들지 않고 top-bar 안에서 current-word-label 바로 아래에 자연스럽게 들어간다
+   (top-bar 높이는 그대로 - current-word-label 글자 크기를 줄여서 자리를 만든다). */
+.stroke-feedback-label {
+    font-size: 20px;
+    -unity-text-align: middle-center;
+    white-space: normal;
+    margin-top: 4px;
+    padding: 0 24px;
+}
+
+.stroke-feedback-label--bad {
+    color: rgb(219, 38, 38);
+}
+
+.stroke-feedback-label--good {
+    color: rgb(56, 142, 60);
 }
 
 /* safe-area 안, 상단 바의 가장 오른쪽에 떠 있는 나가기 버튼.
@@ -183,6 +202,8 @@ Button:active {
     right: 0;
     top: 0;
     bottom: 0;
+    width: 100%;
+    height: 100%;
 }
 
 /* ---- 완료 버튼 ---- */
