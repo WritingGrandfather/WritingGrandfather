@@ -57,6 +57,14 @@ public class LobbyController : MonoBehaviour
     {
         var root = GetComponent<UIDocument>().rootVisualElement;
 
+        // root.panel은 최소 한 프레임의 레이아웃/어태치 과정을 거쳐야 값이
+        // 채워지므로, 아직 비어 있으면 패널에 붙는 시점(AttachToPanelEvent)에
+        // 다시 시도한다.
+        if (root.panel != null)
+            HoistStyleSheetsToPanelRoot(root);
+        else
+            root.RegisterCallback<AttachToPanelEvent>(_ => HoistStyleSheetsToPanelRoot(root));
+
         root.Q<Button>("btn-start").clicked += OnStartClicked;
         root.Q<Button>("btn-settings").clicked += OnSettingsClicked;
         root.Q<Button>("btn-exit").clicked += OnExitClicked;
@@ -100,7 +108,93 @@ public class LobbyController : MonoBehaviour
             _settingsTabButtons[i].clicked += () => ShowSettingsTab(tabIndex);
         }
 
+        FixRadioButtonCheckmarks(root);
+
         ApplySafeArea();
+    }
+
+    // DropdownField를 눌렀을 때 뜨는 선택지 목록(GenericDropdownMenu)은 UXML로
+    // 불러온 콘텐츠 트리 안이 아니라, 패널 자체의 최상위 루트(panel.visualTree)에
+    // rootVisualElement와 형제로 별도로 붙는다 (Unity의 GetRootVisualContainer()가
+    // 그렇게 만듦). Lobby.uxml의 <Style src>로 등록한 스타일시트는 그 UXML
+    // 콘텐츠를 감싸는 자식 요소에만 붙어있어서, 형제로 붙는 드롭다운 목록에는
+    // 상속되지 않아 Settings.uss의 .unity-base-dropdown__label 등이 전혀
+    // 적용되지 않았다. 실제로 스타일시트를 갖고 있는 자식을 찾아 panel.visualTree
+    // 자신에게도 그대로 추가해서 rootVisualElement든 그 형제든 전부 같은
+    // 스타일을 받게 한다.
+    void HoistStyleSheetsToPanelRoot(VisualElement root)
+    {
+        var panelRoot = root.panel.visualTree;
+        var carrier = FindStyleSheetCarrier(root);
+        if (carrier == null)
+            return;
+
+        for (int i = 0; i < carrier.styleSheets.count; i++)
+        {
+            var sheet = carrier.styleSheets[i];
+            if (!panelRoot.styleSheets.Contains(sheet))
+                panelRoot.styleSheets.Add(sheet);
+        }
+    }
+
+    VisualElement FindStyleSheetCarrier(VisualElement element)
+    {
+        if (element.styleSheets.count > 0)
+            return element;
+
+        foreach (var child in element.Children())
+        {
+            var found = FindStyleSheetCarrier(child);
+            if (found != null)
+                return found;
+        }
+
+        return null;
+    }
+
+    // Settings.uss가 링을 꽉 채우는 원으로 바꿔보려 했지만, Unity 기본 테마가
+    // ":checked" 상태에서 checkmark의 position/top을 더 높은 우선순위로 다시
+    // 지정해서 계속 아래로 치우쳐 보였다. 인라인 스타일은 어떤 USS 규칙보다도
+    // 항상 우선 적용되므로, 여기서 직접 지정해 확실하게 중앙에 꽉 채운다.
+    //
+    // position:Relative + top/left:0은 "원래 flex 배치 위치에서 0만큼 이동"일
+    // 뿐이라, checkmark-background의 flex 정렬이 (0,0)이 아닌 곳에 놓으면
+    // 그 어긋난 위치가 그대로 남아 안쪽 원이 한쪽으로 치우쳐 보이는 버그가
+    // 있었다. position:Absolute로 4면을 전부 0에 고정해야 부모의 실제 컨텐츠
+    // 박스 크기와 무관하게 정확히 채워진다.
+    // width/height도 명시적으로 100%를 줘야 한다 - Unity 기본 테마가 checkmark에
+    // 작은 고정 px 크기를 지정해 두는데, absolute에서 left/right(top/bottom)만
+    // 0으로 줘도 width/height가 명시돼 있으면 그 값이 우선되어 결국 좌상단에
+    // 작은 점만 남는 문제가 있었다. border-radius도 36/3px라는 고정값 가정
+    // 대신, 레이아웃이 실제로 계산된 크기(GeometryChangedEvent)를 기준으로
+    // 매번 폭의 절반으로 다시 계산해 항상 완전한 원이 되도록 한다.
+    void FixRadioButtonCheckmarks(VisualElement root)
+    {
+        var checkmarks = root.Query<VisualElement>().Class("unity-radio-button__checkmark").Build().ToList();
+        foreach (var checkmark in checkmarks)
+        {
+            checkmark.style.position = Position.Absolute;
+            checkmark.style.top = 0f;
+            checkmark.style.left = 0f;
+            checkmark.style.right = 0f;
+            checkmark.style.bottom = 0f;
+            checkmark.style.width = new Length(100f, LengthUnit.Percent);
+            checkmark.style.height = new Length(100f, LengthUnit.Percent);
+            checkmark.style.marginTop = 0f;
+            checkmark.style.marginLeft = 0f;
+            checkmark.style.marginRight = 0f;
+            checkmark.style.marginBottom = 0f;
+            checkmark.style.backgroundImage = StyleKeyword.None;
+            checkmark.style.backgroundColor = new Color(214f / 255f, 108f / 255f, 58f / 255f);
+            checkmark.RegisterCallback<GeometryChangedEvent>(evt =>
+            {
+                float radius = evt.newRect.width / 2f;
+                checkmark.style.borderTopLeftRadius = radius;
+                checkmark.style.borderTopRightRadius = radius;
+                checkmark.style.borderBottomLeftRadius = radius;
+                checkmark.style.borderBottomRightRadius = radius;
+            });
+        }
     }
 
     void OnDisable()
