@@ -92,19 +92,22 @@ public class DrowLine : MonoBehaviour
         clickAction.canceled -= OnDrawEnd;
     }
 
-    // UI 위에서 입력 중인지 확인 — 마우스와 터치 모두 처리
+    // UI 위에서 입력 중인지 확인.
+    // IsPointerOverGameObject()는 InputAction 콜백 내에서 전 프레임 상태를 반환해
+    // 버튼 클릭이 그리기로 새어나오는 문제가 있었다 - RaycastAll은 현재 위치로
+    // 즉시 판정하므로 콜백 안에서도 정확하다.
+    static readonly List<RaycastResult> _raycastResults = new List<RaycastResult>();
     bool IsPointerOverUI()
     {
-        if (EventSystem.current == null) return false;
+        if (EventSystem.current == null || Pointer.current == null) return false;
 
-        // 마우스
-        if (EventSystem.current.IsPointerOverGameObject()) return true;
-
-        // 터치 (fingerId 0 = 첫 번째 손가락)
-        if (Touchscreen.current != null && Touchscreen.current.primaryTouch.press.isPressed)
-            return EventSystem.current.IsPointerOverGameObject(0);
-
-        return false;
+        var ped = new PointerEventData(EventSystem.current)
+        {
+            position = Pointer.current.position.ReadValue()
+        };
+        _raycastResults.Clear();
+        EventSystem.current.RaycastAll(ped, _raycastResults);
+        return _raycastResults.Count > 0;
     }
 
     // started 콜백 : 마우스 왼쪽 버튼을 누르는 순간 호출

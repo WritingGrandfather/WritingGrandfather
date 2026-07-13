@@ -84,11 +84,17 @@ public class WritingSessionController : MonoBehaviour
         {
             currentWord = word;
             charIndex = 0;
-            drawLine?.ClearAll();
+            ClearDrawing();
         }
 
         // 본보기(TraceGuide)와 채점기가 참조하는 목표 글자를 항상 최신으로
         cell.targetText = CurrentChar;
+    }
+
+    void ClearDrawing()
+    {
+        drawLine?.ClearAll();
+        UndoManager.Instance?.Clear();
     }
 
     /// <summary>UI의 [평가] 버튼 등에서 호출. 현재 글자를 채점한다.</summary>
@@ -115,11 +121,11 @@ public class WritingSessionController : MonoBehaviour
         bool pass = fb != null && (fb.passed || fb.score >= passScore);
         if (!pass)
         {
-            if (clearOnFail) drawLine?.ClearAll(); // 틀리면 획을 지우고 깨끗하게 다시
+            if (clearOnFail) ClearDrawing();
             return;
         }
 
-        drawLine?.ClearAll();
+        ClearDrawing();
         charIndex++;
 
         if (charIndex >= currentWord.Length)
