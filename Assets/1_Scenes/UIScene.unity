@@ -223,6 +223,7 @@ GameObject:
   - component: {fileID: 1000000004}
   - component: {fileID: 1000000005}
   - component: {fileID: 1000000006}
+  - component: {fileID: 1000000007}
   m_Layer: 0
   m_Name: Lobby UI
   m_TagString: Untagged
@@ -293,6 +294,39 @@ MonoBehaviour:
   m_Name:
   m_EditorClassIdentifier:
   targetElementName: lobby-root
+--- !u!114 &1000000007
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000000001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1251a941b7b842279ef5099b5f19f5fb, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  entries:
+  - labelElementName: btn-start
+    sizeReferenceElementName: btn-start
+    baseFontSize: 22
+    baseReferenceHeight: 76
+  - labelElementName: btn-settings
+    sizeReferenceElementName: btn-settings
+    baseFontSize: 22
+    baseReferenceHeight: 76
+  - labelElementName: btn-exit
+    sizeReferenceElementName: btn-exit
+    baseFontSize: 22
+    baseReferenceHeight: 76
+  - labelElementName: title-label-line1
+    sizeReferenceElementName: title-area
+    baseFontSize: 30
+    baseReferenceHeight: 100
+  - labelElementName: title-label-line2
+    sizeReferenceElementName: title-area
+    baseFontSize: 30
+    baseReferenceHeight: 100
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

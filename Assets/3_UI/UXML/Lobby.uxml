@@ -3,7 +3,8 @@
 
     <ui:VisualElement name="lobby-root" class="lobby-root">
         <ui:VisualElement name="title-area" class="title-area">
-            <ui:Label text="글씨 쓰는 할배" name="title-label" class="title-label" />
+            <ui:Label text="글씨 쓰는" name="title-label-line1" class="title-label" />
+            <ui:Label text="할배" name="title-label-line2" class="title-label" />
         </ui:VisualElement>
 
         <ui:VisualElement name="button-area" class="button-area">

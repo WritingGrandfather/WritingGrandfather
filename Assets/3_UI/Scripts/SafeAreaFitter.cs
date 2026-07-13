@@ -1,18 +1,21 @@
 using UnityEngine;
 using UnityEngine.UIElements;
 
+[ExecuteAlways]
 [RequireComponent(typeof(UIDocument))]
 public class SafeAreaFitter : MonoBehaviour
 {
     [SerializeField] string targetElementName = "lobby-root";
 
+    UIDocument _document;
     VisualElement _target;
     Rect _appliedSafeArea;
     Vector2Int _appliedScreenSize;
 
     void OnEnable()
     {
-        var root = GetComponent<UIDocument>().rootVisualElement;
+        _document = GetComponent<UIDocument>();
+        var root = _document.rootVisualElement;
         _target = string.IsNullOrEmpty(targetElementName) ? root : root.Q<VisualElement>(targetElementName);
         _target.RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
         ApplySafeArea();
@@ -40,6 +43,8 @@ public class SafeAreaFitter : MonoBehaviour
         if (panelWidth <= 0f || screenSize.x <= 0)
             return;
 
+        // PanelSettings matches width, so panel space always equals the reference
+        // width; device-pixel-to-panel-unit scale is panelWidth / screenWidth.
         float scale = panelWidth / screenSize.x;
 
         _target.style.paddingLeft = safeArea.xMin * scale;
