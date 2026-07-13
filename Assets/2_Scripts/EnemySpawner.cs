@@ -70,6 +70,7 @@ public class EnemySpawner : MonoBehaviour
     {
         // root가 화면 전체를 채우도록 강제 (기본은 내용물 크기라서 높이가 0이 됨)
         VisualElement root = Root;
+        root.pickingMode = PickingMode.Ignore; // 포인터 통과 (그리기/버튼 방해 금지)
         root.style.position = Position.Absolute;
         root.style.top = 0;
         root.style.bottom = 0;
@@ -160,6 +161,7 @@ public class EnemySpawner : MonoBehaviour
     {
         var banner = new Label(bannerText);
         banner.AddToClassList("stage-banner"); // USS로 꾸밀 때 사용
+        banner.pickingMode = PickingMode.Ignore; // 포인터 통과
         banner.style.position = Position.Absolute;
         banner.style.left = 0;
         banner.style.right = 0;
@@ -230,6 +232,7 @@ public class EnemySpawner : MonoBehaviour
     {
         var label = new Label(text);
         label.AddToClassList("current-word"); // USS로 꾸밀 때 사용
+        label.pickingMode = PickingMode.Ignore; // 포인터 통과
         if (!showWordLabel)
             label.style.display = DisplayStyle.None; // 본보기가 표시를 대신 (로직은 유지)
         label.style.position = Position.Absolute;

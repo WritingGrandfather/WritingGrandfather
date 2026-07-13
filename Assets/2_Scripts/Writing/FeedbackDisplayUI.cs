@@ -24,8 +24,9 @@ public class FeedbackDisplayUI : MonoBehaviour
         }
 
         string pass = fb.passed ? "Pass" : "Retry";
+        string stars = new string('★', fb.stars) + new string('☆', 3 - fb.stars);
         feedbackText.text =
-            $"Recognized: {fb.recognizedText}\nScore: {fb.score} ({pass})\n\n{fb.message}";
+            $"Recognized: {fb.recognizedText}\nScore: {fb.score} ({pass})\n{stars}\n\n{fb.message}";
     }
 
     // onStatus 이벤트에 연결
