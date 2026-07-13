@@ -8,11 +8,12 @@ public class ToolSelector : MonoBehaviour
     public GameObject pencilSizePanel;
     public GameObject eraserSizePanel;
 
-    enum Tool { None, Pencil, Eraser }
-    Tool currentTool = Tool.None;
+    enum Tool { Pencil, Eraser }
+    Tool currentTool = Tool.Pencil;
 
     void Start()
     {
+        eraser.Deactivate();
         pencilSizePanel.SetActive(false);
         eraserSizePanel.SetActive(false);
     }
