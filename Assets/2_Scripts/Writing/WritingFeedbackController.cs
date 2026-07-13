@@ -58,7 +58,7 @@ public class WritingFeedbackController : MonoBehaviour
         }
 
         isEvaluating = true;
-        onStatus?.Invoke("평가 중...");
+        onStatus?.Invoke("Evaluating...");
 
         // 1) 칸 캡처
         byte[] png = capture.CapturePng(targetCell);
@@ -80,7 +80,7 @@ public class WritingFeedbackController : MonoBehaviour
         isEvaluating = false;
 
         if (feedback == null)
-            feedback = HandwritingFeedback.Error("평가 결과를 받지 못했습니다.");
+            feedback = HandwritingFeedback.Error("No evaluation result received.");
 
         Debug.Log($"[WritingFeedback] 인식='{feedback.recognizedText}' 점수={feedback.score} 통과={feedback.passed}");
 
