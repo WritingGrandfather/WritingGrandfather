@@ -2,6 +2,7 @@ key,ko,en
 lobby.title.line1,글씨 쓰는,Handwriting
 lobby.title.line2,할배,Grandpa
 lobby.btn.start,글쓰기 시작,Start Writing
+lobby.btn.ranking,랭킹,Ranking
 lobby.btn.settings,설정,Settings
 lobby.btn.exit,나가기,Exit
 lobby.exit.confirm_line1,정말,Are you sure

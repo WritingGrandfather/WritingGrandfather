@@ -17,12 +17,12 @@ public class LobbyController : MonoBehaviour
     // titleLabelNames와 같은 순서(line1, line2)로 대응되는 localization.csv 키.
     static readonly string[] TitleLabelKeys = { "lobby.title.line1", "lobby.title.line2" };
     [SerializeField] float titleBaseFontSize = 52f;
-    [SerializeField] string[] menuButtonNames = { "btn-start", "btn-settings", "btn-exit" };
-    // menuButtonNames와 같은 순서(시작, 설정, 나가기)로 대응되는 키.
-    static readonly string[] MenuButtonKeys = { "lobby.btn.start", "lobby.btn.settings", "lobby.btn.exit" };
+    [SerializeField] string[] menuButtonNames = { "btn-start", "btn-ranking", "btn-settings", "btn-exit" };
+    // menuButtonNames와 같은 순서(시작, 랭킹, 설정, 나가기)로 대응되는 키.
+    static readonly string[] MenuButtonKeys = { "lobby.btn.start", "lobby.btn.ranking", "lobby.btn.settings", "lobby.btn.exit" };
     [SerializeField] float menuButtonBaseFontSize = 34f;
-    // title-area (190) + its margin-bottom (40) + button-area (3 * (120 + 14)) in Lobby.uss.
-    [SerializeField] float designContentHeight = 632f;
+    // title-area (190) + its margin-bottom (40) + button-area (4 * (120 + 14)) in Lobby.uss.
+    [SerializeField] float designContentHeight = 766f;
     // .title-area's own "padding: 0 40px" (both sides) in Lobby.uss.
     [SerializeField] float titleAreaHorizontalPadding = 80f;
     // .button-area's "width: 80%" in Lobby.uss.
@@ -114,6 +114,7 @@ public class LobbyController : MonoBehaviour
             root.RegisterCallback<AttachToPanelEvent>(_ => HoistStyleSheetsToPanelRoot(root));
 
         root.Q<Button>("btn-start").clicked += OnStartClicked;
+        root.Q<Button>("btn-ranking").clicked += OnRankingClicked;
         root.Q<Button>("btn-settings").clicked += OnSettingsClicked;
         root.Q<Button>("btn-exit").clicked += OnExitClicked;
 
@@ -385,6 +386,11 @@ public class LobbyController : MonoBehaviour
     void OnStartClicked()
     {
         SceneManager.LoadScene("ModSelectScene");
+    }
+
+    void OnRankingClicked()
+    {
+        SceneManager.LoadScene("Ranking");
     }
 
     // 설정 패널은 항상 트리에 존재하고 .hidden 클래스(Lobby.uss)로만 표시 여부를

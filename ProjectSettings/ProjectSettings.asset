@@ -685,6 +685,7 @@ PlayerSettings:
   webEnableSubmoduleStrippingCompatibility: 0
   scriptingDefineSymbols:
     Android: FIREBASE_ENABLED;FIRESTORE_ENABLED
+    Standalone: FIREBASE_ENABLED;FIRESTORE_ENABLED
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend:

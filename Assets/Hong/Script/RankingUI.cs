@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class RankingUI : MonoBehaviour
 {
@@ -10,6 +11,22 @@ public class RankingUI : MonoBehaviour
     public RankingItem itemPrefab;
 
     public TMP_InputField idInputField;
+
+    [Tooltip("뒤로가기 버튼이 돌아갈 씬 이름")]
+    public string lobbyScene = "LobbyScene";
+
+    // 랭킹 화면이 열리면 자동으로 최신 순위를 불러온다.
+    void OnEnable()
+    {
+        if (rankingManager == null) rankingManager = FindObjectOfType<RankingManager>();
+        Refresh();
+    }
+
+    // 뒤로가기 버튼(OnClick)에 연결 → 로비로 복귀.
+    public void BackToLobby()
+    {
+        SceneManager.LoadScene(lobbyScene);
+    }
 
     public void OnRegisterButtonClicked()
     {
@@ -25,6 +42,12 @@ public class RankingUI : MonoBehaviour
 
     public void Refresh()
     {
+        if (rankingManager == null || content == null || itemPrefab == null)
+        {
+            Debug.LogWarning("[RankingUI] 참조(rankingManager/content/itemPrefab)가 비어 있어 갱신을 건너뜁니다.");
+            return;
+        }
+
         foreach (Transform child in content)
         {
             Destroy(child.gameObject);
