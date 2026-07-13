@@ -432,25 +432,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseMargin: 32
+  settingsIconMargin: 12
   loginScene: LoginScene
   titleLabelNames:
   - title-label-line1
   - title-label-line2
-  titleBaseFontSize: 52
-  menuButtonNames:
-  - btn-start
-  - btn-ranking
-  - btn-settings
-  - btn-exit
-  menuButtonBaseFontSize: 34
-  designContentHeight: 632
+  titleBaseFontSize: 100
+  designContentHeight: 630
   titleAreaHorizontalPadding: 80
-  buttonAreaWidthFraction: 0.8
   minFontScale: 0.5
   settingsTitleBaseFontSize: 44
   settingsSectionTitleBaseFontSize: 56
   settingsHeaderHorizontalPadding: 64
-  settingsRowLabelBaseFontSize: 30
+  settingsRowLabelBaseFontSize: 50
   settingsContentHorizontalPadding: 80
   settingsRowLabelWidthFraction: 0.32
 --- !u!114 &1000000005

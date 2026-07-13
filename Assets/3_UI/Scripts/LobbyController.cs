@@ -7,6 +7,8 @@ using UnityEngine.UIElements;
 public class LobbyController : MonoBehaviour
 {
     [SerializeField] float baseMargin = 32f;
+    [Tooltip("설정 아이콘을 세이프에어리어 구석에 바짝 붙일 때 쓰는 여백 (baseMargin보다 작게)")]
+    [SerializeField] float settingsIconMargin = 12f;
     [Tooltip("로그아웃 시 이동할 씬 이름 (Build Settings에 등록되어 있어야 함)")]
     [SerializeField] string loginScene = "LoginScene";
 
@@ -16,17 +18,16 @@ public class LobbyController : MonoBehaviour
     [SerializeField] string[] titleLabelNames = { "title-label-line1", "title-label-line2" };
     // titleLabelNames와 같은 순서(line1, line2)로 대응되는 localization.csv 키.
     static readonly string[] TitleLabelKeys = { "lobby.title.line1", "lobby.title.line2" };
-    [SerializeField] float titleBaseFontSize = 52f;
-    [SerializeField] string[] menuButtonNames = { "btn-start", "btn-ranking", "btn-settings", "btn-exit" };
-    // menuButtonNames와 같은 순서(시작, 랭킹, 설정, 나가기)로 대응되는 키.
-    static readonly string[] MenuButtonKeys = { "lobby.btn.start", "lobby.btn.ranking", "lobby.btn.settings", "lobby.btn.exit" };
-    [SerializeField] float menuButtonBaseFontSize = 34f;
-    // title-area (190) + its margin-bottom (40) + button-area (4 * (120 + 14)) in Lobby.uss.
-    [SerializeField] float designContentHeight = 766f;
+    [SerializeField] float titleBaseFontSize = 68f;
+    // title-area의 margin-top(80) + height(230) + margin-bottom(40) + button-area
+    // (원형 아이콘 버튼 중 가장 큰 시작 버튼 높이 280px) in Lobby.uss. 타이틀과
+    // 버튼 사이 간격은 이제 flex-spacer 두 개가 만들어주므로(화면이 넉넉하면
+    // 늘어나고, 좁으면 0으로 줄어듦) 고정값 계산에는 안 넣는다. 메뉴 버튼은
+    // 고정 크기 원형 아이콘이라(가변 길이 텍스트가 아님) 별도 텍스트
+    // 스케일링이 필요 없다.
+    [SerializeField] float designContentHeight = 630f;
     // .title-area's own "padding: 0 40px" (both sides) in Lobby.uss.
     [SerializeField] float titleAreaHorizontalPadding = 80f;
-    // .button-area's "width: 80%" in Lobby.uss.
-    [SerializeField] float buttonAreaWidthFraction = 0.8f;
     [SerializeField] float minFontScale = 0.5f;
 
     // Settings panel text also needs to shrink on narrow screens, same reason
@@ -45,8 +46,9 @@ public class LobbyController : MonoBehaviour
 
     VisualElement _lobbyRoot;
     VisualElement _exitModal;
+    Button _btnSettingsIcon;
+    Label _versionLabel;
     TextElement[] _titleLabels;
-    TextElement[] _menuButtons;
     Rect _appliedSafeArea;
     Vector2Int _appliedScreenSize;
     Vector2 _appliedPanelSize;
@@ -130,8 +132,10 @@ public class LobbyController : MonoBehaviour
 
         root.Q<Button>("btn-start").clicked += OnStartClicked;
         root.Q<Button>("btn-ranking").clicked += OnRankingClicked;
-        root.Q<Button>("btn-settings").clicked += OnSettingsClicked;
         root.Q<Button>("btn-exit").clicked += OnExitClicked;
+
+        _btnSettingsIcon = root.Q<Button>("btn-settings");
+        _btnSettingsIcon.clicked += OnSettingsClicked;
 
         _exitModal = root.Q<VisualElement>("exit-modal");
         _modalTextLine1 = root.Q<TextElement>("modal-text-line1");
@@ -143,12 +147,11 @@ public class LobbyController : MonoBehaviour
 
         _lobbyRoot = root.Q<VisualElement>("lobby-root");
         _titleLabels = System.Array.ConvertAll(titleLabelNames, name => _lobbyRoot.Q<TextElement>(name));
-        _menuButtons = System.Array.ConvertAll(menuButtonNames, name => _lobbyRoot.Q<TextElement>(name));
         _lobbyRoot.RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
 
-        var versionLabel = root.Q<Label>("version-label");
-        if (versionLabel != null)
-            versionLabel.text = "v" + Application.version;
+        _versionLabel = root.Q<Label>("version-label");
+        if (_versionLabel != null)
+            _versionLabel.text = "v" + Application.version;
 
         _settingsPanel = root.Q<VisualElement>("settings-panel");
         _settingsTitle = root.Q<TextElement>("settings-title");
@@ -256,8 +259,8 @@ public class LobbyController : MonoBehaviour
         for (int i = 0; i < _titleLabels.Length; i++)
             _titleLabels[i].text = LocalizationManager.Get(TitleLabelKeys[i]);
 
-        for (int i = 0; i < _menuButtons.Length; i++)
-            _menuButtons[i].text = LocalizationManager.Get(MenuButtonKeys[i]);
+        // 시작/랭킹/나가기/설정 버튼은 이제 번역 대상 텍스트가 아니라 고정된
+        // 유니코드 아이콘 글자(▶/★/✕/⚙)라 언어가 바뀌어도 그대로 둔다.
 
         _modalTextLine1.text = LocalizationManager.Get("lobby.exit.confirm_line1");
         _modalTextLine2.text = LocalizationManager.Get("lobby.exit.confirm_line2");
@@ -584,6 +587,23 @@ public class LobbyController : MonoBehaviour
             _settingsPanel.style.paddingBottom = paddingBottom;
         }
 
+        // position:absolute인 자식은 부모(lobby-root)의 패딩을 따라가지 않고
+        // 부모의 테두리 기준으로 붙는다 - 위에서 lobbyRoot에 준 패딩은 이
+        // 아이콘 버튼에는 아무 영향이 없어서, 세이프에어리어 값을 top/right에
+        // 직접 넣어줘야 노치 등을 피해서 항상 안전하게 붙는다.
+        // 설정 아이콘은 다른 콘텐츠(baseMargin)만큼 안 띄우고, 세이프에어리어
+        // 바로 바깥쪽 아주 작은 여백(settingsIconMargin)만 두고 구석에 바짝 붙인다.
+        if (_btnSettingsIcon != null)
+        {
+            _btnSettingsIcon.style.top = Mathf.Max(0f, topLeft.y) + settingsIconMargin;
+            _btnSettingsIcon.style.right = Mathf.Max(0f, panelWidth - bottomRight.x) + settingsIconMargin;
+        }
+
+        // 버전 표시도 같은 이유(절대배치 자식은 부모 패딩을 안 따라감)로
+        // 화면 맨 아래에 고정하려면 bottom을 세이프에어리어 값으로 직접 줘야 한다.
+        if (_versionLabel != null)
+            _versionLabel.style.bottom = paddingBottom;
+
         // Only SafeArea-driven shrinkage should scale the text down - measured
         // against the panel's actual current size, not an assumed constant.
         float availableContentHeight = panelHeight - paddingTop - paddingBottom;
@@ -591,10 +611,8 @@ public class LobbyController : MonoBehaviour
 
         float contentWidth = panelWidth - paddingLeft - paddingRight;
         float titleAvailableWidth = Mathf.Max(0f, contentWidth - titleAreaHorizontalPadding);
-        float buttonAvailableWidth = Mathf.Max(0f, contentWidth * buttonAreaWidthFraction);
 
         ApplyTextScale(_titleLabels, titleBaseFontSize, titleAvailableWidth, heightFontScale);
-        ApplyTextScale(_menuButtons, menuButtonBaseFontSize, buttonAvailableWidth, heightFontScale);
 
         // Settings panel isn't height-constrained the way the lobby's title/
         // buttons are (no equivalent designContentHeight for it), so only

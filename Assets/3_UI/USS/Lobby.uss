@@ -13,13 +13,19 @@ Button:active {
     scale: 0.94;
 }
 
+/* 화면 맨 아래 고정 - lobby-root가 flex-start로 바뀌면서 그냥 두면 버튼
+   바로 아래에 붙어버려서, 절대배치로 떼어내 하단에 고정한다. bottom 값은
+   LobbyController.ApplySafeArea()가 세이프에어리어에 맞춰 매 프레임 지정한다
+   (다른 절대배치 자식들과 같은 이유로 부모 패딩을 안 따라가기 때문). */
 .version-label {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
     font-size: 26px;
     -unity-font-style: bold;
     color: rgb(90, 62, 40);
     -unity-text-align: middle-center;
-    margin-top: 16px;
-    flex-shrink: 0;
 }
 
 .lobby-root {
@@ -28,80 +34,148 @@ Button:active {
     height: 100%;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    /* 예전엔 center라 타이틀+버튼 묶음이 화면 한가운데로 내려와 있었다 -
+       flex-start로 바꾸고 title-area에 margin-top을 줘서 타이틀이 화면
+       위쪽에 오도록 한다. lobby-root의 paddingTop은 LobbyController.
+       ApplySafeArea()가 매 프레임 세이프에어리어에 맞춰 갱신해주므로
+       노치 기기에서도 항상 안전한 위치에서 시작한다. */
+    justify-content: flex-start;
     overflow: hidden;
     background-color: rgb(250, 240, 222);
 }
 
 .title-area {
     width: 100%;
-    height: 190px;
+    height: 230px;
     min-height: 0;
     overflow: hidden;
     flex-shrink: 1;
     justify-content: center;
     align-items: center;
     padding: 0 40px;
+    margin-top: 80px;
     margin-bottom: 40px;
 }
 
+/* title-area 밑, button-area 밑에 하나씩 둬서 button-area가 타이틀 아래
+   남는 공간의 가운데쯤에 오도록 한다 (flex-grow:1짜리 빈 공간 두 개가
+   똑같이 늘어나면서 그 사이에 낀 button-area를 밀어 가운데로 보냄). */
+.flex-spacer {
+    flex-grow: 1;
+}
+
 .title-label {
-    font-size: 52px;
+    font-size: 68px;
     -unity-font-style: bold;
     color: rgb(90, 62, 40);
     -unity-text-align: middle-center;
     white-space: nowrap;
 }
 
+/* 랭킹/시작/나가기 원형 아이콘 버튼이 가로로 나란히 오는 영역 - 시작(가운데,
+   더 큼)을 중심으로 좌우에 랭킹/나가기가 온다. */
 .button-area {
-    width: 80%;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
     min-height: 0;
-    overflow: hidden;
+    overflow: visible;
     flex-shrink: 1;
-    align-items: stretch;
 }
 
-.menu-button {
-    height: 120px;
-    min-height: 0;
-    overflow: hidden;
-    flex-shrink: 1;
-    margin-bottom: 14px;
-    border-radius: 18px;
+/* 원형 아이콘 버튼 공통 - border-radius를 실제 한 변 길이보다 훨씬 크게 주면
+   Unity가 CSS처럼 최대 min(width,height)/2로 잘라내어 항상 완전한 원이 된다.
+   Button 자체에 background-image를 주는 대신 안에 icon-img 자식을 두고
+   그 크기를 60%로 고정한 것은, Button의 padding이 배경 이미지 렌더링
+   영역까지 줄여준다는 보장이 없어서(패딩은 자식 레이아웃에만 확실히
+   적용됨) - 실제 이미지 크기를 확실히 원 안쪽으로 맞추기 위함이다.
+   (참고: 이 USS가 아이콘 PNG들보다 먼저 임포트돼서 한 번 "못 찾음"으로
+   캐시됐을 수 있음 - 그럴 땐 이 파일을 Reimport 하면 다시 잡힌다.) */
+.icon-button {
+    border-radius: 999px;
     border-width: 0;
-    font-size: 34px;
+    margin: 0 24px;
+    align-items: center;
+    justify-content: center;
     color: rgb(255, 255, 255);
-    background-color: rgb(150, 111, 71);
-    -unity-text-align: middle-center;
 }
 
-.menu-button:hover {
-    background-color: rgb(170, 128, 86);
+/* 아이콘 이미지는 Assets/3_UI/Icons/ 밑에 정해진 파일명(icon-start.png 등)으로
+   넣으면 그대로 적용된다 - 아직 없으면 그냥 빈 원으로 보일 뿐 에러는 안 난다. */
+.icon-img {
+    width: 60%;
+    height: 60%;
+    -unity-background-scale-mode: scale-to-fit;
 }
 
-.menu-button--primary {
+/* 재생 모양 아이콘은 삼각형이라 그림 자체가 정사각형 캔버스 안에서 원래
+   약간 왼쪽으로 치우쳐 그려져 있는 경우가 많다 - margin-left로 살짝 밀어서
+   시각적으로 원 가운데에 오도록 보정한다. */
+.icon-img--start {
+    background-image: url("/Assets/3_UI/Icons/icon-start.png");
+    margin-left: 6%;
+}
+
+.icon-img--ranking {
+    background-image: url("/Assets/3_UI/Icons/icon-ranking.png");
+}
+
+.icon-img--exit {
+    background-image: url("/Assets/3_UI/Icons/icon-exit.png");
+}
+
+.icon-img--settings {
+    background-image: url("/Assets/3_UI/Icons/icon-settings.png");
+}
+
+.icon-button--primary {
+    width: 280px;
+    height: 280px;
     background-color: rgb(214, 108, 58);
 }
 
-.menu-button--primary:hover {
+.icon-button--primary:hover {
     background-color: rgb(230, 128, 76);
 }
 
-.menu-button--exit {
+.icon-button--exit {
+    width: 200px;
+    height: 200px;
     background-color: rgb(120, 120, 120);
 }
 
-.menu-button--exit:hover {
+.icon-button--exit:hover {
     background-color: rgb(140, 140, 140);
 }
 
 /* 랭킹 버튼 - 설정(plain 갈색)과 구분되도록 트로피 느낌의 금빛 톤을 사용 */
-.menu-button--ranking {
+.icon-button--ranking {
+    width: 200px;
+    height: 200px;
     background-color: rgb(196, 154, 61);
 }
 
-.menu-button--ranking:hover {
+.icon-button--ranking:hover {
     background-color: rgb(214, 172, 80);
+}
+
+/* 설정 버튼 - 더 이상 다른 메뉴 버튼들과 같은 줄에 있지 않고, 화면 오른쪽
+   위 구석에 작은 톱니바퀴 아이콘으로 고정. lobby-root 자체가 이미
+   position:absolute라 그 안의 절대배치 자식은 lobby-root의 패딩 기준으로
+   붙는데, 그 패딩을 LobbyController.ApplySafeArea()가 매 프레임 세이프에어리어에
+   맞춰 갱신해주므로 노치 등에도 항상 안전하게 붙는다. */
+.icon-button--settings {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 144px;
+    height: 144px;
+    background-color: rgb(150, 111, 71);
+}
+
+.icon-button--settings:hover {
+    background-color: rgb(170, 128, 86);
 }
 
 .modal-overlay {

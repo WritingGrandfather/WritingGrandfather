@@ -202,6 +202,13 @@
     background-image: none;
 }
 
+/* 전체 볼륨/배경음/효과음 토글 - 라벨 텍스트가 없어서 기본은 체크박스가
+   컨트롤 영역(62%) 맨 왼쪽에 붙어 보였다. justify-content:flex-end로
+   Toggle 내부 콘텐츠(체크박스)를 오른쪽 끝으로 밀어 정렬한다. */
+.settings-toggle {
+    justify-content: flex-end;
+}
+
 /* Toggle은 ":checked" 의사 상태를 checkmark 자신이 아니라 그 부모인
    .unity-toggle__input에 붙인다 (Toggle.UpdateMixedValueContent()가
    visualInput.SetCheckedPseudoState()를 호출). ".unity-toggle__checkmark:checked"

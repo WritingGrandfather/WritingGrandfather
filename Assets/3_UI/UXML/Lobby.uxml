@@ -3,17 +3,30 @@
     <Style src="../USS/Settings.uss" />
 
     <ui:VisualElement name="lobby-root" class="lobby-root">
+        <ui:Button name="btn-settings" text="" class="icon-button icon-button--settings">
+            <ui:VisualElement class="icon-img icon-img--settings" picking-mode="Ignore" />
+        </ui:Button>
+
         <ui:VisualElement name="title-area" class="title-area">
             <ui:Label text="글씨 쓰는" name="title-label-line1" class="title-label" />
             <ui:Label text="할배" name="title-label-line2" class="title-label" />
         </ui:VisualElement>
 
+        <ui:VisualElement class="flex-spacer" picking-mode="Ignore" />
+
         <ui:VisualElement name="button-area" class="button-area">
-            <ui:Button name="btn-start" text="글쓰기 시작" class="menu-button menu-button--primary" />
-            <ui:Button name="btn-ranking" text="랭킹" class="menu-button menu-button--ranking" />
-            <ui:Button name="btn-settings" text="설정" class="menu-button" />
-            <ui:Button name="btn-exit" text="나가기" class="menu-button menu-button--exit" />
+            <ui:Button name="btn-ranking" text="" class="icon-button icon-button--ranking">
+                <ui:VisualElement class="icon-img icon-img--ranking" picking-mode="Ignore" />
+            </ui:Button>
+            <ui:Button name="btn-start" text="" class="icon-button icon-button--primary">
+                <ui:VisualElement class="icon-img icon-img--start" picking-mode="Ignore" />
+            </ui:Button>
+            <ui:Button name="btn-exit" text="" class="icon-button icon-button--exit">
+                <ui:VisualElement class="icon-img icon-img--exit" picking-mode="Ignore" />
+            </ui:Button>
         </ui:VisualElement>
+
+        <ui:VisualElement class="flex-spacer" picking-mode="Ignore" />
 
         <ui:Label name="version-label" text="" class="version-label" />
     </ui:VisualElement>
@@ -83,15 +96,15 @@
                 </ui:VisualElement>
                 <ui:VisualElement class="settings-row">
                     <ui:Label text="전체 볼륨" class="settings-row-label" />
-                    <ui:Toggle name="toggle-master-volume" value="true" class="settings-control" />
+                    <ui:Toggle name="toggle-master-volume" value="true" class="settings-control settings-toggle" />
                 </ui:VisualElement>
                 <ui:VisualElement class="settings-row">
                     <ui:Label text="배경음" class="settings-row-label" />
-                    <ui:Toggle name="toggle-bgm-volume" value="true" class="settings-control" />
+                    <ui:Toggle name="toggle-bgm-volume" value="true" class="settings-control settings-toggle" />
                 </ui:VisualElement>
                 <ui:VisualElement class="settings-row">
                     <ui:Label text="효과음" class="settings-row-label" />
-                    <ui:Toggle name="toggle-sfx-volume" value="true" class="settings-control" />
+                    <ui:Toggle name="toggle-sfx-volume" value="true" class="settings-control settings-toggle" />
                 </ui:VisualElement>
             </ui:VisualElement>
 
