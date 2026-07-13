@@ -22,15 +22,11 @@ public static class JihwanSceneBuilder
     const string ScenePath = "Assets/1_Scenes/JihwanScnene.unity";
     const string TeamScenePath = "Assets/Hong/Scene/New Scene 1.unity";
 
-    static TMP_FontAsset koreanFont; // 인식된 한글(예: 목표 글자) 표시용 폰트
-
     [MenuItem("Tools/Build Jihwan Scene")]
     public static void Build()
     {
         // 팀 UI 씬을 베이스로 연다
         var scene = EditorSceneManager.OpenScene(TeamScenePath, OpenSceneMode.Single);
-
-        koreanFont = FindKoreanFont(); // 인식 결과에 한글이 섞이므로 폰트는 여전히 필요
 
         // 팀 씬에 이미 있는 오브젝트 찾기
         var canvas = Object.FindObjectOfType<Canvas>();
@@ -47,10 +43,21 @@ public static class JihwanSceneBuilder
         cell.targetText = "가"; // 목표 글자 (인스펙터에서 수정 가능)
         cellGO.transform.position = Vector3.zero;
 
-        var capGO = new GameObject("CellCapture");
-        var cap = capGO.AddComponent<CellCapture>();
-        cap.resolution = 512;
-        cap.backgroundColor = Color.white;
+        // 하이브리드 캡처: 획 좌표(StrokeCapture) + PNG(CellCapture)
+        var drow = Object.FindObjectOfType<DrowLine>();
+
+        var strokeGO = new GameObject("StrokeCapture");
+        var strokeCap = strokeGO.AddComponent<StrokeCapture>();
+        var strokeSO = new SerializedObject(strokeCap);
+        strokeSO.FindProperty("drawLine").objectReferenceValue = drow;
+        strokeSO.ApplyModifiedPropertiesWithoutUndo();
+        if (drow == null)
+            Debug.LogWarning("[JihwanSceneBuilder] 팀 씬에서 DrowLine을 찾지 못했습니다. StrokeCapture의 drawLine을 수동 연결하세요.");
+
+        var imgGO = new GameObject("CellCapture");
+        var imgCap = imgGO.AddComponent<CellCapture>();
+        imgCap.resolution = 512;
+        imgCap.backgroundColor = Color.white;
 
         var evalGO = new GameObject("OpenAIEvaluator");
         var evaluator = evalGO.AddComponent<OpenAIHandwritingEvaluator>();
@@ -77,7 +84,8 @@ public static class JihwanSceneBuilder
         var ctrl = ctrlGO.AddComponent<WritingFeedbackController>();
         var ctrlSO = new SerializedObject(ctrl);
         ctrlSO.FindProperty("targetCell").objectReferenceValue = cell;
-        ctrlSO.FindProperty("capture").objectReferenceValue = cap;
+        ctrlSO.FindProperty("strokeCapture").objectReferenceValue = strokeCap;
+        ctrlSO.FindProperty("imageCapture").objectReferenceValue = imgCap;
         ctrlSO.FindProperty("evaluator").objectReferenceValue = evaluator;
         ctrlSO.FindProperty("criteria").stringValue =
             "You are a teacher helping a learner practice Korean handwriting. " +
@@ -111,21 +119,6 @@ public static class JihwanSceneBuilder
         }
     }
 
-    // 프로젝트 안의 한글 TMP 폰트 에셋을 이름 힌트로 자동 탐색
-    static TMP_FontAsset FindKoreanFont()
-    {
-        string[] hints = { "KR", "Kor", "Nanum", "Malgun", "Noto", "Gothic", "Pretendard", "Spoqa", "나눔", "고딕", "본고딕" };
-        foreach (var guid in AssetDatabase.FindAssets("t:TMP_FontAsset"))
-        {
-            string path = AssetDatabase.GUIDToAssetPath(guid);
-            string name = System.IO.Path.GetFileNameWithoutExtension(path);
-            foreach (var h in hints)
-                if (name.IndexOf(h, System.StringComparison.OrdinalIgnoreCase) >= 0)
-                    return AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(path);
-        }
-        return null;
-    }
-
     // ── UI 헬퍼 ────────────────────────────────────────────────────
 
     // anchor: (0.5,1)=상단중앙, (1,1)=우상단 등. pos: 앵커 기준 오프셋
@@ -144,7 +137,6 @@ public static class JihwanSceneBuilder
         tmp.fontSize = fontSize;
         tmp.alignment = TextAlignmentOptions.Center;
         tmp.color = Color.black;
-        if (koreanFont != null) tmp.font = koreanFont;
         return tmp;
     }
 
@@ -174,7 +166,6 @@ public static class JihwanSceneBuilder
         tmp.fontSize = 32;
         tmp.alignment = TextAlignmentOptions.Center;
         tmp.color = Color.white;
-        if (koreanFont != null) tmp.font = koreanFont;
 
         return go;
     }

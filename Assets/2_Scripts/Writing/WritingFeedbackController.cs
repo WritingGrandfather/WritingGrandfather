@@ -24,7 +24,8 @@ public class WritingFeedbackController : MonoBehaviour
 {
     [Header("참조")]
     [SerializeField] WritingCell targetCell;
-    [SerializeField] CellCapture capture;
+    [SerializeField] StrokeCapture strokeCapture; // 획 좌표(획순/획수)
+    [SerializeField] CellCapture imageCapture;     // PNG(글자 인식/모양)
     [SerializeField] HandwritingEvaluator evaluator;
 
     [Header("기획 판정 기준 (AI 프롬프트로 전달됨)")]
@@ -51,21 +52,23 @@ public class WritingFeedbackController : MonoBehaviour
             return;
         }
 
-        if (targetCell == null || capture == null || evaluator == null)
+        if (targetCell == null || strokeCapture == null || imageCapture == null || evaluator == null)
         {
-            Debug.LogError("[WritingFeedback] targetCell / capture / evaluator 참조가 비어 있습니다. 인스펙터를 확인하세요.");
+            Debug.LogError("[WritingFeedback] targetCell / strokeCapture / imageCapture / evaluator 참조가 비어 있습니다. 인스펙터를 확인하세요.");
             return;
         }
 
         isEvaluating = true;
         onStatus?.Invoke("Evaluating...");
 
-        // 1) 칸 캡처
-        byte[] png = capture.CapturePng(targetCell);
+        // 1) 하이브리드 캡처 — 획 좌표(획순) + PNG(모양/인식)
+        string strokes = strokeCapture.CaptureJson(targetCell);
+        byte[] png = imageCapture.CapturePng(targetCell);
 
         // 2) 요청 구성
         var request = new HandwritingEvaluationRequest
         {
+            strokesJson = strokes,
             imagePng = png,
             targetText = targetCell.targetText,
             criteria = criteria
@@ -82,7 +85,19 @@ public class WritingFeedbackController : MonoBehaviour
         if (feedback == null)
             feedback = HandwritingFeedback.Error("No evaluation result received.");
 
-        Debug.Log($"[WritingFeedback] 인식='{feedback.recognizedText}' 점수={feedback.score} 통과={feedback.passed}");
+        // 인식 글자가 목표와 다르면 통과 불가로 강제 (AI가 관대하게 줘도 코드로 못박음)
+        if (targetCell != null && !string.IsNullOrEmpty(targetCell.targetText))
+        {
+            string target = targetCell.targetText.Trim();
+            string recognized = (feedback.recognizedText ?? "").Trim();
+            if (recognized != target)
+            {
+                if (feedback.score > 20) feedback.score = 20;
+                feedback.passed = false;
+            }
+        }
+
+        Debug.Log($"[WritingFeedback] 목표='{targetCell?.targetText}' 인식='{feedback.recognizedText}' 점수={feedback.score} 통과={feedback.passed}");
 
         onStatus?.Invoke("");
         onFeedback?.Invoke(feedback);
