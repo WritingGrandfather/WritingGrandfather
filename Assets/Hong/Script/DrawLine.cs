@@ -15,6 +15,9 @@ public class DrowLine : MonoBehaviour
     [Range(0.01f, 1f)]
     public float lineWidth = 0.1f;
 
+    // 선 색상 — Inspector 또는 UI에서 조절 가능
+    public Color lineColor = Color.black;
+
     LineRenderer lr;
     EdgeCollider2D collider2D;
     List<Vector2> points = new List<Vector2>();
@@ -23,8 +26,14 @@ public class DrowLine : MonoBehaviour
     // Dispose() 호출 시 id 없이도 풀로 자동 반환됨
     PooledObject<GameObject> currentHandle;
 
-    // 완성된 라인 핸들 목록 (ClearAll 호출 시 각각 Dispose)
-    List<PooledObject<GameObject>> drawnHandles = new List<PooledObject<GameObject>>();
+    // GameObject → 핸들 매핑 : 특정 라인을 지울 때 핸들을 찾아 Dispose하기 위해 사용
+    Dictionary<GameObject, PooledObject<GameObject>> lineHandles = new Dictionary<GameObject, PooledObject<GameObject>>();
+
+    // false면 드로우 입력을 무시 — 지우개 모드일 때 Eraser에서 false로 설정
+    public bool drawingEnabled = true;
+
+    // OnDrawStart가 정상적으로 완료됐을 때만 true — OnDrawEnd에서 핸들 저장 여부 판단
+    bool isDrawing;
 
     // Camera.main은 호출할 때마다 FindWithTag로 탐색하므로 매 프레임 호출하면 비효율적
     // Awake에서 한 번만 캐싱해서 사용
@@ -77,8 +86,9 @@ public class DrowLine : MonoBehaviour
     // 풀에서 라인 오브젝트를 꺼내 초기화한 뒤 드로우 루프를 시작함
     void OnDrawStart(InputAction.CallbackContext ctx)
     {
-        // 슬라이더 등 UI 조작 중에는 드로우 차단
-        if (IsPointerOverUI()) return;
+        // 지우개 모드이거나 UI 조작 중에는 드로우 차단
+        isDrawing = false;
+        if (!drawingEnabled || IsPointerOverUI()) return;
         // out으로 핸들을 받아 저장 — 반환 시 Dispose()만 호출하면 됨
         GameObject currentLineGO = PoolManager.Instance.Spawn(linePoolId, Vector3.zero, transform, out currentHandle);
 
@@ -95,15 +105,18 @@ public class DrowLine : MonoBehaviour
         lr.positionCount = 0;
         collider2D.points = new Vector2[0];
 
-        // 현재 설정된 두께 적용
-        lr.startWidth = lineWidth;
-        lr.endWidth   = lineWidth;
+        // 현재 설정된 두께 및 색상 적용
+        lr.startWidth  = lineWidth;
+        lr.endWidth    = lineWidth;
+        lr.startColor  = lineColor;
+        lr.endColor    = lineColor;
 
         Vector2 startPos = cam.ScreenToWorldPoint(Pointer.current.position.ReadValue());
         points.Add(startPos);
         lr.positionCount = 1;
         lr.SetPosition(0, startPos);
 
+        isDrawing = true;
         drawCoroutine = StartCoroutine(DrawLoop());
     }
 
@@ -136,8 +149,16 @@ public class DrowLine : MonoBehaviour
             drawCoroutine = null;
         }
 
-        // 완성된 라인 핸들을 목록에 보관 (ClearAll에서 Dispose로 반환)
-        drawnHandles.Add(currentHandle);
+        // 정상적으로 그리기가 시작된 경우에만 핸들 저장 및 undo 기록
+        if (isDrawing)
+        {
+            var capturedGO = lr.gameObject;
+            lineHandles[capturedGO] = currentHandle;
+            isDrawing = false;
+
+            // 이 라인을 제거하는 액션을 undo 스택에 기록
+            UndoManager.Instance.Record(() => RemoveLine(capturedGO));
+        }
         currentHandle = default;
 
         points.Clear();
@@ -149,15 +170,61 @@ public class DrowLine : MonoBehaviour
         lineWidth = width;
     }
 
+    // 색상 변경 — UI 버튼 OnClick에 연결해서 사용
+    public void SetLineColor(Color color)
+    {
+        lineColor = color;
+    }
+
+    // R/G/B/A 개별 채널 변경용 — 필요 시 사용
+    public void SetLineColorR(float r) => lineColor.r = r;
+    public void SetLineColorG(float g) => lineColor.g = g;
+    public void SetLineColorB(float b) => lineColor.b = b;
+    public void SetLineColorA(float a) => lineColor.a = a;
+
+    // 특정 라인 하나를 풀로 반환 — Eraser에서 호출
+    public void RemoveLine(GameObject line)
+    {
+        if (!lineHandles.TryGetValue(line, out var handle)) return;
+
+        ((IDisposable)handle).Dispose();
+        lineHandles.Remove(line);
+    }
+
+    // 포인트 목록으로 새 라인을 풀에서 꺼내 생성 — 부분 지우개로 선을 쪼갤 때 사용
+    // 생성된 GameObject를 반환해 Eraser가 undo 추적에 활용할 수 있게 함
+    public GameObject CreateLine(List<Vector2> linePoints, float width, Color color)
+    {
+        if (linePoints == null || linePoints.Count < 2) return null;
+
+        GameObject go = PoolManager.Instance.Spawn(linePoolId, Vector3.zero, transform, out PooledObject<GameObject> handle);
+        if (go == null) return null;
+
+        var newLR       = go.GetComponent<LineRenderer>();
+        var newCollider = go.GetComponent<EdgeCollider2D>();
+
+        newLR.positionCount  = 0;
+        newCollider.points   = new Vector2[0];
+        newLR.startWidth     = width;
+        newLR.endWidth       = width;
+        newLR.startColor     = color;
+        newLR.endColor       = color;
+
+        newLR.positionCount = linePoints.Count;
+        for (int i = 0; i < linePoints.Count; i++)
+            newLR.SetPosition(i, linePoints[i]);
+
+        newCollider.points = linePoints.ToArray();
+        lineHandles[go]    = handle;
+        return go;
+    }
+
     // 그려진 모든 라인을 풀로 반환하고 화면을 초기화
-    // 지우개 기능이나 전체 초기화 버튼에서 호출하면 됨
-    // PooledObject.Dispose()가 내부적으로 Release를 처리하므로 id 불필요
     public void ClearAll()
     {
-        // PooledObject<T>는 IDisposable을 명시적으로 구현하므로 캐스팅 필요
-        foreach (var handle in drawnHandles)
+        foreach (var handle in lineHandles.Values)
             ((IDisposable)handle).Dispose();
 
-        drawnHandles.Clear();
+        lineHandles.Clear();
     }
 }

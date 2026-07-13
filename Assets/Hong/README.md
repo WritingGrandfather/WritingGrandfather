@@ -14,7 +14,9 @@ Assets/Hong/
 └── Script/
     ├── PoolManager.cs
     ├── PooledObject.cs
-    └── DrawLine.cs
+    ├── DrawLine.cs
+    ├── ColorButton.cs
+    └── Eraser.cs
 ```
 
 ---
@@ -108,15 +110,55 @@ GetComponent<DrowLine>().ClearAll(); // 그려진 라인 전부 풀로 반환
 
 ---
 
+---
+
+## Eraser
+
+### 개요
+드래그하면서 닿는 라인을 감지해 풀로 반환하는 지우개 컴포넌트입니다.  
+`Activate` / `Deactivate`로 펜 모드와 지우개 모드를 전환하며, 모드 전환 시 DrawLine의 드로우 입력이 자동으로 차단됩니다.
+
+### 씬 설정
+
+#### 필수 컴포넌트 (DrawLine과 같은 오브젝트에 추가)
+| 컴포넌트 | 설정 |
+|---|---|
+| `Eraser` | `Draw Line` 필드에 DrawLine 오브젝트 연결 |
+
+#### 펜 / 지우개 전환 버튼
+| 버튼 | On Click 연결 |
+|---|---|
+| 펜 버튼 | `Eraser.Deactivate` |
+| 지우개 버튼 | `Eraser.Activate` |
+
+### 지우개 크기 조절 (UI Slider 연결)
+1. `UI → Slider` 생성
+2. Inspector 설정
+   - `Min Value`: `0.05`
+   - `Max Value`: `1`
+   - `Value`: `0.2`
+3. `On Value Changed` → `Eraser` 오브젝트 → `Eraser.SetEraserRadius`
+
+### 동작 방식
+- 지우개 모드에서 드래그하면 `eraserRadius` 반경 안의 `EdgeCollider2D`를 감지
+- 감지된 라인을 `DrawLine.RemoveLine`으로 풀에 반환
+- UI 위에서는 지우개도 동작하지 않음
+
+---
+
 ## 씬 오브젝트 구성 예시
 
 ```
 Scene
 ├── Main Camera          (태그: MainCamera)
 ├── PoolManager          (PoolManager 컴포넌트)
-├── DrawLine             (DrowLine + PlayerInput 컴포넌트)
+├── DrawLine             (DrowLine + PlayerInput + Eraser 컴포넌트)
 └── Canvas
-    └── Slider           (On Value Changed → DrowLine.SetLineWidth)
+    ├── PenButton        (On Click → Eraser.Deactivate)
+    ├── EraserButton     (On Click → Eraser.Activate)
+    ├── WidthSlider      (On Value Changed → DrowLine.SetLineWidth)
+    ├── EraserSlider     (On Value Changed → Eraser.SetEraserRadius)
+    └── ColorButtons     (ColorButton 컴포넌트, On Click → DrowLine.SetLineColor)
 ```
 
 ---
