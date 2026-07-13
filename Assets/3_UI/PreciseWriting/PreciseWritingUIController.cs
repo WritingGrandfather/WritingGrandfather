@@ -120,19 +120,37 @@ namespace WritingGrandfather.UI.PreciseWriting
             var cam = Camera.main;
             if (cam == null) return;
 
+            var panel = guideBox.panel;
+            if (panel == null) return;
+            float panelW = panel.visualTree.resolvedStyle.width;
+            float panelH = panel.visualTree.resolvedStyle.height;
+            if (panelW <= 0f || panelH <= 0f || Screen.width <= 0 || Screen.height <= 0) return;
+
             Rect r = guideBox.worldBound;
             if (r.width <= 0f || r.height <= 0f) return;
 
-            Vector3 topLeft = cam.ScreenToWorldPoint(new Vector3(r.xMin, r.yMin, 0));
-            Vector3 bottomRight = cam.ScreenToWorldPoint(new Vector3(r.xMax, r.yMax, 0));
+            // guide-box.worldBound는 UI Toolkit 패널 좌표계인데, PanelSettings가
+            // Constant Physical Size 등 1:1이 아닌 스케일 모드면 실제 화면 픽셀과 어긋난다.
+            // SafeAreaApplier/LobbyController와 같은 방식(화면 크기 대비 패널 크기 비율)으로
+            // 패널 좌표 → 화면 픽셀로 변환한 뒤 world 좌표로 옮긴다.
+            // 패널 좌표는 top-left 원점, Pointer.current/ScreenToWorldPoint는 bottom-left
+            // 원점이라 Y를 뒤집어야 한다.
+            float sx = Screen.width / panelW;
+            float sy = Screen.height / panelH;
+
+            Vector2 screenTopLeft = new Vector2(r.xMin * sx, Screen.height - r.yMin * sy);
+            Vector2 screenBottomRight = new Vector2(r.xMax * sx, Screen.height - r.yMax * sy);
+
+            Vector3 worldA = cam.ScreenToWorldPoint(new Vector3(screenTopLeft.x, screenTopLeft.y, 0));
+            Vector3 worldB = cam.ScreenToWorldPoint(new Vector3(screenBottomRight.x, screenBottomRight.y, 0));
 
             writingCell.transform.position = new Vector3(
-                (topLeft.x + bottomRight.x) * 0.5f,
-                (topLeft.y + bottomRight.y) * 0.5f,
+                (worldA.x + worldB.x) * 0.5f,
+                (worldA.y + worldB.y) * 0.5f,
                 writingCell.transform.position.z);
             writingCell.size = new Vector2(
-                Mathf.Abs(bottomRight.x - topLeft.x),
-                Mathf.Abs(bottomRight.y - topLeft.y));
+                Mathf.Abs(worldB.x - worldA.x),
+                Mathf.Abs(worldA.y - worldB.y));
         }
 
         // guide-box와 safe-area 밖에서는 손글씨가 그려지지 않도록, 포인터가 둘 다 안에 있을 때만
