@@ -300,6 +300,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb52b55725f0cd0459a1631525c9d565, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AuthManager
+  googleWebClientId: 
 --- !u!4 &1424888600
 Transform:
   m_ObjectHideFlags: 0
