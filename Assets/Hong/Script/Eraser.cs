@@ -15,14 +15,11 @@ public class Eraser : MonoBehaviour
     Coroutine eraseCoroutine;
     bool isActive;
 
-    // 드래그 세션 동안 발생한 undo 액션 목록
-    // 드래그가 끝날 때 UndoManager에 한 번에 배치로 기록됨
     List<System.Action> sessionUndoActions;
 
     void Awake()
     {
         cam = Camera.main;
-
         var playerInput = GetComponent<PlayerInput>();
         var clickAction = playerInput.actions["Click"];
         clickAction.started  += OnEraseStart;
@@ -33,34 +30,18 @@ public class Eraser : MonoBehaviour
     {
         var playerInput = GetComponent<PlayerInput>();
         if (playerInput == null) return;
-
         var clickAction = playerInput.actions["Click"];
         clickAction.started  -= OnEraseStart;
         clickAction.canceled -= OnEraseEnd;
     }
 
-    public void Activate()
-    {
-        isActive = true;
-        drawLine.drawingEnabled = false;
-    }
-
-    public void Deactivate()
-    {
-        isActive = false;
-        drawLine.drawingEnabled = true;
-    }
-
-    public void SetEraserRadius(float radius)
-    {
-        eraserRadius = radius;
-    }
+    public void Activate()                    { isActive = true;  drawLine.drawingEnabled = false; }
+    public void Deactivate()                  { isActive = false; drawLine.drawingEnabled = true;  }
+    public void SetEraserRadius(float radius) { eraserRadius = radius; }
 
     void OnEraseStart(InputAction.CallbackContext ctx)
     {
         if (!isActive || IsPointerOverUI()) return;
-
-        // 새 드래그 세션 시작 — undo 액션 목록 초기화
         sessionUndoActions = new List<System.Action>();
         eraseCoroutine = StartCoroutine(EraseLoop());
     }
@@ -71,132 +52,137 @@ public class Eraser : MonoBehaviour
         StopCoroutine(eraseCoroutine);
         eraseCoroutine = null;
 
-        // 드래그 세션 전체를 하나의 undo 스텝으로 기록
         if (sessionUndoActions != null && sessionUndoActions.Count > 0)
             UndoManager.Instance.RecordBatch(sessionUndoActions);
-
         sessionUndoActions = null;
     }
 
     IEnumerator EraseLoop()
     {
-        Vector2 prevPos  = cam.ScreenToWorldPoint(Pointer.current.position.ReadValue());
-        bool    hasFirst = false;
+        Vector2 prevPos = cam.ScreenToWorldPoint(Pointer.current.position.ReadValue());
+        ProcessErase(new List<Vector2> { prevPos });
 
         while (true)
         {
-            Vector2 currentPos = cam.ScreenToWorldPoint(Pointer.current.position.ReadValue());
-
-            if (!hasFirst)
-            {
-                EraseAt(currentPos);
-                hasFirst = true;
-            }
-            else
-            {
-                float dist = Vector2.Distance(prevPos, currentPos);
-
-                // 이동 거리가 반지름보다 크면 중간 지점을 촘촘하게 보간해 연속 지우기
-                // 보간 간격을 반지름의 절반으로 유지해 빈틈이 생기지 않게 함
-                int steps = Mathf.Max(1, Mathf.CeilToInt(dist / (eraserRadius * 0.5f)));
-                for (int i = 1; i <= steps; i++)
-                {
-                    Vector2 samplePos = Vector2.Lerp(prevPos, currentPos, (float)i / steps);
-                    EraseAt(samplePos);
-                }
-            }
-
-            prevPos = currentPos;
             yield return null;
+
+            Vector2 currentPos = cam.ScreenToWorldPoint(Pointer.current.position.ReadValue());
+            float dist = Vector2.Distance(prevPos, currentPos);
+
+            // 이전 위치와 현재 위치 사이를 반지름 절반 간격으로 보간
+            int steps = Mathf.Max(1, Mathf.CeilToInt(dist / (eraserRadius * 0.5f)));
+            var samples = new List<Vector2>();
+            for (int i = 1; i <= steps; i++)
+                samples.Add(Vector2.Lerp(prevPos, currentPos, (float)i / steps));
+
+            ProcessErase(samples);
+            prevPos = currentPos;
         }
     }
 
-    // 지우개 위치에서 닿은 라인들을 부분적으로 잘라냄
-    void EraseAt(Vector2 center)
+    // 이번 프레임의 모든 샘플 위치로 영향받는 오브젝트를 먼저 수집한 뒤 각각 한 번씩만 처리.
+    // 새로 생성된 조각이 같은 프레임에 재감지되는 연쇄 지우기를 방지함.
+    void ProcessErase(List<Vector2> samples)
     {
-        Collider2D[] hits = Physics2D.OverlapCircleAll(center, eraserRadius);
+        var affected = new HashSet<GameObject>();
+        foreach (var pos in samples)
+            foreach (var hit in Physics2D.OverlapCircleAll(pos, eraserRadius))
+                if (hit is EdgeCollider2D)
+                    affected.Add(hit.gameObject);
 
-        // 같은 프레임에 딕셔너리가 바뀌는 걸 막기 위해 먼저 수집
-        var toProcess = new List<GameObject>();
-        foreach (var hit in hits)
-        {
-            if (hit is EdgeCollider2D)
-                toProcess.Add(hit.gameObject);
-        }
-
-        foreach (var go in toProcess)
+        foreach (var go in affected)
         {
             var lr = go.GetComponent<LineRenderer>();
             if (lr == null) continue;
 
-            // 원본 라인의 포인트, 두께, 색상 수집
             var original = new List<Vector2>();
             for (int i = 0; i < lr.positionCount; i++)
                 original.Add(lr.GetPosition(i));
 
             float width = lr.startWidth;
-            Color color = lr.startColor;
+            Color color  = lr.startColor;
 
-            // 지우개 원과 겹치지 않는 구간들로 분리
-            // 반지름을 살짝 키워 부동소수점 오차로 생기는 미세 잔재를 방지
-            var segments = SplitLine(original, center, eraserRadius + 0.01f);
+            var segments = SplitLine(original, samples);
 
-            // 원본 제거
             drawLine.RemoveLine(go);
 
-            // 남은 구간마다 새 라인 생성 후 GO 수집
-            var createdSegments = new List<GameObject>();
+            var created = new List<GameObject>();
             foreach (var seg in segments)
             {
-                var created = drawLine.CreateLine(seg, width, color);
-                if (created != null) createdSegments.Add(created);
+                var newGo = drawLine.CreateLine(seg, width, color);
+                if (newGo != null) created.Add(newGo);
             }
 
-            // undo 액션 : 생성된 조각들 제거 + 원본 복원
-            var capturedPoints   = new List<Vector2>(original);
+            var capturedOriginal = new List<Vector2>(original);
             var capturedWidth    = width;
             var capturedColor    = color;
-            var capturedSegments = createdSegments;
+            var capturedCreated  = created;
 
             sessionUndoActions?.Add(() =>
             {
-                foreach (var seg in capturedSegments)
+                foreach (var seg in capturedCreated)
                     drawLine.RemoveLine(seg);
-                drawLine.CreateLine(capturedPoints, capturedWidth, capturedColor);
+                drawLine.CreateLine(capturedOriginal, capturedWidth, capturedColor);
             });
         }
     }
 
-    // 라인 포인트 목록을 지우개 원 기준으로 살아있는 구간들로 분리
-    List<List<Vector2>> SplitLine(List<Vector2> points, Vector2 center, float radius)
+    // ──────────────────────────────────────────────────────────────────────────
+    // 선분(segment) 기반 SplitLine
+    //
+    // 이전 포인트 기준 방식의 문제:
+    //   두 포인트가 모두 원 밖에 있어도 그 사이의 선분이 원을 통과할 수 있음.
+    //   → 이 경우 삭제가 일어나지 않거나 부정확하게 일어남.
+    //
+    // 새 방식:
+    //   각 선분(p1→p2)에 대해 이차방정식으로 원과의 교점 t ∈ (0,1)을 계산.
+    //   여러 지우개 원의 합집합 기준으로 inside ↔ outside 전환이 일어나는 t값을
+    //   오름차순으로 추출한 뒤, 그 지점에서만 선을 자름.
+    // ──────────────────────────────────────────────────────────────────────────
+    List<List<Vector2>> SplitLine(List<Vector2> points, List<Vector2> centers)
     {
-        var result  = new List<List<Vector2>>();
-        var current = new List<Vector2>();
+        float r      = eraserRadius;
+        var result   = new List<List<Vector2>>();
+        var current  = new List<Vector2>();
 
-        for (int i = 0; i < points.Count; i++)
+        for (int i = 0; i < points.Count - 1; i++)
         {
-            bool inside = Vector2.Distance(points[i], center) <= radius;
+            Vector2 p1 = points[i];
+            Vector2 p2 = points[i + 1];
 
-            if (!inside)
+            bool startInside = IsInsideAny(p1, centers, r);
+
+            // p1이 밖에 있으면 현재 kept 구간에 추가 (이미 있으면 중복 추가 안 함)
+            if (!startInside && current.Count == 0)
+                current.Add(p1);
+
+            // 이 선분에서 '지우개 합집합 안/밖' 상태가 전환되는 t 값 목록 (오름차순)
+            var transitions = GetTransitions(p1, p2, centers, r);
+            bool inside = startInside;
+
+            foreach (float t in transitions)
             {
-                // 직전 포인트가 원 안이었다면 경계 교차점을 구간 시작점으로 추가
-                if (i > 0 && Vector2.Distance(points[i - 1], center) <= radius)
+                Vector2 pt = Vector2.Lerp(p1, p2, t);
+
+                if (inside) // inside → outside : kept 구간 재개
                 {
-                    var cross = CircleIntersection(points[i - 1], points[i], center, radius);
-                    if (cross.HasValue) current.Add(cross.Value);
+                    current.Add(pt);
+                    inside = false;
                 }
-                current.Add(points[i]);
+                else        // outside → inside : kept 구간 종료
+                {
+                    current.Add(pt);
+                    if (current.Count >= 2) result.Add(current);
+                    current = new List<Vector2>();
+                    inside = true;
+                }
             }
+
+            // 선분 끝(p2) 처리
+            if (!inside)
+                current.Add(p2);
             else
             {
-                // 직전 포인트가 원 밖이었다면 경계 교차점을 현재 구간 끝점으로 추가
-                if (i > 0 && Vector2.Distance(points[i - 1], center) > radius)
-                {
-                    var cross = CircleIntersection(points[i - 1], points[i], center, radius);
-                    if (cross.HasValue) current.Add(cross.Value);
-                }
-
-                // 현재 구간 마감
                 if (current.Count >= 2) result.Add(current);
                 current = new List<Vector2>();
             }
@@ -204,9 +190,75 @@ public class Eraser : MonoBehaviour
 
         if (current.Count >= 2) result.Add(current);
 
-        // 총 길이가 너무 짧은 구간은 미세 잔재이므로 제거
+        // 너무 짧은 구간(미세 잔재)은 제거
         result.RemoveAll(seg => SegmentLength(seg) < 0.05f);
         return result;
+    }
+
+    // 선분(p1→p2)에서 지우개 원들의 합집합 경계를 넘는 t 값들을 반환 (오름차순).
+    // 단순히 원 경계를 넘는 모든 t가 아닌, '합집합 기준 inside ↔ outside' 전환만 추출.
+    // 예: 두 원이 겹쳐있을 때 한 원에서 나와도 다른 원 안이면 전환으로 보지 않음.
+    List<float> GetTransitions(Vector2 p1, Vector2 p2, List<Vector2> centers, float radius)
+    {
+        Vector2 d = p2 - p1;
+        float aSq = Vector2.Dot(d, d);
+        if (aSq < 1e-10f) return new List<float>(); // 길이 0인 선분
+
+        // 각 원과의 교점을 (t값, 방향) 쌍으로 수집
+        // +1 = 원 진입, -1 = 원 탈출 (무한 직선 기준)
+        var crossings = new List<(float t, int delta)>();
+
+        foreach (var c in centers)
+        {
+            Vector2 f  = p1 - c;
+            float b    = 2f * Vector2.Dot(f, d);
+            float cv   = Vector2.Dot(f, f) - radius * radius;
+            float disc = b * b - 4f * aSq * cv;
+
+            if (disc < 0f) continue; // 원과 교점 없음
+
+            disc = Mathf.Sqrt(disc);
+            float t1 = (-b - disc) / (2f * aSq); // 진입 t (항상 t1 ≤ t2)
+            float t2 = (-b + disc) / (2f * aSq); // 탈출 t
+
+            // 선분 내부 (끝점 제외) 교점만 수집; 끝점은 IsInsideAny/CountCirclesContaining 에서 처리
+            const float eps = 1e-5f;
+            if (t1 > eps && t1 < 1f - eps) crossings.Add((t1, +1));
+            if (t2 > eps && t2 < 1f - eps) crossings.Add((t2, -1));
+        }
+
+        crossings.Sort((a, b_) => a.t.CompareTo(b_.t));
+
+        // 합집합 기준 실제 전환(0→1 또는 1→0) 지점만 추출
+        var events   = new List<float>();
+        int insideCount = CountCirclesContaining(p1, centers, radius);
+
+        foreach (var (t, delta) in crossings)
+        {
+            bool was = insideCount > 0;
+            insideCount = Mathf.Max(0, insideCount + delta);
+            if ((insideCount > 0) != was)
+                events.Add(t);
+        }
+
+        return events;
+    }
+
+    // p 가 circles 중 어느 하나라도 안에 있는지 (경계 포함하지 않음 — 경계선상은 밖으로 처리)
+    bool IsInsideAny(Vector2 p, List<Vector2> centers, float radius)
+    {
+        foreach (var c in centers)
+            if (Vector2.Distance(p, c) < radius) return true;
+        return false;
+    }
+
+    // p 를 포함하는 원의 개수 (합집합 inside 카운트 초기값 계산용)
+    int CountCirclesContaining(Vector2 p, List<Vector2> centers, float radius)
+    {
+        int n = 0;
+        foreach (var c in centers)
+            if (Vector2.Distance(p, c) < radius) n++;
+        return n;
     }
 
     float SegmentLength(List<Vector2> seg)
@@ -215,33 +267,6 @@ public class Eraser : MonoBehaviour
         for (int i = 1; i < seg.Count; i++)
             len += Vector2.Distance(seg[i - 1], seg[i]);
         return len;
-    }
-
-    // 선분 p1→p2 와 원의 교차점 계산 (이차방정식 풀이)
-    // p1이 원 안이면 탈출점, p1이 원 밖이면 진입점을 반환
-    Vector2? CircleIntersection(Vector2 p1, Vector2 p2, Vector2 center, float radius)
-    {
-        Vector2 d = p2 - p1;
-        Vector2 f = p1 - center;
-
-        float a = Vector2.Dot(d, d);
-        float b = 2f * Vector2.Dot(f, d);
-        float c = Vector2.Dot(f, f) - radius * radius;
-
-        float disc = b * b - 4f * a * c;
-        if (disc < 0f) return null;
-
-        disc = Mathf.Sqrt(disc);
-        float t1 = (-b - disc) / (2f * a);
-        float t2 = (-b + disc) / (2f * a);
-
-        bool p1Inside = Vector2.Distance(p1, center) <= radius;
-
-        // p1이 안에 있으면 탈출점(t2), 밖에 있으면 진입점(t1)
-        float t = p1Inside ? t2 : t1;
-        if (t >= 0f && t <= 1f) return p1 + t * d;
-
-        return null;
     }
 
     bool IsPointerOverUI()

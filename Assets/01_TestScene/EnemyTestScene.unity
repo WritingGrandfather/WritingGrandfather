@@ -151,45 +151,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
   uiDocument: {fileID: 249968774}
   gungseoFont: {fileID: 12800000, guid: eeb8b184c61c3c743b0bd13837406ade, type: 3}
-  mode: 1
+  mode: 0
   stages:
   - {fileID: 11400000, guid: 86a7e7c65bf7243f9964986964bcad04, type: 2}
   - {fileID: 11400000, guid: f3bb46fd134234e869d7fcb3fbdd7f8f, type: 2}
   - {fileID: 11400000, guid: 872f18239d65443629696302b7a9a0f8, type: 2}
   - {fileID: 11400000, guid: 1e3352cf80830407f83fb53e6f4e13d5, type: 2}
   - {fileID: 11400000, guid: e81ea5de933d84b87959a7d61c9b8c4f, type: 2}
-  fontSize: 72
-  verticalRatio: 0.35
+  fontSize: 160
+  verticalRatio: 0.12
   slideDuration: 0.4
-  choseongPool: "\u3131\u3134\u3137\u3139\u3141\u3142\u3145\u3147\u3148\u314A\u314B\u314C\u314D\u314E"
-  jungseongPool: "\u314F\u3151\u3153\u3155\u3157\u315B\u315C\u3160\u3161\u3163\u3150\u3154"
-  jongseongPool: "\u3131\u3134\u3139\u3141\u3142\u3145\u3147"
-  jongseongChance: 0.4
-  wordPool:
-  - "\uB098\uBB34"
-  - "\uD558\uB298"
-  - "\uBC14\uB2E4"
-  - "\uAD6C\uB984"
-  - "\uBC14\uB78C"
-  - "\uC0AC\uB791"
-  - "\uB178\uB798"
-  - "\uB2EC\uBE5B"
-  - "\uBCC4\uBE5B"
-  - "\uAC00\uB77D"
-  - "\uB9C8\uC74C"
-  - "\uC18C\uB9AC"
-  - "\uAC70\uC6B8"
-  - "\uB098\uBE44"
-  - "\uACE0\uB798"
-  - "\uC218\uBC15"
-  - "\uAC00\uBC29"
-  - "\uBAA8\uC790"
-  - "\uC2E0\uBC1C"
-  - "\uC6B0\uC0B0"
-  - "\uC9C0\uB3C4"
-  - "\uC57D\uC18D"
-  - "\uBB34\uC9C0\uAC1C"
-  - "\uB3C4\uC11C\uAD00"
+  bannerFontSize: 130
+  bannerFadeDuration: 0.3
+  bannerHoldDuration: 1.2
 --- !u!114 &249968774
 MonoBehaviour:
   m_ObjectHideFlags: 0

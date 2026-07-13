@@ -128,7 +128,7 @@ public class DrowLine : MonoBehaviour
         while (true)
         {
             Vector2 pos = cam.ScreenToWorldPoint(Pointer.current.position.ReadValue());
-            if (Vector2.Distance(points[points.Count - 1], pos) > 0.1f)
+            if (Vector2.Distance(points[points.Count - 1], pos) > 0.001f)
             {
                 points.Add(pos);
                 lr.positionCount++;
