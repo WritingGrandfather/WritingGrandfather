@@ -131,7 +131,7 @@ public class TemplateSimilarityEvaluator : HandwritingEvaluator
         // 혼동 글자 검사: 목표보다 헷갈리는 다른 글자(사↔자↔차 등)에 더 가까우면 불통과
         if (checkConfusables)
         {
-            char confChar = FindBetterConfusable(user, target, aligned, score, outsideInk);
+            char confChar = FindBetterConfusable(user, templ, target, aligned);
             if (confChar != '\0')
             {
                 if (debugDump) DumpMasks(user, templ);
@@ -163,13 +163,16 @@ public class TemplateSimilarityEvaluator : HandwritingEvaluator
 
     // ── 혼동 글자 검사: 유저 잉크가 목표보다 더 닮은 헷갈리는 글자를 찾는다 ──
     //    (한 획 차이 글자들 — 사/자/차, ㅏ/ㅑ 등. 없으면 '\0')
-    char FindBetterConfusable(bool[,] user, string target, bool aligned, int targetScore, int outsideInk)
+    //    ※ 관용 곡선/굵은 허용 오차를 쓰면 한 획 차이가 묻히므로,
+    //      여기서는 곡선 없는 원시 F1 + 절반 허용 오차로 순수하게 모양만 대조한다.
+    char FindBetterConfusable(bool[,] user, bool[,] targetTempl, string target, bool aligned)
     {
         string[] cands = HangulComposer.GenerateConfusables(target);
         if (cands == null) return '\0';
 
+        int targetRaw = RawSimilarity(user, targetTempl);
         char best = '\0';
-        int bestScore = targetScore + Mathf.Max(0, confusableMargin);
+        int bestScore = targetRaw + Mathf.Max(0, confusableMargin);
 
         foreach (string cand in cands)
         {
@@ -178,7 +181,7 @@ public class TemplateSimilarityEvaluator : HandwritingEvaluator
             bool[,] ct = aligned ? PlaceTemplate(MaskFromFont(cand[0])) : Normalize(MaskFromFont(cand[0]));
             if (CountInk(ct) == 0) continue;
 
-            int cs = Compare(user, ct, outsideInk, verbose: false);
+            int cs = RawSimilarity(user, ct);
             if (cs > bestScore)
             {
                 bestScore = cs;
@@ -187,8 +190,31 @@ public class TemplateSimilarityEvaluator : HandwritingEvaluator
         }
 
         if (best != '\0')
-            Debug.Log($"[TemplateEval] 혼동 판정: 목표 '{target}' {targetScore}점 < '{best}' {bestScore}점 → 불통과");
+            Debug.Log($"[TemplateEval] 혼동 판정: 목표 '{target}' 원점수 {targetRaw} < '{best}' {bestScore} → 불통과");
         return best;
+    }
+
+    // 곡선·감점 보정 없는 원시 유사도 (F1, 절반 허용 오차) — 혼동 글자 판별 전용
+    int RawSimilarity(bool[,] user, bool[,] templ)
+    {
+        int r = Mathf.Max(1, Mathf.RoundToInt(tolerance * 0.5f * gridSize));
+        bool[,] userFat = Dilate(user, r);
+        bool[,] templFat = Dilate(templ, r);
+
+        int userInk = 0, templInk = 0, userHit = 0, templHit = 0;
+        for (int y = 0; y < gridSize; y++)
+        {
+            for (int x = 0; x < gridSize; x++)
+            {
+                if (user[y, x]) { userInk++; if (templFat[y, x]) userHit++; }
+                if (templ[y, x]) { templInk++; if (userFat[y, x]) templHit++; }
+            }
+        }
+        if (userInk == 0 || templInk == 0) return 0;
+
+        float p = (float)userHit / userInk;
+        float rc = (float)templHit / templInk;
+        return Mathf.RoundToInt(200f * p * rc / Mathf.Max(p + rc, 1e-4f)); // F1 × 100
     }
 
     // ── 교정 겹쳐보기: 마지막 평가의 비교 결과를 색깔 텍스처로 만든다 ──────

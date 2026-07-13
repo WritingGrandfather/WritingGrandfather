@@ -41,7 +41,7 @@ public class FallingWritingSession : MonoBehaviour
 
     [Tooltip("자동 판정이 걸리는 채움 비율 (본보기를 이만큼 덮으면 판정. 벗어난 잉크는 무시)")]
     [Range(0.3f, 1f)]
-    [SerializeField] float autoFillThreshold = 0.9f;
+    [SerializeField] float autoFillThreshold = 0.95f;
 
     [Tooltip("채움 비율 검사 주기(초) — 너무 짧으면 연산 낭비")]
     [SerializeField] float autoCheckInterval = 0.15f;

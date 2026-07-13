@@ -5118,7 +5118,7 @@ MonoBehaviour:
   checkStrokeOrder: 1
   requireNeatWriting: 1
   autoEvaluate: 1
-  autoFillThreshold: 0.9
+  autoFillThreshold: 0.95
   autoCheckInterval: 0.15
   autoEvaluateDelay: 0.4
   idleEvaluateTimeout: 2.5
