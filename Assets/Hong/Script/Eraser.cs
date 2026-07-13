@@ -11,9 +11,14 @@ public class Eraser : MonoBehaviour
     [Range(0.05f, 1f)]
     public float eraserRadius = 0.2f;
 
+    public string eraserSoundName = "EraserSound";
+
     Camera cam;
     Coroutine eraseCoroutine;
     bool isActive;
+    AudioSource currentSfxSource;
+    float stillTimer = 0f;
+    const float stopGraceTime = 0.05f;
 
     List<(System.Action undo, System.Action redo)> sessionActions;
 
@@ -41,8 +46,9 @@ public class Eraser : MonoBehaviour
 
     void OnEraseStart(InputAction.CallbackContext ctx)
     {
-        if (!isActive || IsPointerOverUI()) return;
+        if (!isActive || IsPointerOverUI() || Pointer.current == null) return;
         sessionActions = new List<(System.Action, System.Action)>();
+        currentSfxSource = SoundManager.Instance.PlaySfx(eraserSoundName, loop: true);
         eraseCoroutine = StartCoroutine(EraseLoop());
     }
 
@@ -51,6 +57,10 @@ public class Eraser : MonoBehaviour
         if (eraseCoroutine == null) return;
         StopCoroutine(eraseCoroutine);
         eraseCoroutine = null;
+
+        if (currentSfxSource != null) currentSfxSource.Stop();
+        currentSfxSource = null;
+        stillTimer = 0f;
 
         if (sessionActions != null && sessionActions.Count > 0)
             UndoManager.Instance.RecordBatch(sessionActions);
@@ -61,6 +71,7 @@ public class Eraser : MonoBehaviour
     {
         Vector2 prevPos = cam.ScreenToWorldPoint(Pointer.current.position.ReadValue());
         ProcessErase(new List<Vector2> { prevPos });
+        stillTimer = 0f;
 
         while (true)
         {
@@ -68,6 +79,23 @@ public class Eraser : MonoBehaviour
 
             Vector2 currentPos = cam.ScreenToWorldPoint(Pointer.current.position.ReadValue());
             float dist = Vector2.Distance(prevPos, currentPos);
+            bool moved = dist > 0.001f;
+
+            if (moved)
+            {
+                stillTimer = 0f;
+                if (currentSfxSource == null || !currentSfxSource.isPlaying)
+                    currentSfxSource = SoundManager.Instance.PlaySfx(eraserSoundName, loop: true);
+            }
+            else
+            {
+                stillTimer += Time.deltaTime;
+                if (stillTimer >= stopGraceTime)
+                {
+                    if (currentSfxSource != null) currentSfxSource.Stop();
+                    currentSfxSource = null;
+                }
+            }
 
             // 이전 위치와 현재 위치 사이를 반지름 절반 간격으로 보간
             int steps = Mathf.Max(1, Mathf.CeilToInt(dist / (eraserRadius * 0.5f)));

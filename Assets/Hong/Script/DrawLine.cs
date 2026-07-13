@@ -41,11 +41,20 @@ public class DrowLine : MonoBehaviour
     Camera cam;
 
     Coroutine drawCoroutine;
-    
+
     public PencilSound pencilSound;
 
     AudioSource currentSfxSource;
     int lastSoundIndex = -1;
+    float soundTimer = 0f;
+    const float soundSwitchInterval = 2f;
+
+    // 사운드 정지 유예 시간 — 이 시간 이상 포인터가 멈춰 있어야 소리를 끔
+    // 입력 장치 폴링 주기 < 게임 프레임 주기라서 움직이는 중에도 위치가 그대로인 프레임이 생기는데,
+    // 그때마다 즉시 Stop하면 소리가 뚝뚝 끊기므로 유예를 둠
+    const float stopGraceTime = 0.15f;
+    float stillTimer = 0f;
+
     // Awake : PlayerInput 컴포넌트에서 Action을 찾아 콜백 등록
     // PlayerInput의 Behavior가 "Invoke C Sharp Events" 여야 동작함
     void Awake()
@@ -56,7 +65,7 @@ public class DrowLine : MonoBehaviour
 
         // Click : 마우스 왼쪽 버튼 + 터치 press 바인딩
         var clickAction = playerInput.actions["Click"];
-        
+
         pencilSound = GetComponent<PencilSound>();
         clickAction.started  += OnDrawStart;
         clickAction.canceled += OnDrawEnd;
@@ -95,7 +104,7 @@ public class DrowLine : MonoBehaviour
     {
         // 지우개 모드이거나 UI 조작 중에는 드로우 차단
         isDrawing = false;
-        if (!drawingEnabled || IsPointerOverUI()) return;
+        if (!drawingEnabled || IsPointerOverUI() || Pointer.current == null) return;
 
         Vector2 startPos = cam.ScreenToWorldPoint(Pointer.current.position.ReadValue());
 
@@ -126,19 +135,19 @@ public class DrowLine : MonoBehaviour
         lr.SetPosition(0, startPos);
 
         isDrawing = true;
-        lastSoundIndex = PlayRandomPencilSound(-1);
         drawCoroutine = StartCoroutine(DrawLoop());
     }
 
     // 코루틴 : 버튼을 누르고 있는 동안 매 프레임 실행됨
     // yield return null 로 한 프레임씩 대기하며 마우스 위치를 추적함
-    // 이전 포인트와 거리가 0.1f 이상일 때만 포인트를 추가해 과도한 포인트 생성을 방지
+    // 이전 포인트와 거리가 threshold 이상일 때만 포인트를 추가해 과도한 포인트 생성을 방지
     IEnumerator DrawLoop()
     {
+        Vector2 prevPos = cam.ScreenToWorldPoint(Pointer.current.position.ReadValue());
+        stillTimer = 0f;
+
         while (true)
         {
-            // 드래그 도중 drawingEnabled가 꺼지면(허용 영역 밖으로 나가면) 그 구간은 점을 추가하지 않고 건너뜀
-            // — 다시 켜지면(허용 영역으로 복귀) 마지막 점과 이어 그리되, 두 점 모두 허용 영역 안이므로 안전함
             if (!drawingEnabled || IsPointerOverUI())
             {
                 yield return null;
@@ -146,6 +155,8 @@ public class DrowLine : MonoBehaviour
             }
 
             Vector2 pos = cam.ScreenToWorldPoint(Pointer.current.position.ReadValue());
+
+            // 드로잉 포인트 추가 (드로잉 전용 threshold)
             if (Vector2.Distance(points[points.Count - 1], pos) > 0.001f)
             {
                 points.Add(pos);
@@ -154,13 +165,38 @@ public class DrowLine : MonoBehaviour
                 collider2D.points = points.ToArray();
             }
 
-            // 재생 중인 사운드가 끝났으면 다른 소리로 이어서 재생
-            if (currentSfxSource == null || !currentSfxSource.isPlaying)
-                lastSoundIndex = PlayRandomPencilSound(lastSoundIndex);
+            // 사운드는 매 프레임 이전 프레임 위치와 비교 — 드로잉 threshold와 독립적
+            bool moving = Vector2.Distance(prevPos, pos) > 0.001f;
+            prevPos = pos;
 
-            yield return null; // 다음 프레임까지 대기
+            if (moving)
+            {
+                stillTimer = 0f;
+                soundTimer += Time.deltaTime;
+                if (currentSfxSource == null || !currentSfxSource.isPlaying || soundTimer >= soundSwitchInterval)
+                {
+                    if (currentSfxSource != null) currentSfxSource.Stop();
+                    lastSoundIndex = PlayRandomPencilSound(lastSoundIndex);
+                    soundTimer = 0f;
+                }
+            }
+            else
+            {
+                // 정지 프레임이 stopGraceTime 이상 누적됐을 때만 소리를 끔
+                // (한두 프레임 멈춘 걸로는 끄지 않음 → 소리 뚝뚝 끊김 방지)
+                stillTimer += Time.deltaTime;
+                if (stillTimer >= stopGraceTime && currentSfxSource != null)
+                {
+                    currentSfxSource.Stop();
+                    currentSfxSource = null;
+                    soundTimer = 0f;
+                }
+            }
+
+            yield return null;
         }
     }
+
     // canceled 콜백 : 마우스 왼쪽 버튼을 떼는 순간 호출
     // 드로우 루프를 중단하고 완성된 라인을 drawnLines에 보관함
     void OnDrawEnd(InputAction.CallbackContext ctx)
@@ -188,8 +224,10 @@ public class DrowLine : MonoBehaviour
                 () => { goRef[0] = CreateLine(capturedPoints, capturedWidth, capturedColor); }
             );
         }
-        currentSfxSource?.Stop();
+        if (currentSfxSource != null) currentSfxSource.Stop();
         currentSfxSource = null;
+        stillTimer = 0f;
+        soundTimer = 0f;
         currentHandle = default;
 
         points.Clear();
@@ -206,7 +244,7 @@ public class DrowLine : MonoBehaviour
         else
             idx = 0;
 
-        currentSfxSource = SoundManager.Instance.PlaySfx(sounds[idx]);
+        currentSfxSource = SoundManager.Instance.PlaySfx(sounds[idx], loop: true);
         return idx;
     }
 
