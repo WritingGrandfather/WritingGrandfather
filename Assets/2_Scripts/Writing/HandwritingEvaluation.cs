@@ -7,10 +7,11 @@ using UnityEngine;
 [Serializable]
 public class HandwritingEvaluationRequest
 {
-    public string strokesJson; // 획 좌표 JSON (StrokeCapture.CaptureJson 결과) — 라인렌더러 기반
-    public byte[] imagePng;    // (선택) 칸 캡처 PNG — 하이브리드로 되돌릴 때 사용
-    public string targetText;  // 이 칸에서 써야 할 목표 글자 (없으면 빈 문자열)
-    public string criteria;    // 기획에 정의된 판정 기준 (프롬프트로 그대로 사용)
+    public string strokesJson;   // 획 좌표 JSON (StrokeCapture.CaptureJson 결과) — 라인렌더러 기반
+    public byte[] imagePng;      // 인식용 PNG (StrokeRasterizer로 그린 이미지)
+    public string targetText;    // 이 칸에서 써야 할 목표 글자 (없으면 빈 문자열)
+    public string criteria;      // 기획에 정의된 판정 기준 (프롬프트로 그대로 사용)
+    public string[] candidates;  // (선택) 후보 글자 목록 — 현재 스테이지의 글자들. 닫힌 집합 인식으로 정확도↑
 }
 
 /// <summary>
