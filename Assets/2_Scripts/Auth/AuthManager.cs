@@ -108,6 +108,12 @@ public class AuthManager : MonoBehaviour
     public void SignInGoogle(Action<bool, string> onDone)
     {
 #if FIREBASE_ENABLED && GOOGLE_SIGNIN
+        // 구글 로그인은 안드로이드 네이티브 — 에디터에서는 동작 불가 (currentActivity 없음)
+        if (Application.platform != RuntimePlatform.Android)
+        {
+            onDone?.Invoke(false, "구글 로그인은 안드로이드 기기/빌드에서만 됩니다. 에디터에서는 이메일/게스트로 테스트하세요.");
+            return;
+        }
         if (!ready) { onDone?.Invoke(false, "잠시 후 다시 시도해 주세요. (초기화 중)"); return; }
         GoogleSignIn.Configuration = new GoogleSignInConfiguration
         {
