@@ -225,6 +225,13 @@
     color: rgb(214, 108, 58);
 }
 
+.result-message {
+    font-size: 32px;
+    color: rgb(90, 62, 40);
+    white-space: normal;
+    -unity-text-align: middle-center;
+}
+
 .result-button-row {
     flex-direction: row;
     width: 100%;

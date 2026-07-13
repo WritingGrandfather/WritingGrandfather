@@ -45,6 +45,7 @@
                     <ui:Label text="글자 크기 위치 정확도" class="result-label" />
                     <ui:Label text="85%" name="result-position-score" class="result-value" />
                 </ui:VisualElement>
+                <ui:Label text="" name="result-message" class="result-message" />
                 <ui:VisualElement class="result-button-row">
                     <ui:Button text="다시 하기" name="retry-button" class="modal-button modal-button--confirm" />
                     <ui:Button text="나가기" name="exit-button" class="modal-button modal-button--cancel" />

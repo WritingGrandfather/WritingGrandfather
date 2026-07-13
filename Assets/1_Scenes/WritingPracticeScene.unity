@@ -187,6 +187,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WritingGrandfather.UI.PreciseWriting.PreciseWritingUIController
   koreanFont: {fileID: 12800000, guid: eeb8b184c61c3c743b0bd13837406ade, type: 3}
   drawLine: {fileID: 1155924613}
+  feedbackController: {fileID: 676139461}
+  writingCell: {fileID: 1261887764}
 --- !u!4 &697538486
 Transform:
   m_ObjectHideFlags: 0
@@ -543,6 +545,124 @@ MonoBehaviour:
   m_DefaultActionMap: Draw
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!1 &340074031
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 869136918}
+  - component: {fileID: 1261887764}
+  - component: {fileID: 1764770114}
+  - component: {fileID: 918817555}
+  - component: {fileID: 2091857815}
+  - component: {fileID: 676139461}
+  m_Layer: 0
+  m_Name: AIEvaluation
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &869136918
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 340074031}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1261887764
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 340074031}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 284697afe32d0f84d9098d5b740d2a50, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::WritingCell
+  size: {x: 2, y: 2}
+  targetText:
+--- !u!114 &1764770114
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 340074031}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f90bea57cc9faf34dbd0a72e0c74f1f4, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::StrokeCapture
+  drawLine: {fileID: 1155924613}
+  decimals: 3
+--- !u!114 &918817555
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 340074031}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbb34007feba9fc49807bfd9444f613b, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::CellCapture
+  resolution: 256
+  backgroundColor: {r: 1, g: 1, b: 1, a: 1}
+  cullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+--- !u!114 &2091857815
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 340074031}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ea73ac5e55102f42a26c19f95c87f82, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::OpenAIHandwritingEvaluator
+  model: gpt-4o
+  maxTokens: 1024
+--- !u!114 &676139461
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 340074031}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9f19eb85ffee6047a334538fe979c7a, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::WritingFeedbackController
+  targetCell: {fileID: 1261887764}
+  strokeCapture: {fileID: 1764770114}
+  imageCapture: {fileID: 918817555}
+  evaluator: {fileID: 2091857815}
+  criteria: 목표 글자를 정확한 획순과 모양으로 썼는지 평가해줘. 다음 기준을 사용해서 종합적으로 판단해줘. 1) 획순이 올바른 한글 필순을 따르는지. 2) 글자 모양이 목표 글자와 얼마나 비슷한지. 3) 글자의 크기와 칸 안에서의 위치가 적절한지.
+  onFeedback:
+    m_PersistentCalls:
+      m_Calls: []
+  onStatus:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -551,5 +671,6 @@ SceneRoots:
   - {fileID: 697538486}
   - {fileID: 1919882250}
   - {fileID: 556293195}
+  - {fileID: 869136918}
   - {fileID: 924205830}
   - {fileID: 1998077378}
