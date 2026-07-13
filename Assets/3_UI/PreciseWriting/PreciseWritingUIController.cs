@@ -54,6 +54,7 @@ namespace WritingGrandfather.UI.PreciseWriting
         private Button retryButton;
         private Button exitButton;
         private Button resetButton;
+        private Button undoButton;
         private Label currentWordLabel;
         private Label wordProgressLabel;
         private VisualElement guideCrossH;
@@ -185,6 +186,7 @@ namespace WritingGrandfather.UI.PreciseWriting
             retryButton = root.Q<Button>("retry-button");
             exitButton = root.Q<Button>("exit-button");
             resetButton = root.Q<Button>("reset-button");
+            undoButton = root.Q<Button>("undo-button");
             currentWordLabel = root.Q<Label>("current-word-label");
             wordProgressLabel = root.Q<Label>("word-progress-label");
             guideCrossH = root.Q("guide-cross-h");
@@ -203,6 +205,7 @@ namespace WritingGrandfather.UI.PreciseWriting
         private void ApplyLocalization()
         {
             if (resetButton != null) resetButton.text = LocalizationManager.Get("precise_writing.reset_button");
+            if (undoButton != null) undoButton.text = LocalizationManager.Get("precise_writing.undo_button");
             if (completeButton != null) completeButton.text = LocalizationManager.Get("precise_writing.complete_button");
             if (retryButton != null) retryButton.text = LocalizationManager.Get("precise_writing.retry_button");
             if (exitButton != null) exitButton.text = LocalizationManager.Get("precise_writing.exit_button");
@@ -231,12 +234,13 @@ namespace WritingGrandfather.UI.PreciseWriting
             toggleShowCharacter?.RegisterValueChangedCallback(_ => ApplyToggles());
             toggleShowStrokeOrder?.RegisterValueChangedCallback(_ => ApplyToggles());
             completeButton?.RegisterCallback<ClickEvent>(_ => OnCompleteClicked());
-            resetButton?.RegisterCallback<ClickEvent>(_ => drawLine?.ClearAll());
+            resetButton?.RegisterCallback<ClickEvent>(_ => ClearStrokes());
+            undoButton?.RegisterCallback<ClickEvent>(_ => UndoManager.Instance?.Undo());
             retryButton?.RegisterCallback<ClickEvent>(_ =>
             {
                 wordIndex = 0;
                 UpdateWordLabel();
-                drawLine?.ClearAll();
+                ClearStrokes();
                 Show(writingScreen);
             });
             exitButton?.RegisterCallback<ClickEvent>(_ =>
@@ -250,7 +254,7 @@ namespace WritingGrandfather.UI.PreciseWriting
             {
                 wordIndex++;
                 UpdateWordLabel();
-                drawLine?.ClearAll();
+                ClearStrokes();
                 return;
             }
 
