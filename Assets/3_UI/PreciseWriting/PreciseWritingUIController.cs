@@ -29,6 +29,9 @@ namespace WritingGrandfather.UI.PreciseWriting
         [Tooltip("실제 캡처 영역을 정의하는 WritingCell — guide-box와 매 프레임 위치/크기를 맞춘다.")]
         [SerializeField] private WritingCell writingCell;
 
+        [Tooltip("교정 겹쳐보기 (선택) — 연결하면 카드가 표시됐다 사라진 뒤에 다음 글자로 넘어간다")]
+        [SerializeField] private CompareOverlay compareOverlay;
+
         [Tooltip("연습할 스테이지 데이터 — 연결하면 아래 데모 단어 대신 스테이지 글자들을 순서대로 출제")]
         [SerializeField] private StageData[] stages;
 
@@ -430,7 +433,38 @@ namespace WritingGrandfather.UI.PreciseWriting
             int strokeOrder = feedback.strokeOrderScore >= 0 ? feedback.strokeOrderScore : feedback.score;
             int position = feedback.positionScore >= 0 ? feedback.positionScore : feedback.score;
 
+            // 교정 겹쳐보기가 연결돼 있으면: 카드가 표시됐다 사라진 뒤에 다음 글자로 진행
+            float delayMs = compareOverlay != null ? compareOverlay.TotalDuration * 1000f : 0f;
+            if (delayMs > 0f && root != null)
+            {
+                Show(writingScreen); // 분석 화면을 닫고 쓰기 화면으로 — 칸 위의 교정 카드가 보이게
+                SetGuideVisible(false); // 안내선·본보기를 잠시 숨겨 교정 카드가 또렷하게 보이게
+                root.schedule.Execute(() =>
+                {
+                    SetGuideVisible(true);
+                    HandleScored(similarity, strokeOrder, position, feedback.message);
+                }).StartingIn((long)delayMs);
+                return;
+            }
+
             HandleScored(similarity, strokeOrder, position, feedback.message);
+        }
+
+        // 교정 카드 표시 중 십자 점선/본보기 글자 숨김·복원 (복원 시 토글 상태 존중)
+        private void SetGuideVisible(bool visible)
+        {
+            var d = visible ? DisplayStyle.Flex : DisplayStyle.None;
+            if (guideCrossH != null) guideCrossH.style.display = d;
+            if (guideCrossV != null) guideCrossV.style.display = d;
+
+            if (visible)
+            {
+                ApplyToggles(); // 본보기 글자는 사용자의 토글 설정대로 복원
+            }
+            else if (ghostCharacterLabel != null)
+            {
+                ghostCharacterLabel.style.display = DisplayStyle.None;
+            }
         }
 
         // 글자 하나 채점 완료 → 누적하고 다음 글자로. 첫 바퀴(stageLoopCount==0, 스테이지1~5를

@@ -168,6 +168,7 @@ GameObject:
   - component: {fileID: 2091857815}
   - component: {fileID: 676139461}
   - component: {fileID: 2091857816}
+  - component: {fileID: 1261887799}
   m_Layer: 0
   m_Name: AIEvaluation
   m_TagString: Untagged
@@ -236,6 +237,7 @@ MonoBehaviour:
   debugDump: 1
   candidates: []
   strokeOrderChecker: {fileID: 0}
+  compareOverlay: {fileID: 0}
   failOnWrongOrder: 1
 --- !u!1 &697538484
 GameObject:
@@ -322,6 +324,7 @@ MonoBehaviour:
   drawLine: {fileID: 1155924613}
   feedbackController: {fileID: 676139461}
   writingCell: {fileID: 1261887764}
+  compareOverlay: {fileID: 0}
   stages:
   - {fileID: 11400000, guid: 86a7e7c65bf7243f9964986964bcad04, type: 2}
   - {fileID: 11400000, guid: f3bb46fd134234e869d7fcb3fbdd7f8f, type: 2}
@@ -724,7 +727,7 @@ MonoBehaviour:
   cell: {fileID: 1261887764}
   traceGuide: {fileID: 0}
   font: {fileID: 12800000, guid: e3265ab4bf004d28a9537516768c1c75, type: 3}
-  templateHeightRatio: 0.55
+  templateHeightRatio: 0.37
   templateOffsetY: 0
   fontRenderSize: 192
   gridSize: 96
@@ -732,6 +735,24 @@ MonoBehaviour:
   strayPenalty: 2
   requireNeatWriting: 1
   debugDump: 1
+--- !u!114 &1261887799
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 340074031}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65433c5a121c454c88cd4257d0871a49, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cell: {fileID: 1261887764}
+  showDuration: 2.5
+  fadeDuration: 0.4
+  fillRatio: 1
+  yOffsetRatio: 0
+  sortingOrder: 5
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

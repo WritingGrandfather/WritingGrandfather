@@ -22,6 +22,9 @@ public class FallingWritingSession : MonoBehaviour
     [SerializeField] TemplateSimilarityEvaluator evaluator;
     [SerializeField] DrowLine drawLine;
 
+    [Tooltip("판정 직후 맞음/빠뜨림/벗어남을 색으로 보여줄 교정 겹쳐보기 (선택)")]
+    [SerializeField] CompareOverlay compareOverlay;
+
     [Header("판정")]
     [Tooltip("이 점수 이상으로 닮은 낙하 글자가 있으면 격추")]
     [SerializeField] int passScore = 60;
@@ -204,6 +207,10 @@ public class FallingWritingSession : MonoBehaviour
             Finish(HandwritingFeedback.Error("채점 결과를 받지 못했습니다."));
             return;
         }
+
+        // 교정 겹쳐보기 — 통과/불통과와 무관하게 어디가 맞고 틀렸는지 색으로 표시
+        if (compareOverlay != null)
+            compareOverlay.Show(evaluator.BuildCompareTexture());
 
         // 정자 검사 — 흘림체(획 이어 쓰기, 구불거림) 감점
         if (requireNeatWriting)

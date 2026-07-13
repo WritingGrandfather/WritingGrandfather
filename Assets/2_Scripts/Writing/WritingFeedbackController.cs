@@ -61,6 +61,10 @@ public class WritingFeedbackController : MonoBehaviour
     [Tooltip("획순이 틀리면 불통과 처리 (끄면 피드백 문장만 보여줌)")]
     [SerializeField] bool failOnWrongOrder = true;
 
+    [Header("교정 겹쳐보기 (선택)")]
+    [Tooltip("판정 직후 맞음(초록)/빠뜨림(파랑)/벗어남(빨강)을 카드로 보여줄 오버레이")]
+    [SerializeField] CompareOverlay compareOverlay;
+
     string lastStrokesJson; // 획순 검사에 전달할 최근 획 데이터
 
     /// <summary>평가 버튼에서 호출. 칸을 캡처해 AI 평가를 요청한다.</summary>
@@ -206,6 +210,11 @@ public class WritingFeedbackController : MonoBehaviour
         feedback.stars = ComputeStars(feedback);
         isEvaluating = false;
         onStatus?.Invoke("");
+
+        // 교정 겹쳐보기 — 어디가 맞고(초록) 빠지고(파랑) 벗어났는지(빨강) 카드로 표시
+        if (compareOverlay != null && evaluator is TemplateSimilarityEvaluator tse)
+            compareOverlay.Show(tse.BuildCompareTexture());
+
         onFeedback?.Invoke(feedback);
     }
 

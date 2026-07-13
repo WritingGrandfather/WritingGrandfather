@@ -51,6 +51,10 @@ public class TemplateSimilarityEvaluator : HandwritingEvaluator
     [Range(1f, 3f)]
     [SerializeField] float strayPenalty = 2f;
 
+    [Tooltip("벗어남 관용 구간 — 벗어난 잉크 비율이 이 값보다 작으면 감점이 완만하고, 넘어서면 급격히 커진다")]
+    [Range(0.1f, 0.6f)]
+    [SerializeField] float strayForgiveness = 0.35f;
+
     [Header("정자 검사 (흘림체 차단)")]
     [Tooltip("켜면 획수 부족(이어 쓰기)과 구불거리는 획(흘림)을 감점한다")]
     [SerializeField] bool requireNeatWriting = true;
@@ -106,6 +110,10 @@ public class TemplateSimilarityEvaluator : HandwritingEvaluator
         if (CountInk(templ) == 0)
             return HandwritingFeedback.Error($"폰트에서 '{target}' 글자를 만들지 못했습니다.");
 
+        // 교정 겹쳐보기용으로 마지막 비교 마스크 보관
+        lastUserMask = user;
+        lastTemplMask = templ;
+
         int score = Compare(user, templ, outsideInk);
 
         // 정자 검사: 흘림체(획 이어 쓰기, 구불거림)면 감점
@@ -122,6 +130,41 @@ public class TemplateSimilarityEvaluator : HandwritingEvaluator
             passed = false,
             message = neatWarn ?? $"본보기 글자와 {score}% 닮았어요.",
         };
+    }
+
+    // ── 교정 겹쳐보기: 마지막 평가의 비교 결과를 색깔 텍스처로 만든다 ──────
+    //    잘 쓴 잉크=초록, 벗어난 잉크=빨강, 빠뜨린 본보기 부분=파랑, 나머지=투명
+    bool[,] lastUserMask, lastTemplMask;
+
+    public Texture2D BuildCompareTexture()
+    {
+        if (lastUserMask == null || lastTemplMask == null) return null;
+
+        int n = gridSize;
+        int r = Mathf.Max(1, Mathf.RoundToInt(tolerance * n));
+        bool[,] userFat = Dilate(lastUserMask, r);
+        bool[,] templFat = Dilate(lastTemplMask, Mathf.Max(1, r / 2));
+
+        var ok = new Color(0.16f, 0.62f, 0.24f);      // 본보기 위에 잘 쓴 잉크
+        var stray = new Color(0.85f, 0.20f, 0.15f);   // 벗어난 잉크
+        var missed = new Color(0.25f, 0.45f, 0.95f, 0.85f); // 못 덮은 본보기 부분
+        var clear = new Color(0f, 0f, 0f, 0f);
+
+        var tex = new Texture2D(n, n, TextureFormat.RGBA32, false);
+        for (int y = 0; y < n; y++)
+        {
+            for (int x = 0; x < n; x++)
+            {
+                bool u = lastUserMask[y, x], t = lastTemplMask[y, x];
+                Color c = u && templFat[y, x] ? ok
+                        : u ? stray
+                        : t && !userFat[y, x] ? missed
+                        : clear;
+                tex.SetPixel(x, n - 1 - y, c); // 마스크는 top-down → 텍스처 좌표로 뒤집기
+            }
+        }
+        tex.Apply();
+        return tex;
     }
 
     // ── 채움 비율: 본보기 글자를 얼마나 덮었는지(재현율)만 계산 ──────────
@@ -519,9 +562,15 @@ public class TemplateSimilarityEvaluator : HandwritingEvaluator
         float precision = (float)userHit / userInk;  // 유저 잉크가 본보기 위에 있는가 (벗어남 감점)
         float recall = (float)templHit / templInk;   // 본보기를 얼마나 덮었는가 (빠뜨림 감점)
 
+        // 벗어남 감점 곡선 (3차): 조금 벗어난 건 관대하게, 많이 벗어날수록 가속 감점.
+        //   sf = 벗어난 잉크 비율. sf < strayForgiveness면 선형보다 훨씬 완만, 넘어서면 급격히 커진다.
+        float sf = 1f - precision;
+        float f = Mathf.Max(strayForgiveness, 0.01f);
+        float pEff = Mathf.Clamp01(1f - (sf * sf * sf) / (f * f));
+
         // 가중 조화평균: strayPenalty만큼 정밀도(벗어남)에 무게
         float w = Mathf.Max(1f, strayPenalty);
-        float denom = w / Mathf.Max(precision, 1e-4f) + 1f / Mathf.Max(recall, 1e-4f);
+        float denom = w / Mathf.Max(pEff, 1e-4f) + 1f / Mathf.Max(recall, 1e-4f);
         float score01 = (w + 1f) / denom;
 
         // 잉크 과다 사용 감점: 본보기보다 훨씬 많은 잉크(낙서로 도배)는 점수를 깎는다
@@ -529,7 +578,7 @@ public class TemplateSimilarityEvaluator : HandwritingEvaluator
         if (inkRatio > 1.5f)
             score01 *= (1.5f / inkRatio) * (1.5f / inkRatio);
 
-        Debug.Log($"[TemplateEval] 덮음(재현율) {recall:P0}, 본보기 위(정밀도) {precision:P0}, " +
+        Debug.Log($"[TemplateEval] 덮음(재현율) {recall:P0}, 본보기 위(정밀도) {precision:P0} (곡선 적용 {pEff:P0}), " +
                   $"잉크 비율 {inkRatio:F1}배, 칸 밖 {outsideInk}칸 → {Mathf.RoundToInt(score01 * 100f)}점");
         return Mathf.RoundToInt(score01 * 100f);
     }
