@@ -145,6 +145,7 @@ public class PoolManager : MonoBehaviour
         GameObject obj = pool.Get();
         objectToId[obj] = id;
         obj.transform.SetParent(parent);
+        obj.transform.SetAsLastSibling(); // 재사용 시에도 하이어라키 순서 = 스폰 순서 보장 (획순 판정에 필요)
         obj.transform.position = position;
         return obj;
     }
@@ -168,6 +169,7 @@ public class PoolManager : MonoBehaviour
         handle = pool.Get(out GameObject obj);
         objectToId[obj] = id;
         obj.transform.SetParent(parent);
+        obj.transform.SetAsLastSibling(); // 재사용 시에도 하이어라키 순서 = 스폰 순서 보장 (획순 판정에 필요)
         obj.transform.position = position;
         return obj;
     }

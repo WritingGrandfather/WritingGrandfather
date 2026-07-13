@@ -23,6 +23,7 @@ public static class StrokeOrderValidator
     {
         public char jamo;       // 이 획이 속한 자모 (메시지용)
         public Vector2[] pts;   // 시작→끝 (글자 좌표, y: 위→아래)
+        public Rect box;        // 자모 배치 영역 (위치 게이트용)
     }
 
     // ────────────────────────────────────────────────────────────────
@@ -41,55 +42,150 @@ public static class StrokeOrderValidator
 
         // 유저 잉크를 유닛 정사각형으로 (계획 좌표계와 맞춤)
         List<Vector2[]> user = NormalizeToUnitSquare(strokes);
+        int U = user.Count, N = plan.Count;
+        if (N > 14) return res; // DP 마스크 한계
 
-        // 순서대로 greedy 매칭
-        bool[] used = new bool[plan.Count];
-        var seq = new List<int>();      // 유저 획 i가 매칭된 계획 획 인덱스
-        var reversed = new List<bool>(); // 반대 방향으로 그었는지
-        var lengths = new List<float>();
+        // 비용 행렬: 위치(시작/중간/끝) + 방향(가로/세로 불일치 페널티)
+        float[,] cost = new float[U, N];
+        bool[,] revFlag = new bool[U, N];
+        var lengths = new float[U];
 
-        foreach (var s in user)
+        for (int u = 0; u < U; u++)
         {
+            Vector2[] s = user[u];
             Vector2 uS = s[0], uM = s[s.Length / 2], uE = s[s.Length - 1];
+            Vector2 uDir = uE - uS;
+            float uLen = 0f;
+            for (int k = 1; k < s.Length; k++) uLen += Vector2.Distance(s[k - 1], s[k]);
+            lengths[u] = uLen;
+            uDir = uDir.magnitude > 0.001f ? uDir.normalized : Vector2.zero;
 
-            int best = -1;
-            float bestCost = float.MaxValue;
-            bool bestRev = false;
+            // 획 중심점 (자모 영역 게이트용)
+            Vector2 uCenter = Vector2.zero;
+            foreach (var pt in s) uCenter += pt;
+            uCenter /= s.Length;
 
-            for (int i = 0; i < plan.Count; i++)
+            for (int p = 0; p < N; p++)
             {
-                if (used[i]) continue;
-                Vector2[] p = plan[i].pts;
-                Vector2 pS = p[0], pM = p[p.Length / 2], pE = p[p.Length - 1];
+                Vector2[] q = plan[p].pts;
+                Vector2 pS = q[0], pM = q[q.Length / 2], pE = q[q.Length - 1];
+                Vector2 pDir = pE - pS;
+                pDir = pDir.magnitude > 0.001f ? pDir.normalized : Vector2.zero;
 
                 float fwd = Vector2.Distance(uS, pS) + Vector2.Distance(uM, pM) + Vector2.Distance(uE, pE);
-                float rev = Vector2.Distance(uS, pE) + Vector2.Distance(uM, pM) + Vector2.Distance(uE, pS);
-                float cost = Mathf.Min(fwd, rev);
+                float rv = Vector2.Distance(uS, pE) + Vector2.Distance(uM, pM) + Vector2.Distance(uE, pS);
 
-                if (cost < bestCost)
+                // 방향 불일치 페널티: 세로획이 가로획에 매칭되는 것을 강하게 차단
+                float orient = (uDir == Vector2.zero || pDir == Vector2.zero)
+                    ? 0f
+                    : 1f - Mathf.Abs(Vector2.Dot(uDir, pDir));
+
+                // 자모 영역 게이트: 획의 중심이 이 계획 획이 속한 자모 영역에서 멀수록 페널티,
+                // 아예 멀면(0.15 초과) 사실상 매칭 금지 — 위치 간격으로 자모를 구분
+                float gate = DistanceToRect(uCenter, plan[p].box);
+                float region = gate > 0.15f ? 5f : gate * 2f;
+
+                cost[u, p] = Mathf.Min(fwd, rv) + orient * 1.2f + region;
+                revFlag[u, p] = rv + 0.15f < fwd;
+            }
+        }
+
+        // 전체 최적 매칭 (DP 비트마스크) — 그리디의 연쇄 오매칭 방지
+        const float SkipCost = 0.9f;       // 유저 잡획 하나 건너뛰는 비용
+        const float UnusedPlanCost = 0.4f; // 계획 획이 매칭 안 되고 남는 비용
+        int full = 1 << N;
+        const float INF = 1e9f;
+
+        var dp = new float[U + 1, full];
+        var parent = new int[U + 1, full]; // -1: 건너뜀, 그 외: 매칭한 계획 획
+        for (int i = 0; i <= U; i++)
+            for (int m = 0; m < full; m++)
+                dp[i, m] = INF;
+        dp[0, 0] = 0f;
+
+        for (int i = 0; i < U; i++)
+        {
+            for (int m = 0; m < full; m++)
+            {
+                if (dp[i, m] >= INF) continue;
+
+                // 이 유저 획을 잡획으로 건너뜀
+                if (dp[i, m] + SkipCost < dp[i + 1, m])
                 {
-                    bestCost = cost;
-                    best = i;
-                    bestRev = rev + 0.15f < fwd; // 확실히 반대일 때만
+                    dp[i + 1, m] = dp[i, m] + SkipCost;
+                    parent[i + 1, m] = -1;
+                }
+                // 남은 계획 획에 매칭
+                for (int p = 0; p < N; p++)
+                {
+                    if ((m & (1 << p)) != 0) continue;
+                    int nm = m | (1 << p);
+
+                    // 순서 우대: 이미 매칭된 획 중 계획 순서가 p보다 뒤인 것(=역전)마다 페널티.
+                    // 위치가 애매한 비슷한 획(짧은 가로 2개 등)은 표준 순서대로 매칭되고,
+                    // 진짜 순서를 바꿔 쓴 경우는 위치 차이가 커서 여전히 역전 매칭이 이긴다.
+                    int inversions = CountBits(m >> (p + 1));
+                    float nc = dp[i, m] + cost[i, p] + inversions * 0.25f;
+
+                    if (nc < dp[i + 1, nm])
+                    {
+                        dp[i + 1, nm] = nc;
+                        parent[i + 1, nm] = p;
+                    }
                 }
             }
+        }
 
-            if (best < 0) break;
-            used[best] = true;
-            seq.Add(best);
-            reversed.Add(bestRev);
+        // 최적 마스크 선택 (남은 계획 획은 개당 페널티)
+        int bestMask = 0;
+        float bestTotal = INF;
+        for (int m = 0; m < full; m++)
+        {
+            if (dp[U, m] >= INF) continue;
+            int unused = N - CountBits(m);
+            float total = dp[U, m] + unused * UnusedPlanCost;
+            if (total < bestTotal)
+            {
+                bestTotal = total;
+                bestMask = m;
+            }
+        }
 
-            float len = 0f;
-            for (int k = 1; k < s.Length; k++) len += Vector2.Distance(s[k - 1], s[k]);
-            lengths.Add(len);
+        // 역추적으로 유저 획별 매칭 복원
+        var assigned = new int[U]; // -1 = 건너뜀
+        {
+            int m = bestMask;
+            for (int i = U; i >= 1; i--)
+            {
+                int p = parent[i, m];
+                assigned[i - 1] = p;
+                if (p >= 0) m &= ~(1 << p);
+            }
+        }
+
+        var seq = new List<int>();
+        var reversed = new List<bool>();
+        var seqLens = new List<float>();
+        for (int u = 0; u < U; u++)
+        {
+            if (assigned[u] < 0) continue;
+            seq.Add(assigned[u]);
+            reversed.Add(revFlag[u, assigned[u]]);
+            seqLens.Add(lengths[u]);
         }
 
         res.supported = true;
 
+        // 디버그: 매칭 결과 출력 (유저 획 번호 → 표준 획)
+        var dbg = new System.Text.StringBuilder("[StrokeOrder/로컬] 매칭: ");
+        for (int i = 0; i < seq.Count; i++)
+            dbg.Append($"{i + 1}번획→{plan[seq[i]].jamo}(순서{seq[i]}){(reversed[i] ? "[역방향]" : "")}  ");
+        Debug.Log(dbg.ToString());
+
         // 1) 방향 검사 — 긴 획이 반대 방향이면 오류
         for (int i = 0; i < seq.Count; i++)
         {
-            if (reversed[i] && lengths[i] > 0.4f)
+            if (reversed[i] && seqLens[i] > 0.4f)
             {
                 char jamo = plan[seq[i]].jamo;
                 res.ok = false;
@@ -117,6 +213,21 @@ public static class StrokeOrderValidator
         }
 
         return res;
+    }
+
+    static int CountBits(int v)
+    {
+        int c = 0;
+        while (v != 0) { c += v & 1; v >>= 1; }
+        return c;
+    }
+
+    /// <summary>점과 사각형의 거리 (안이면 0)</summary>
+    static float DistanceToRect(Vector2 p, Rect r)
+    {
+        float dx = Mathf.Max(r.xMin - p.x, 0f, p.x - r.xMax);
+        float dy = Mathf.Max(r.yMin - p.y, 0f, p.y - r.yMax);
+        return Mathf.Sqrt(dx * dx + dy * dy);
     }
 
     // ── 필순 계획 생성 ───────────────────────────────────────────────
@@ -186,7 +297,7 @@ public static class StrokeOrderValidator
             var pts = new Vector2[s.Length];
             for (int i = 0; i < s.Length; i++)
                 pts[i] = new Vector2(box.xMin + s[i].x * box.width, box.yMin + s[i].y * box.height);
-            plan.Add(new PlanStroke { jamo = jamo, pts = pts });
+            plan.Add(new PlanStroke { jamo = jamo, pts = pts, box = box });
         }
         return true;
     }

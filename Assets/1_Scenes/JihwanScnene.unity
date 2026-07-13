@@ -315,6 +315,7 @@ GameObject:
   m_Component:
   - component: {fileID: 75206300}
   - component: {fileID: 75206299}
+  - component: {fileID: 75206301}
   m_Layer: 0
   m_Name: WritingCell
   m_TagString: Untagged
@@ -351,6 +352,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &75206301
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 75206298}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 762c913548f2449e3844cfa08a7611ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TraceGuide
+  cell: {fileID: 75206299}
+  font: {fileID: 12800000, guid: e3265ab4bf004d28a9537516768c1c75, type: 3}
+  color: {r: 0.4433962, g: 0.4433962, b: 0.4433962, a: 1}
+  fillRatio: 0.75
+  zOffset: 0.5
 --- !u!1 &99468696
 GameObject:
   m_ObjectHideFlags: 0
@@ -687,7 +705,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: 0
+  m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -1385,7 +1403,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: 0
+  m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -2505,7 +2523,7 @@ MonoBehaviour:
   targetCell: {fileID: 75206299}
   strokeCapture: {fileID: 1775397693}
   imageCapture: {fileID: 49852415}
-  evaluator: {fileID: 936507626}
+  evaluator: {fileID: 936507628}
   passScore: 70
   criteria: 'You are a teacher helping a learner practice Korean handwriting. Recognize
     the handwriting in the image and compare it with the target character. Judge
@@ -2570,6 +2588,7 @@ GameObject:
   m_Component:
   - component: {fileID: 936507627}
   - component: {fileID: 936507626}
+  - component: {fileID: 936507628}
   m_Layer: 0
   m_Name: OpenAIEvaluator
   m_TagString: Untagged
@@ -2608,6 +2627,30 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &936507628
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 936507625}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 019013826376c464fa5a9ed78055b184, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TemplateSimilarityEvaluator
+  strokeCapture: {fileID: 1775397693}
+  cell: {fileID: 75206299}
+  traceGuide: {fileID: 75206301}
+  font: {fileID: 12800000, guid: e3265ab4bf004d28a9537516768c1c75, type: 3}
+  templateHeightRatio: 0.55
+  templateOffsetY: 0
+  fontRenderSize: 192
+  gridSize: 96
+  tolerance: 0.08
+  strayPenalty: 2
+  requireNeatWriting: 1
+  debugDump: 1
 --- !u!1 &992798058
 GameObject:
   m_ObjectHideFlags: 0
@@ -3584,7 +3627,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
+    rgba: 4278190080
   m_fontColor: {r: 0, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -3597,7 +3640,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: 0
+  m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -4189,6 +4232,90 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1286220685}
   m_CullTransparentMesh: 1
+--- !u!1 &1287237627
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1287237630}
+  - component: {fileID: 1287237629}
+  - component: {fileID: 1287237628}
+  m_Layer: 0
+  m_Name: EnemySpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1287237628
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1287237627}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.UIDocument
+  m_PanelSettings: {fileID: 11400000, guid: d5d572b3182254a058a113b82e6028d0, type: 2}
+  m_ParentUI: {fileID: 0}
+  sourceAsset: {fileID: 0}
+  m_SortingOrder: 0
+  m_Position: 0
+  m_WorldSpaceSizeMode: 1
+  m_WorldSpaceWidth: 1920
+  m_WorldSpaceHeight: 1080
+  m_PivotReferenceSize: 0
+  m_Pivot: 0
+  m_WorldSpaceCollider: {fileID: 0}
+--- !u!114 &1287237629
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1287237627}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d8713232c5624e78bcb74b400180257, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
+  uiDocument: {fileID: 1287237628}
+  gungseoFont: {fileID: 12800000, guid: e3265ab4bf004d28a9537516768c1c75, type: 3}
+  mode: 0
+  stages:
+  - {fileID: 11400000, guid: 86a7e7c65bf7243f9964986964bcad04, type: 2}
+  - {fileID: 11400000, guid: f3bb46fd134234e869d7fcb3fbdd7f8f, type: 2}
+  - {fileID: 11400000, guid: 872f18239d65443629696302b7a9a0f8, type: 2}
+  - {fileID: 11400000, guid: 1e3352cf80830407f83fb53e6f4e13d5, type: 2}
+  - {fileID: 11400000, guid: e81ea5de933d84b87959a7d61c9b8c4f, type: 2}
+  showWordLabel: 0
+  fontSize: 140
+  verticalRatio: 0.35
+  slideDuration: 0.4
+  bannerFontSize: 90
+  bannerFadeDuration: 0.3
+  bannerHoldDuration: 1.2
+--- !u!4 &1287237630
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1287237627}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1323767681
 GameObject:
   m_ObjectHideFlags: 0
@@ -4432,6 +4559,68 @@ MonoBehaviour:
   pencilSounds:
   - pencliSound1
   - pencliSound2
+--- !u!1 &1369336973
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1369336975}
+  - component: {fileID: 1369336974}
+  m_Layer: 0
+  m_Name: WritingSessionController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1369336974
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1369336973}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ee8c197f1d638e4ab0358ea2816bbd2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WritingSessionController
+  spawner: {fileID: 1287237629}
+  cell: {fileID: 75206299}
+  feedback: {fileID: 913206370}
+  drawLine: {fileID: 1346376305}
+  passScore: 70
+  clearOnFail: 1
+  onResult:
+    m_PersistentCalls:
+      m_Calls: []
+  onStatus:
+    m_PersistentCalls:
+      m_Calls: []
+  onCharAdvanced:
+    m_PersistentCalls:
+      m_Calls: []
+  onWordAdvanced:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!4 &1369336975
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1369336973}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1372578001
 GameObject:
   m_ObjectHideFlags: 0
@@ -6854,3 +7043,5 @@ SceneRoots:
   - {fileID: 49852416}
   - {fileID: 936507627}
   - {fileID: 913206371}
+  - {fileID: 1369336975}
+  - {fileID: 1287237630}
