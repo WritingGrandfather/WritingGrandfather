@@ -10,7 +10,7 @@
 
         <ui:VisualElement name="button-area" class="button-area">
             <ui:Button name="btn-start" text="글쓰기 시작" class="menu-button menu-button--primary" />
-            <ui:Button name="btn-ranking" text="랭킹" class="menu-button" />
+            <ui:Button name="btn-ranking" text="랭킹" class="menu-button menu-button--ranking" />
             <ui:Button name="btn-settings" text="설정" class="menu-button" />
             <ui:Button name="btn-exit" text="나가기" class="menu-button menu-button--exit" />
         </ui:VisualElement>
@@ -41,6 +41,10 @@
                     <ui:VisualElement class="settings-section-line" />
                     <ui:Label text="마이페이지" name="section-mypage-title" class="settings-section-title" />
                     <ui:VisualElement class="settings-section-line" />
+                </ui:VisualElement>
+                <ui:VisualElement class="settings-row">
+                    <ui:Label text="닉네임" class="settings-row-label" />
+                    <ui:TextField name="mypage-nickname-field" class="settings-control" />
                 </ui:VisualElement>
                 <ui:VisualElement class="settings-row">
                     <ui:Label text="이메일" class="settings-row-label" />

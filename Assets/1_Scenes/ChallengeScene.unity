@@ -316,6 +316,7 @@ GameObject:
   - component: {fileID: 75206300}
   - component: {fileID: 75206299}
   - component: {fileID: 75206301}
+  - component: {fileID: 75206310}
   m_Layer: 0
   m_Name: WritingCell
   m_TagString: Untagged
@@ -7919,6 +7920,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+<<<<<<< Updated upstream
 --- !u!1 &2119045085
 GameObject:
   m_ObjectHideFlags: 0
@@ -8048,11 +8050,15 @@ RectTransform:
   m_SizeDelta: {x: 1080, y: 2340}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &2129359266
+=======
+--- !u!114 &75206310
+>>>>>>> Stashed changes
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
+<<<<<<< Updated upstream
   m_GameObject: {fileID: 2129359264}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -8085,6 +8091,28 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2129359264}
   m_CullTransparentMesh: 1
+=======
+  m_GameObject: {fileID: 75206298}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea48390a3b434a77b50219ccab397c61, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cell: {fileID: 75206299}
+  drawLine: {fileID: 1346376305}
+  restrictDrawing: 1
+  anchorToCameraBottom: 1
+  bottomMargin: 0.1
+  widthAsScreenRatio: 0.8
+  backgroundColor: {r: 0.976, g: 0.949, b: 0.902, a: 0.35}
+  borderColor: {r: 0.63, g: 0.58, b: 0.51, a: 1}
+  dotColor: {r: 0.72, g: 0.68, b: 0.62, a: 1}
+  borderWidth: 0.012
+  dotsPerLine: 15
+  dotRadius: 0.005
+  textureSize: 512
+  sortingOrder: -10
+>>>>>>> Stashed changes
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

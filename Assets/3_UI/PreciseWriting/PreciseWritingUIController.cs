@@ -10,7 +10,7 @@ namespace WritingGrandfather.UI.PreciseWriting
         // 위→아래로 실제 그려진 크기를 이어 붙여 배치한다 (guide-box가 폭 기준 정사각형이라
         // 세로 공간이 남을 수 있으므로, 고정 비율 밴드 대신 이전 요소의 실제 하단을 기준으로 다음 요소를 배치).
         private const float TopBarTopFrac = 0.04f;
-        private const float TopBarHeightFrac = 0.11f;
+        private const float TopBarHeightFrac = 0.085f;
         private const float GuideGapFrac = 0.035f;
         private const float GuideWidthFrac = 0.92f;
         private const float ButtonGapFrac = 0.035f;
@@ -35,6 +35,9 @@ namespace WritingGrandfather.UI.PreciseWriting
         [Tooltip("스테이지에서 낱말(Letter)/단어(Word) 중 어느 목록을 쓸지")]
         [SerializeField] private GameMode stageMode = GameMode.Letter;
 
+        [Tooltip("스테이지 하나를 클리어하는 데 필요한 라운드(글자) 수 - 실제 스테이지 데이터에 더 많은 글자가 있어도 이 개수만 쓰고 다음 스테이지로 넘어간다")]
+        [SerializeField] private int roundsPerStage = 5;
+
         [Tooltip("데모용 연습 단어 목록 — 스테이지가 비어 있을 때만 사용")]
         [SerializeField] private string[] practiceWords = { "가", "나", "다" };
 
@@ -58,10 +61,12 @@ namespace WritingGrandfather.UI.PreciseWriting
         private Toggle toggleShowCharacter;
         private Toggle toggleShowStrokeOrder;
         private Button completeButton;
-        private Button retryButton;
-        private Button exitButton;
+        private Button continueButton;
+        private Button retryStageButton;
+        private Button resultExitButton;
         private Button resetButton;
         private Button undoButton;
+        private Button topBarStopButton;
         private Label currentWordLabel;
         private Label wordProgressLabel;
         private VisualElement guideCrossH;
@@ -77,6 +82,7 @@ namespace WritingGrandfather.UI.PreciseWriting
         private Label analyzingLabel;
         private Label toggleShowCharacterLabel;
         private Label toggleShowStrokeOrderLabel;
+        private VisualElement resultStarsRow;
 
         private int wordIndex;
 
@@ -85,11 +91,16 @@ namespace WritingGrandfather.UI.PreciseWriting
         private string[] wordStageNames;
         private int lastBannerStage = -1;
 
-        // 스테이지 점수 누적 (스테이지 끝날 때 평균으로 결과창 표시)
+        // 무한모드: 마지막 스테이지까지 다 돌면 다시 1번째 스테이지 데이터로 순환하되,
+        // 화면에 보여주는 스테이지 번호는 계속 누적해서 커진다(1~5, 6~10, 11~15, ...).
+        private int stageLoopCount;
+
+        // 점수 누적 (다시하기로 초기화되기 전까지 계속 쌓이며, 그만하기를 누르면 평균으로 표시)
         private int stageSimilaritySum;
         private int stageOrderSum;
         private int stagePositionSum;
         private int stageScoredCount;
+        private string lastFeedbackMessage = "";
 
         private void OnEnable()
         {
@@ -119,9 +130,12 @@ namespace WritingGrandfather.UI.PreciseWriting
                         int k = Random.Range(0, i + 1);
                         (texts[i], texts[k]) = (texts[k], texts[i]);
                     }
-                    foreach (var t in texts)
+                    // 스테이지 데이터에 글자가 더 있어도 roundsPerStage개만 써서, 그만큼만
+                    // 채우면 스테이지가 클리어되도록 한다 (나머지는 이번 판에서 쓰지 않음).
+                    int count = Mathf.Min(roundsPerStage, texts.Count);
+                    for (int i = 0; i < count; i++)
                     {
-                        list.Add(t);
+                        list.Add(texts[i]);
                         nums.Add(si + 1);
                         names.Add(stages[si].stageName);
                     }
@@ -295,10 +309,12 @@ namespace WritingGrandfather.UI.PreciseWriting
             toggleShowCharacter = root.Q<Toggle>("toggle-show-character");
             toggleShowStrokeOrder = root.Q<Toggle>("toggle-show-stroke-order");
             completeButton = root.Q<Button>("complete-button");
-            retryButton = root.Q<Button>("retry-button");
-            exitButton = root.Q<Button>("exit-button");
+            continueButton = root.Q<Button>("continue-button");
+            retryStageButton = root.Q<Button>("retry-stage-button");
+            resultExitButton = root.Q<Button>("result-exit-button");
             resetButton = root.Q<Button>("reset-button");
             undoButton = root.Q<Button>("undo-button");
+            topBarStopButton = root.Q<Button>("top-bar-stop-button");
             currentWordLabel = root.Q<Label>("current-word-label");
             wordProgressLabel = root.Q<Label>("word-progress-label");
             guideCrossH = root.Q("guide-cross-h");
@@ -312,6 +328,7 @@ namespace WritingGrandfather.UI.PreciseWriting
             resultSimilarityCaptionLabel = root.Q<Label>("result-similarity-label");
             resultPositionCaptionLabel = root.Q<Label>("result-position-label");
             analyzingLabel = root.Q<Label>("analyzing-label");
+            resultStarsRow = root.Q<VisualElement>("result-stars-row");
         }
 
         private void ApplyLocalization()
@@ -319,8 +336,10 @@ namespace WritingGrandfather.UI.PreciseWriting
             if (resetButton != null) resetButton.text = LocalizationManager.Get("precise_writing.reset_button");
             if (undoButton != null) undoButton.text = LocalizationManager.Get("precise_writing.undo_button");
             if (completeButton != null) completeButton.text = LocalizationManager.Get("precise_writing.complete_button");
-            if (retryButton != null) retryButton.text = LocalizationManager.Get("precise_writing.retry_button");
-            if (exitButton != null) exitButton.text = LocalizationManager.Get("precise_writing.exit_button");
+            if (continueButton != null) continueButton.text = LocalizationManager.Get("precise_writing.continue_button");
+            if (retryStageButton != null) retryStageButton.text = LocalizationManager.Get("precise_writing.retry_stage_button");
+            if (resultExitButton != null) resultExitButton.text = LocalizationManager.Get("precise_writing.exit_button");
+            if (topBarStopButton != null) topBarStopButton.text = LocalizationManager.Get("precise_writing.stop_button");
 
             if (analyzingLabel != null) analyzingLabel.text = LocalizationManager.Get("precise_writing.analyzing_label");
 
@@ -348,24 +367,27 @@ namespace WritingGrandfather.UI.PreciseWriting
             completeButton?.RegisterCallback<ClickEvent>(_ => OnCompleteClicked());
             resetButton?.RegisterCallback<ClickEvent>(_ => ClearStrokes());
             undoButton?.RegisterCallback<ClickEvent>(_ => UndoManager.Instance?.Undo());
-            retryButton?.RegisterCallback<ClickEvent>(_ =>
-            {
-                // 스테이지 결과창에서: 다음 스테이지가 남았으면 이어서, 전부 끝났으면 처음부터
-                if (practiceWords != null && wordIndex < practiceWords.Length - 1)
-                {
-                    wordIndex++;
-                }
-                else
-                {
-                    wordIndex = 0;
-                    lastBannerStage = -1; // 1단계 배너 다시
-                }
-                UpdateWordLabel();
-                ClearStrokes();
-                Show(writingScreen);
-            });
-            exitButton?.RegisterCallback<ClickEvent>(_ =>
+            // 계속 하기: 점수창을 닫고 멈췄던 글자부터 바로 이어서 쓴다 (단어 인덱스/누적 점수 그대로).
+            continueButton?.RegisterCallback<ClickEvent>(_ => Show(writingScreen));
+            // 다시하기: 누적 점수와 진행도를 전부 초기화하고 첫 글자부터 새로 시작한다.
+            retryStageButton?.RegisterCallback<ClickEvent>(_ => RestartSession());
+            resultExitButton?.RegisterCallback<ClickEvent>(_ =>
                 UnityEngine.SceneManagement.SceneManager.LoadScene("LobbyScene"));
+            // 그만하기: 라운드 수 제한 없이 계속 쓰다가, 사용자가 직접 멈출 때만 지금까지의
+            // 누적 점수로 점수창을 띄운다 - 더 이상 5단계 등 정해진 라운드 끝에서 자동으로 뜨지 않는다.
+            topBarStopButton?.RegisterCallback<ClickEvent>(_ => ShowResult(lastFeedbackMessage));
+        }
+
+        // 다시하기: 진행도와 누적 점수를 전부 초기화하고 첫 글자로 되돌아간다.
+        private void RestartSession()
+        {
+            wordIndex = 0;
+            stageLoopCount = 0;
+            lastBannerStage = -1;
+            stageSimilaritySum = stageOrderSum = stagePositionSum = stageScoredCount = 0;
+            UpdateWordLabel();
+            ClearStrokes();
+            Show(writingScreen);
         }
 
         // 획을 전부 지울 때(초기화/다음 단어/다시 하기)는 UndoManager 히스토리도 같이
@@ -377,8 +399,8 @@ namespace WritingGrandfather.UI.PreciseWriting
             UndoManager.Instance?.Clear();
         }
 
-        // 완료 클릭: 현재 글자를 채점한다. 점수는 스테이지에 누적되고,
-        // 스테이지 마지막 글자면 스테이지 평균 점수로 결과창이 뜬다.
+        // 완료 클릭: 현재 글자를 채점한다. 점수는 계속 누적되고, 다음 글자로 바로 넘어간다 -
+        // 점수창은 라운드 수와 상관없이 그만하기를 눌렀을 때만 뜬다(무제한 라운드).
         private void OnCompleteClicked()
         {
             Show(analyzingScreen);
@@ -411,48 +433,141 @@ namespace WritingGrandfather.UI.PreciseWriting
             HandleScored(similarity, strokeOrder, position, feedback.message);
         }
 
-        // 글자 하나 채점 완료 → 스테이지에 누적. 스테이지 끝이면 결과창, 아니면 다음 글자로.
+        // 글자 하나 채점 완료 → 누적하고 다음 글자로. 첫 바퀴(stageLoopCount==0, 스테이지1~5를
+        // 아직 다 안 돌았을 때)엔 스테이지가 바뀔 때마다 자동으로 점수창을 띄운다. 5단계까지
+        // 다 돌고 나면(무한모드) 더 이상 자동으로 뜨지 않고, 그만하기를 눌렀을 때만 뜬다.
         private void HandleScored(int similarity, int strokeOrder, int position, string message)
         {
             stageSimilaritySum += similarity;
             stageOrderSum += strokeOrder;
             stagePositionSum += position;
             stageScoredCount++;
+            lastFeedbackMessage = message;
 
+            bool hasStages = stages != null && stages.Length > 0;
             bool lastOverall = practiceWords == null || wordIndex >= practiceWords.Length - 1;
-            bool stageEnd = lastOverall ||
-                (wordStageNums != null && wordIndex + 1 < wordStageNums.Length &&
-                 wordStageNums[wordIndex + 1] != wordStageNums[wordIndex]);
+            bool stageEnd = hasStages && stageLoopCount == 0 &&
+                (lastOverall ||
+                 (wordStageNums != null && wordIndex + 1 < wordStageNums.Length &&
+                  wordStageNums[wordIndex + 1] != wordStageNums[wordIndex]));
+            // wordIndex를 진행시키기 전에 "방금 끝난" 스테이지 번호를 미리 구해 둔다 -
+            // 진행 후에는 wordIndex가 다음 스테이지(또는 순환된 처음)를 가리키게 되기 때문.
+            int completedStageNum = stageEnd ? GetDisplayStageNum(wordIndex) : 0;
+
+            wordIndex++;
+            if (practiceWords == null || wordIndex >= practiceWords.Length)
+            {
+                wordIndex = 0;
+                if (hasStages) stageLoopCount++; // 5단계까지 다 돌았으면 여기서 무한모드 진입
+            }
 
             if (stageEnd)
             {
-                ShowStageResult(message);
+                ShowResult(message, completedStageNum);
                 return;
             }
 
-            // 스테이지 진행 중 → 바로 다음 글자로
-            wordIndex++;
             UpdateWordLabel();
             ClearStrokes();
             Show(writingScreen);
         }
 
-        // 스테이지 결과창: 이번 스테이지 글자들의 평균 점수 표시
-        private void ShowStageResult(string lastMessage)
+        // 점수창: 스테이지 클리어로 자동으로 뜬 경우엔 "n단계 완료!" 제목을, 그만하기로
+        // 수동으로 띄운 경우(completedStageNum==0, 보통 무한모드 중)엔 기본 "결과" 제목을 쓴다.
+        private void ShowResult(string lastMessage, int completedStageNum = 0)
         {
             int n = Mathf.Max(1, stageScoredCount);
-            if (resultSimilarityScoreLabel != null) resultSimilarityScoreLabel.text = $"{stageSimilaritySum / n}%";
-            if (resultStrokeOrderScoreLabel != null) resultStrokeOrderScoreLabel.text = $"{stageOrderSum / n}%";
-            if (resultPositionScoreLabel != null) resultPositionScoreLabel.text = $"{stagePositionSum / n}%";
-
-            int stageNum = wordStageNums != null && wordIndex < wordStageNums.Length ? wordStageNums[wordIndex] : 0;
-            if (resultTitleLabel != null && stageNum > 0) resultTitleLabel.text = $"{stageNum}단계 완료!";
+            int similarityAvg = stageSimilaritySum / n;
+            int orderAvg = stageOrderSum / n;
+            int positionAvg = stagePositionSum / n;
+            if (resultSimilarityScoreLabel != null) resultSimilarityScoreLabel.text = $"{similarityAvg}%";
+            if (resultStrokeOrderScoreLabel != null) resultStrokeOrderScoreLabel.text = $"{orderAvg}%";
+            if (resultPositionScoreLabel != null) resultPositionScoreLabel.text = $"{positionAvg}%";
             if (resultMessageLabel != null) resultMessageLabel.text = lastMessage;
 
-            // 다음 스테이지를 위해 누적 초기화
+            if (resultTitleLabel != null)
+            {
+                resultTitleLabel.text = completedStageNum > 0
+                    ? $"{completedStageNum}단계 완료!"
+                    : LocalizationManager.Get("precise_writing.result_title");
+            }
+
+            // 세 점수의 평균으로 3개 만점 별점을 매긴다: 90%↑ 3개, 60%↑ 2개, 30%↑ 1개, 그 미만 0개.
+            int overallAvg = (similarityAvg + orderAvg + positionAvg) / 3;
+            int starCount = overallAvg >= 90 ? 3 : overallAvg >= 60 ? 2 : overallAvg >= 30 ? 1 : 0;
+            RenderStars(starCount);
+
+            // 다음 구간을 위해 누적 초기화 (점수창이 뜰 때마다 "여기까지의 점수"를 보여주는 개념)
             stageSimilaritySum = stageOrderSum = stagePositionSum = stageScoredCount = 0;
 
             Show(resultScreen);
+        }
+
+        // wordStageNums[idx](1~stages.Length, 루프마다 초기화됨)에 stageLoopCount * stages.Length를
+        // 더해서, 무한모드로 계속 순환해도 화면에는 1,2,3...으로 끊임없이 커지는 번호로 보이게 한다.
+        private int GetDisplayStageNum(int idx)
+        {
+            if (wordStageNums == null || idx < 0 || idx >= wordStageNums.Length) return 0;
+            int stagesPerLoop = stages != null ? stages.Length : 0;
+            return wordStageNums[idx] + stageLoopCount * stagesPerLoop;
+        }
+
+        // 별 3개를 그려서 획득한 개수만큼 채우고, 나머지는 빈 별로 표시한다.
+        private void RenderStars(int filledCount)
+        {
+            if (resultStarsRow == null) return;
+
+            resultStarsRow.Clear();
+            for (int i = 0; i < 3; i++)
+                resultStarsRow.Add(CreateStar(90f, i < filledCount));
+        }
+
+        private static VisualElement CreateStar(float size, bool filled)
+        {
+            var star = new VisualElement();
+            star.style.width = size;
+            star.style.height = size;
+            star.style.marginLeft = 6;
+            star.style.marginRight = 6;
+            star.generateVisualContent += ctx => DrawStar(ctx, size, filled);
+            return star;
+        }
+
+        // 폰트에 ★/☆ 글리프가 없을 수 있어 텍스트 대신 Painter2D로 5각별 폴리곤을 직접 그린다.
+        // 채워진 별은 테마 오렌지로 꽉 채우고, 빈 별은 테두리만(반투명 브라운) 그려 구분한다.
+        private static void DrawStar(MeshGenerationContext ctx, float size, bool filled)
+        {
+            var painter = ctx.painter2D;
+            var fillColor = new Color(214f / 255f, 108f / 255f, 58f / 255f);
+            var emptyOutline = new Color(150f / 255f, 111f / 255f, 71f / 255f, 0.45f);
+
+            float cx = size * 0.5f;
+            float cy = size * 0.5f;
+            float outerR = size * 0.5f;
+            float innerR = outerR * 0.42f;
+
+            painter.BeginPath();
+            for (int i = 0; i < 10; i++)
+            {
+                float angle = -Mathf.PI / 2f + i * Mathf.PI / 5f;
+                float r = (i % 2 == 0) ? outerR : innerR;
+                var p = new Vector2(cx + r * Mathf.Cos(angle), cy + r * Mathf.Sin(angle));
+                if (i == 0) painter.MoveTo(p);
+                else painter.LineTo(p);
+            }
+            painter.ClosePath();
+
+            if (filled)
+            {
+                painter.fillColor = fillColor;
+                painter.Fill();
+            }
+            else
+            {
+                painter.strokeColor = emptyOutline;
+                painter.lineWidth = 4f;
+                painter.Stroke();
+            }
         }
 
         private void UpdateWordLabel()
@@ -462,13 +577,18 @@ namespace WritingGrandfather.UI.PreciseWriting
             string word = practiceWords[wordIndex];
             if (currentWordLabel != null) currentWordLabel.text = word;
             if (ghostCharacterLabel != null) ghostCharacterLabel.text = word;
-            if (wordProgressLabel != null) wordProgressLabel.text = $"{wordIndex + 1} / {practiceWords.Length}";
 
-            // 스테이지가 바뀌는 첫 글자에서 전환 연출
-            if (wordStageNums != null && wordIndex < wordStageNums.Length && wordStageNums[wordIndex] != lastBannerStage)
+            // 무제한 라운드라 "n / 총개수"처럼 정해진 끝이 있는 표시 대신, 루프 횟수까지 반영해
+            // 계속 커지기만 하는 라운드 번호를 보여준다.
+            if (wordProgressLabel != null)
+                wordProgressLabel.text = $"{stageLoopCount * practiceWords.Length + wordIndex + 1}";
+
+            // 스테이지가 바뀌는 첫 글자에서 전환 연출 - 첫 바퀴(stageLoopCount==0, 아직 5단계까지
+            // 다 안 돌았을 때)에만 띄우고, 무한모드(stageLoopCount>=1)에서는 더 이상 띄우지 않는다.
+            if (stageLoopCount == 0 && wordStageNums != null && wordIndex < wordStageNums.Length && wordStageNums[wordIndex] != lastBannerStage)
             {
                 lastBannerStage = wordStageNums[wordIndex];
-                ShowStageBanner(lastBannerStage, wordStageNames[wordIndex]);
+                ShowStageBanner(GetDisplayStageNum(wordIndex), wordStageNames[wordIndex]);
             }
         }
 

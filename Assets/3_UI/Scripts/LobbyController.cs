@@ -61,11 +61,12 @@ public class LobbyController : MonoBehaviour
     Button _settingsCloseButton;
     TextElement[] _settingsSectionTitles;
     TextElement[] _settingsRowLabels;
-    // _settingsRowLabels는 이름이 아니라 UXML 문서 순서(이메일/비밀번호/화질/프레임/
-    // 전체 볼륨/배경음/효과음/언어 선택/연령)로 모은 것이라, 이 배열도 그 순서와
+    // _settingsRowLabels는 이름이 아니라 UXML 문서 순서(닉네임/이메일/비밀번호/화질/
+    // 프레임/전체 볼륨/배경음/효과음/언어 선택/연령)로 모은 것이라, 이 배열도 그 순서와
     // 반드시 일치해야 한다 - Lobby.uxml에서 행 라벨 순서가 바뀌면 여기도 같이 바꿔야 한다.
     static readonly string[] SettingsRowLabelKeys =
     {
+        "lobby.settings.nickname_label",
         "login.field.email_label",
         "login.field.password_label",
         "lobby.settings.quality_label",
@@ -85,6 +86,12 @@ public class LobbyController : MonoBehaviour
     Label _mypageEmailValue;
     VisualElement _mypagePasswordRow;
     Button _btnLogout;
+
+    // 닉네임은 계정 인증 정보가 아니라 이 화면(랭킹 표시용)만의 로컬 설정이라
+    // AuthManager를 건드리지 않고 PlayerPrefs에 직접 저장한다. 랭킹에 실제로
+    // 반영하는 연동은 나중에 별도로 처리한다.
+    const string NicknamePrefsKey = "user_nickname";
+    TextField _nicknameField;
 
     void OnEnable()
     {
@@ -164,6 +171,10 @@ public class LobbyController : MonoBehaviour
         _mypageEmailValue = root.Q<Label>("mypage-email-value");
         _mypagePasswordRow = root.Q<VisualElement>("mypage-password-row");
         _btnLogout = root.Q<Button>("btn-logout");
+
+        _nicknameField = root.Q<TextField>("mypage-nickname-field");
+        _nicknameField.SetValueWithoutNotify(PlayerPrefs.GetString(NicknamePrefsKey, ""));
+        _nicknameField.RegisterValueChangedCallback(OnNicknameChanged);
         _btnLogout.clicked += OnLogoutClicked;
 
         LocalizationManager.OnLanguageChanged += OnLanguageChanged;
@@ -176,6 +187,12 @@ public class LobbyController : MonoBehaviour
     void OnLanguageRadioChanged(ChangeEvent<int> evt)
     {
         LocalizationManager.SetLanguage(evt.newValue == 0 ? Language.Korean : Language.English);
+    }
+
+    void OnNicknameChanged(ChangeEvent<string> evt)
+    {
+        PlayerPrefs.SetString(NicknamePrefsKey, evt.newValue);
+        PlayerPrefs.Save();
     }
 
     // 언어가 바뀌면 모든 텍스트를 다시 채우고, 언어별로 글자 폭이 달라질 수
@@ -368,6 +385,7 @@ public class LobbyController : MonoBehaviour
     {
         _lobbyRoot?.UnregisterCallback<GeometryChangedEvent>(OnGeometryChanged);
         _radioLanguage?.UnregisterValueChangedCallback(OnLanguageRadioChanged);
+        _nicknameField?.UnregisterValueChangedCallback(OnNicknameChanged);
         LocalizationManager.OnLanguageChanged -= OnLanguageChanged;
     }
 

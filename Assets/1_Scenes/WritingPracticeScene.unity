@@ -423,8 +423,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c58e7ac0e2c274cf3a68ef1b7bb90fc0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PoolManager
-  entries: []
-  resourcesPath: Prefab
+  entries:
+  - id: Line
+    prefab: {fileID: 8074208889824306892, guid: 2fe6248eb3043447293c8228871fc0e3, type: 3}
+    defaultCapacity: 0
+    maxSize: 0
+  resourcesPath: Prefabs
   resourceDefaultCapacity: 5
   resourceMaxSize: 50
 --- !u!1 &1414669556
