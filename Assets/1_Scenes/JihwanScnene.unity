@@ -359,7 +359,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 75206298}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 762c913548f2449e3844cfa08a7611ea, type: 3}
   m_Name: 
@@ -452,13 +452,13 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 913206370}
-        m_TargetAssemblyTypeName: WritingFeedbackController, Assembly-CSharp
-        m_MethodName: RequestFeedback
-        m_Mode: 0
+      - m_Target: {fileID: 1369336976}
+        m_TargetAssemblyTypeName: FallingWritingSession, Assembly-CSharp
+        m_MethodName: Evaluate
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -2639,9 +2639,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 019013826376c464fa5a9ed78055b184, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TemplateSimilarityEvaluator
-  strokeCapture: {fileID: 1775397693}
-  cell: {fileID: 75206299}
-  traceGuide: {fileID: 75206301}
+  strokeCapture: {fileID: 0}
+  cell: {fileID: 0}
+  traceGuide: {fileID: 0}
   font: {fileID: 12800000, guid: e3265ab4bf004d28a9537516768c1c75, type: 3}
   templateHeightRatio: 0.55
   templateOffsetY: 0
@@ -4241,8 +4241,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1287237630}
-  - component: {fileID: 1287237629}
   - component: {fileID: 1287237628}
+  - component: {fileID: 1287237631}
   m_Layer: 0
   m_Name: EnemySpawner
   m_TagString: Untagged
@@ -4273,34 +4273,6 @@ MonoBehaviour:
   m_PivotReferenceSize: 0
   m_Pivot: 0
   m_WorldSpaceCollider: {fileID: 0}
---- !u!114 &1287237629
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1287237627}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3d8713232c5624e78bcb74b400180257, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
-  uiDocument: {fileID: 1287237628}
-  gungseoFont: {fileID: 12800000, guid: e3265ab4bf004d28a9537516768c1c75, type: 3}
-  mode: 0
-  stages:
-  - {fileID: 11400000, guid: 86a7e7c65bf7243f9964986964bcad04, type: 2}
-  - {fileID: 11400000, guid: f3bb46fd134234e869d7fcb3fbdd7f8f, type: 2}
-  - {fileID: 11400000, guid: 872f18239d65443629696302b7a9a0f8, type: 2}
-  - {fileID: 11400000, guid: 1e3352cf80830407f83fb53e6f4e13d5, type: 2}
-  - {fileID: 11400000, guid: e81ea5de933d84b87959a7d61c9b8c4f, type: 2}
-  showWordLabel: 0
-  fontSize: 140
-  verticalRatio: 0.35
-  slideDuration: 0.4
-  bannerFontSize: 90
-  bannerFadeDuration: 0.3
-  bannerHoldDuration: 1.2
 --- !u!4 &1287237630
 Transform:
   m_ObjectHideFlags: 0
@@ -4316,6 +4288,35 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1287237631
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1287237627}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 324bb2a75ea4f49b5ad98e4a2e7ae6ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FallingWordSpawner
+  uiDocument: {fileID: 1287237628}
+  font: {fileID: 12800000, guid: e3265ab4bf004d28a9537516768c1c75, type: 3}
+  mode: 0
+  stages:
+  - {fileID: 11400000, guid: 86a7e7c65bf7243f9964986964bcad04, type: 2}
+  - {fileID: 11400000, guid: f3bb46fd134234e869d7fcb3fbdd7f8f, type: 2}
+  - {fileID: 11400000, guid: 872f18239d65443629696302b7a9a0f8, type: 2}
+  - {fileID: 11400000, guid: 1e3352cf80830407f83fb53e6f4e13d5, type: 2}
+  - {fileID: 11400000, guid: e81ea5de933d84b87959a7d61c9b8c4f, type: 2}
+  startSpawnInterval: 2.5
+  minSpawnInterval: 0.9
+  startFallSpeed: 80
+  maxFallSpeed: 240
+  rampDuration: 180
+  fontSize: 90
+  sideMarginPx: 80
+  deadlineRatio: 0.85
 --- !u!1 &1323767681
 GameObject:
   m_ObjectHideFlags: 0
@@ -4569,7 +4570,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1369336975}
-  - component: {fileID: 1369336974}
+  - component: {fileID: 1369336976}
   m_Layer: 0
   m_Name: WritingSessionController
   m_TagString: Untagged
@@ -4577,36 +4578,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1369336974
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1369336973}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4ee8c197f1d638e4ab0358ea2816bbd2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::WritingSessionController
-  spawner: {fileID: 1287237629}
-  cell: {fileID: 75206299}
-  feedback: {fileID: 913206370}
-  drawLine: {fileID: 1346376305}
-  passScore: 70
-  clearOnFail: 1
-  onResult:
-    m_PersistentCalls:
-      m_Calls: []
-  onStatus:
-    m_PersistentCalls:
-      m_Calls: []
-  onCharAdvanced:
-    m_PersistentCalls:
-      m_Calls: []
-  onWordAdvanced:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!4 &1369336975
 Transform:
   m_ObjectHideFlags: 0
@@ -4622,6 +4593,34 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1369336976
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1369336973}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95ba8ef5e324643ecbc17a9f1975e462, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FallingWritingSession
+  spawner: {fileID: 1287237631}
+  strokeCapture: {fileID: 1775397693}
+  cell: {fileID: 75206299}
+  evaluator: {fileID: 936507628}
+  drawLine: {fileID: 1346376305}
+  passScore: 60
+  checkStrokeOrder: 1
+  onResult:
+    m_PersistentCalls:
+      m_Calls: []
+  onStatus:
+    m_PersistentCalls:
+      m_Calls: []
+  onWordCleared:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1372578001
 GameObject:
   m_ObjectHideFlags: 0

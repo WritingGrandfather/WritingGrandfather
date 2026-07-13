@@ -37,6 +37,7 @@ public class FallingWordSpawner : MonoBehaviour
 
             Element = new Label(text);
             Element.AddToClassList("falling-word");
+            Element.pickingMode = PickingMode.Ignore; // 포인터 통과 (그리기/버튼 방해 금지)
             Element.style.position = Position.Absolute;
             Element.style.left = x;
             Element.style.top = y;
@@ -97,6 +98,7 @@ public class FallingWordSpawner : MonoBehaviour
     void OnEnable()
     {
         VisualElement root = Root;
+        root.pickingMode = PickingMode.Ignore; // 전체 화면 root가 포인터를 삼키지 않게
         root.style.position = Position.Absolute;
         root.style.top = 0;
         root.style.bottom = 0;

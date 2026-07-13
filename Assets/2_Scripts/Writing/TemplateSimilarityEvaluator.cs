@@ -125,7 +125,8 @@ public class TemplateSimilarityEvaluator : HandwritingEvaluator
     }
 
     // ── 정자 검사: 획수 부족(이어 쓰기)과 구불거리는 획(흘림)을 감점 ──────
-    int ApplyNeatnessChecks(System.Collections.Generic.List<System.Collections.Generic.List<Vector2>> strokes,
+    //    (낙하 모드 등 외부에서도 쓸 수 있게 public static)
+    public static int ApplyNeatnessChecks(System.Collections.Generic.List<System.Collections.Generic.List<Vector2>> strokes,
                             char targetChar, int score, out string warn)
     {
         warn = null;
