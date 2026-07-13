@@ -130,8 +130,12 @@
     white-space: nowrap;
 }
 
-/* 설정 맨 아래 로그아웃 버튼. 나가기 버튼(menu-button--exit)과 같은 회색 톤이지만
-   설정 행 크기(다른 settings-control들과 비슷한 높이)에 맞춘 별도 스타일. */
+/* 로그아웃 버튼(설정 맨 아래) 및 마이페이지의 "로그인 하기" 버튼(게스트일 때
+   닉네임 입력칸 대신 표시) 공용 스타일. 나가기 버튼(menu-button--exit)과 같은
+   회색 톤이지만 설정 행 크기(다른 settings-control들과 비슷한 높이)에 맞춤.
+   margin-bottom을 둔 건 "로그인 하기"처럼 섹션 중간에서 쓰일 때도 아래 행과
+   settings-row만큼의 간격(36px)을 유지하기 위함 - 맨 마지막 로그아웃 버튼은
+   그 아래가 스크롤 영역 끝이라 여백이 조금 더 생길 뿐 문제되지 않는다. */
 .settings-logout-button {
     width: 100%;
     height: 96px;
@@ -139,6 +143,7 @@
     border-radius: 18px;
     border-width: 0;
     margin-top: 12px;
+    margin-bottom: 36px;
     font-size: 40px;
     color: rgb(255, 255, 255);
     background-color: rgb(120, 120, 120);
