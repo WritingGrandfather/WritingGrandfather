@@ -428,7 +428,7 @@ MonoBehaviour:
     prefab: {fileID: 8074208889824306892, guid: 2fe6248eb3043447293c8228871fc0e3, type: 3}
     defaultCapacity: 0
     maxSize: 0
-  resourcesPath: Prefab
+  resourcesPath: Prefabs
   resourceDefaultCapacity: 5
   resourceMaxSize: 50
 --- !u!1 &1414669556

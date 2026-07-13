@@ -68,7 +68,9 @@ precise_writing.result_title,결과,Result
 precise_writing.result_stroke_order_label,획 순서 정확도,Stroke Order Accuracy
 precise_writing.result_similarity_label,글자 유사도,Character Similarity
 precise_writing.result_position_label,글자 크기 위치 정확도,Size & Position Accuracy
-precise_writing.retry_button,다시 하기,Try Again
+precise_writing.continue_button,계속 하기,Continue
+precise_writing.retry_stage_button,다시하기,Retry
+precise_writing.stop_button,그만하기,Stop
 precise_writing.exit_button,나가기,Exit
 precise_writing.toggle_show_character,안내선,Guide Lines
 precise_writing.toggle_show_stroke_order,획 순서,Stroke Order
