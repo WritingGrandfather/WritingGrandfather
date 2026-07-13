@@ -61,6 +61,7 @@ public class RankingScreenController : MonoBehaviour
     void OnEnable()
     {
         root = GetComponent<UIDocument>().rootVisualElement;
+        UIClickSound.Attach(root);
 
         rankingRoot = root.Q<VisualElement>("ranking-root");
         title = root.Q<Label>("ranking-title");

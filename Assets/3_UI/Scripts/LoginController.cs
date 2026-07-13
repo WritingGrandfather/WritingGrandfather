@@ -39,6 +39,7 @@ public class LoginController : MonoBehaviour
     void OnEnable()
     {
         var root = GetComponent<UIDocument>().rootVisualElement;
+        UIClickSound.Attach(root);
 
         _msg = root.Q<Label>("msg");
 

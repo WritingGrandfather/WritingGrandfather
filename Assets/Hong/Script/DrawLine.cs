@@ -260,13 +260,18 @@ public class DrowLine : MonoBehaviour
         points.Clear();
     }
 
+    // pencilSound 컴포넌트를 씬에서 연결 안 해둔 경우(예: WritingPracticeScene의 DrawLine)에도
+    // 소리가 나도록, 프로젝트에 들어있는 기본 연필 클립 이름을 폴백으로 쓴다.
+    static readonly List<string> DefaultPencilSounds = new List<string> { "pencliSound1", "pencliSound2" };
+
     int PlayRandomPencilSound(int exclude)
     {
-        // pencilSound(같은 오브젝트의 PencilSound 컴포넌트)나 SoundManager 싱글톤이 없는 씬(예: 사운드 설정 없이
-        // WritingPracticeScene을 단독으로 재생하는 경우)에서도 그리기 자체는 죽지 않도록 방어
-        if (pencilSound == null || SoundManager.Instance == null) return -1;
+        // SoundManager 싱글톤이 없으면(부트스트랩 실패 등) 그리기 자체는 죽지 않도록 방어
+        if (SoundManager.Instance == null) return -1;
 
-        var sounds = pencilSound.pencilSounds;
+        var sounds = (pencilSound != null && pencilSound.pencilSounds != null && pencilSound.pencilSounds.Count > 0)
+            ? pencilSound.pencilSounds
+            : DefaultPencilSounds;
         if (sounds == null || sounds.Count == 0) return -1;
 
         int idx = exclude;

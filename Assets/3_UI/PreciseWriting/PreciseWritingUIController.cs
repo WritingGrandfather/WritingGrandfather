@@ -24,7 +24,6 @@ namespace WritingGrandfather.UI.PreciseWriting
         [Tooltip("단어가 바뀌거나 다시 시작할 때 이전 획을 지우기 위한 참조")]
         [SerializeField] private DrowLine drawLine;
 
-<<<<<<< Updated upstream
         [Tooltip("AI 채점 파이프라인 (WritingCell + StrokeCapture + CellCapture + Evaluator를 조율). 비워두면 데모 점수로 대체.")]
         [SerializeField] private WritingFeedbackController feedbackController;
 
@@ -44,9 +43,6 @@ namespace WritingGrandfather.UI.PreciseWriting
         [SerializeField] private int roundsPerStage = 5;
 
         [Tooltip("데모용 연습 단어 목록 — 스테이지가 비어 있을 때만 사용")]
-=======
-        [Tooltip("데모용 연습 단어 목록 — 실제 출제 시스템 연동 전까지 임시로 사용")]
->>>>>>> Stashed changes
         [SerializeField] private string[] practiceWords = { "가", "나", "다" };
 
         [Tooltip("결과 화면에 표시할 데모 점수(%) — feedbackController가 비어있을 때만 사용")]
@@ -67,18 +63,12 @@ namespace WritingGrandfather.UI.PreciseWriting
         private Label ghostCharacterLabel;
         private Toggle toggleShowCharacter;
         private Button completeButton;
-<<<<<<< Updated upstream
         private Button continueButton;
         private Button retryStageButton;
         private Button resultExitButton;
         private Button resetButton;
         private Button undoButton;
         private Button topBarStopButton;
-=======
-        private Button retryButton;
-        private Button exitButton;
-        private Button resetButton;
->>>>>>> Stashed changes
         private Label currentWordLabel;
         private Label wordProgressLabel;
         private Label strokeFeedbackLabel;
@@ -121,6 +111,7 @@ namespace WritingGrandfather.UI.PreciseWriting
         private void OnEnable()
         {
             root = GetComponent<UIDocument>().rootVisualElement;
+            UIClickSound.Attach(root);
             Cache();
             ApplyFont();
             toggleShowCharacterLabel = SetupToggleButton(toggleShowCharacter);
@@ -322,18 +313,12 @@ namespace WritingGrandfather.UI.PreciseWriting
             ghostCharacterLabel = root.Q<Label>("ghost-character-label");
             toggleShowCharacter = root.Q<Toggle>("toggle-show-character");
             completeButton = root.Q<Button>("complete-button");
-<<<<<<< Updated upstream
             continueButton = root.Q<Button>("continue-button");
             retryStageButton = root.Q<Button>("retry-stage-button");
             resultExitButton = root.Q<Button>("result-exit-button");
             resetButton = root.Q<Button>("reset-button");
             undoButton = root.Q<Button>("undo-button");
             topBarStopButton = root.Q<Button>("top-bar-stop-button");
-=======
-            retryButton = root.Q<Button>("retry-button");
-            exitButton = root.Q<Button>("exit-button");
-            resetButton = root.Q<Button>("reset-button");
->>>>>>> Stashed changes
             currentWordLabel = root.Q<Label>("current-word-label");
             wordProgressLabel = root.Q<Label>("word-progress-label");
             strokeFeedbackLabel = root.Q<Label>("stroke-feedback-label");
@@ -385,7 +370,6 @@ namespace WritingGrandfather.UI.PreciseWriting
         {
             toggleShowCharacter?.RegisterValueChangedCallback(_ => ApplyToggles());
             completeButton?.RegisterCallback<ClickEvent>(_ => OnCompleteClicked());
-<<<<<<< Updated upstream
             resetButton?.RegisterCallback<ClickEvent>(_ => ClearStrokes());
             undoButton?.RegisterCallback<ClickEvent>(_ => UndoManager.Instance?.Undo());
             // 계속 하기: 점수창을 닫고 멈췄던 글자부터 바로 이어서 쓴다 (단어 인덱스/누적 점수 그대로).
@@ -397,18 +381,6 @@ namespace WritingGrandfather.UI.PreciseWriting
             // 그만하기: 라운드 수 제한 없이 계속 쓰다가, 사용자가 직접 멈출 때만 지금까지의
             // 누적 점수로 점수창을 띄운다 - 더 이상 5단계 등 정해진 라운드 끝에서 자동으로 뜨지 않는다.
             topBarStopButton?.RegisterCallback<ClickEvent>(_ => ShowResult(lastFeedbackMessage));
-=======
-            resetButton?.RegisterCallback<ClickEvent>(_ => drawLine?.ClearAll());
-            retryButton?.RegisterCallback<ClickEvent>(_ =>
-            {
-                wordIndex = 0;
-                UpdateWordLabel();
-                drawLine?.ClearAll();
-                Show(writingScreen);
-            });
-            exitButton?.RegisterCallback<ClickEvent>(_ =>
-                UnityEngine.SceneManagement.SceneManager.LoadScene("UIScene"));
->>>>>>> Stashed changes
         }
 
         // 다시하기: 진행도와 누적 점수를 전부 초기화하고 첫 글자로 되돌아간다.
@@ -442,16 +414,10 @@ namespace WritingGrandfather.UI.PreciseWriting
 
             if (feedbackController != null && writingCell != null)
             {
-<<<<<<< Updated upstream
                 writingCell.targetText = practiceWords != null && practiceWords.Length > 0
                     ? practiceWords[wordIndex]
                     : "";
                 feedbackController.RequestFeedback();
-=======
-                wordIndex++;
-                UpdateWordLabel();
-                drawLine?.ClearAll();
->>>>>>> Stashed changes
                 return;
             }
 

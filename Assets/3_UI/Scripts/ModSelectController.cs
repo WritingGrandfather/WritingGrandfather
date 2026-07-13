@@ -15,6 +15,7 @@ public class ModSelectController : MonoBehaviour
     void OnEnable()
     {
         var root = GetComponent<UIDocument>().rootVisualElement;
+        UIClickSound.Attach(root);
 
         _titleLabel = root.Q<TextElement>("title-label");
         _btnPrecise = root.Q<Button>("btn-precise");
