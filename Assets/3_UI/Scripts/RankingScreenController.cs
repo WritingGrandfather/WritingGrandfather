@@ -42,6 +42,9 @@ public class RankingScreenController : MonoBehaviour
     Vector2Int _appliedScreenSize;
     Vector2 _appliedPanelSize;
 
+    float _scrollBounceVelocity;
+    bool  _scrollPointerDown;
+
     void OnEnable()
     {
         root = GetComponent<UIDocument>().rootVisualElement;
@@ -56,6 +59,14 @@ public class RankingScreenController : MonoBehaviour
         backButton = root.Q<Button>("btn-back");
 
         if (backButton != null) backButton.clicked += OnBackClicked;
+
+        // UI Toolkit 포인터 이벤트로 드래그 상태 추적 (Input System 여부 무관)
+        if (list != null)
+        {
+            list.RegisterCallback<PointerDownEvent>(OnScrollPointerDown, TrickleDown.TrickleDown);
+            list.RegisterCallback<PointerUpEvent>(OnScrollPointerUp, TrickleDown.TrickleDown);
+            list.RegisterCallback<PointerCancelEvent>(OnScrollPointerCancel, TrickleDown.TrickleDown);
+        }
 
         LocalizationManager.OnLanguageChanged += ApplyLocalization;
         ApplyLocalization();
@@ -73,9 +84,19 @@ public class RankingScreenController : MonoBehaviour
     void OnDisable()
     {
         if (backButton != null) backButton.clicked -= OnBackClicked;
+        if (list != null)
+        {
+            list.UnregisterCallback<PointerDownEvent>(OnScrollPointerDown, TrickleDown.TrickleDown);
+            list.UnregisterCallback<PointerUpEvent>(OnScrollPointerUp, TrickleDown.TrickleDown);
+            list.UnregisterCallback<PointerCancelEvent>(OnScrollPointerCancel, TrickleDown.TrickleDown);
+        }
         LocalizationManager.OnLanguageChanged -= ApplyLocalization;
         rankingRoot?.UnregisterCallback<GeometryChangedEvent>(OnGeometryChanged);
     }
+
+    void OnScrollPointerDown(PointerDownEvent evt) { _scrollPointerDown = true;  _scrollBounceVelocity = 0f; }
+    void OnScrollPointerUp(PointerUpEvent evt)     { _scrollPointerDown = false; }
+    void OnScrollPointerCancel(PointerCancelEvent evt) { _scrollPointerDown = false; }
 
     void OnGeometryChanged(GeometryChangedEvent evt)
     {
@@ -85,6 +106,34 @@ public class RankingScreenController : MonoBehaviour
     void Update()
     {
         ApplySafeArea();
+        UpdateScrollBounce();
+    }
+
+    // 리스트 끝을 넘어 스크롤했을 때 강하게 되돌아오는 바운스 효과
+    void UpdateScrollBounce()
+    {
+        if (list == null) return;
+
+        float contentH  = list.contentContainer.layout.height;
+        float viewportH = list.contentViewport.layout.height;
+        if (contentH <= 0f || viewportH <= 0f) return;
+
+        // 드래그 중이면 바운스 비활성 (UI Toolkit 포인터 이벤트로 추적)
+        if (_scrollPointerDown) { _scrollBounceVelocity = 0f; return; }
+
+        float maxScroll = Mathf.Max(0f, contentH - viewportH);
+        float current   = list.scrollOffset.y;
+
+        // 범위 안이면 바운스 불필요
+        if (current >= 0f && current <= maxScroll) { _scrollBounceVelocity = 0f; return; }
+
+        float target = Mathf.Clamp(current, 0f, maxScroll);
+        // smoothTime 0.07 → 약 70ms 안에 강하게 되돌아옴
+        float newY = Mathf.SmoothDamp(current, target, ref _scrollBounceVelocity, 0.07f, 4000f);
+
+        if (Mathf.Abs(newY - target) < 0.5f) { newY = target; _scrollBounceVelocity = 0f; }
+
+        list.scrollOffset = new Vector2(list.scrollOffset.x, newY);
     }
 
     void ApplySafeArea()
@@ -141,7 +190,15 @@ public class RankingScreenController : MonoBehaviour
             ShowEmpty(true);
             return;
         }
-        rankingManager.GetRanking(BuildRows);
+        try
+        {
+            rankingManager.GetRanking(BuildRows);
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogWarning($"[RankingScreen] 랭킹 불러오기 실패 (Firebase 미지원 환경일 수 있음): {e.Message}");
+            ShowEmpty(true);
+        }
     }
 
     void BuildRows(List<RankingManager.RankingData> data)
