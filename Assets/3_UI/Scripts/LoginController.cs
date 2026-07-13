@@ -46,6 +46,7 @@ public class LoginController : MonoBehaviour
 
         // 메인 버튼
         root.Q<Button>("btn-google").clicked += OnGoogle;
+       
         root.Q<Button>("btn-email-login").clicked += () => Show(_loginPanel, true);
         root.Q<Button>("btn-guest").clicked += OnGuest;
         root.Q<Button>("btn-signup").clicked += () => Show(_signupPanel, true);
@@ -104,6 +105,7 @@ public class LoginController : MonoBehaviour
 
     void OnGuest()
     {
+         Debug.LogError("OnGuest Call");
         SetMsg(_msg, "시작 중...");
         Auth()?.SignInGuest((ok, m) =>
         {

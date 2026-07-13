@@ -2,7 +2,7 @@
     display: none;
 }
 
-/* 화면 전체 (SafeAreaFitter가 패딩 적용). 위/가운데/아래 3분할 */
+/* 화면 전체. 폭 기준(PanelSettings match=width)이라 크기는 모든 폰 동일 */
 .login-root {
     position: absolute;
     width: 100%;
@@ -10,132 +10,79 @@
     background-color: rgb(250, 240, 222);
     flex-direction: column;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start; /* spacer가 남는 공간을 채워 위/가운데/아래로 분배 */
+}
+
+/* 신축 여백: 공간 남으면 벌어지고, 부족하면 0까지 줄어 겹침 방지 */
+.spacer {
+    flex-grow: 1;
+    flex-shrink: 1;
+    min-height: 0;
 }
 
 /* 위: 제목 */
 .header {
-    width: 100%;
-    max-width: 560px;
+    width: 90%;
     align-items: center;
-    margin-top: 40px;
     flex-shrink: 0;
+    margin-top: 60px;
 }
 
 .title-label {
-    font-size: 30px;
+    font-size: 64px;
     -unity-font-style: bold;
     color: rgb(90, 62, 40);
     -unity-text-align: middle-center;
     white-space: normal;
-    margin-bottom: 10px;
+    margin-bottom: 14px;
 }
 
 .subtitle {
-    font-size: 18px;
+    font-size: 32px;
     color: rgb(140, 115, 90);
     -unity-text-align: middle-center;
 }
 
-/* 가운데: 구글 / 로그인 / 게스트 (남는 공간 차지하며 세로 중앙) */
+/* 가운데: 버튼들 */
 .middle {
-    width: 90%;
-    max-width: 560px;
-    flex-grow: 1;
+    width: 84%;
+    flex-shrink: 0;
     flex-direction: column;
     align-items: stretch;
-    justify-content: center;
-    padding: 20px 0;
-}
-
-/* 로그인 입력 카드 */
-.card {
-    background-color: rgb(255, 253, 248);
-    border-radius: 22px;
-    padding: 22px 20px 18px 20px;
-    margin-top: 14px;
-    margin-bottom: 14px;
-    align-items: stretch;
-}
-
-.input {
-    margin-bottom: 14px;
-    font-size: 20px;
-    flex-direction: column;   /* 라벨을 입력칸 위로 */
-    align-items: stretch;
-}
-
-.input .unity-base-field__label {
-    color: rgb(90, 62, 40);
-    min-width: auto;          /* 좌측 고정폭 해제 */
-    font-size: 17px;
-    margin-bottom: 6px;
-    -unity-text-align: middle-left;
-}
-
-.input .unity-base-text-field__input {
-    height: 56px;
-    border-radius: 12px;
-    border-width: 0;
-    background-color: rgb(245, 238, 227);
-    color: rgb(50, 40, 30);
-    padding: 0 12px;
 }
 
 .menu-button {
-    height: 66px;
+    height: 150px;
     flex-shrink: 0;
-    border-radius: 18px;
+    margin-bottom: 30px;
+    border-radius: 34px;
     border-width: 0;
-    font-size: 22px;
+    font-size: 50px;
     color: rgb(255, 255, 255);
     background-color: rgb(150, 111, 71);
     -unity-text-align: middle-center;
 }
 
-.menu-button:hover {
-    background-color: rgb(170, 128, 86);
-}
-
-.menu-button--primary {
-    background-color: rgb(214, 108, 58);
-    margin-top: 4px;
-}
-
-.menu-button--primary:hover {
-    background-color: rgb(230, 128, 76);
-}
-
-.menu-button--google {
-    background-color: rgb(66, 133, 244);
-}
-
-.menu-button--google:hover {
-    background-color: rgb(90, 150, 250);
-}
-
-.menu-button--guest {
-    background-color: rgb(120, 120, 120);
-}
-
-.menu-button--guest:hover {
-    background-color: rgb(140, 140, 140);
-}
+.menu-button:hover { background-color: rgb(170, 128, 86); }
+.menu-button--primary { background-color: rgb(214, 108, 58); }
+.menu-button--primary:hover { background-color: rgb(230, 128, 76); }
+.menu-button--google { background-color: rgb(66, 133, 244); }
+.menu-button--google:hover { background-color: rgb(90, 150, 250); }
+.menu-button--guest { background-color: rgb(120, 120, 120); }
+.menu-button--guest:hover { background-color: rgb(140, 140, 140); }
 
 .msg {
-    font-size: 17px;
+    font-size: 32px;
     color: rgb(190, 60, 40);
     -unity-text-align: middle-center;
     white-space: normal;
-    margin-top: 12px;
+    margin-top: 18px;
 }
 
 /* 아래: 회원가입 */
 .footer {
-    width: 92%;
-    max-width: 560px;
+    width: 90%;
     flex-direction: row;
-    flex-wrap: wrap;
     justify-content: center;
     align-items: center;
     flex-shrink: 0;
@@ -143,27 +90,23 @@
 }
 
 .hint {
-    font-size: 16px;
+    font-size: 32px;
     color: rgb(120, 100, 80);
     -unity-text-align: middle-center;
-    white-space: normal;
-    flex-shrink: 1;
 }
 
 .link-button {
     background-color: rgba(0, 0, 0, 0);
     border-width: 0;
     color: rgb(214, 108, 58);
-    font-size: 18px;
+    font-size: 36px;
     -unity-font-style: bold;
-    margin-left: 6px;
+    margin-left: 12px;
 }
 
-.link-button:hover {
-    color: rgb(230, 128, 76);
-}
+.link-button:hover { color: rgb(230, 128, 76); }
 
-/* 회원가입 모달 */
+/* ── 모달 ── */
 .modal-overlay {
     position: absolute;
     width: 100%;
@@ -174,55 +117,67 @@
 }
 
 .modal-box {
-    width: 100%;
-    max-width: 520px;
+    width: 84%;
     background-color: rgb(255, 253, 248);
-    border-radius: 28px;
-    padding: 34px 28px;
+    border-radius: 44px;
+    padding: 56px 44px;
     align-items: stretch;
 }
 
 .modal-text {
-    font-size: 28px;
+    font-size: 52px;
     -unity-font-style: bold;
     color: rgb(60, 45, 35);
-    margin-bottom: 22px;
+    margin-bottom: 36px;
     -unity-text-align: middle-center;
     white-space: normal;
+}
+
+/* 입력: 라벨 위, 입력칸 아래 */
+.input {
+    margin-bottom: 26px;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.input .unity-base-field__label {
+    color: rgb(90, 62, 40);
+    min-width: auto;
+    font-size: 32px;
+    margin-bottom: 10px;
+    -unity-text-align: middle-left;
+}
+
+.input .unity-base-text-field__input {
+    height: 100px;
+    border-radius: 22px;
+    border-width: 0;
+    background-color: rgb(245, 238, 227);
+    color: rgb(50, 40, 30);
+    font-size: 38px;
+    padding: 0 22px;
 }
 
 .modal-button-row {
     flex-direction: row;
     width: 100%;
     justify-content: space-between;
-    margin-top: 14px;
+    margin-top: 26px;
 }
 
 .modal-button {
     flex-grow: 1;
     flex-basis: 0;
-    flex-shrink: 1;
-    height: 50px;
-    margin: 0 8px;
-    border-radius: 18px;
+    height: 120px;
+    margin: 0 14px;
+    border-radius: 30px;
     border-width: 0;
-    font-size: 24px;
+    font-size: 46px;
     color: rgb(255, 255, 255);
     -unity-text-align: middle-center;
 }
 
-.modal-button--confirm {
-    background-color: rgb(214, 108, 58);
-}
-
-.modal-button--confirm:hover {
-    background-color: rgb(230, 128, 76);
-}
-
-.modal-button--cancel {
-    background-color: rgb(120, 120, 120);
-}
-
-.modal-button--cancel:hover {
-    background-color: rgb(140, 140, 140);
-}
+.modal-button--confirm { background-color: rgb(214, 108, 58); }
+.modal-button--confirm:hover { background-color: rgb(230, 128, 76); }
+.modal-button--cancel { background-color: rgb(120, 120, 120); }
+.modal-button--cancel:hover { background-color: rgb(140, 140, 140); }
