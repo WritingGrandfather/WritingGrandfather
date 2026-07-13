@@ -63,6 +63,27 @@ Button:active {
     white-space: nowrap;
 }
 
+/* safe-area 안, 상단 바의 가장 오른쪽에 떠 있는 나가기 버튼.
+   top-bar 높이에 따라 늘어나지 않도록 폭/높이를 고정값으로 맞춰 정사각형을 유지한다. */
+.top-bar-exit-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 130px;
+    height: 130px;
+    border-radius: 16px;
+    border-width: 0;
+    font-size: 40px;
+    color: rgb(255, 255, 255);
+    background-color: rgba(120, 120, 120, 0.85);
+    -unity-text-align: middle-center;
+    white-space: normal;
+}
+
+.top-bar-exit-button:hover {
+    background-color: rgba(140, 140, 140, 0.9);
+}
+
 /* ---- 가이드 박스 ---- */
 
 .guide-box {
@@ -242,6 +263,15 @@ Button:active {
     white-space: nowrap;
 }
 
+/* "n단계 완료!" 위에 뜨는 별 3개 - 별 자체는 C#에서 Painter2D로 직접 그린다(폰트에
+   ★/☆ 글리프가 없을 수도 있어서 텍스트 대신 벡터로 그림). */
+.result-stars-row {
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
 .result-row {
     flex-direction: row;
     width: 100%;
@@ -300,4 +330,22 @@ Button:active {
 
 .modal-button--cancel:hover {
     background-color: rgb(140, 140, 140);
+}
+
+/* 계속 하기/다시하기 버튼 아래, 결과창을 완전히 벗어나는 나가기 버튼 - 위 둘보다
+   낮은 우선순위 행동이라 폭 전체를 쓰는 대신 눈에 덜 띄게 작고 수수하게 둔다. */
+.result-exit-button {
+    width: 100%;
+    height: 100px;
+    margin-top: 16px;
+    border-radius: 18px;
+    border-width: 0;
+    font-size: 34px;
+    color: rgb(255, 255, 255);
+    background-color: rgba(120, 120, 120, 0.7);
+    -unity-text-align: middle-center;
+}
+
+.result-exit-button:hover {
+    background-color: rgba(140, 140, 140, 0.8);
 }
