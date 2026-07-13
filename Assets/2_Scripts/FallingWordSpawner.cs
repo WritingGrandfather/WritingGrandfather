@@ -79,7 +79,10 @@ public class FallingWordSpawner : MonoBehaviour
     [Range(0f, 1f)][SerializeField] float deadlineRatio = 0.85f;
 
     [Tooltip("정렬 순서 — 쓰기 칸(-10)과 획(0)보다 낮아야 글자가 칸 뒤로 지나간다")]
-    [SerializeField] int sortingOrder = -20;
+    [SerializeField] int sortingOrder = -3;
+
+    [Tooltip("낙하 글자 색")]
+    [SerializeField] Color textColor = Color.black;
 
     readonly List<FallingWord> active = new List<FallingWord>();
     readonly List<string> queue = new List<string>(); // 현재 스테이지 셔플 큐
@@ -171,7 +174,7 @@ public class FallingWordSpawner : MonoBehaviour
         tm.font = font;
         tm.fontSize = fontSize;
         tm.characterSize = 10f * wpp;   // 줄 높이 ≈ fontSize × characterSize × 0.1 = fontSize(px) × wpp
-        tm.color = Color.white;
+        tm.color = textColor;
         tm.anchor = TextAnchor.UpperLeft;
 
         var mr = go.GetComponent<MeshRenderer>();
