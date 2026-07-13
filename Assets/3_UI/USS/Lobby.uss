@@ -79,6 +79,8 @@
 
 .modal-box {
     width: 75%;
+    height: 280px;
+    flex-shrink: 1;
     background-color: rgb(255, 253, 248);
     border-radius: 32px;
     padding: 48px 32px;
@@ -87,20 +89,23 @@
 
 .modal-text {
     font-size: 30px;
+    flex-shrink: 1;
     color: rgb(60, 45, 35);
     margin-bottom: 48px;
     -unity-text-align: middle-center;
-    white-space: normal;
+    white-space: nowrap;
 }
 
 .modal-button-row {
     flex-direction: row;
+    flex-shrink: 1;
     width: 100%;
     justify-content: space-between;
 }
 
 .modal-button {
     flex-grow: 1;
+    flex-shrink: 1;
     height: 96px;
     margin: 0 8px;
     border-radius: 20px;

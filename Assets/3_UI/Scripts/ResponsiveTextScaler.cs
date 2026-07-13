@@ -53,6 +53,11 @@ public class ResponsiveTextScaler : MonoBehaviour
         ApplyAll();
     }
 
+    public void Refresh()
+    {
+        ApplyAll();
+    }
+
     void ApplyAll()
     {
         for (int i = 0; i < entries.Length; i++)

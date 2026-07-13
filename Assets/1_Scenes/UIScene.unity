@@ -327,6 +327,18 @@ MonoBehaviour:
     sizeReferenceElementName: title-area
     baseFontSize: 30
     baseReferenceHeight: 100
+  - labelElementName: btn-exit-confirm
+    sizeReferenceElementName: btn-exit-confirm
+    baseFontSize: 26
+    baseReferenceHeight: 96
+  - labelElementName: btn-exit-cancel
+    sizeReferenceElementName: btn-exit-cancel
+    baseFontSize: 26
+    baseReferenceHeight: 96
+  - labelElementName: modal-text
+    sizeReferenceElementName: exit-modal-box
+    baseFontSize: 30
+    baseReferenceHeight: 280
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

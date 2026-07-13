@@ -5,10 +5,12 @@ using UnityEngine.UIElements;
 public class LobbyController : MonoBehaviour
 {
     VisualElement _exitModal;
+    ResponsiveTextScaler _textScaler;
 
     void OnEnable()
     {
         var root = GetComponent<UIDocument>().rootVisualElement;
+        _textScaler = GetComponent<ResponsiveTextScaler>();
 
         root.Q<Button>("btn-start").clicked += OnStartClicked;
         root.Q<Button>("btn-settings").clicked += OnSettingsClicked;
@@ -35,6 +37,7 @@ public class LobbyController : MonoBehaviour
     void OnExitClicked()
     {
         _exitModal.RemoveFromClassList("hidden");
+        _exitModal.schedule.Execute(() => _textScaler?.Refresh());
     }
 
     void OnExitConfirmClicked()
