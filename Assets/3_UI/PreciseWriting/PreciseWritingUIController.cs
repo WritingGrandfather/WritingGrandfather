@@ -61,9 +61,7 @@ namespace WritingGrandfather.UI.PreciseWriting
         private VisualElement drawMaskLeft;
         private VisualElement drawMaskRight;
         private Label ghostCharacterLabel;
-        private VisualElement strokeOrderLayer;
         private Toggle toggleShowCharacter;
-        private Toggle toggleShowStrokeOrder;
         private Button completeButton;
         private Button continueButton;
         private Button retryStageButton;
@@ -86,7 +84,6 @@ namespace WritingGrandfather.UI.PreciseWriting
         private Label resultPositionCaptionLabel;
         private Label analyzingLabel;
         private Label toggleShowCharacterLabel;
-        private Label toggleShowStrokeOrderLabel;
         private VisualElement resultStarsRow;
 
         private int wordIndex;
@@ -107,15 +104,9 @@ namespace WritingGrandfather.UI.PreciseWriting
         private int stageScoredCount;
         private string lastFeedbackMessage = "";
 
-        // ── 실시간 획순 미리보기/교정 ──────────────────────────────────
-        // (StrokeOrderValidator의 표준 필순 계획을 그려서 쓰기 전엔 미리보기 화살표,
-        //  획순을 틀리면 그 획만 다시 알려주는 교정 화살표 + 글자 전체 빨간색으로 표시)
-        private static readonly Color PreviewArrowColor = new Color(214f / 255f, 108f / 255f, 58f / 255f); // 테마 오렌지
-        private static readonly Color CorrectionArrowColor = new Color(0.86f, 0.15f, 0.15f); // FeedbackDisplayUI.failColor과 동일 계열
-
-        private List<StrokeOrderValidator.PlanStep> strokeOrderPlan;
-        private int strokeOrderPlanIndex;
-        private bool strokeOrderErrorActive;
+        // ghost-character-label의 폰트 크기가 guide-box의 이 비율이라(ApplyLayout 참고),
+        // 실제로 보이는 흐린 글자는 guide-box 전체를 채우지 않고 이 비율만큼만 중앙에 작게 그려진다.
+        private const float GhostGlyphScale = 0.52f;
 
         private void OnEnable()
         {
@@ -123,7 +114,6 @@ namespace WritingGrandfather.UI.PreciseWriting
             Cache();
             ApplyFont();
             toggleShowCharacterLabel = SetupToggleButton(toggleShowCharacter);
-            toggleShowStrokeOrderLabel = SetupToggleButton(toggleShowStrokeOrder);
             Bind();
             ApplyToggles();
             BuildGuideCross();
@@ -186,7 +176,6 @@ namespace WritingGrandfather.UI.PreciseWriting
             {
                 drawLine.drawingEnabled = true;
                 drawLine.canDrawAt = CanDrawAtScreenPoint;
-                drawLine.OnStrokeCompleted += HandleStrokeCompleted;
             }
 
             // UndoManager.Awake()가 이 컴포넌트의 OnEnable()보다 먼저 실행된다는
@@ -208,7 +197,6 @@ namespace WritingGrandfather.UI.PreciseWriting
             {
                 drawLine.drawingEnabled = false;
                 drawLine.canDrawAt = null;
-                drawLine.OnStrokeCompleted -= HandleStrokeCompleted;
             }
             if (UndoManager.Instance != null)
                 UndoManager.Instance.OnStateChanged -= RefreshUndoButton;
@@ -322,9 +310,7 @@ namespace WritingGrandfather.UI.PreciseWriting
             drawMaskLeft = root.Q("draw-mask-left");
             drawMaskRight = root.Q("draw-mask-right");
             ghostCharacterLabel = root.Q<Label>("ghost-character-label");
-            strokeOrderLayer = root.Q("stroke-order-layer");
             toggleShowCharacter = root.Q<Toggle>("toggle-show-character");
-            toggleShowStrokeOrder = root.Q<Toggle>("toggle-show-stroke-order");
             completeButton = root.Q<Button>("complete-button");
             continueButton = root.Q<Button>("continue-button");
             retryStageButton = root.Q<Button>("retry-stage-button");
@@ -369,7 +355,6 @@ namespace WritingGrandfather.UI.PreciseWriting
             if (resultPositionCaptionLabel != null) resultPositionCaptionLabel.text = LocalizationManager.Get("precise_writing.result_position_label");
 
             if (toggleShowCharacterLabel != null) toggleShowCharacterLabel.text = LocalizationManager.Get("precise_writing.toggle_show_character");
-            if (toggleShowStrokeOrderLabel != null) toggleShowStrokeOrderLabel.text = LocalizationManager.Get("precise_writing.toggle_show_stroke_order");
         }
 
         private void ApplyFont()
@@ -383,22 +368,9 @@ namespace WritingGrandfather.UI.PreciseWriting
         private void Bind()
         {
             toggleShowCharacter?.RegisterValueChangedCallback(_ => ApplyToggles());
-            toggleShowStrokeOrder?.RegisterValueChangedCallback(_ => ApplyToggles());
             completeButton?.RegisterCallback<ClickEvent>(_ => OnCompleteClicked());
             resetButton?.RegisterCallback<ClickEvent>(_ => ClearStrokes());
-            // 되돌리기는 보통 방금 틀린 획을 지우려는 것이므로, 그 획이 사라진 뒤에는
-            // 에러 표시(빨간색+교정 화살표)를 걷어낸다 - 다음 획순 판정은 그대로 이어짐
-            // (planIndex는 애초에 틀렸을 때 진행시키지 않았으므로 되돌린 뒤에도 여전히 맞음).
-            undoButton?.RegisterCallback<ClickEvent>(_ =>
-            {
-                UndoManager.Instance?.Undo();
-                if (strokeOrderErrorActive)
-                {
-                    strokeOrderErrorActive = false;
-                    drawLine?.SetInkColor(Color.black);
-                    RefreshStrokeOrderOverlay();
-                }
-            });
+            undoButton?.RegisterCallback<ClickEvent>(_ => UndoManager.Instance?.Undo());
             // 계속 하기: 점수창을 닫고 멈췄던 글자부터 바로 이어서 쓴다 (단어 인덱스/누적 점수 그대로).
             continueButton?.RegisterCallback<ClickEvent>(_ => Show(writingScreen));
             // 다시하기: 누적 점수와 진행도를 전부 초기화하고 첫 글자부터 새로 시작한다.
@@ -431,7 +403,6 @@ namespace WritingGrandfather.UI.PreciseWriting
         {
             drawLine?.ClearAll();
             UndoManager.Instance?.Clear();
-            ResetStrokeOrderState();
         }
 
         // 완료 클릭: 현재 글자를 채점한다. 점수는 계속 누적되고, 다음 글자로 바로 넘어간다 -
@@ -656,7 +627,6 @@ namespace WritingGrandfather.UI.PreciseWriting
             string word = practiceWords[wordIndex];
             if (currentWordLabel != null) currentWordLabel.text = word;
             if (ghostCharacterLabel != null) ghostCharacterLabel.text = word;
-            RebuildStrokeOrderPlan(word);
 
             // 무제한 라운드라 "n / 총개수"처럼 정해진 끝이 있는 표시 대신, 루프 횟수까지 반영해
             // 계속 커지기만 하는 라운드 번호를 보여준다.
@@ -784,8 +754,17 @@ namespace WritingGrandfather.UI.PreciseWriting
             float toggleHeight = ToggleHeightFrac * h;
             PlaceRect(bottomBar, 0.06f * w, toggleTop, 0.88f * w, toggleHeight);
 
+            // 안내선 토글 바로 아래에 피드백 문구를 붙여 놓되, 화면 높이(h)를 절대 넘지 않도록
+            // 클램프한다. 텍스트는 위쪽 정렬(upper-center)이라 이 영역이 아래로 넉넉히 남아도
+            // 토글에 붙어 시작한다 - 세로로 가운데 정렬했을 때 큰 여유 공간 중앙에 떠서
+            // 토글과 멀어 보이던 문제를 피한다.
+            float toggleBottom = toggleTop + toggleHeight;
+            float feedbackTop = Mathf.Min(toggleBottom + 4f, h - 36f);
+            float feedbackHeight = Mathf.Max(30f, Mathf.Min(h - feedbackTop - 6f, 100f));
+            PlaceRect(strokeFeedbackLabel, 0.06f * w, feedbackTop, 0.88f * w, feedbackHeight);
+
             if (ghostCharacterLabel != null)
-                ghostCharacterLabel.style.fontSize = guideSize * 0.52f;
+                ghostCharacterLabel.style.fontSize = guideSize * GhostGlyphScale;
         }
 
         /// <summary>
@@ -822,190 +801,11 @@ namespace WritingGrandfather.UI.PreciseWriting
         private void ApplyToggles()
         {
             var showChar = toggleShowCharacter == null || toggleShowCharacter.value;
-            var showStroke = toggleShowStrokeOrder != null && toggleShowStrokeOrder.value;
 
             if (ghostCharacterLabel != null)
                 ghostCharacterLabel.style.display = showChar ? DisplayStyle.Flex : DisplayStyle.None;
 
-            strokeOrderLayer?.EnableInClassList("hidden", !showStroke);
-
             toggleShowCharacter?.EnableInClassList("toggle-btn--on", showChar);
-            toggleShowStrokeOrder?.EnableInClassList("toggle-btn--on", showStroke);
-        }
-
-        // 글자가 바뀔 때마다 그 글자의 표준 필순 계획을 새로 만든다. 여러 글자(단어 모드)는
-        // 지원하지 않는다 - 배치 채점(WritingFeedbackController)도 한 글자짜리만 획순을 검사한다.
-        private void RebuildStrokeOrderPlan(string word)
-        {
-            strokeOrderPlan = (!string.IsNullOrEmpty(word) && word.Length == 1)
-                ? StrokeOrderValidator.BuildStandardPlan(word[0])
-                : null;
-            ResetStrokeOrderState();
-        }
-
-        // 획을 전부 지웠을 때(초기화/다음 글자/다시 하기) 진행 상태를 처음으로 되돌린다.
-        private void ResetStrokeOrderState()
-        {
-            strokeOrderPlanIndex = 0;
-            strokeOrderErrorActive = false;
-            RefreshStrokeOrderOverlay();
-        }
-
-        // DrowLine이 획 하나를 다 그렸을 때(펜을 뗀 순간) 호출된다.
-        // 다음에 나와야 할 표준 획(strokeOrderPlan[strokeOrderPlanIndex])과 위치·방향을 대조한다.
-        private void HandleStrokeCompleted(List<Vector2> worldPoints)
-        {
-            if (strokeOrderPlan == null || writingCell == null) return;
-            if (worldPoints == null || worldPoints.Count < 2) return;
-            if (strokeOrderPlanIndex >= strokeOrderPlan.Count) return; // 이미 다 맞음 - 여분의 획은 검사하지 않음
-
-            Rect rect = writingCell.WorldRect;
-            if (rect.width <= 0f || rect.height <= 0f) return;
-
-            // 칸(WritingCell) 기준 0~1 정규화 (y: 위→아래) — StrokeCapture.GetCellNormalizedStrokes와 동일한 변환.
-            // (전체 잉크의 바운딩 박스가 아니라 "칸" 기준인 이유: 계획의 자모 배치 좌표가
-            //  글자 전체가 칸을 채운다는 가정으로 만들어져 있어, 한 획만으로도 즉시 비교 가능)
-            Vector2 nStart = NormalizeToCell(worldPoints[0], rect);
-            Vector2 nEnd = NormalizeToCell(worldPoints[worldPoints.Count - 1], rect);
-            Vector2 nCenter = Vector2.zero;
-            foreach (var p in worldPoints) nCenter += NormalizeToCell(p, rect);
-            nCenter /= worldPoints.Count;
-
-            var expected = strokeOrderPlan[strokeOrderPlanIndex];
-
-            float dx = Mathf.Max(expected.box.xMin - nCenter.x, 0f, nCenter.x - expected.box.xMax);
-            float dy = Mathf.Max(expected.box.yMin - nCenter.y, 0f, nCenter.y - expected.box.yMax);
-            float gate = Mathf.Sqrt(dx * dx + dy * dy);
-
-            Vector2 strokeDir = nEnd - nStart;
-            Vector2 expectedDir = expected.end - expected.start;
-
-            bool matched = false;
-            if (gate <= 0.25f && strokeDir.magnitude > 0.001f && expectedDir.magnitude > 0.001f)
-            {
-                float dot = Vector2.Dot(strokeDir.normalized, expectedDir.normalized);
-                matched = dot > 0.25f; // 위치가 맞고, 방향도 크게 반대가 아님
-            }
-
-            if (matched)
-            {
-                strokeOrderPlanIndex++;
-                if (strokeOrderErrorActive)
-                {
-                    strokeOrderErrorActive = false;
-                    drawLine?.SetInkColor(Color.black);
-                }
-            }
-            else
-            {
-                strokeOrderErrorActive = true;
-                drawLine?.SetInkColor(CorrectionArrowColor);
-            }
-
-            RefreshStrokeOrderOverlay();
-        }
-
-        private static Vector2 NormalizeToCell(Vector2 world, Rect cellRect) => new Vector2(
-            (world.x - cellRect.xMin) / cellRect.width,
-            1f - (world.y - cellRect.yMin) / cellRect.height);
-
-        // stroke-order-layer 내용을 현재 상태에 맞게 다시 그린다. 표시 여부(hidden 클래스)는
-        // ApplyToggles가 "획 순서 표시" 토글로 이미 제어하므로, 여기서는 내용만 갱신한다.
-        //  - 획순 오류 상태: 틀린(다음에 나와야 할) 획 하나만 빨간 교정 화살표로 표시
-        //  - 아직 한 획도 안 그림: 전체 필순을 번호+화살표로 미리보기
-        //  - 정상 진행 중(일부만 쓰고 오류 없음): 방해되지 않도록 아무것도 표시하지 않음
-        private void RefreshStrokeOrderOverlay()
-        {
-            if (strokeOrderLayer == null) return;
-            strokeOrderLayer.Clear();
-            if (strokeOrderPlan == null) return;
-
-            if (strokeOrderErrorActive)
-            {
-                if (strokeOrderPlanIndex < strokeOrderPlan.Count)
-                    AddStrokeArrow(strokeOrderPlan[strokeOrderPlanIndex], 0, CorrectionArrowColor);
-            }
-            else if (strokeOrderPlanIndex == 0)
-            {
-                for (int i = 0; i < strokeOrderPlan.Count; i++)
-                    AddStrokeArrow(strokeOrderPlan[i], i + 1, PreviewArrowColor);
-            }
-        }
-
-        // 화살표(선+화살촉) 하나와, number>0이면 순서 번호 배지를 stroke-order-layer에 추가한다.
-        private void AddStrokeArrow(StrokeOrderValidator.PlanStep step, int number, Color color)
-        {
-            Vector2 start = step.start;
-            Vector2 end = step.end;
-
-            var arrow = new VisualElement();
-            arrow.pickingMode = PickingMode.Ignore;
-            arrow.style.position = Position.Absolute;
-            arrow.style.left = 0; arrow.style.right = 0; arrow.style.top = 0; arrow.style.bottom = 0;
-            // left/right/top/bottom만으로는 width/height가 0으로 잡혀 generateVisualContent의
-            // contentRect가 0이 되는 경우가 있어(그러면 화살표가 전혀 그려지지 않음), 확실하게
-            // 100%로 명시한다.
-            arrow.style.width = Length.Percent(100f);
-            arrow.style.height = Length.Percent(100f);
-            arrow.generateVisualContent += ctx => DrawStrokeArrow(ctx, start, end, color);
-            strokeOrderLayer.Add(arrow);
-
-            if (number > 0)
-            {
-                var badge = new Label(number.ToString());
-                badge.pickingMode = PickingMode.Ignore;
-                badge.style.position = Position.Absolute;
-                badge.style.left = Length.Percent(start.x * 100f);
-                badge.style.top = Length.Percent(start.y * 100f);
-                badge.style.translate = new Translate(Length.Percent(-50f), Length.Percent(-50f));
-                badge.style.width = 44; badge.style.height = 44;
-                badge.style.borderTopLeftRadius = 22; badge.style.borderTopRightRadius = 22;
-                badge.style.borderBottomLeftRadius = 22; badge.style.borderBottomRightRadius = 22;
-                badge.style.backgroundColor = color;
-                badge.style.color = Color.white;
-                badge.style.unityTextAlign = TextAnchor.MiddleCenter;
-                badge.style.fontSize = 24;
-                if (koreanFont != null) badge.style.unityFontDefinition = new StyleFontDefinition(koreanFont);
-                strokeOrderLayer.Add(badge);
-            }
-        }
-
-        // Painter2D로 시작→끝 화살표를 그린다 (RenderStars/DrawStar와 같은 방식).
-        private static void DrawStrokeArrow(MeshGenerationContext ctx, Vector2 start, Vector2 end, Color color)
-        {
-            var painter = ctx.painter2D;
-            float w = ctx.visualElement.contentRect.width;
-            float h = ctx.visualElement.contentRect.height;
-            if (w <= 0f || h <= 0f) return;
-
-            Vector2 p0 = new Vector2(start.x * w, start.y * h);
-            Vector2 p1 = new Vector2(end.x * w, end.y * h);
-            Vector2 diff = p1 - p0;
-            float len = diff.magnitude;
-            if (len < 1f) return;
-            Vector2 dir = diff / len;
-            Vector2 normal = new Vector2(-dir.y, dir.x);
-
-            painter.strokeColor = color;
-            painter.lineWidth = Mathf.Max(4f, w * 0.018f);
-            painter.BeginPath();
-            painter.MoveTo(p0);
-            painter.LineTo(p1);
-            painter.Stroke();
-
-            float headLen = Mathf.Min(len * 0.45f, w * 0.09f);
-            float headWidth = headLen * 0.8f;
-            Vector2 basePt = p1 - dir * headLen;
-            Vector2 left = basePt + normal * headWidth * 0.5f;
-            Vector2 right = basePt - normal * headWidth * 0.5f;
-
-            painter.fillColor = color;
-            painter.BeginPath();
-            painter.MoveTo(p1);
-            painter.LineTo(left);
-            painter.LineTo(right);
-            painter.ClosePath();
-            painter.Fill();
         }
 
         private void Show(VisualElement target)

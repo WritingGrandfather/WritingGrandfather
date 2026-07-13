@@ -11,22 +11,20 @@
                     <ui:Label text="가" name="current-word-label" class="current-word-label" />
                     <ui:Label text="1 / 3" name="word-progress-label" class="word-progress-label" />
                 </ui:VisualElement>
-                <ui:Label text="" name="stroke-feedback-label" class="stroke-feedback-label hidden" />
                 <ui:Button text="그만하기" name="top-bar-stop-button" class="top-bar-exit-button" />
             </ui:VisualElement>
             <ui:VisualElement name="guide-box" class="guide-box">
                 <ui:VisualElement name="guide-cross-h" class="guide-cross guide-cross--h" />
                 <ui:VisualElement name="guide-cross-v" class="guide-cross guide-cross--v" />
                 <ui:Label text="가" name="ghost-character-label" class="ghost-character-label" />
-                <ui:VisualElement name="stroke-order-layer" class="stroke-order-layer hidden" />
                 <ui:Button text="되돌리기" name="undo-button" class="undo-button" />
                 <ui:Button text="초기화" name="reset-button" class="reset-button" />
             </ui:VisualElement>
             <ui:Button text="완료" name="complete-button" class="primary-button" />
             <ui:VisualElement name="bottom-bar" class="bottom-bar">
                 <ui:Toggle name="toggle-show-character" value="true" class="toggle-btn" />
-                <ui:Toggle name="toggle-show-stroke-order" value="false" class="toggle-btn" />
             </ui:VisualElement>
+            <ui:Label text="" name="stroke-feedback-label" class="stroke-feedback-label hidden" />
         </ui:VisualElement>
         <ui:VisualElement name="analyzing-screen" class="screen overlay hidden">
             <ui:VisualElement class="overlay-box">
