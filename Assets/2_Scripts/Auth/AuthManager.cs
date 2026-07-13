@@ -6,9 +6,6 @@ using Firebase;
 using Firebase.Auth;
 using Firebase.Extensions;
 #endif
-#if FIREBASE_ENABLED && GOOGLE_SIGNIN
-using Google;
-#endif
 
 /// <summary>
 /// Firebase 기반 인증 매니저. (씬 전환에도 유지되는 싱글톤)
@@ -17,10 +14,9 @@ using Google;
 ///  - Firebase SDK를 아직 안 넣었으면 Player Settings의 Scripting Define Symbols에
 ///    FIREBASE_ENABLED 가 없으므로, Firebase 코드는 컴파일에서 빠진다 → 프로젝트가 안 깨진다.
 ///  - SDK 임포트 후 FIREBASE_ENABLED 를 추가하면 실제 인증이 동작한다.
-///  - 구글 로그인은 추가로 Google Sign-In 플러그인 + GOOGLE_SIGNIN 심볼이 필요하다.
 ///  - 게스트 로그인은 Firebase 없이도 항상 동작한다 (계정 불필요).
 ///
-/// 사용법: UI는 SignInEmail / SignUpEmail / SignInGoogle / SignInGuest 를 호출하고
+/// 사용법: UI는 SignInEmail / SignUpEmail / SignInGuest 를 호출하고
 ///        결과 콜백 Action&lt;bool success, string message&gt; 로 처리한다.
 /// </summary>
 public class AuthManager : MonoBehaviour
@@ -32,12 +28,6 @@ public class AuthManager : MonoBehaviour
     public bool IsGuest { get; private set; }
     public string UserId { get; private set; } = "";
     public string DisplayName { get; private set; } = "";
-
-    [Header("구글 로그인")]
-    [Tooltip("Firebase 콘솔 > 프로젝트 설정 > 웹 클라이언트 ID (구글 로그인 켤 때만 사용)")]
-#pragma warning disable 0414 // GOOGLE_SIGNIN 꺼져 있을 땐 미사용 — 경고 무시
-    [SerializeField] string googleWebClientId = "764618953349-9auq48l3o95177kg9ej1bc692vp1sijd.apps.googleusercontent.com";
-#pragma warning restore 0414
 
 #if FIREBASE_ENABLED
     FirebaseAuth auth;
@@ -140,56 +130,6 @@ public class AuthManager : MonoBehaviour
         });
 #else
         onDone?.Invoke(false, "Firebase 미설정 (FIREBASE_ENABLED 심볼 필요)");
-#endif
-    }
-
-    // ── 구글 로그인 ─────────────────────────────────────────────────
-    public void SignInGoogle(Action<bool, string> onDone)
-    {
-#if FIREBASE_ENABLED && GOOGLE_SIGNIN
-        // 구글 로그인은 안드로이드 네이티브 — 에디터에서는 동작 불가 (currentActivity 없음)
-        if (Application.platform != RuntimePlatform.Android)
-        {
-            onDone?.Invoke(false, "구글 로그인은 안드로이드 기기/빌드에서만 됩니다. 에디터에서는 이메일/게스트로 테스트하세요.");
-            return;
-        }
-        if (!ready) { onDone?.Invoke(false, "잠시 후 다시 시도해 주세요. (초기화 중)"); return; }
-        // Configuration은 인스턴스 생성 전 딱 한 번만 설정 가능 — 두 번째부터 설정하면
-        // "DefaultInstance already created. Cannot change configuration after creation." 에러가 남
-        if (GoogleSignIn.Configuration == null)
-        {
-            GoogleSignIn.Configuration = new GoogleSignInConfiguration
-            {
-                WebClientId = googleWebClientId,
-                RequestIdToken = true,
-                UseGameSignIn = false
-            };
-        }
-        GoogleSignIn.DefaultInstance.SignIn().ContinueWithOnMainThread(task =>
-        {
-            if (task.IsCanceled) { onDone?.Invoke(false, "구글 로그인 취소됨"); return; }
-            if (task.IsFaulted)
-            {
-                var e = task.Exception?.GetBaseException();
-                string reason = "구글 로그인 실패";
-                if (e is GoogleSignIn.SignInException sie)
-                    reason = $"구글 로그인 실패: Status={sie.Status} ({(int)sie.Status})";
-                else if (e != null)
-                    reason = "구글 로그인 실패: " + e.GetType().Name + " " + e.Message;
-                Debug.LogError("[Auth] " + reason);
-                onDone?.Invoke(false, reason);
-                return;
-            }
-            var credential = GoogleAuthProvider.GetCredential(task.Result.IdToken, null);
-            auth.SignInWithCredentialAsync(credential).ContinueWithOnMainThread(t =>
-            {
-                if (t.IsCanceled || t.IsFaulted) { onDone?.Invoke(false, FirebaseError(t)); return; }
-                ApplyUser(auth.CurrentUser, guest: false);
-                onDone?.Invoke(true, "구글 로그인 성공");
-            });
-        });
-#else
-        onDone?.Invoke(false, "구글 로그인은 Firebase + Google Sign-In 플러그인 설정이 필요합니다.");
 #endif
     }
 
