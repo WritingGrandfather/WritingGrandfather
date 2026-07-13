@@ -108,3 +108,8 @@ InitTestScene*.unity*
 # API keys / secrets - do not commit, create locally via Assets > Create > Config > Api Key Config
 /[Aa]ssets/[Rr]esources/ApiKeyConfig.asset
 /[Aa]ssets/[Rr]esources/ApiKeyConfig.asset.meta
+
+# Firebase 대용량 바이너리 (GitHub 100MB 초과) — 각자 Firebase SDK 임포트로 받음
+/[Aa]ssets/Firebase/Plugins/x86_64/*.bundle
+/[Aa]ssets/Firebase/Plugins/x86_64/*.bundle.meta
+/[Aa]ssets/GeneratedLocalRepo/

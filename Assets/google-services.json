@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "764618953349",
+    "project_id": "writinggrandfather",
+    "storage_bucket": "writinggrandfather.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:764618953349:android:f5ef3ba493a9009679cfec",
+        "android_client_info": {
+          "package_name": "com.writinggrandfather.writinggrandfather"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "764618953349-1nqh6acufd2coadvqoubbblm82h9b5j0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.writinggrandfather.writinggrandfather",
+            "certificate_hash": "a1b2c3d4e5f60708091011121314151617181920"
+          }
+        },
+        {
+          "client_id": "764618953349-9auq48l3o95177kg9ej1bc692vp1sijd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBMWzxMrAW_hinCJ32LsISEh49JhYZIvrA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "764618953349-9auq48l3o95177kg9ej1bc692vp1sijd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

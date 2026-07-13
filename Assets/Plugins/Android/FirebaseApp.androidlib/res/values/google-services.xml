@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:keep="@string/gcm_defaultSenderId,@string/google_storage_bucket,@string/project_id,@string/google_api_key,@string/google_crash_reporting_api_key,@string/google_app_id,@string/default_android_client_id,@string/default_web_client_id">
+  <string name="gcm_defaultSenderId" translatable="false">764618953349</string>
+  <string name="google_storage_bucket" translatable="false">writinggrandfather.firebasestorage.app</string>
+  <string name="project_id" translatable="false">writinggrandfather</string>
+  <string name="google_api_key" translatable="false">AIzaSyBMWzxMrAW_hinCJ32LsISEh49JhYZIvrA</string>
+  <string name="google_crash_reporting_api_key" translatable="false">AIzaSyBMWzxMrAW_hinCJ32LsISEh49JhYZIvrA</string>
+  <string name="google_app_id" translatable="false">1:764618953349:android:f5ef3ba493a9009679cfec</string>
+  <string name="default_android_client_id" translatable="false">764618953349-1nqh6acufd2coadvqoubbblm82h9b5j0.apps.googleusercontent.com</string>
+  <string name="default_web_client_id" translatable="false">764618953349-9auq48l3o95177kg9ej1bc692vp1sijd.apps.googleusercontent.com</string>
+</resources>
