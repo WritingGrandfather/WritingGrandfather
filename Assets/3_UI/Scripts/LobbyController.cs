@@ -408,6 +408,7 @@ public class LobbyController : MonoBehaviour
 
     void OnRankingClicked()
     {
+        RankingScreenController.CallerScene = SceneManager.GetActiveScene().name;
         SceneManager.LoadScene("Ranking");
     }
 

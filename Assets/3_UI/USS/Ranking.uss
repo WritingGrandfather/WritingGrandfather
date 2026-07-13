@@ -20,7 +20,7 @@ Button:active {
     justify-content: flex-start;
     overflow: hidden;
     background-color: rgb(250, 240, 222);
-    padding: 48px 32px;
+    /* padding은 RankingScreenController.ApplySafeArea()에서 SafeArea 기준으로 동적 설정 */
 }
 
 .ranking-title {
