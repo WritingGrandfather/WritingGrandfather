@@ -160,6 +160,11 @@
 .unity-scroller--vertical {
     width: 28px;
     margin-left: 8px;
+    /* .settings-content의 오른쪽 padding(40px)만큼 스크롤바와 실제 화면 오른쪽
+       끝 사이에 큰 여백이 생겨서, 그 여백 쪽으로 당겨 가장자리에 붙인다.
+       세이프에어리어 쪽 padding(ApplySafeArea가 매 프레임 계산)까지 당기면
+       기기마다 부호가 달라져 오히려 어긋나므로, 고정값인 40px 쪽만 상쇄한다. */
+    margin-right: -32px;
 }
 
 .unity-scroller__low-button,

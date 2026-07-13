@@ -35,7 +35,7 @@
             <ui:Button name="btn-settings-close" text="닫기" class="settings-close-button" />
         </ui:VisualElement>
 
-        <ui:ScrollView name="settings-content" class="settings-content" mode="Vertical" vertical-scroller-visibility="AlwaysVisible">
+        <ui:ScrollView name="settings-content" class="settings-content" mode="Vertical" vertical-scroller-visibility="AlwaysVisible" horizontal-scroller-visibility="Hidden">
             <ui:VisualElement name="section-mypage" class="settings-section">
                 <ui:VisualElement class="settings-section-header">
                     <ui:VisualElement class="settings-section-line" />
