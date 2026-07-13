@@ -113,3 +113,6 @@ InitTestScene*.unity*
 /[Aa]ssets/Firebase/Plugins/x86_64/*.bundle
 /[Aa]ssets/Firebase/Plugins/x86_64/*.bundle.meta
 /[Aa]ssets/GeneratedLocalRepo/
+
+# 채점 디버그 덤프 (로컬 전용 — 커밋 금지)
+/DebugCapture/
