@@ -67,9 +67,11 @@ public class TemplateSimilarityEvaluator : HandwritingEvaluator
     [Tooltip("켜면 목표와 헷갈리는 글자들과도 비교해서, 다른 글자에 더 가까우면 불통과시킨다")]
     [SerializeField] bool checkConfusables = true;
 
-    [Tooltip("혼동 글자가 목표보다 이만큼(점) 이상 더 닮았으면 그 글자로 판정")]
+    [Tooltip("혼동 글자가 목표보다 이만큼(점) 이상 더 닮았으면 그 글자로 판정. " +
+             "너무 낮으면(예: 4) 손 떨림 등 정상적인 점수 흔들림만으로도 " +
+             "제대로 쓴 글자를 다른 글자로 오판하기 쉽다.")]
     [Range(0, 20)]
-    [SerializeField] int confusableMargin = 4;
+    [SerializeField] int confusableMargin = 14;
 
     [Header("디버그")]
     [Tooltip("켜면 본보기/유저 마스크 비교 이미지를 DebugCapture 폴더에 저장")]
