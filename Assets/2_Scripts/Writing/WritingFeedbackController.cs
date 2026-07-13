@@ -31,11 +31,7 @@ public class WritingFeedbackController : MonoBehaviour
     [Tooltip("기획서에 정의된 채점/피드백 조건을 여기에 적는다. AI가 이 기준으로 판단.")]
     [TextArea(4, 12)]
     [SerializeField]
-    string criteria =
-        "당신은 한글 글씨 쓰기를 배우는 어르신을 돕는 선생님입니다.\n" +
-        "이미지에 쓰인 글자를 인식하고, 목표 글자와 비교해 평가하세요.\n" +
-        "판정 기준: 1) 목표 글자와 일치하는가 2) 획의 모양이 또렷한가 3) 칸 안에 잘 들어왔는가.\n" +
-        "따뜻하고 격려하는 말투로 한두 문장 피드백을 주세요.";
+    string criteria = "";   // ← 기획 판정 기준을 나중에 여기 채우기 (비워둠)
 
     [Header("이벤트")]
     [Tooltip("평가 결과가 나오면 호출 (피드백 메시지 등 표시용)")]
