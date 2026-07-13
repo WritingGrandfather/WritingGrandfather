@@ -69,6 +69,7 @@ mod_select.precise_desc,한 글자씩 정확하게 따라 쓰며 연습해요,Pr
 mod_select.challenge_button,도전 모드,Challenge Mode
 mod_select.challenge_desc,떨어지는 글자를 빠르고 정확하게 써봐요,Write falling characters quickly and accurately
 mod_select.back_button,뒤로,Back
+mod_select.hint,버튼을 누르면 모드의 설명을 확인 가능합니다.,Tap a button to see what that mode is about.
 precise_writing.reset_button,초기화,Reset
 precise_writing.undo_button,되돌리기,Undo
 precise_writing.complete_button,완료,Done
