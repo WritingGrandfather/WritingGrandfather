@@ -1,58 +1,58 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
-    <Style src="../USS/PreciseWriting.uss" />
+    <Style src="project://database/Assets/3_UI/USS/PreciseWriting.uss?fileID=7433441132597879392&amp;guid=fd3000cab2f972e1dde94ea5dc9102b0&amp;type=3#PreciseWriting"/>
     <ui:VisualElement name="safe-area" class="safe-area">
-        <ui:VisualElement name="writing-screen" class="screen">
-            <ui:VisualElement name="draw-mask-top" class="draw-mask" />
-            <ui:VisualElement name="draw-mask-bottom" class="draw-mask" />
-            <ui:VisualElement name="draw-mask-left" class="draw-mask" />
-            <ui:VisualElement name="draw-mask-right" class="draw-mask" />
+        <ui:VisualElement name="writing-screen" class="screen" style="display: flex;">
+            <ui:VisualElement name="draw-mask-top" class="draw-mask"/>
+            <ui:VisualElement name="draw-mask-bottom" class="draw-mask"/>
+            <ui:VisualElement name="draw-mask-left" class="draw-mask"/>
+            <ui:VisualElement name="draw-mask-right" class="draw-mask"/>
             <ui:VisualElement name="top-bar" class="top-bar">
                 <ui:VisualElement class="word-progress-row">
-                    <ui:Label text="가" name="current-word-label" class="current-word-label" />
-                    <ui:Label text="1 / 3" name="word-progress-label" class="word-progress-label" />
+                    <ui:Label text="가" name="current-word-label" class="current-word-label"/>
+                    <ui:Label text="1 / 3" name="word-progress-label" class="word-progress-label"/>
                 </ui:VisualElement>
-                <ui:Button text="그만하기" name="top-bar-stop-button" class="top-bar-exit-button" />
+                <ui:Button text="그만하기" name="top-bar-stop-button" class="top-bar-exit-button"/>
             </ui:VisualElement>
             <ui:VisualElement name="guide-box" class="guide-box">
-                <ui:VisualElement name="guide-cross-h" class="guide-cross guide-cross--h" />
-                <ui:VisualElement name="guide-cross-v" class="guide-cross guide-cross--v" />
-                <ui:Label text="가" name="ghost-character-label" class="ghost-character-label" />
-                <ui:Button text="되돌리기" name="undo-button" class="undo-button" />
-                <ui:Button text="초기화" name="reset-button" class="reset-button" />
+                <ui:VisualElement name="guide-cross-h" class="guide-cross guide-cross--h"/>
+                <ui:VisualElement name="guide-cross-v" class="guide-cross guide-cross--v"/>
+                <ui:Label text="가" name="ghost-character-label" class="ghost-character-label"/>
+                <ui:Button text="되돌리기" name="undo-button" class="undo-button"/>
+                <ui:Button text="초기화" name="reset-button" class="reset-button"/>
             </ui:VisualElement>
-            <ui:Button text="완료" name="complete-button" class="primary-button" />
+            <ui:Button text="완료" name="complete-button" class="primary-button"/>
             <ui:VisualElement name="bottom-bar" class="bottom-bar">
-                <ui:Toggle name="toggle-show-character" value="true" class="toggle-btn" />
+                <ui:Toggle name="toggle-show-character" value="true" class="toggle-btn"/>
             </ui:VisualElement>
-            <ui:Label text="" name="stroke-feedback-label" class="stroke-feedback-label hidden" />
+            <ui:Label text="" name="stroke-feedback-label" class="stroke-feedback-label hidden" style="font-size: 50px;"/>
         </ui:VisualElement>
-        <ui:VisualElement name="analyzing-screen" class="screen overlay hidden">
+        <ui:VisualElement name="analyzing-screen" class="screen overlay hidden" style="display: none;">
             <ui:VisualElement class="overlay-box">
-                <ui:Label text="AI가 결과를 분석중..." name="analyzing-label" class="overlay-title" />
+                <ui:Label text="AI가 결과를 분석중..." name="analyzing-label" class="overlay-title"/>
             </ui:VisualElement>
         </ui:VisualElement>
-        <ui:VisualElement name="result-screen" class="screen overlay hidden">
+        <ui:VisualElement name="result-screen" class="screen overlay hidden" style="display: none;">
             <ui:VisualElement class="overlay-box">
-                <ui:VisualElement name="result-stars-row" class="result-stars-row" />
-                <ui:Label text="결과" name="result-title-label" class="overlay-title" />
+                <ui:VisualElement name="result-stars-row" class="result-stars-row"/>
+                <ui:Label text="결과" name="result-title-label" class="overlay-title"/>
                 <ui:VisualElement class="result-row">
-                    <ui:Label text="획 순서 정확도" name="result-stroke-order-label" class="result-label" />
-                    <ui:Label text="85%" name="result-stroke-order-score" class="result-value" />
+                    <ui:Label text="획 순서 정확도" name="result-stroke-order-label" class="result-label"/>
+                    <ui:Label text="85%" name="result-stroke-order-score" class="result-value"/>
                 </ui:VisualElement>
                 <ui:VisualElement class="result-row">
-                    <ui:Label text="글자 유사도" name="result-similarity-label" class="result-label" />
-                    <ui:Label text="85%" name="result-similarity-score" class="result-value" />
+                    <ui:Label text="글자 유사도" name="result-similarity-label" class="result-label"/>
+                    <ui:Label text="85%" name="result-similarity-score" class="result-value"/>
                 </ui:VisualElement>
                 <ui:VisualElement class="result-row">
-                    <ui:Label text="글자 크기 위치 정확도" name="result-position-label" class="result-label" />
-                    <ui:Label text="85%" name="result-position-score" class="result-value" />
+                    <ui:Label text="글자 크기 위치 정확도" name="result-position-label" class="result-label"/>
+                    <ui:Label text="85%" name="result-position-score" class="result-value"/>
                 </ui:VisualElement>
-                <ui:Label text="" name="result-message" class="result-message" />
+                <ui:Label text="" name="result-message" class="result-message"/>
                 <ui:VisualElement class="result-button-row">
-                    <ui:Button text="계속 하기" name="continue-button" class="modal-button modal-button--confirm" />
-                    <ui:Button text="다시하기" name="retry-stage-button" class="modal-button modal-button--cancel" />
+                    <ui:Button text="계속 하기" name="continue-button" class="modal-button modal-button--confirm"/>
+                    <ui:Button text="다시하기" name="retry-stage-button" class="modal-button modal-button--cancel"/>
                 </ui:VisualElement>
-                <ui:Button text="나가기" name="result-exit-button" class="result-exit-button" />
+                <ui:Button text="나가기" name="result-exit-button" class="result-exit-button"/>
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
