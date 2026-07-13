@@ -21,6 +21,8 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private StageData[] stages;
 
     [Header("표시")]
+    [Tooltip("출제 단어 라벨 표시 여부")]
+    [SerializeField] private bool showWordLabel = true;
     [SerializeField] private int fontSize = 140;
     [Range(0f, 1f)][SerializeField] private float verticalRatio = 0.35f; // 화면 높이 대비 글자 위치
 
@@ -39,6 +41,10 @@ public class EnemySpawner : MonoBehaviour
     // 스테이지 진행 상태
     private int stageIndex;
     private readonly System.Collections.Generic.List<string> stageQueue = new(); // 셔플된 남은 텍스트
+    private string[] currentStageTexts; // 현재 스테이지의 전체 텍스트 (필기 인식 후보군용)
+
+    /// <summary>현재 스테이지의 전체 글자 목록. 필기 인식의 후보군으로 사용 (없으면 null)</summary>
+    public string[] CurrentCandidates => currentStageTexts;
 
     /// <summary>현재 화면에 떠 있는 단어/낱말 (필기 인식 채점에 사용)</summary>
     public string CurrentText { get; private set; }
@@ -209,6 +215,7 @@ public class EnemySpawner : MonoBehaviour
     {
         stageQueue.Clear();
         string[] texts = stages[stageIndex].GetTexts(mode);
+        currentStageTexts = texts;
         stageQueue.AddRange(texts);
 
         // Fisher-Yates 셔플
@@ -223,6 +230,8 @@ public class EnemySpawner : MonoBehaviour
     {
         var label = new Label(text);
         label.AddToClassList("current-word"); // USS로 꾸밀 때 사용
+        if (!showWordLabel)
+            label.style.display = DisplayStyle.None; // 본보기가 표시를 대신 (로직은 유지)
         label.style.position = Position.Absolute;
         label.style.left = 0;
         label.style.right = 0; // 가로 전체 폭 → 텍스트 가운데 정렬로 중앙 배치

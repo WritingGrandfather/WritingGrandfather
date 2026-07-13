@@ -36,7 +36,7 @@ public class AuthManager : MonoBehaviour
     [Header("구글 로그인")]
     [Tooltip("Firebase 콘솔 > 프로젝트 설정 > 웹 클라이언트 ID (구글 로그인 켤 때만 사용)")]
 #pragma warning disable 0414 // GOOGLE_SIGNIN 꺼져 있을 땐 미사용 — 경고 무시
-    [SerializeField] string googleWebClientId = "";
+    [SerializeField] string googleWebClientId = "764618953349-9auq48l3o95177kg9ej1bc692vp1sijd.apps.googleusercontent.com";
 #pragma warning restore 0414
 
 #if FIREBASE_ENABLED
