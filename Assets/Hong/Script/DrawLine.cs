@@ -45,6 +45,9 @@ public class DrowLine : MonoBehaviour
     // OnDrawStart가 정상적으로 완료됐을 때만 true — OnDrawEnd에서 핸들 저장 여부 판단
     bool isDrawing;
 
+    // true면 포인터를 뗄 때까지 새 그리기를 차단 (자동 판정 직후, 누른 손가락이 계속 그리는 것 방지)
+    bool suppressUntilRelease;
+
     // Camera.main은 호출할 때마다 FindWithTag로 탐색하므로 매 프레임 호출하면 비효율적
     // Awake에서 한 번만 캐싱해서 사용
     Camera cam;
@@ -116,7 +119,7 @@ public class DrowLine : MonoBehaviour
     {
         // 지우개 모드이거나 UI 조작 중에는 드로우 차단
         isDrawing = false;
-        if (!drawingEnabled || IsPointerOverUI() || Pointer.current == null) return;
+        if (suppressUntilRelease || !drawingEnabled || IsPointerOverUI() || Pointer.current == null) return;
 
         Vector2 pointerScreenPos = Pointer.current.position.ReadValue();
         if (canDrawAt != null && !canDrawAt(pointerScreenPos)) return;
@@ -217,6 +220,8 @@ public class DrowLine : MonoBehaviour
     // 드로우 루프를 중단하고 완성된 라인을 drawnLines에 보관함
     void OnDrawEnd(InputAction.CallbackContext ctx)
     {
+        suppressUntilRelease = false; // 포인터를 뗐으므로 차단 해제
+
         if (drawCoroutine != null)
         {
             StopCoroutine(drawCoroutine);
@@ -266,6 +271,40 @@ public class DrowLine : MonoBehaviour
 
         currentSfxSource = SoundManager.Instance.PlaySfx(sounds[idx], loop: true);
         return idx;
+    }
+
+    /// <summary>
+    /// 지금 그리던 획을 강제 종료한다 (undo 기록 없이 풀로 반환).
+    /// 포인터를 누른 채라면 뗄 때까지 새 그리기를 차단 — 자동 판정 직후 손가락이
+    /// 계속 눌려 있어도 펜이 나오지 않게 한다.
+    /// </summary>
+    public void CancelCurrentStroke()
+    {
+        if (drawCoroutine != null)
+        {
+            StopCoroutine(drawCoroutine);
+            drawCoroutine = null;
+        }
+
+        if (isDrawing)
+        {
+            isDrawing = false;
+            ((IDisposable)currentHandle).Dispose(); // 그리던 라인을 풀로 반환
+            currentHandle = default;
+            points.Clear();
+        }
+
+        if (currentSfxSource != null)
+        {
+            currentSfxSource.Stop();
+            currentSfxSource = null;
+        }
+        soundTimer = 0f;
+        stillTimer = 0f;
+
+        // 아직 누르고 있으면 뗄 때까지 새 그리기 차단
+        if (Pointer.current != null && Pointer.current.press.isPressed)
+            suppressUntilRelease = true;
     }
 
     // UI Slider의 OnValueChanged에 연결해서 두께를 실시간으로 조절

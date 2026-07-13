@@ -124,6 +124,61 @@ public class TemplateSimilarityEvaluator : HandwritingEvaluator
         };
     }
 
+    // ── 채움 비율: 본보기 글자를 얼마나 덮었는지(재현율)만 계산 ──────────
+    //    벗어난 잉크는 무시. 자동 판정 트리거용 — 매 프레임 호출해도 되도록 본보기 마스크는 캐시.
+    char coverageChar;
+    bool[,] coverageTemplMask;
+
+    /// <summary>본보기 글자가 덮인 비율 0~1. (정규화 모양 비교 기준, 벗어난 잉크 무시)</summary>
+    public float CoverageRatio(System.Collections.Generic.List<System.Collections.Generic.List<Vector2>> normStrokes, char targetChar)
+    {
+        if (font == null || normStrokes == null || normStrokes.Count == 0) return 0f;
+
+        if (coverageTemplMask == null || coverageChar != targetChar)
+        {
+            coverageChar = targetChar;
+            coverageTemplMask = Normalize(MaskFromFont(targetChar));
+        }
+        int templInk = CountInk(coverageTemplMask);
+        if (templInk == 0) return 0f;
+
+        bool[,] user = Normalize(RasterizeNormStrokes(normStrokes));
+        if (CountInk(user) == 0) return 0f;
+
+        int r = Mathf.Max(1, Mathf.RoundToInt(tolerance * gridSize));
+        bool[,] userFat = Dilate(user, r);
+
+        int hit = 0;
+        for (int y = 0; y < gridSize; y++)
+            for (int x = 0; x < gridSize; x++)
+                if (coverageTemplMask[y, x] && userFat[y, x]) hit++;
+
+        return (float)hit / templInk;
+    }
+
+    // 0~1 정규화 획들을 격자에 굽는다 (채움 비율 계산용)
+    bool[,] RasterizeNormStrokes(System.Collections.Generic.List<System.Collections.Generic.List<Vector2>> strokes)
+    {
+        var mask = new bool[gridSize, gridSize];
+        foreach (var stroke in strokes)
+        {
+            for (int i = 1; i < stroke.Count; i++)
+            {
+                Vector2 a = stroke[i - 1] * (gridSize - 1);
+                Vector2 b = stroke[i] * (gridSize - 1);
+                int steps = Mathf.Max(1, Mathf.CeilToInt(Vector2.Distance(a, b)));
+                for (int s = 0; s <= steps; s++)
+                {
+                    Vector2 p = Vector2.Lerp(a, b, (float)s / steps);
+                    int x = Mathf.Clamp(Mathf.FloorToInt(p.x), 0, gridSize - 1);
+                    int y = Mathf.Clamp(Mathf.FloorToInt(p.y), 0, gridSize - 1);
+                    mask[y, x] = true;
+                }
+            }
+        }
+        return mask;
+    }
+
     // ── 정자 검사: 획수 부족(이어 쓰기)과 구불거리는 획(흘림)을 감점 ──────
     //    (낙하 모드 등 외부에서도 쓸 수 있게 public static)
     public static int ApplyNeatnessChecks(System.Collections.Generic.List<System.Collections.Generic.List<Vector2>> strokes,
