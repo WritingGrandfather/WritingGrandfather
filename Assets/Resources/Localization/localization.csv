@@ -10,6 +10,14 @@ ranking.header_score,점수,Score
 ranking.empty,아직 기록이 없습니다,No records yet
 ranking.back,뒤로,Back
 ranking.me,나,Me
+ranking.my_rank,내 순위,My Rank
+ranking.my_score,내 점수,My Score
+ranking.my_grade,등급,Grade
+ranking.grade_none,-,-
+ranking.grade_bronze,브론즈,Bronze
+ranking.grade_silver,실버,Silver
+ranking.grade_gold,골드,Gold
+ranking.grade_diamond,다이아,Diamond
 lobby.btn.settings,설정,Settings
 lobby.btn.exit,나가기,Exit
 lobby.exit.confirm_line1,정말,Are you sure

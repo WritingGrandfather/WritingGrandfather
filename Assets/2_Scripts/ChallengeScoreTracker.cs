@@ -4,6 +4,8 @@ using UnityEngine.SceneManagement;
 
 // UnityEvent<int> 제네릭은 인스펙터에 노출되지 않으므로 구체 서브클래스로 선언한다.
 [System.Serializable] public class ScoreEvent : UnityEvent<int> { }
+// 결과창용 - (이번 판 점수, 최고 점수)를 함께 전달한다.
+[System.Serializable] public class ScoreResultEvent : UnityEvent<int, int> { }
 
 /// <summary>
 /// 도전 모드의 점수를 누적하고, 게임이 끝나면 랭킹(Firestore)에 업로드하는 연결자.
@@ -44,11 +46,17 @@ public class ChallengeScoreTracker : MonoBehaviour
     }
 
     [Header("참조")]
-    [Tooltip("단어 완성(onWordAdvanced)을 받아 점수를 누적할 세션 컨트롤러")]
+    [Tooltip("단어 완성(onWordAdvanced)을 받아 점수를 누적할 세션 컨트롤러 - 구버전(넘기기 방식) 씬용")]
     [SerializeField] WritingSessionController session;
 
-    [Tooltip("모든 스테이지 클리어(OnAllStagesCleared)를 게임 종료로 감지할 출제기")]
+    [Tooltip("모든 스테이지 클리어(OnAllStagesCleared)를 게임 종료로 감지할 출제기 - 구버전(넘기기 방식) 씬용")]
     [SerializeField] EnemySpawner spawner;
+
+    [Tooltip("글자를 맞혀서 없앨 때마다(OnWordCleared) 점수를 더할 낙하식 출제기 - 실제 도전 씬(ChallengeScene)이 쓰는 시스템")]
+    [SerializeField] FallingWordSpawner fallingSpawner;
+
+    [Tooltip("체력이 0이 되거나 시간이 다 됐을 때(OnDied) 게임 종료로 감지할 플레이어 체력 - 비워두면 PlayerHp.Instance 사용")]
+    [SerializeField] PlayerHp playerHp;
 
     [Tooltip("점수를 업로드할 랭킹 매니저")]
     [SerializeField] RankingManager rankingManager;
@@ -71,6 +79,9 @@ public class ChallengeScoreTracker : MonoBehaviour
     [Tooltip("게임이 끝났을 때 최종 점수를 전달 (결과 화면 표시용)")]
     public ScoreEvent onGameFinished;
 
+    [Tooltip("최고 점수 저장까지 끝난 뒤(이번 점수, 최고 점수) - 결과 화면이 이걸 구독해서 뜬다")]
+    public ScoreResultEvent onResultReady;
+
     int score;
     int wordsCleared;
     bool submitted;
@@ -81,11 +92,14 @@ public class ChallengeScoreTracker : MonoBehaviour
     /// <summary>이번 게임에서 완성한 단어 수</summary>
     public int WordsCleared => wordsCleared;
 
+    PlayerHp Hp => playerHp != null ? playerHp : PlayerHp.Instance;
+
     void OnEnable()
     {
         // 인스펙터에서 연결 안 했으면 씬에서 자동으로 찾아 붙인다.
         if (session == null) session = FindObjectOfType<WritingSessionController>();
         if (spawner == null) spawner = FindObjectOfType<EnemySpawner>();
+        if (fallingSpawner == null) fallingSpawner = FindObjectOfType<FallingWordSpawner>();
         if (rankingManager == null) rankingManager = FindObjectOfType<RankingManager>();
 
         if (session != null)
@@ -95,6 +109,13 @@ public class ChallengeScoreTracker : MonoBehaviour
         }
         if (spawner != null)
             spawner.OnAllStagesCleared += OnAllStagesCleared;
+        if (fallingSpawner != null)
+            fallingSpawner.OnWordCleared += OnFallingWordCleared;
+
+        // 목숨이 0이 되거나(놓친 글자 누적) 시간이 다 되면(ChallengeSurvivalController가
+        // PlayerHp.HP를 0으로 만듦) PlayerHp.OnDied가 한 번 울린다 - 그 시점에 점수를 제출한다.
+        if (Hp != null)
+            Hp.OnDied += SubmitScore;
 
         ResetGame();
     }
@@ -105,7 +126,14 @@ public class ChallengeScoreTracker : MonoBehaviour
             session.onWordAdvanced.RemoveListener(OnWordCleared);
         if (spawner != null)
             spawner.OnAllStagesCleared -= OnAllStagesCleared;
+        if (fallingSpawner != null)
+            fallingSpawner.OnWordCleared -= OnFallingWordCleared;
+        if (Hp != null)
+            Hp.OnDied -= SubmitScore;
     }
+
+    // 낙하식(ChallengeScene 실제 사용 시스템)에서 글자를 맞혀서 없앴을 때
+    void OnFallingWordCleared(FallingWordSpawner.FallingWord word) => OnWordCleared();
 
     /// <summary>새 게임 시작 — 점수/상태 초기화. (다시하기 버튼 등에서 호출)</summary>
     public void ResetGame()
@@ -140,7 +168,26 @@ public class ChallengeScoreTracker : MonoBehaviour
         onGameFinished?.Invoke(score);
 
         if (uploadToRanking) UploadToRanking();
-        if (saveBestScore) SaveBestScore();
+
+        // 최고점수 저장 여부와 무관하게, 결과창에 보여줄 최고점수는 항상 한 번 읽어 온다
+        // (저장을 껐다면 이번 판 점수로 최고점수가 갱신되지 않은 채로만 보여준다).
+        if (SaveManager.Instance == null)
+        {
+            onResultReady?.Invoke(score, score);
+            return;
+        }
+
+        SaveManager.Instance.Load(data =>
+        {
+            if (data == null) data = new PlayerData();
+            bool isNewBest = score > data.bestScore;
+            if (isNewBest && saveBestScore)
+            {
+                data.bestScore = score;
+                SaveManager.Instance.Save(data);
+            }
+            onResultReady?.Invoke(score, Mathf.Max(data.bestScore, score));
+        });
     }
 
     void UploadToRanking()
@@ -157,18 +204,5 @@ public class ChallengeScoreTracker : MonoBehaviour
 
         rankingManager.UploadScore(id, score,
             () => Debug.Log($"[ChallengeScore] 랭킹 업로드 완료: {id} = {score}"));
-    }
-
-    void SaveBestScore()
-    {
-        if (SaveManager.Instance == null) return;
-
-        // 기존 데이터를 불러와 최고점수를 갱신한 뒤 다시 저장.
-        SaveManager.Instance.Load(data =>
-        {
-            if (data == null) data = new PlayerData();
-            if (score > data.bestScore) data.bestScore = score;
-            SaveManager.Instance.Save(data);
-        });
     }
 }

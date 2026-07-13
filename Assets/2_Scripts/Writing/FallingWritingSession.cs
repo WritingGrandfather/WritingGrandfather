@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.InputSystem;
 
 /// <summary>
 /// 낙하 모드 세션: 떨어지는 글자들(FallingWordSpawner) 중 유저가 쓴 글자를 찾아 제거한다.
@@ -31,6 +32,23 @@ public class FallingWritingSession : MonoBehaviour
     [Tooltip("정자 검사 — 흘림체(획 이어 쓰기, 구불거림)를 감점")]
     [SerializeField] bool requireNeatWriting = true;
 
+    [Header("자동 판정")]
+    [Tooltip("본보기 글자가 일정 비율 이상 채워지면 버튼 없이 자동으로 판정 (그리는 도중에도)")]
+    [SerializeField] bool autoEvaluate = true;
+
+    [Tooltip("자동 판정이 걸리는 채움 비율 (본보기를 이만큼 덮으면 판정. 벗어난 잉크는 무시)")]
+    [Range(0.3f, 1f)]
+    [SerializeField] float autoFillThreshold = 0.9f;
+
+    [Tooltip("채움 비율 검사 주기(초) — 너무 짧으면 연산 낭비")]
+    [SerializeField] float autoCheckInterval = 0.15f;
+
+    [Tooltip("조건 충족 후 펜을 뗀 뒤 판정까지 대기 시간(초) — 쓰는 도중 성급한 판정 방지")]
+    [SerializeField] float autoEvaluateDelay = 0.4f;
+
+    [Tooltip("예외 처리: 두 조건 다 못 채운 채 이 시간(초) 동안 아무것도 안 쓰면 그냥 판정 (대부분 불통과 → 다시 쓰기)")]
+    [SerializeField] float idleEvaluateTimeout = 2.5f;
+
     [Header("UI가 구독할 이벤트")]
     public FeedbackEvent onResult;
     public StatusEvent onStatus;
@@ -50,12 +68,93 @@ public class FallingWritingSession : MonoBehaviour
         return null;
     }
 
+    float autoCheckTimer;
+    float strokeStableTime;
+    float idleTime;
+    int lastStrokeCount;
+
     void Update()
     {
         // 현재 타겟을 칸에 기록 → TraceGuide(본보기)가 자동으로 그 글자를 띄운다
         if (cell == null) return;
         var target = CurrentTarget();
         cell.targetText = target != null ? target.Text : "";
+
+        if (autoEvaluate) AutoEvaluateCheck(target);
+    }
+
+    // ── 자동 판정: 본보기가 일정 비율 이상 채워지면 즉시 Evaluate() ──────
+    //    그리는 도중에도 검사한다. 판정되면 그리던 획을 끊고, 손가락을 뗄 때까지 펜 차단.
+    void AutoEvaluateCheck(FallingWordSpawner.FallingWord target)
+    {
+        if (isEvaluating || target == null || strokeCapture == null || evaluator == null) return;
+
+        autoCheckTimer += Time.deltaTime;
+        if (autoCheckTimer < autoCheckInterval) return;
+        autoCheckTimer = 0f;
+
+        var norm = strokeCapture.GetNormalizedStrokes(cell);
+        if (norm.Count == 0)
+        {
+            strokeStableTime = 0f;
+            idleTime = 0f;
+            lastStrokeCount = 0;
+            return;
+        }
+
+        // 획이 늘거나 지워지면 방치 타이머 리셋 (아직 쓰는 중)
+        if (norm.Count != lastStrokeCount)
+        {
+            lastStrokeCount = norm.Count;
+            idleTime = 0f;
+        }
+
+        // 조건: 1차 채움 비율 (벗어난 잉크 무시) 또는 2차 획수 (표준 획수 완료)
+        float coverage = evaluator.CoverageRatio(norm, target.Text[0]);
+        int expected = ExpectedStrokes(target.Text[0]);
+        bool conditionMet = coverage >= autoFillThreshold
+                         || (expected > 0 && norm.Count >= expected);
+
+        bool drawing = Pointer.current != null && Pointer.current.press.isPressed;
+        if (drawing)
+        {
+            strokeStableTime = 0f;
+            idleTime = 0f;
+            return;
+        }
+
+        if (conditionMet)
+        {
+            // 펜을 뗀 상태로 대기 시간이 지나야 판정 (쓰는 도중 성급한 판정 방지)
+            idleTime = 0f;
+            strokeStableTime += autoCheckInterval;
+            if (strokeStableTime < autoEvaluateDelay) return;
+        }
+        else
+        {
+            // 예외 처리: 두 조건 다 못 채운 채 한참 방치하면 그냥 판정 (불통과 피드백 → 다시 쓰기)
+            strokeStableTime = 0f;
+            idleTime += autoCheckInterval;
+            if (idleTime < idleEvaluateTimeout) return;
+        }
+
+        strokeStableTime = 0f;
+        idleTime = 0f;
+        lastStrokeCount = 0;
+
+        // 판정! (Evaluate가 그리는 중인 획까지 포함해 캡처한 뒤 획을 정리한다)
+        Evaluate();
+
+        // 아직 손가락/펜을 누르고 있으면 뗄 때까지 새 획이 안 나오게 차단
+        drawLine?.CancelCurrentStroke();
+    }
+
+    /// <summary>완성형 한글의 표준 획수 (자모 분해 후 합산). 모르면 0.</summary>
+    static int ExpectedStrokes(char ch)
+    {
+        if (!HangulComposer.Decompose(ch, out char cho, out char jung, out char jong)) return 0;
+        return HangulComposer.JamoStrokeCount(cho) + HangulComposer.JamoStrokeCount(jung)
+             + (jong != '\0' ? HangulComposer.JamoStrokeCount(jong) : 0);
     }
 
     /// <summary>UI의 [평가] 버튼에서 호출</summary>
