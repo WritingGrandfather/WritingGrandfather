@@ -11,9 +11,14 @@ public class Eraser : MonoBehaviour
     [Range(0.05f, 1f)]
     public float eraserRadius = 0.2f;
 
+    public string eraserSoundName = "EraserSound";
+
     Camera cam;
     Coroutine eraseCoroutine;
     bool isActive;
+    AudioSource currentSfxSource;
+    float stillTimer = 0f;
+    const float stopGraceTime = 0.05f;
 
     List<(System.Action undo, System.Action redo)> sessionActions;
 
@@ -41,7 +46,7 @@ public class Eraser : MonoBehaviour
 
     void OnEraseStart(InputAction.CallbackContext ctx)
     {
-        if (!isActive || IsPointerOverUI()) return;
+        if (!isActive || IsPointerOverUI() || Pointer.current == null) return;
         sessionActions = new List<(System.Action, System.Action)>();
         eraseCoroutine = StartCoroutine(EraseLoop());
     }
@@ -52,15 +57,40 @@ public class Eraser : MonoBehaviour
         StopCoroutine(eraseCoroutine);
         eraseCoroutine = null;
 
+        ReleaseSfxSource();
+        stillTimer = 0f;
+
         if (sessionActions != null && sessionActions.Count > 0)
             UndoManager.Instance.RecordBatch(sessionActions);
         sessionActions = null;
     }
 
+    // 사운드 소스를 정지하고 놓아줌 — mute 상태를 반드시 풀어서 반환해야
+    // 풀에서 재사용될 때 음소거된 채로 나오는 문제를 방지함
+    void ReleaseSfxSource()
+    {
+        if (currentSfxSource != null)
+        {
+            currentSfxSource.Stop();
+            currentSfxSource.mute = false;
+        }
+        currentSfxSource = null;
+    }
+
     IEnumerator EraseLoop()
     {
         Vector2 prevPos = cam.ScreenToWorldPoint(Pointer.current.position.ReadValue());
-        ProcessErase(new List<Vector2> { prevPos });
+
+        // Play()는 호출 시점마다 클립 로드/오디오 시작 지연이 생길 수 있으므로,
+        // 세션 시작과 동시에 루프 사운드를 미리 재생해두고 mute로만 on/off 제어함.
+        // → 실제로 지워지는 순간 mute만 풀면 되므로 시작 지연이 0에 가까움
+        currentSfxSource = SoundManager.Instance.PlaySfx(eraserSoundName, loop: true);
+        if (currentSfxSource != null) currentSfxSource.mute = true;
+
+        bool initialErased = ProcessErase(new List<Vector2> { prevPos });
+        if (initialErased && currentSfxSource != null)
+            currentSfxSource.mute = false;
+        stillTimer = 0f;
 
         while (true)
         {
@@ -75,20 +105,40 @@ public class Eraser : MonoBehaviour
             for (int i = 1; i <= steps; i++)
                 samples.Add(Vector2.Lerp(prevPos, currentPos, (float)i / steps));
 
-            ProcessErase(samples);
+            bool erased = ProcessErase(samples);
+
+            if (erased)
+            {
+                stillTimer = 0f;
+
+                // 소스가 어떤 이유로든 죽었으면 재생성 (안전장치)
+                if (currentSfxSource == null || !currentSfxSource.isPlaying)
+                    currentSfxSource = SoundManager.Instance.PlaySfx(eraserSoundName, loop: true);
+
+                if (currentSfxSource != null) currentSfxSource.mute = false;
+            }
+            else
+            {
+                stillTimer += Time.deltaTime;
+                if (stillTimer >= stopGraceTime && currentSfxSource != null)
+                    currentSfxSource.mute = true; // Stop 대신 mute — 다시 지울 때 즉시 소리 재개
+            }
+
             prevPos = currentPos;
         }
     }
 
     // 이번 프레임의 모든 샘플 위치로 영향받는 오브젝트를 먼저 수집한 뒤 각각 한 번씩만 처리.
     // 새로 생성된 조각이 같은 프레임에 재감지되는 연쇄 지우기를 방지함.
-    void ProcessErase(List<Vector2> samples)
+    bool ProcessErase(List<Vector2> samples)
     {
         var affected = new HashSet<GameObject>();
         foreach (var pos in samples)
             foreach (var hit in Physics2D.OverlapCircleAll(pos, eraserRadius))
                 if (hit is EdgeCollider2D)
                     affected.Add(hit.gameObject);
+
+        if (affected.Count == 0) return false;
 
         foreach (var go in affected)
         {
@@ -140,6 +190,7 @@ public class Eraser : MonoBehaviour
                 }
             ));
         }
+        return true;
     }
 
     // ──────────────────────────────────────────────────────────────────────────

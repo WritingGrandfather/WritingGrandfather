@@ -3415,6 +3415,135 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1286220685}
   m_CullTransparentMesh: 1
+--- !u!1 &1314779285
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1314779287}
+  - component: {fileID: 1314779286}
+  m_Layer: 0
+  m_Name: BgmAudioSource
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!82 &1314779286
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1314779285}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 1837228633726804520, guid: c37020fd3d5e049549038e0c8b469589, type: 2}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 0
+  m_Pitch: 1
+  Loop: 1
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!4 &1314779287
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1314779285}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 283, y: 521, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1323767681
 GameObject:
   m_ObjectHideFlags: 0
@@ -3583,7 +3712,7 @@ MonoBehaviour:
   lineWidth: 0.1
   lineColor: {r: 0, g: 0, b: 0, a: 1}
   drawingEnabled: 1
-  pencilSound: {fileID: 0}
+  pencilSound: {fileID: 1346376309}
 --- !u!4 &1346376306
 Transform:
   m_ObjectHideFlags: 0
@@ -3643,6 +3772,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Eraser
   drawLine: {fileID: 1346376305}
   eraserRadius: 0.2
+  eraserSoundName: EraserSound
 --- !u!114 &1346376309
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5240,13 +5370,15 @@ MonoBehaviour:
   audioList:
   - {fileID: 8300000, guid: c5e236d940cd742908665025c6660528, type: 3}
   - {fileID: 8300000, guid: ac265f96c936249b7a842c7fdb6128d6, type: 3}
-  sfx: {fileID: 0}
-  bgm: {fileID: 0}
+  - {fileID: 8300000, guid: 32713e15174f04ba8a4cbea0cc5a956a, type: 3}
+  - {fileID: 8300000, guid: def1068018e3948499d85894ae1fb37a, type: 3}
+  - {fileID: 8300000, guid: 793dd49bdbaa643ff88f28061f8b4508, type: 3}
+  bgm: {fileID: 1314779286}
+  sfxMixerGroup: {fileID: -5585902434157442593, guid: c37020fd3d5e049549038e0c8b469589, type: 2}
   sfxVolume: 1
-  bgmVolume: 1
+  bgmVolume: 0
   masterVolume: 1
-  currentSfx: {fileID: 0}
-  currentBgm: {fileID: 0}
+  sfxPoolSize: 8
 --- !u!4 &1706301962
 Transform:
   m_ObjectHideFlags: 0
@@ -6011,3 +6143,4 @@ SceneRoots:
   - {fileID: 1655316389}
   - {fileID: 1077001474}
   - {fileID: 1706301962}
+  - {fileID: 1314779287}

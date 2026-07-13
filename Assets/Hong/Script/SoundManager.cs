@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class SoundManager : MonoBehaviour
 {
@@ -7,6 +8,7 @@ public class SoundManager : MonoBehaviour
 
     public List<AudioClip> audioList = new List<AudioClip>();
     public AudioSource bgm = null;
+    public AudioMixerGroup sfxMixerGroup = null;
 
     public float sfxVolume    = 1f;
     public float bgmVolume    = 1f;
@@ -31,7 +33,9 @@ public class SoundManager : MonoBehaviour
         {
             var go = new GameObject($"SfxSource_{i}");
             go.transform.SetParent(transform);
-            sfxPool[i] = go.AddComponent<AudioSource>();
+            var src = go.AddComponent<AudioSource>();
+            src.outputAudioMixerGroup = sfxMixerGroup;
+            sfxPool[i] = src;
         }
 
         PlayBgm("Lobby", bgmVolume * masterVolume);
@@ -54,7 +58,7 @@ public class SoundManager : MonoBehaviour
         return stolen;
     }
 
-    public AudioSource PlaySfx(string clipName)
+    public AudioSource PlaySfx(string clipName, bool loop = false)
     {
         if (!audioClips.TryGetValue(clipName, out var clip))
         {
@@ -63,6 +67,7 @@ public class SoundManager : MonoBehaviour
         }
 
         var source    = GetFreeSource();
+        source.loop   = loop;
         source.clip   = clip;
         source.volume = sfxVolume * masterVolume;
         source.Play();
