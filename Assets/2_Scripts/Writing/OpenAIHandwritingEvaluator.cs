@@ -194,9 +194,12 @@ public class OpenAIHandwritingEvaluator : HandwritingEvaluator
         sb.AppendLine("        below 50 = broken or ambiguous structure.");
         sb.AppendLine("        If illegible, empty, or a scribble: recognizedText=\"\" and score 0-10.");
         sb.AppendLine();
+        // message는 UI에 그대로 노출되는 문장이라, 앱에 설정된 언어(한국어/영어)에 맞춰
+        // AI가 그 언어로 답하도록 지시한다 - 그래야 영어로 전환했을 때 이 문장도 영어로 나온다.
+        string messageLanguage = LocalizationManager.CurrentLanguage == Language.Korean ? "Korean" : "English";
         sb.AppendLine("OUTPUT FORMAT:");
         sb.AppendLine("First: AT MOST 2 short analysis lines (stroke grouping + composition). No braces, no markdown.");
-        sb.AppendLine("Then on the LAST line output exactly this JSON (message = one friendly Korean sentence about the writing):");
+        sb.AppendLine($"Then on the LAST line output exactly this JSON (message = one friendly sentence in {messageLanguage} about the writing):");
         sb.AppendLine("{\"recognizedText\":\"...\",\"score\":0-100 integer,\"message\":\"...\"}");
         return sb.ToString();
     }

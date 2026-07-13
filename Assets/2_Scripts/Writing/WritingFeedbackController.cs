@@ -138,8 +138,8 @@ public class WritingFeedbackController : MonoBehaviour
                 if (feedback.score > 20) feedback.score = 20;
                 feedback.passed = false;
                 feedback.message = string.IsNullOrEmpty(recognized)
-                    ? $"글자를 알아볼 수 없어요. '{target}'를 다시 써볼까요?"
-                    : $"'{target}'가 아니라 '{recognized}'로 보여요. 다시 한번 써볼까요?";
+                    ? string.Format(LocalizationManager.Get("writing_feedback.unrecognized"), target)
+                    : string.Format(LocalizationManager.Get("writing_feedback.wrong_character"), target, recognized);
             }
         }
 

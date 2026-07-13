@@ -28,7 +28,6 @@ lobby.settings.lang_korean,한국어,한국어
 lobby.settings.lang_english,English,English
 login.title,글씨 쓰는 할배,Handwriting Grandpa
 login.subtitle,로그인하고 시작하세요,Log in to get started
-login.btn_google,구글로 로그인,Sign in with Google
 login.btn_email,이메일로 로그인,Sign in with Email
 login.btn_guest,게스트로 시작,Continue as Guest
 login.hint,계정이 없으신가요?,Don't have an account?
@@ -55,4 +54,21 @@ precise_writing.result_similarity_label,글자 유사도,Character Similarity
 precise_writing.result_position_label,글자 크기 위치 정확도,Size & Position Accuracy
 precise_writing.retry_button,다시 하기,Try Again
 precise_writing.exit_button,나가기,Exit
+writing_feedback.unrecognized,글자를 알아볼 수 없어요. '{0}'를 다시 써볼까요?,I couldn't recognize the character. Want to try writing '{0}' again?
+writing_feedback.wrong_character,'{0}'가 아니라 '{1}'로 보여요. 다시 한번 써볼까요?,That looks like '{1}' instead of '{0}'. Want to try again?
+auth.checking_auto_login,자동 로그인 확인 중...,Checking auto-login...
+auth.logging_in,로그인 중...,Logging in...
+auth.signing_up,회원가입 중...,Signing up...
+auth.starting,시작 중...,Starting...
+auth.no_manager,인증 매니저 없음,Auth manager not found
+auth.signup_complete,회원가입 완료,Sign-up complete
+auth.login_success,로그인 성공,Login successful
+auth.please_wait_init,잠시 후 다시 시도해 주세요. (초기화 중),Please try again in a moment. (Initializing)
+auth.firebase_not_configured,Firebase 미설정 (FIREBASE_ENABLED 심볼 필요),Firebase not configured (requires the FIREBASE_ENABLED symbol)
+auth.guest_start,게스트로 시작,Continue as guest
+auth.invalid_email,이메일 형식이 올바르지 않습니다. (예: name@example.com),Invalid email format. (e.g. name@example.com)
+auth.password_too_short,비밀번호는 6자 이상이어야 합니다.,Password must be at least 6 characters.
+auth.failure_prefix,실패:,Failed:
+auth.failure,실패,Failed
+auth.guest_display_name,게스트,Guest
 

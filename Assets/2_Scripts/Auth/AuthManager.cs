@@ -95,7 +95,7 @@ public class AuthManager : MonoBehaviour
     void SetGuestLocal()
     {
         IsSignedIn = true; IsGuest = true;
-        UserId = SystemInfo.deviceUniqueIdentifier; DisplayName = "게스트";
+        UserId = SystemInfo.deviceUniqueIdentifier; DisplayName = LocalizationManager.Get("auth.guest_display_name");
         PlayerPrefs.SetInt(GuestKey, 1);
     }
 
@@ -104,15 +104,15 @@ public class AuthManager : MonoBehaviour
     {
         if (!ValidateInput(email, password, onDone)) return;
 #if FIREBASE_ENABLED
-        if (!ready) { onDone?.Invoke(false, "잠시 후 다시 시도해 주세요. (초기화 중)"); return; }
+        if (!ready) { onDone?.Invoke(false, LocalizationManager.Get("auth.please_wait_init")); return; }
         auth.CreateUserWithEmailAndPasswordAsync(email, password).ContinueWithOnMainThread(t =>
         {
             if (t.IsCanceled || t.IsFaulted) { onDone?.Invoke(false, FirebaseError(t)); return; }
             ApplyUser(auth.CurrentUser, guest: false);
-            onDone?.Invoke(true, "회원가입 완료");
+            onDone?.Invoke(true, LocalizationManager.Get("auth.signup_complete"));
         });
 #else
-        onDone?.Invoke(false, "Firebase 미설정 (FIREBASE_ENABLED 심볼 필요)");
+        onDone?.Invoke(false, LocalizationManager.Get("auth.firebase_not_configured"));
 #endif
     }
 
@@ -121,15 +121,15 @@ public class AuthManager : MonoBehaviour
     {
         if (!ValidateInput(email, password, onDone)) return;
 #if FIREBASE_ENABLED
-        if (!ready) { onDone?.Invoke(false, "잠시 후 다시 시도해 주세요. (초기화 중)"); return; }
+        if (!ready) { onDone?.Invoke(false, LocalizationManager.Get("auth.please_wait_init")); return; }
         auth.SignInWithEmailAndPasswordAsync(email, password).ContinueWithOnMainThread(t =>
         {
             if (t.IsCanceled || t.IsFaulted) { onDone?.Invoke(false, FirebaseError(t)); return; }
             ApplyUser(auth.CurrentUser, guest: false);
-            onDone?.Invoke(true, "로그인 성공");
+            onDone?.Invoke(true, LocalizationManager.Get("auth.login_success"));
         });
 #else
-        onDone?.Invoke(false, "Firebase 미설정 (FIREBASE_ENABLED 심볼 필요)");
+        onDone?.Invoke(false, LocalizationManager.Get("auth.firebase_not_configured"));
 #endif
     }
 
@@ -143,14 +143,14 @@ public class AuthManager : MonoBehaviour
             {
                 if (t.IsCanceled || t.IsFaulted) { onDone?.Invoke(false, FirebaseError(t)); return; }
                 ApplyUser(auth.CurrentUser, guest: true);
-                onDone?.Invoke(true, "게스트로 시작");
+                onDone?.Invoke(true, LocalizationManager.Get("auth.guest_start"));
             });
             return;
         }
 #endif
         // Firebase 없이도 게스트는 바로 진행 (저장은 로컬로 처리)
         SetGuestLocal();
-        onDone?.Invoke(true, "게스트로 시작");
+        onDone?.Invoke(true, LocalizationManager.Get("auth.guest_start"));
     }
 
     public void SignOut()
@@ -172,9 +172,9 @@ public class AuthManager : MonoBehaviour
     {
         email = (email ?? "").Trim();
         if (string.IsNullOrEmpty(email) || !EmailRegex.IsMatch(email))
-        { onDone?.Invoke(false, "이메일 형식이 올바르지 않습니다. (예: name@example.com)"); return false; }
+        { onDone?.Invoke(false, LocalizationManager.Get("auth.invalid_email")); return false; }
         if (string.IsNullOrEmpty(password) || password.Length < 6)
-        { onDone?.Invoke(false, "비밀번호는 6자 이상이어야 합니다."); return false; }
+        { onDone?.Invoke(false, LocalizationManager.Get("auth.password_too_short")); return false; }
         return true;
     }
 
@@ -186,14 +186,14 @@ public class AuthManager : MonoBehaviour
         UserId = user != null ? user.UserId : "";
         DisplayName = (user != null && !string.IsNullOrEmpty(user.DisplayName))
             ? user.DisplayName
-            : (guest ? "게스트" : (user != null ? user.Email : ""));
+            : (guest ? LocalizationManager.Get("auth.guest_display_name") : (user != null ? user.Email : ""));
         PlayerPrefs.SetInt(GuestKey, guest ? 1 : 0); // 게스트=로컬저장, 실제계정=클라우드
     }
 
     static string FirebaseError(System.Threading.Tasks.Task t)
     {
         var e = t.Exception?.GetBaseException();
-        return e != null ? "실패: " + e.Message : "실패";
+        return e != null ? LocalizationManager.Get("auth.failure_prefix") + " " + e.Message : LocalizationManager.Get("auth.failure");
     }
 #endif
 }

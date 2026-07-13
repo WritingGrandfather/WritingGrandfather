@@ -66,8 +66,6 @@
 .menu-button:hover { background-color: rgb(170, 128, 86); }
 .menu-button--primary { background-color: rgb(214, 108, 58); }
 .menu-button--primary:hover { background-color: rgb(230, 128, 76); }
-.menu-button--google { background-color: rgb(66, 133, 244); }
-.menu-button--google:hover { background-color: rgb(90, 150, 250); }
 .menu-button--guest { background-color: rgb(120, 120, 120); }
 .menu-button--guest:hover { background-color: rgb(140, 140, 140); }
 
