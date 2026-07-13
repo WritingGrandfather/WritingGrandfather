@@ -17,6 +17,7 @@
                 <ui:VisualElement name="guide-cross-v" class="guide-cross guide-cross--v" />
                 <ui:Label text="가" name="ghost-character-label" class="ghost-character-label" />
                 <ui:VisualElement name="stroke-order-layer" class="stroke-order-layer hidden" />
+                <ui:Button text="취소" name="undo-button" class="undo-button" />
                 <ui:Button text="초기화" name="reset-button" class="reset-button" />
             </ui:VisualElement>
             <ui:Button text="완료" name="complete-button" class="primary-button" />

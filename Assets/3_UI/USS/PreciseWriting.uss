@@ -129,6 +129,31 @@ Button:active {
     background-color: rgba(140, 140, 140, 0.9);
 }
 
+/* 획 하나 취소(undo) 버튼 - 초기화(전체 삭제)와 헷갈리지 않도록 반대쪽(좌상단)에
+   두고, 색도 테마 브라운으로 구분한다. */
+.undo-button {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    height: 100px;
+    padding: 0 24px;
+    border-radius: 30px;
+    border-width: 0;
+    font-size: 40px;
+    color: rgb(255, 255, 255);
+    background-color: rgba(150, 111, 71, 0.9);
+    -unity-text-align: middle-center;
+}
+
+.undo-button:hover {
+    background-color: rgba(170, 128, 86, 0.95);
+}
+
+/* 되돌릴 게 없을 때(UndoManager.CanUndo == false) 흐리게 표시 + 클릭 무시 */
+.undo-button:disabled {
+    opacity: 0.4;
+}
+
 /* ---- 획순 레이어 ---- */
 
 .stroke-order-layer {

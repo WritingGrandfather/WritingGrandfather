@@ -37,6 +37,16 @@ public class UndoManager : MonoBehaviour
         OnStateChanged?.Invoke();
     }
 
+    // ClearAll() 등으로 그려진 선을 전부 풀에 반환한 뒤에는, 그 이전 히스토리에
+    // 남아있던 undo/redo 델리게이트가 이미 사라진 GameObject를 참조하게 된다 -
+    // 단어를 넘어가거나 초기화할 때 반드시 같이 호출해서 History를 비워야 한다.
+    public void Clear()
+    {
+        history.Clear();
+        redoHistory.Clear();
+        OnStateChanged?.Invoke();
+    }
+
     public void Undo()
     {
         if (!CanUndo) return;
