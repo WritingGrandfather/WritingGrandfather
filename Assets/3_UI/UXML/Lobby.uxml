@@ -34,14 +34,13 @@
             <ui:Button name="btn-settings-close" text="닫기" class="settings-close-button" />
         </ui:VisualElement>
 
-        <ui:VisualElement name="settings-tab-bar" class="settings-tab-bar">
-            <ui:Button name="tab-video" text="비디오" class="settings-tab" />
-            <ui:Button name="tab-audio" text="오디오" class="settings-tab settings-tab--active" />
-            <ui:Button name="tab-language" text="언어" class="settings-tab" />
-        </ui:VisualElement>
-
-        <ui:VisualElement name="settings-content" class="settings-content">
-            <ui:VisualElement name="video-panel" class="settings-tab-panel hidden">
+        <ui:ScrollView name="settings-content" class="settings-content" mode="Vertical">
+            <ui:VisualElement name="section-video" class="settings-section">
+                <ui:VisualElement class="settings-section-header">
+                    <ui:VisualElement class="settings-section-line" />
+                    <ui:Label text="비디오" name="section-video-title" class="settings-section-title" />
+                    <ui:VisualElement class="settings-section-line" />
+                </ui:VisualElement>
                 <ui:VisualElement class="settings-row">
                     <ui:Label text="화질" class="settings-row-label" />
                     <ui:DropdownField name="dropdown-quality" choices="낮음,보통,높음" index="1" class="settings-control" />
@@ -52,7 +51,12 @@
                 </ui:VisualElement>
             </ui:VisualElement>
 
-            <ui:VisualElement name="audio-panel" class="settings-tab-panel">
+            <ui:VisualElement name="section-audio" class="settings-section">
+                <ui:VisualElement class="settings-section-header">
+                    <ui:VisualElement class="settings-section-line" />
+                    <ui:Label text="오디오" name="section-audio-title" class="settings-section-title" />
+                    <ui:VisualElement class="settings-section-line" />
+                </ui:VisualElement>
                 <ui:VisualElement class="settings-row">
                     <ui:Label text="전체 볼륨" class="settings-row-label" />
                     <ui:Toggle name="toggle-master-volume" value="true" class="settings-control" />
@@ -67,12 +71,17 @@
                 </ui:VisualElement>
             </ui:VisualElement>
 
-            <ui:VisualElement name="language-panel" class="settings-tab-panel hidden">
+            <ui:VisualElement name="section-language" class="settings-section">
+                <ui:VisualElement class="settings-section-header">
+                    <ui:VisualElement class="settings-section-line" />
+                    <ui:Label text="언어" name="section-language-title" class="settings-section-title" />
+                    <ui:VisualElement class="settings-section-line" />
+                </ui:VisualElement>
                 <ui:VisualElement class="settings-row">
                     <ui:Label text="언어 선택" class="settings-row-label" />
                     <ui:RadioButtonGroup name="radio-language" choices="한국어,English" value="0" class="settings-control" />
                 </ui:VisualElement>
             </ui:VisualElement>
-        </ui:VisualElement>
+        </ui:ScrollView>
     </ui:VisualElement>
 </ui:UXML>

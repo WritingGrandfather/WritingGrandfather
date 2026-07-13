@@ -30,14 +30,12 @@ public class LobbyController : MonoBehaviour
     // Settings panel text also needs to shrink on narrow screens, same reason
     // as the lobby title/menu buttons above. Matches Settings.uss values.
     [SerializeField] float settingsTitleBaseFontSize = 44f;
-    [SerializeField] float settingsTabBaseFontSize = 28f;
+    // .settings-section-title's font-size in Settings.uss (비디오/오디오/언어 등 분류 제목).
+    [SerializeField] float settingsSectionTitleBaseFontSize = 56f;
     // .settings-header's "padding: 24px 32px" (both sides) in Settings.uss.
     [SerializeField] float settingsHeaderHorizontalPadding = 64f;
-    // .settings-tab-bar's "padding: 0 24px" (both sides) in Settings.uss.
-    [SerializeField] float settingsTabBarHorizontalPadding = 48f;
-    // each .settings-tab's "margin: 0 6px" (both sides) in Settings.uss.
-    [SerializeField] float settingsTabHorizontalMargin = 12f;
-    [SerializeField] float settingsRowLabelBaseFontSize = 30f;
+    // .settings-row-label's font-size in Settings.uss.
+    [SerializeField] float settingsRowLabelBaseFontSize = 48f;
     // .settings-content's "padding: 8px 40px 32px" (both sides) in Settings.uss.
     [SerializeField] float settingsContentHorizontalPadding = 80f;
     // .settings-row-label's "width: 32%" in Settings.uss.
@@ -59,8 +57,7 @@ public class LobbyController : MonoBehaviour
     VisualElement _settingsPanel;
     TextElement _settingsTitle;
     Button _settingsCloseButton;
-    Button[] _settingsTabButtons;
-    VisualElement[] _settingsTabPanels;
+    TextElement[] _settingsSectionTitles;
     TextElement[] _settingsRowLabels;
     // _settingsRowLabels는 이름이 아니라 UXML 문서 순서(화질/프레임/전체 볼륨/배경음/
     // 효과음/언어 선택)로 모은 것이라, 이 배열도 그 순서와 반드시 일치해야 한다 -
@@ -128,30 +125,17 @@ public class LobbyController : MonoBehaviour
         _settingsCloseButton = root.Q<Button>("btn-settings-close");
         _settingsCloseButton.clicked += OnSettingsCloseClicked;
 
-        // 탭 버튼과 탭 콘텐츠 패널을 같은 순서(비디오/오디오/언어)로 짝지어
-        // 인덱스만으로 서로 매칭할 수 있게 함 - Lobby.uxml의 탭 순서와 일치해야 함.
-        _settingsTabButtons = new[]
+        // 비디오/오디오/언어 섹션 제목을 같은 순서로 모아, 인덱스만으로
+        // 로컬라이제이션 키와 매칭할 수 있게 함 - Lobby.uxml의 섹션 순서와 일치해야 함.
+        _settingsSectionTitles = new TextElement[]
         {
-            root.Q<Button>("tab-video"),
-            root.Q<Button>("tab-audio"),
-            root.Q<Button>("tab-language"),
+            root.Q<Label>("section-video-title"),
+            root.Q<Label>("section-audio-title"),
+            root.Q<Label>("section-language-title"),
         };
-        _settingsTabPanels = new[]
-        {
-            root.Q<VisualElement>("video-panel"),
-            root.Q<VisualElement>("audio-panel"),
-            root.Q<VisualElement>("language-panel"),
-        };
-        // 화질/밝기/전체 볼륨 등 모든 탭 패널에 걸쳐 있는 행 라벨을 한 번에 모음 -
-        // 탭이 숨겨져 있어도(display:none) 텍스트 측정 자체는 문제없이 동작한다.
+        // 화질/프레임/전체 볼륨 등 모든 섹션에 걸쳐 있는 행 라벨을 한 번에 모음 -
+        // 이제 모든 섹션이 항상 같이 표시되므로 순서만 UXML 문서 순서와 맞으면 된다.
         _settingsRowLabels = root.Query<Label>().Class("settings-row-label").Build().ToList().ToArray();
-        for (int i = 0; i < _settingsTabButtons.Length; i++)
-        {
-            // 클로저가 루프 변수 i를 그대로 캡처하면 모든 버튼이 마지막 인덱스를
-            // 참조하게 되므로, 로컬 변수 tabIndex에 복사해서 캡처한다.
-            int tabIndex = i;
-            _settingsTabButtons[i].clicked += () => ShowSettingsTab(tabIndex);
-        }
 
         _dropdownQuality = root.Q<DropdownField>("dropdown-quality");
         _dropdownFramerate = root.Q<DropdownField>("dropdown-framerate");
@@ -197,9 +181,9 @@ public class LobbyController : MonoBehaviour
         _settingsTitle.text = LocalizationManager.Get("lobby.settings.title");
         _settingsCloseButton.text = LocalizationManager.Get("lobby.settings.close");
 
-        _settingsTabButtons[0].text = LocalizationManager.Get("lobby.settings.tab_video");
-        _settingsTabButtons[1].text = LocalizationManager.Get("lobby.settings.tab_audio");
-        _settingsTabButtons[2].text = LocalizationManager.Get("lobby.settings.tab_language");
+        _settingsSectionTitles[0].text = LocalizationManager.Get("lobby.settings.tab_video");
+        _settingsSectionTitles[1].text = LocalizationManager.Get("lobby.settings.tab_audio");
+        _settingsSectionTitles[2].text = LocalizationManager.Get("lobby.settings.tab_language");
 
         for (int i = 0; i < _settingsRowLabels.Length; i++)
             _settingsRowLabels[i].text = LocalizationManager.Get(SettingsRowLabelKeys[i]);
@@ -366,16 +350,6 @@ public class LobbyController : MonoBehaviour
         _settingsPanel.AddToClassList("hidden");
     }
 
-    // 선택된 탭만 활성 스타일 + 해당 탭 패널을 보여주고, 나머지는 비활성 처리.
-    void ShowSettingsTab(int tabIndex)
-    {
-        for (int i = 0; i < _settingsTabButtons.Length; i++)
-        {
-            _settingsTabButtons[i].EnableInClassList("settings-tab--active", i == tabIndex);
-            _settingsTabPanels[i].EnableInClassList("hidden", i != tabIndex);
-        }
-    }
-
     void OnExitClicked()
     {
         _exitModal.RemoveFromClassList("hidden");
@@ -474,11 +448,13 @@ public class LobbyController : MonoBehaviour
             ApplyTextScale(new[] { _settingsTitle }, settingsTitleBaseFontSize, settingsTitleAvailableWidth, 1f);
         }
 
-        if (_settingsTabButtons != null)
+        if (_settingsSectionTitles != null)
         {
-            float tabsMargin = settingsTabHorizontalMargin * _settingsTabButtons.Length;
-            float settingsTabAvailableWidth = Mathf.Max(0f, (contentWidth - settingsTabBarHorizontalPadding - tabsMargin) / _settingsTabButtons.Length);
-            ApplyTextScale(_settingsTabButtons, settingsTabBaseFontSize, settingsTabAvailableWidth, 1f);
+            // 섹션 제목은 좌우 구분선과 한 줄에 나란히 있지만, 그 선들은
+            // flex-grow로 남는 폭을 채울 뿐이라 제목 자체의 사용 가능 폭은
+            // 콘텐츠 폭 전체(줄어들 필요가 있을 만큼 좁아지는 경우는 드묾)로 잡는다.
+            float settingsSectionTitleAvailableWidth = Mathf.Max(0f, contentWidth - settingsContentHorizontalPadding);
+            ApplyTextScale(_settingsSectionTitles, settingsSectionTitleBaseFontSize, settingsSectionTitleAvailableWidth, 1f);
         }
 
         if (_settingsRowLabels != null)

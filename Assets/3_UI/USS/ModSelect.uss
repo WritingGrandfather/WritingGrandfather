@@ -4,6 +4,16 @@
     height: 100%;
 }
 
+/* 모든 Button에 공통으로 적용되는 눌림 효과 - Lobby.uss와 동일한 규칙 */
+Button {
+    transition-property: scale;
+    transition-duration: 0.08s;
+}
+
+Button:active {
+    scale: 0.94;
+}
+
 .modselect-root {
     position: absolute;
     width: 100%;

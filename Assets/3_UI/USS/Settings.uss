@@ -50,58 +50,45 @@
     background-color: rgb(140, 140, 140);
 }
 
-/* 화면/소리/기타 등 설정 카테고리를 전환하는 탭 버튼들이 나열되는 바 */
-.settings-tab-bar {
-    flex-direction: row;
-    flex-shrink: 0;
-    padding: 0 24px;
-    margin-bottom: 16px;
-}
-
-/* 탭 버튼 하나. flex-grow로 탭 바 안에서 균등한 너비를 가짐.
-   min-width:0 + overflow:hidden이 없으면 좁은 화면에서 라벨 텍스트가
-   버튼 폭을 넘어 옆 탭까지 겹쳐 보이므로 반드시 필요 */
-.settings-tab {
-    flex-grow: 1;
-    flex-shrink: 1;
-    flex-basis: 0;
-    min-height: 0;
-    min-width: 0;
-    overflow: hidden;
-    height: 50px;
-    margin: 0 6px;
-    border-radius: 14px;
-    border-width: 0;
-    font-size: 28px;
-    color: rgb(255, 255, 255);
-    background-color: rgb(150, 111, 71);
-    -unity-text-align: middle-center;
-}
-
-.settings-tab:hover {
-    background-color: rgb(170, 128, 86);
-}
-
-/* 현재 선택된 탭에 붙는 모디파이어 클래스 (스크립트에서 토글) */
-.settings-tab--active {
-    background-color: rgb(214, 108, 58);
-}
-
-.settings-tab--active:hover {
-    background-color: rgb(230, 128, 76);
-}
-
-/* 탭 바 아래, 실제 설정 항목들이 표시되는 스크롤/콘텐츠 영역 */
+/* 탭 없이 모든 설정 항목이 한 화면에 이어지는 스크롤 콘텐츠 영역.
+   ScrollView 자체가 overflow/clipping을 처리하므로 overflow:hidden은 필요 없음 */
 .settings-content {
     flex-grow: 1;
     min-height: 0;
-    overflow: hidden;
     padding: 8px 40px 32px;
 }
 
-/* 탭 하나에 대응하는 설정 항목 묶음 (탭 전환 시 표시/숨김 대상) */
-.settings-tab-panel {
+/* 비디오/오디오/언어처럼 서로 다른 카테고리의 설정 항목 묶음.
+   더 이상 탭으로 전환되지 않고 세로로 이어서 전부 표시된다 */
+.settings-section {
     flex-direction: column;
+}
+
+/* 카테고리 제목 줄 - 제목 좌우로 얇은 구분선이 나란히 오는 "----비디오----" 형태.
+   Unity USS는 인접 형제 결합자(+)를 지원하지 않으므로, "첫 섹션 제외 위 여백"
+   대신 모든 섹션에 균일하게 위 여백을 준다 (첫 섹션은 여백이 살짝 더 생길 뿐
+   콘텐츠 padding-top과 합쳐져도 크게 어색하지 않다). */
+.settings-section-header {
+    flex-direction: row;
+    align-items: center;
+    margin-top: 36px;
+    margin-bottom: 24px;
+}
+
+.settings-section-line {
+    flex-grow: 1;
+    height: 2px;
+    background-color: rgb(150, 111, 71);
+}
+
+.settings-section-title {
+    flex-shrink: 0;
+    margin: 0 16px;
+    font-size: 56px;
+    -unity-font-style: bold;
+    color: rgb(90, 62, 40);
+    -unity-text-align: middle-center;
+    white-space: nowrap;
 }
 
 /* "라벨 - 컨트롤" 형태로 구성되는 설정 항목 한 줄 */
@@ -109,14 +96,14 @@
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 28px;
+    margin-bottom: 36px;
 }
 
 .settings-row-label {
     width: 32%;
     min-width: 0;
     overflow: hidden;
-    font-size: 21px;
+    font-size: 48px;
     color: rgb(60, 45, 35);
     white-space: nowrap;
 }
@@ -137,10 +124,10 @@
    체크 아이콘 대신 라디오 체크마크처럼 단순히 배경색만 바꿔 표시한다 - 꺼짐:
    크림색 빈 사각형, 켜짐: 테마 오렌지로 꽉 채움. */
 .unity-toggle__checkmark {
-    width: 44px;
-    height: 44px;
-    border-radius: 10px;
-    border-width: 3px;
+    width: 60px;
+    height: 60px;
+    border-radius: 14px;
+    border-width: 4px;
     border-color: rgb(150, 111, 71);
     background-color: rgb(255, 253, 248);
     background-image: none;
@@ -157,13 +144,13 @@
 
 /* DropdownField(해상도, 언어 등 선택) 전체 높이 */
 .unity-base-popup-field {
-    height: 70px;
+    height: 92px;
 }
 
 .unity-base-popup-field__input {
-    border-radius: 14px;
+    border-radius: 16px;
     border-width: 0;
-    padding: 0 20px;
+    padding: 0 24px;
     background-color: rgb(255, 253, 248);
 }
 
@@ -172,18 +159,20 @@
 }
 
 .unity-base-popup-field__text {
-    font-size: 26px;
+    font-size: 48px;
     color: rgb(60, 45, 35);
 }
 
 .unity-base-popup-field__arrow {
+    width: 24px;
+    height: 24px;
     -unity-background-image-tint-color: rgb(150, 111, 71);
 }
 
 /* DropdownField를 눌렀을 때 뜨는 선택지 목록(GenericDropdownMenu)의 항목 텍스트.
-   기본값은 매우 작아서 본체 드롭다운 텍스트(26px)와 맞춰 키운다. */
+   기본값은 매우 작아서 본체 드롭다운 텍스트(48px)와 맞춰 키운다. */
 .unity-base-dropdown__label {
-    font-size: 26px;
+    font-size: 48px;
 }
 
 /* RadioButtonGroup(예: 화질 옵션 등) 컨테이너 - 가로 정렬 */
@@ -192,7 +181,7 @@
 }
 
 .unity-radio-button {
-    margin-right: 40px;
+    margin-right: 48px;
     flex-grow: 0;
     /* flex-shrink 기본값(1)이면 라디오 그룹이 부모 폭보다 좁아질 때 라벨이
        같이 눌려서 "English" 오른쪽 글자가 잘려 보였다 - 원래 크기 그대로 유지 */
@@ -200,10 +189,10 @@
 }
 
 .unity-radio-button__checkmark-background {
-    width: 36px;
-    height: 36px;
-    border-radius: 18px;
-    border-width: 3px;
+    width: 48px;
+    height: 48px;
+    border-radius: 24px;
+    border-width: 4px;
     border-color: rgb(150, 111, 71);
     background-color: rgb(255, 253, 248);
 }
@@ -225,5 +214,5 @@
    Label에 기본 테마가 자체 font-size를 명시적으로 깔아둬서 상속 값을 덮어써
    커지지 않는 문제가 있었다 - 그래서 실제로 그리는 안쪽 클래스에 직접 지정. */
 .unity-radio-button__text {
-    font-size: 36px;
+    font-size: 48px;
 }
