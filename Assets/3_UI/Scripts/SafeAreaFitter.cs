@@ -71,53 +71,38 @@ public class SafeAreaFitter : MonoBehaviour
         if (safeArea == _appliedSafeArea && screenSize == _appliedScreenSize)
             return;
 
-        var refRes = _document.panelSettings.referenceResolution;
-        if (refRes.x <= 0f || refRes.y <= 0f || screenSize.x <= 0 || screenSize.y <= 0)
+        var panel = _target.panel;
+        float panelWidth = panel.visualTree.resolvedStyle.width;
+        float panelHeight = panel.visualTree.resolvedStyle.height;
+        if (panelWidth <= 0f || panelHeight <= 0f)
             return;
 
-        // PanelSettings is set to Shrink: the reference canvas is uniformly scaled
-        // down to fit inside the screen (letterboxed), so the device-pixel-to-panel-
-        // unit scale is governed by whichever axis is tighter.
-        float fitScale = Mathf.Min(screenSize.x / refRes.x, screenSize.y / refRes.y);
-        float scale = 1f / fitScale;
-
-        // Screen.safeArea is measured against the full physical screen, but the
-        // rendered canvas is a centered sub-rect (letterboxed) of that screen.
-        // Intersect the notch/home-indicator exclusion zones with the canvas rect
-        // instead of applying them directly - otherwise, on extreme aspect ratios
-        // or very small screens, the letterbox bars and the real notch inset get
-        // double-counted, over-padding the content until it overflows.
-        float canvasWidthPx = refRes.x * fitScale;
-        float canvasHeightPx = refRes.y * fitScale;
-        float canvasLeft = (screenSize.x - canvasWidthPx) * 0.5f;
-        float canvasBottom = (screenSize.y - canvasHeightPx) * 0.5f;
-        float canvasTop = canvasBottom + canvasHeightPx;
-        float canvasRight = canvasLeft + canvasWidthPx;
-
-        float leftInsetPx = Mathf.Max(0f, safeArea.xMin - canvasLeft);
-        float rightInsetPx = Mathf.Max(0f, canvasRight - safeArea.xMax);
-        float topInsetPx = Mathf.Max(0f, canvasTop - safeArea.yMax);
-        float bottomInsetPx = Mathf.Max(0f, safeArea.yMin - canvasBottom);
+        // Let Unity's own screen-to-panel transform do the conversion instead of
+        // re-deriving PanelSettings' scale factor by hand - it already accounts
+        // for whichever ScreenMatchMode (Shrink/Expand/MatchWidthOrHeight) is
+        // configured, so this stays correct no matter how that setting changes.
+        // Screen.safeArea uses a bottom-left origin (like Input.mousePosition);
+        // ScreenToPanel expects a top-left origin, so flip Y.
+        Vector2 topLeft = RuntimePanelUtils.ScreenToPanel(panel, new Vector2(safeArea.xMin, screenSize.y - safeArea.yMax));
+        Vector2 bottomRight = RuntimePanelUtils.ScreenToPanel(panel, new Vector2(safeArea.xMax, screenSize.y - safeArea.yMin));
 
         // Even with no notch/home-indicator inset, keep a minimum breathing
         // room from the screen edge so content doesn't hug it directly.
-        float paddingTop = topInsetPx * scale + baseMargin;
-        float paddingBottom = bottomInsetPx * scale + baseMargin;
-        float paddingLeft = leftInsetPx * scale + baseMargin;
-        float paddingRight = rightInsetPx * scale + baseMargin;
+        float paddingLeft = Mathf.Max(0f, topLeft.x) + baseMargin;
+        float paddingTop = Mathf.Max(0f, topLeft.y) + baseMargin;
+        float paddingRight = Mathf.Max(0f, panelWidth - bottomRight.x) + baseMargin;
+        float paddingBottom = Mathf.Max(0f, panelHeight - bottomRight.y) + baseMargin;
         _target.style.paddingLeft = paddingLeft;
         _target.style.paddingRight = paddingRight;
         _target.style.paddingTop = paddingTop;
         _target.style.paddingBottom = paddingBottom;
 
-        // Only SafeArea-driven shrinkage should scale the text down - a normal
-        // change of screen aspect ratio never reduces the available space below
-        // the design budgets below, since PanelSettings keeps the panel's own
-        // logical size pinned to referenceResolution regardless of device aspect.
-        float availableContentHeight = refRes.y - paddingTop - paddingBottom;
+        // Only SafeArea-driven shrinkage should scale the text down - measured
+        // against the panel's actual current size, not an assumed constant.
+        float availableContentHeight = panelHeight - paddingTop - paddingBottom;
         float heightFontScale = Mathf.Clamp(availableContentHeight / designContentHeight, minFontScale, 1f);
 
-        float contentWidth = refRes.x - paddingLeft - paddingRight;
+        float contentWidth = panelWidth - paddingLeft - paddingRight;
         float titleAvailableWidth = Mathf.Max(0f, contentWidth - titleAreaHorizontalPadding);
         float buttonAvailableWidth = Mathf.Max(0f, contentWidth * buttonAreaWidthFraction);
 
