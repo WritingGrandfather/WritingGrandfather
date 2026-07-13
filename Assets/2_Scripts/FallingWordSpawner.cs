@@ -1,10 +1,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 /// <summary>
-/// 낙하식 출제: 낱말/단어가 화면 위에서 아래로 떨어진다. (UI Toolkit)
+/// 낙하식 출제: 낱말/단어가 화면 위에서 아래로 떨어진다.
+///
+/// 글자는 월드 공간 TextMesh로 렌더링 — 정렬 순서(sortingOrder)를 낮게 줘서
+/// 쓰기 칸(WritingCellBox)·획(LineRenderer) 뒤에 그려진다.
+/// (예전 UI Toolkit Label 방식은 오버레이 UI라 항상 맨 위에 그려져 칸을 가렸음)
 ///
 /// EnemySpawner(넘기기 방식)와 독립된 별도 시스템.
 /// 스테이지가 있으면 스테이지 글자들이 셔플로 떨어지고, 없으면 경고.
@@ -16,45 +19,47 @@ using UnityEngine.UIElements;
 /// </summary>
 public class FallingWordSpawner : MonoBehaviour
 {
-    /// <summary>떨어지는 글자 하나 (Label 래퍼)</summary>
+    /// <summary>떨어지는 글자 하나 (월드 TextMesh 래퍼)</summary>
     public class FallingWord
     {
         public string Text { get; }
-        public Label Element { get; }
+        public GameObject Go { get; }
 
-        readonly float speed;
-        readonly float deadlineY;
+        readonly float speed;      // 월드 단위/초 (아래로)
+        readonly float deadlineY;  // 이 월드 y 이하로 내려가면 바닥
         float y;
 
         public bool ReachedDeadline { get; private set; }
 
-        public FallingWord(string text, float x, float startY, float speed, float deadlineY)
+        public FallingWord(string text, GameObject go, float startY, float speed, float deadlineY)
         {
             Text = text;
+            Go = go;
             this.speed = speed;
             this.deadlineY = deadlineY;
             y = startY;
-
-            Element = new Label(text);
-            Element.AddToClassList("falling-word");
-            Element.pickingMode = PickingMode.Ignore; // 포인터 통과 (그리기/버튼 방해 금지)
-            Element.style.position = Position.Absolute;
-            Element.style.left = x;
-            Element.style.top = y;
         }
 
         public void Tick(float deltaTime)
         {
-            y += speed * deltaTime;
-            Element.style.top = y;
-            if (y >= deadlineY) ReachedDeadline = true;
+            y -= speed * deltaTime;
+            if (Go != null)
+            {
+                Vector3 p = Go.transform.position;
+                p.y = y;
+                Go.transform.position = p;
+            }
+            if (y <= deadlineY) ReachedDeadline = true;
         }
 
-        public void Remove() => Element.RemoveFromHierarchy();
+        public void Remove()
+        {
+            if (Go != null) Destroy(Go);
+        }
     }
 
     [Header("참조")]
-    [SerializeField] UIDocument uiDocument;
+    [Tooltip("글자를 그릴 폰트 (레거시 다이내믹 폰트 — 한글은 OS 폰트 폴백으로 렌더링)")]
     [SerializeField] Font font;
 
     [Header("모드 / 스테이지")]
@@ -64,20 +69,24 @@ public class FallingWordSpawner : MonoBehaviour
     [Header("난이도 (시작 → 최대, 완만하게 상승)")]
     [SerializeField] float startSpawnInterval = 2.5f;
     [SerializeField] float minSpawnInterval = 0.9f;
-    [SerializeField] float startFallSpeed = 80f;   // px/sec
+    [SerializeField] float startFallSpeed = 80f;   // px/sec (화면 픽셀 기준 — 내부에서 월드로 환산)
     [SerializeField] float maxFallSpeed = 240f;
     [SerializeField] float rampDuration = 180f;    // 이 시간쯤 최대 난이도의 95% 도달
 
     [Header("표시")]
-    [SerializeField] int fontSize = 90;
+    [SerializeField] int fontSize = 90;            // px 기준 글자 높이
     [SerializeField] float sideMarginPx = 80f;
     [Range(0f, 1f)][SerializeField] float deadlineRatio = 0.85f;
+
+    [Tooltip("정렬 순서 — 쓰기 칸(-10)과 획(0)보다 낮아야 글자가 칸 뒤로 지나간다")]
+    [SerializeField] int sortingOrder = -20;
 
     readonly List<FallingWord> active = new List<FallingWord>();
     readonly List<string> queue = new List<string>(); // 현재 스테이지 셔플 큐
     int stageIndex;
     float spawnTimer;
     float elapsed;
+    Camera cam;
 
     public IReadOnlyList<FallingWord> ActiveWords => active;
     public int CurrentStage => stageIndex + 1;
@@ -89,27 +98,27 @@ public class FallingWordSpawner : MonoBehaviour
     /// <summary>글자를 맞혀서 제거됐을 때</summary>
     public System.Action<FallingWord> OnWordCleared;
 
-    VisualElement Root => uiDocument.rootVisualElement;
-
     float Progress => 1f - Mathf.Exp(-3f * elapsed / rampDuration);
-    float CurrentSpeed => Mathf.Lerp(startFallSpeed, maxFallSpeed, Progress);
+    float CurrentSpeedPx => Mathf.Lerp(startFallSpeed, maxFallSpeed, Progress);
     float CurrentInterval => Mathf.Lerp(startSpawnInterval, minSpawnInterval, Progress);
+
+    /// <summary>화면 픽셀 → 월드 단위 환산 계수</summary>
+    float WorldPerPx => cam != null && cam.pixelHeight > 0
+        ? 2f * cam.orthographicSize / cam.pixelHeight
+        : 0.01f;
 
     void OnEnable()
     {
-        VisualElement root = Root;
-        root.pickingMode = PickingMode.Ignore; // 전체 화면 root가 포인터를 삼키지 않게
-        root.style.position = Position.Absolute;
-        root.style.top = 0;
-        root.style.bottom = 0;
-        root.style.left = 0;
-        root.style.right = 0;
+        cam = Camera.main;
     }
 
     void Update()
     {
-        if (float.IsNaN(Root.resolvedStyle.width) || Root.resolvedStyle.width <= 0f)
-            return;
+        if (cam == null)
+        {
+            cam = Camera.main;
+            if (cam == null) return;
+        }
 
         elapsed += Time.deltaTime;
         spawnTimer += Time.deltaTime;
@@ -138,18 +147,38 @@ public class FallingWordSpawner : MonoBehaviour
         string text = NextText();
         if (string.IsNullOrEmpty(text)) return;
 
-        float width = Root.resolvedStyle.width;
-        float textWidth = fontSize * text.Length;
-        float x = Random.Range(sideMarginPx, Mathf.Max(sideMarginPx + 1f, width - sideMarginPx - textWidth));
-        float deadlineY = Root.resolvedStyle.height * deadlineRatio;
+        float wpp = WorldPerPx;
+        float camH = 2f * cam.orthographicSize;
+        float camW = camH * cam.aspect;
+        float left = cam.transform.position.x - camW * 0.5f;
+        float top = cam.transform.position.y + camH * 0.5f;
 
-        var word = new FallingWord(text, x, -fontSize, CurrentSpeed, deadlineY);
-        word.Element.style.fontSize = fontSize;
-        word.Element.style.color = Color.white;
-        if (font != null)
-            word.Element.style.unityFontDefinition = new StyleFontDefinition(font);
+        float charWorld = fontSize * wpp;                 // 글자 높이 (월드)
+        float textWorldW = charWorld * text.Length;       // 대략적 글자 폭
+        float margin = sideMarginPx * wpp;
 
-        Root.Add(word.Element);
+        float x = Random.Range(left + margin,
+                               Mathf.Max(left + margin + 0.01f, left + camW - margin - textWorldW));
+        float startY = top + charWorld;                    // 화면 위 살짝 바깥에서 시작
+        float deadlineY = top - camH * deadlineRatio;      // 예전 UI 기준(위에서 85%)과 동일
+
+        var go = new GameObject("FallingWord_" + text);
+        go.transform.SetParent(transform, false);
+        go.transform.position = new Vector3(x, startY, 0f);
+
+        var tm = go.AddComponent<TextMesh>();
+        tm.text = text;
+        tm.font = font;
+        tm.fontSize = fontSize;
+        tm.characterSize = 10f * wpp;   // 줄 높이 ≈ fontSize × characterSize × 0.1 = fontSize(px) × wpp
+        tm.color = Color.white;
+        tm.anchor = TextAnchor.UpperLeft;
+
+        var mr = go.GetComponent<MeshRenderer>();
+        if (font != null) mr.material = font.material;
+        mr.sortingOrder = sortingOrder;   // 쓰기 칸/획 뒤에 그리기
+
+        var word = new FallingWord(text, go, startY, CurrentSpeedPx * wpp, deadlineY);
         active.Add(word);
     }
 
