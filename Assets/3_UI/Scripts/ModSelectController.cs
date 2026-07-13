@@ -24,7 +24,7 @@ public class ModSelectController : MonoBehaviour
         _challengeDesc = root.Q<TextElement>("challenge-desc");
 
         _btnPrecise.clicked += () => SceneManager.LoadScene("WritingPracticeScene");
-        _btnChallenge.clicked += () => SceneManager.LoadScene("JihwanScnene");
+        _btnChallenge.clicked += () => SceneManager.LoadScene("도전씬");
         _btnBack.clicked += () => SceneManager.LoadScene("LobbyScene");
 
         ApplyLocalization();

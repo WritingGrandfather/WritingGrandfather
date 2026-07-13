@@ -19,7 +19,7 @@ using TMPro;
 /// </summary>
 public static class JihwanSceneBuilder
 {
-    const string ScenePath = "Assets/1_Scenes/JihwanScnene.unity";
+    const string ScenePath = "Assets/1_Scenes/도전씬.unity";
     const string TeamScenePath = "Assets/Hong/Scene/New Scene 1.unity";
 
     [MenuItem("Tools/Build Jihwan Scene")]

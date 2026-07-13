@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 // UnityEvent<int> 제네릭은 인스펙터에 노출되지 않으므로 구체 서브클래스로 선언한다.
 [System.Serializable] public class ScoreEvent : UnityEvent<int> { }
@@ -22,6 +23,26 @@ using UnityEngine.Events;
 /// </summary>
 public class ChallengeScoreTracker : MonoBehaviour
 {
+    // 도전 씬 이름 — 이 씬이 로드되면 트래커를 자동 생성한다.
+    const string ChallengeSceneName = "도전씬";
+
+    // 게임 시작 시 1회 등록. 도전 씬이 열릴 때마다 트래커 오브젝트를 자동으로 만들어 준다.
+    // (씬에 수동으로 오브젝트를 넣지 않아도 동작하도록)
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+    static void AutoBootstrap()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded; // 중복 등록 방지
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    static void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name != ChallengeSceneName) return;
+        if (FindObjectOfType<ChallengeScoreTracker>() != null) return; // 이미 있으면 그대로 사용
+        var go = new GameObject("ChallengeScoreTracker (auto)");
+        go.AddComponent<ChallengeScoreTracker>();
+    }
+
     [Header("참조")]
     [Tooltip("단어 완성(onWordAdvanced)을 받아 점수를 누적할 세션 컨트롤러")]
     [SerializeField] WritingSessionController session;
@@ -62,6 +83,11 @@ public class ChallengeScoreTracker : MonoBehaviour
 
     void OnEnable()
     {
+        // 인스펙터에서 연결 안 했으면 씬에서 자동으로 찾아 붙인다.
+        if (session == null) session = FindObjectOfType<WritingSessionController>();
+        if (spawner == null) spawner = FindObjectOfType<EnemySpawner>();
+        if (rankingManager == null) rankingManager = FindObjectOfType<RankingManager>();
+
         if (session != null)
         {
             if (session.onWordAdvanced == null) session.onWordAdvanced = new UnityEvent();
