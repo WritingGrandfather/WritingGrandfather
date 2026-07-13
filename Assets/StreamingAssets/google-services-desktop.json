@@ -14,11 +14,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "764618953349-1nqh6acufd2coadvqoubbblm82h9b5j0.apps.googleusercontent.com",
+          "client_id": "764618953349-dfeeprd1hn94j8vlbbspnf7tapr7f2gi.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.writinggrandfather.writinggrandfather",
-            "certificate_hash": "a1b2c3d4e5f60708091011121314151617181920"
+            "certificate_hash": "c24796f1a9f9bac972125f5d61ea8ba51fc44009"
           }
         },
         {
