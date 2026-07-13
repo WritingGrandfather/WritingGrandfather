@@ -11,9 +11,24 @@
                 <ui:Label text="점수" name="header-score" class="header-cell header-cell--score" />
             </ui:VisualElement>
 
-            <ui:ScrollView name="ranking-list" class="ranking-list" mode="Vertical" vertical-scroller-visibility="Auto" />
+            <ui:VisualElement name="ranking-list" class="ranking-list" />
 
             <ui:Label text="아직 기록이 없습니다" name="ranking-empty" class="ranking-empty hidden" />
+        </ui:VisualElement>
+
+        <ui:VisualElement name="my-rank-panel" class="my-rank-panel">
+            <ui:VisualElement name="my-rank-cell" class="my-rank-cell">
+                <ui:Label text="내 순위" name="my-rank-label" class="my-rank-label" />
+                <ui:Label text="-" name="my-rank-value" class="my-rank-value" />
+            </ui:VisualElement>
+            <ui:VisualElement name="my-score-cell" class="my-rank-cell">
+                <ui:Label text="내 점수" name="my-score-label" class="my-rank-label" />
+                <ui:Label text="0" name="my-score-value" class="my-rank-value" />
+            </ui:VisualElement>
+            <ui:VisualElement name="my-grade-cell" class="my-rank-cell">
+                <ui:Label text="등급" name="my-grade-label" class="my-rank-label" />
+                <ui:Label text="-" name="my-grade-value" class="my-rank-value my-grade-value" />
+            </ui:VisualElement>
         </ui:VisualElement>
 
         <ui:Button text="뒤로" name="btn-back" class="ranking-back-button" />

@@ -14,6 +14,8 @@
             <ui:Button name="btn-settings" text="설정" class="menu-button" />
             <ui:Button name="btn-exit" text="나가기" class="menu-button menu-button--exit" />
         </ui:VisualElement>
+
+        <ui:Label name="version-label" text="" class="version-label" />
     </ui:VisualElement>
 
     <ui:VisualElement name="exit-modal" class="modal-overlay hidden">

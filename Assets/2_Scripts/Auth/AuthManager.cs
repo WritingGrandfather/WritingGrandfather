@@ -45,19 +45,28 @@ public class AuthManager : MonoBehaviour
     void InitFirebase()
     {
 #if FIREBASE_ENABLED
-        FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task =>
+        try
         {
-            if (task.Result == DependencyStatus.Available)
+            FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task =>
             {
-                auth = FirebaseAuth.DefaultInstance;
-                ready = true;
-                Debug.Log("[Auth] Firebase 준비 완료");
-            }
-            else
-            {
-                Debug.LogError("[Auth] Firebase 의존성 오류: " + task.Result);
-            }
-        });
+                if (task.Result == DependencyStatus.Available)
+                {
+                    auth = FirebaseAuth.DefaultInstance;
+                    ready = true;
+                    Debug.Log("[Auth] Firebase 준비 완료");
+                }
+                else
+                {
+                    Debug.LogWarning("[Auth] Firebase 의존성 오류: " + task.Result);
+                }
+            });
+        }
+        catch (Exception e)
+        {
+            // 네이티브 라이브러리(FirebaseCppApp)가 없는 환경(에디터 등)에서 발생.
+            // ready=false 상태를 유지하고 게스트 모드로 동작한다.
+            Debug.LogWarning("[Auth] Firebase 초기화 실패 — 네이티브 라이브러리를 찾을 수 없음: " + e.Message);
+        }
 #endif
     }
 
