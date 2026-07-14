@@ -109,7 +109,17 @@ public class PoolManager : MonoBehaviour
         pools[id] = new ObjectPool<GameObject>(
             createFunc:      () => Instantiate(prefabs[id]),
             actionOnGet:     obj => obj.SetActive(true),
-            actionOnRelease: obj => { obj.SetActive(false); objectToId.Remove(obj); },
+            // 반환 시 PoolManager(DontDestroyOnLoad) 밑으로 옮긴다 —
+            // 씬 오브젝트 밑에 남겨두면 씬 전환 때 파괴돼서 풀에 죽은 참조가 쌓임
+            actionOnRelease: obj =>
+            {
+                if (obj != null)
+                {
+                    obj.SetActive(false);
+                    obj.transform.SetParent(transform, false);
+                }
+                objectToId.Remove(obj);
+            },
             actionOnDestroy: obj => { objectToId.Remove(obj); Destroy(obj); },
             collectionCheck: false,
             defaultCapacity: defaultCapacity,
@@ -143,8 +153,13 @@ public class PoolManager : MonoBehaviour
         }
 
         GameObject obj = pool.Get();
+        // 씬 전환 등으로 파괴된 잔재가 나오면 새로 생성 (죽은 참조 방어)
+        while (obj == null && pool.CountInactive > 0) obj = pool.Get();
+        if (obj == null) obj = Instantiate(prefabs[id]);
+
         objectToId[obj] = id;
         obj.transform.SetParent(parent);
+        obj.transform.SetAsLastSibling(); // 재사용 시에도 하이어라키 순서 = 스폰 순서 보장 (획순 판정에 필요)
         obj.transform.position = position;
         return obj;
     }
@@ -166,8 +181,17 @@ public class PoolManager : MonoBehaviour
 
         // Get(out T v) : 반환값이 PooledObject<T>(핸들), out 파라미터가 실제 오브젝트
         handle = pool.Get(out GameObject obj);
+        // 씬 전환 등으로 파괴된 잔재가 나오면 버리고 다시 꺼낸다 (죽은 참조 방어)
+        while (obj == null && pool.CountInactive > 0)
+            handle = pool.Get(out obj);
+        if (obj == null)
+        {
+            handle = pool.Get(out obj); // 풀이 비면 createFunc로 새로 생성됨
+        }
+
         objectToId[obj] = id;
         obj.transform.SetParent(parent);
+        obj.transform.SetAsLastSibling(); // 재사용 시에도 하이어라키 순서 = 스폰 순서 보장 (획순 판정에 필요)
         obj.transform.position = position;
         return obj;
     }

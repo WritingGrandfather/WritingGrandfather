@@ -1,0 +1,131 @@
+key,ko,en
+lobby.title.full,글씨 쓰는 할배,Handwriting Grandpa
+lobby.btn.start,글쓰기 시작,Start Writing
+lobby.btn.ranking,랭킹,Ranking
+ranking.title,랭킹,Ranking
+ranking.header_rank,순위,Rank
+ranking.header_name,이름,Name
+ranking.header_score,점수,Score
+ranking.empty,아직 기록이 없습니다,No records yet
+ranking.back,뒤로,Back
+ranking.me,나,Me
+ranking.my_rank,내 순위,My Rank
+ranking.my_score,내 점수,My Score
+ranking.my_grade,등급,Grade
+ranking.grade_none,-,-
+ranking.grade_bronze,브론즈,Bronze
+ranking.grade_silver,실버,Silver
+ranking.grade_gold,골드,Gold
+ranking.grade_diamond,다이아,Diamond
+lobby.btn.settings,설정,Settings
+lobby.btn.exit,나가기,Exit
+lobby.exit.confirm_line1,정말,Are you sure
+lobby.exit.confirm_line2,나가시겠습니까?,you want to exit?
+lobby.exit.confirm_yes,예,Yes
+lobby.exit.confirm_no,아니오,No
+lobby.settings.title,설정,Settings
+lobby.settings.close,닫기,Close
+lobby.settings.tab_video,비디오,Video
+lobby.settings.tab_audio,오디오,Audio
+lobby.settings.tab_language,언어,Language
+lobby.settings.quality_label,화질,Quality
+lobby.settings.framerate_label,프레임,Frame Rate
+lobby.settings.quality_low,낮음,Low
+lobby.settings.quality_medium,보통,Medium
+lobby.settings.quality_high,높음,High
+lobby.settings.fps_30,30 FPS,30 FPS
+lobby.settings.fps_60,60 FPS,60 FPS
+lobby.settings.master_volume_label,전체 볼륨,Master Volume
+lobby.settings.bgm_label,배경음,BGM
+lobby.settings.sfx_label,효과음,SFX
+lobby.settings.language_label,언어 선택,Language
+lobby.settings.lang_korean,한국어,한국어
+lobby.settings.lang_english,English,English
+lobby.settings.tab_mypage,마이페이지,My Page
+lobby.settings.nickname_label,닉네임,Nickname
+lobby.settings.tab_misc,기타,Other
+lobby.settings.logout_button,로그아웃,Log Out
+lobby.settings.login_button,로그인 하기,Log In
+lobby.settings.adult_child_label,연령,Age
+lobby.settings.adult_label,성인,Adult
+lobby.settings.child_label,어린이,Child
+login.title,글씨 쓰는 할배,Handwriting Grandpa
+login.subtitle,로그인하고 시작하세요,Log in to get started
+login.btn_email,이메일로 로그인,Sign in with Email
+login.btn_guest,게스트로 시작,Continue as Guest
+login.hint,계정이 없으신가요?,Don't have an account?
+login.btn_signup,회원가입,Sign Up
+login.modal.email_title,이메일로 로그인,Sign in with Email
+login.modal.signup_title,회원가입,Sign Up
+login.field.email_label,이메일,Email
+login.field.password_label,비밀번호,Password
+login.btn.login_confirm,로그인,Log In
+login.btn.signup_confirm,가입,Sign Up
+login.btn.cancel,취소,Cancel
+mod_select.title,글쓰기 시작,Start Writing
+mod_select.precise_button,정밀 쓰기,Precise Writing
+mod_select.precise_desc,한 글자씩 정확하게 따라 쓰며 연습해요,Practice by tracing each character precisely
+mod_select.challenge_button,도전 모드,Challenge Mode
+mod_select.challenge_desc,떨어지는 글자를 빠르고 정확하게 써봐요,Write falling characters quickly and accurately
+mod_select.back_button,뒤로,Back
+mod_select.hint,버튼을 누르면 모드의 설명을 확인 가능합니다.,Tap a button to see what that mode is about.
+precise_writing.reset_button,초기화,Reset
+precise_writing.undo_button,되돌리기,Undo
+precise_writing.complete_button,완료,Done
+precise_writing.analyzing_label,AI가 결과를 분석중...,Analyzing with AI...
+precise_writing.result_title,결과,Result
+precise_writing.result_stroke_order_label,획 순서 정확도,Stroke Order Accuracy
+precise_writing.result_similarity_label,글자 유사도,Character Similarity
+precise_writing.result_position_label,글자 크기 위치 정확도,Size & Position Accuracy
+precise_writing.continue_button,계속 하기,Continue
+precise_writing.retry_stage_button,다시하기,Retry
+precise_writing.stop_button,그만하기,Stop
+precise_writing.exit_button,나가기,Exit
+precise_writing.toggle_show_character,안내선,Guide Lines
+precise_writing.toggle_show_stroke_order,획 순서,Stroke Order
+writing_feedback.unrecognized,글자를 알아볼 수 없어요. '{0}'를 다시 써볼까요?,I couldn't recognize the character. Want to try writing '{0}' again?
+writing_feedback.wrong_character,'{0}'가 아니라 '{1}'로 보여요. 다시 한번 써볼까요?,That looks like '{1}' instead of '{0}'. Want to try again?
+auth.checking_auto_login,자동 로그인 확인 중...,Checking auto-login...
+auth.logging_in,로그인 중...,Logging in...
+auth.signing_up,회원가입 중...,Signing up...
+auth.starting,시작 중...,Starting...
+auth.no_manager,인증 매니저 없음,Auth manager not found
+auth.signup_complete,회원가입 완료,Sign-up complete
+auth.login_success,로그인 성공,Login successful
+auth.please_wait_init,잠시 후 다시 시도해 주세요. (초기화 중),Please try again in a moment. (Initializing)
+auth.firebase_not_configured,Firebase 미설정 (FIREBASE_ENABLED 심볼 필요),Firebase not configured (requires the FIREBASE_ENABLED symbol)
+auth.guest_start,게스트로 시작,Continue as guest
+auth.invalid_email,이메일 형식이 올바르지 않습니다. (예: name@example.com),Invalid email format. (e.g. name@example.com)
+auth.password_too_short,비밀번호는 6자 이상이어야 합니다.,Password must be at least 6 characters.
+auth.failure_prefix,실패:,Failed:
+auth.failure,실패,Failed
+auth.guest_display_name,게스트,Guest
+writing_feedback.eval_error,채점 오류: {0},Evaluation error: {0}
+writing_feedback.ai_unavailable,아주 잘 쓰셨어요! (지금은 서버 연결이 원활하지 않아 자동으로 통과 처리했어요),Great job! (We couldn't reach the AI right now, so this was passed automatically)
+writing_feedback.no_target,목표 글자가 없습니다.,No target character.
+writing_feedback.trace_single_only,따라쓰기 채점은 외자(한 글자)만 지원합니다.,Tracing evaluation only supports a single character.
+writing_feedback.no_font,TemplateSimilarityEvaluator에 폰트가 연결되지 않았습니다.,No font connected to TemplateSimilarityEvaluator.
+writing_feedback.empty_writing,글씨가 없어요. 칸에 글자를 써볼까요?,There's no writing. Try writing a character in the box?
+writing_feedback.font_glyph_missing,폰트에서 '{0}' 글자를 만들지 못했습니다.,Couldn't render '{0}' from the font.
+writing_feedback.confusable_character,'{0}'보다 '{1}'에 가까워 보여요. 다시 써볼까요?,This looks more like '{1}' than '{0}'. Want to try again?
+writing_feedback.similarity_score,본보기 글자와 {0}% 닮았어요.,{0}% similar to the model character.
+writing_feedback.neat_stroke_joined,획을 이어서 쓰신 것 같아요. 한 획씩 또박또박 써볼까요? (약 {0}획),It looks like you joined strokes together. Try writing each stroke separately? (about {0} strokes)
+writing_feedback.neat_too_many_strokes,획 수가 너무 많아요. 차분히 다시 써볼까요?,Too many strokes. Want to try again slowly?
+writing_feedback.neat_wobbly_line,선이 많이 구불거려요. 천천히 곧게 그어볼까요?,The lines are quite wobbly. Try drawing them slowly and straight?
+writing_feedback.stroke_direction_wrong,"'{0}'의 획 방향이 반대예요. 가로는 왼쪽→오른쪽, 세로는 위→아래로 그어볼까요?",The stroke direction for '{0}' is reversed. Try drawing horizontal strokes left→right and vertical strokes top→bottom?
+writing_feedback.stroke_order_same_jamo,"'{0}'의 획 순서가 표준과 달라요. 위에서 아래, 왼쪽에서 오른쪽 순서로 써볼까요?","The stroke order for '{0}' differs from the standard. Try writing top-to-bottom, left-to-right?"
+writing_feedback.stroke_order_different_jamo,'{0}'를 먼저 쓰고 '{1}'를 써볼까요?,Try writing '{0}' before '{1}'?
+precise_writing.stage_banner,{0}단계,Stage {0}
+precise_writing.stage_banner_named,"{0}단계
+{1}","Stage {0}
+{1}"
+precise_writing.stage_clear_title,{0}단계 완료!,Stage {0} Clear!
+precise_writing.demo_score_message,(데모 점수 — 채점 미연결),(Demo score — evaluator not connected)
+falling_writing.no_ink,글씨를 먼저 써볼까요?,Try writing a character first?
+falling_writing.no_target_word,떨어지는 글자가 없어요.,There's no falling character.
+falling_writing.eval_no_response,채점 결과를 받지 못했습니다.,Didn't receive a scoring result.
+falling_writing.mismatch,'{0}'와 달라 보여요. 또박또박 다시 써볼까요?,This looks different from '{0}'. Try writing it neatly again?
+falling_writing.hit,'{0}' 명중! ({1}점),'{0}' Hit! ({1} pts)
+falling_writing.over_stroke,획이 너무 많아요 ({0}획 — '{1}'는 {2}획). 또박또박 다시 써볼까요?,Too many strokes ({0} strokes — '{1}' should be {2}). Try writing it neatly again?
+challenge.countdown_start,시작!,Start!
+

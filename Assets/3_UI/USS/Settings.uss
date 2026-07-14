@@ -36,11 +36,11 @@
    유지해 좁은 화면에서도 버튼이 잘리지 않게 함 */
 .settings-close-button {
     flex-shrink: 0;
-    height: 40px;
-    padding: 0 28px;
-    border-radius: 14px;
+    height: 70px;
+    padding: 0 36px;
+    border-radius: 18px;
     border-width: 0;
-    font-size: 26px;
+    font-size: 30px;
     color: rgb(255, 255, 255);
     background-color: rgb(120, 120, 120);
     -unity-text-align: middle-center;
@@ -50,58 +50,45 @@
     background-color: rgb(140, 140, 140);
 }
 
-/* 화면/소리/기타 등 설정 카테고리를 전환하는 탭 버튼들이 나열되는 바 */
-.settings-tab-bar {
-    flex-direction: row;
-    flex-shrink: 0;
-    padding: 0 24px;
-    margin-bottom: 16px;
-}
-
-/* 탭 버튼 하나. flex-grow로 탭 바 안에서 균등한 너비를 가짐.
-   min-width:0 + overflow:hidden이 없으면 좁은 화면에서 라벨 텍스트가
-   버튼 폭을 넘어 옆 탭까지 겹쳐 보이므로 반드시 필요 */
-.settings-tab {
-    flex-grow: 1;
-    flex-shrink: 1;
-    flex-basis: 0;
-    min-height: 0;
-    min-width: 0;
-    overflow: hidden;
-    height: 50px;
-    margin: 0 6px;
-    border-radius: 14px;
-    border-width: 0;
-    font-size: 28px;
-    color: rgb(255, 255, 255);
-    background-color: rgb(150, 111, 71);
-    -unity-text-align: middle-center;
-}
-
-.settings-tab:hover {
-    background-color: rgb(170, 128, 86);
-}
-
-/* 현재 선택된 탭에 붙는 모디파이어 클래스 (스크립트에서 토글) */
-.settings-tab--active {
-    background-color: rgb(214, 108, 58);
-}
-
-.settings-tab--active:hover {
-    background-color: rgb(230, 128, 76);
-}
-
-/* 탭 바 아래, 실제 설정 항목들이 표시되는 스크롤/콘텐츠 영역 */
+/* 탭 없이 모든 설정 항목이 한 화면에 이어지는 스크롤 콘텐츠 영역.
+   ScrollView 자체가 overflow/clipping을 처리하므로 overflow:hidden은 필요 없음 */
 .settings-content {
     flex-grow: 1;
     min-height: 0;
-    overflow: hidden;
     padding: 8px 40px 32px;
 }
 
-/* 탭 하나에 대응하는 설정 항목 묶음 (탭 전환 시 표시/숨김 대상) */
-.settings-tab-panel {
+/* 비디오/오디오/언어처럼 서로 다른 카테고리의 설정 항목 묶음.
+   더 이상 탭으로 전환되지 않고 세로로 이어서 전부 표시된다 */
+.settings-section {
     flex-direction: column;
+}
+
+/* 카테고리 제목 줄 - 제목 좌우로 얇은 구분선이 나란히 오는 "----비디오----" 형태.
+   Unity USS는 인접 형제 결합자(+)를 지원하지 않으므로, "첫 섹션 제외 위 여백"
+   대신 모든 섹션에 균일하게 위 여백을 준다 (첫 섹션은 여백이 살짝 더 생길 뿐
+   콘텐츠 padding-top과 합쳐져도 크게 어색하지 않다). */
+.settings-section-header {
+    flex-direction: row;
+    align-items: center;
+    margin-top: 36px;
+    margin-bottom: 24px;
+}
+
+.settings-section-line {
+    flex-grow: 1;
+    height: 2px;
+    background-color: rgb(150, 111, 71);
+}
+
+.settings-section-title {
+    flex-shrink: 0;
+    margin: 0 16px;
+    font-size: 56px;
+    -unity-font-style: bold;
+    color: rgb(90, 62, 40);
+    -unity-text-align: middle-center;
+    white-space: nowrap;
 }
 
 /* "라벨 - 컨트롤" 형태로 구성되는 설정 항목 한 줄 */
@@ -109,14 +96,14 @@
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 28px;
+    margin-bottom: 36px;
 }
 
 .settings-row-label {
     width: 32%;
     min-width: 0;
     overflow: hidden;
-    font-size: 21px;
+    font-size: 48px;
     color: rgb(60, 45, 35);
     white-space: nowrap;
 }
@@ -130,6 +117,75 @@
     overflow: hidden;
 }
 
+/* 마이페이지의 이메일/비밀번호처럼 값만 보여주고 조작은 안 되는 텍스트.
+   폭이 좁아지면 가운데 대신 끝을 "..."으로 잘라 보여준다 (긴 이메일 대비). */
+.settings-value-label {
+    width: 62%;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 44px;
+    color: rgb(60, 45, 35);
+    -unity-text-align: middle-right;
+    white-space: nowrap;
+}
+
+/* 로그아웃 버튼(설정 맨 아래) 및 마이페이지의 "로그인 하기" 버튼(게스트일 때
+   닉네임 입력칸 대신 표시) 공용 스타일. 나가기 버튼(menu-button--exit)과 같은
+   회색 톤이지만 설정 행 크기(다른 settings-control들과 비슷한 높이)에 맞춤.
+   margin-bottom을 둔 건 "로그인 하기"처럼 섹션 중간에서 쓰일 때도 아래 행과
+   settings-row만큼의 간격(36px)을 유지하기 위함 - 맨 마지막 로그아웃 버튼은
+   그 아래가 스크롤 영역 끝이라 여백이 조금 더 생길 뿐 문제되지 않는다. */
+.settings-logout-button {
+    width: 100%;
+    height: 96px;
+    min-height: 0;
+    border-radius: 18px;
+    border-width: 0;
+    margin-top: 12px;
+    margin-bottom: 36px;
+    font-size: 40px;
+    color: rgb(255, 255, 255);
+    background-color: rgb(120, 120, 120);
+    -unity-text-align: middle-center;
+}
+
+.settings-logout-button:hover {
+    background-color: rgb(140, 140, 140);
+}
+
+/* 설정 콘텐츠가 넘칠 때 오른쪽에 표시되는 세로 스크롤바. 런타임 UI Toolkit은
+   기본 테마(런타임 테마 스타일시트)가 없으면 스크롤러의 트랙/손잡이가 투명해
+   전혀 안 보이므로, Toggle/RadioButton처럼 직접 색과 두께를 지정한다. */
+.unity-scroller--vertical {
+    width: 28px;
+    margin-left: 8px;
+    /* .settings-content의 오른쪽 padding(40px)만큼 스크롤바와 실제 화면 오른쪽
+       끝 사이에 큰 여백이 생겨서, 그 여백 쪽으로 당겨 가장자리에 붙인다.
+       세이프에어리어 쪽 padding(ApplySafeArea가 매 프레임 계산)까지 당기면
+       기기마다 부호가 달라져 오히려 어긋나므로, 고정값인 40px 쪽만 상쇄한다. */
+    margin-right: -32px;
+}
+
+.unity-scroller__low-button,
+.unity-scroller__high-button {
+    display: none;
+}
+
+.unity-base-slider--vertical .unity-base-slider__tracker {
+    width: 10px;
+    border-width: 0;
+    border-radius: 5px;
+    background-color: rgb(230, 214, 189);
+}
+
+.unity-base-slider--vertical .unity-base-slider__dragger {
+    width: 20px;
+    border-width: 0;
+    border-radius: 10px;
+    background-color: rgb(150, 111, 71);
+}
+
 /* Restyle Unity's default Toggle/DropdownField/RadioButtonGroup skin to match
    the lobby's warm cream/brown/orange look instead of the default grey. */
 
@@ -137,28 +193,55 @@
    체크 아이콘 대신 라디오 체크마크처럼 단순히 배경색만 바꿔 표시한다 - 꺼짐:
    크림색 빈 사각형, 켜짐: 테마 오렌지로 꽉 채움. */
 .unity-toggle__checkmark {
-    width: 44px;
-    height: 44px;
-    border-radius: 10px;
-    border-width: 3px;
+    width: 60px;
+    height: 60px;
+    border-radius: 14px;
+    border-width: 4px;
     border-color: rgb(150, 111, 71);
     background-color: rgb(255, 253, 248);
     background-image: none;
 }
 
-.unity-toggle__checkmark:checked {
+/* 전체 볼륨/배경음/효과음 토글 - 라벨 텍스트가 없어서 기본은 체크박스가
+   컨트롤 영역(62%) 맨 왼쪽에 붙어 보였다. justify-content:flex-end로
+   Toggle 내부 콘텐츠(체크박스)를 오른쪽 끝으로 밀어 정렬한다. */
+.settings-toggle {
+    justify-content: flex-end;
+}
+
+/* Toggle은 ":checked" 의사 상태를 checkmark 자신이 아니라 그 부모인
+   .unity-toggle__input에 붙인다 (Toggle.UpdateMixedValueContent()가
+   visualInput.SetCheckedPseudoState()를 호출). ".unity-toggle__checkmark:checked"
+   로 걸면 checkmark 자신에는 그 상태가 없어서 절대 매칭되지 않아 체크해도
+   색이 안 바뀌었다 - 부모 기준으로 자손을 선택해야 한다. */
+.unity-toggle__input:checked .unity-toggle__checkmark {
     background-color: rgb(214, 108, 58);
+}
+
+/* 닉네임 입력칸(TextField) - DropdownField와 같은 높이/폰트로 톤을 맞춘다. */
+.unity-base-text-field__input {
+    height: 92px;
+    border-radius: 16px;
+    border-width: 0;
+    padding: 0 24px;
+    background-color: rgb(255, 253, 248);
+    font-size: 44px;
+    color: rgb(60, 45, 35);
+}
+
+.unity-base-text-field__input:hover {
+    background-color: rgb(245, 235, 218);
 }
 
 /* DropdownField(해상도, 언어 등 선택) 전체 높이 */
 .unity-base-popup-field {
-    height: 70px;
+    height: 92px;
 }
 
 .unity-base-popup-field__input {
-    border-radius: 14px;
+    border-radius: 16px;
     border-width: 0;
-    padding: 0 20px;
+    padding: 0 24px;
     background-color: rgb(255, 253, 248);
 }
 
@@ -167,18 +250,20 @@
 }
 
 .unity-base-popup-field__text {
-    font-size: 26px;
+    font-size: 48px;
     color: rgb(60, 45, 35);
 }
 
 .unity-base-popup-field__arrow {
+    width: 24px;
+    height: 24px;
     -unity-background-image-tint-color: rgb(150, 111, 71);
 }
 
 /* DropdownField를 눌렀을 때 뜨는 선택지 목록(GenericDropdownMenu)의 항목 텍스트.
-   기본값은 매우 작아서 본체 드롭다운 텍스트(26px)와 맞춰 키운다. */
+   기본값은 매우 작아서 본체 드롭다운 텍스트(48px)와 맞춰 키운다. */
 .unity-base-dropdown__label {
-    font-size: 26px;
+    font-size: 48px;
 }
 
 /* RadioButtonGroup(예: 화질 옵션 등) 컨테이너 - 가로 정렬 */
@@ -187,7 +272,7 @@
 }
 
 .unity-radio-button {
-    margin-right: 40px;
+    margin-right: 48px;
     flex-grow: 0;
     /* flex-shrink 기본값(1)이면 라디오 그룹이 부모 폭보다 좁아질 때 라벨이
        같이 눌려서 "English" 오른쪽 글자가 잘려 보였다 - 원래 크기 그대로 유지 */
@@ -195,10 +280,10 @@
 }
 
 .unity-radio-button__checkmark-background {
-    width: 36px;
-    height: 36px;
-    border-radius: 18px;
-    border-width: 3px;
+    width: 48px;
+    height: 48px;
+    border-radius: 24px;
+    border-width: 4px;
     border-color: rgb(150, 111, 71);
     background-color: rgb(255, 253, 248);
 }
@@ -220,5 +305,5 @@
    Label에 기본 테마가 자체 font-size를 명시적으로 깔아둬서 상속 값을 덮어써
    커지지 않는 문제가 있었다 - 그래서 실제로 그리는 안쪽 클래스에 직접 지정. */
 .unity-radio-button__text {
-    font-size: 36px;
+    font-size: 48px;
 }

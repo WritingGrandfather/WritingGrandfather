@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 
 public class Eraser : MonoBehaviour
 {
-    public DrowLine drawLine;
+    public DrawLine drawLine;
 
     [Range(0.05f, 1f)]
     public float eraserRadius = 0.2f;

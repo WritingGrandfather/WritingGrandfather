@@ -3,16 +3,33 @@
     <Style src="../USS/Settings.uss" />
 
     <ui:VisualElement name="lobby-root" class="lobby-root">
+        <ui:VisualElement name="bg-words-layer" class="bg-words-layer" picking-mode="Ignore" />
+
+        <ui:Button name="btn-settings" text="" class="icon-button icon-button--settings">
+            <ui:VisualElement class="icon-img icon-img--settings" picking-mode="Ignore" />
+        </ui:Button>
+
         <ui:VisualElement name="title-area" class="title-area">
-            <ui:Label text="글씨 쓰는" name="title-label-line1" class="title-label" />
-            <ui:Label text="할배" name="title-label-line2" class="title-label" />
+            <ui:Label text="글씨 쓰는 할배" name="title-label" class="title-label" />
         </ui:VisualElement>
 
+        <ui:VisualElement class="flex-spacer" picking-mode="Ignore" />
+
         <ui:VisualElement name="button-area" class="button-area">
-            <ui:Button name="btn-start" text="글쓰기 시작" class="menu-button menu-button--primary" />
-            <ui:Button name="btn-settings" text="설정" class="menu-button" />
-            <ui:Button name="btn-exit" text="나가기" class="menu-button menu-button--exit" />
+            <ui:Button name="btn-ranking" text="" class="icon-button icon-button--ranking">
+                <ui:VisualElement class="icon-img icon-img--ranking" picking-mode="Ignore" />
+            </ui:Button>
+            <ui:Button name="btn-start" text="" class="icon-button icon-button--primary">
+                <ui:VisualElement class="icon-img icon-img--start" picking-mode="Ignore" />
+            </ui:Button>
+            <ui:Button name="btn-exit" text="" class="icon-button icon-button--exit">
+                <ui:VisualElement class="icon-img icon-img--exit" picking-mode="Ignore" />
+            </ui:Button>
         </ui:VisualElement>
+
+        <ui:VisualElement class="flex-spacer" picking-mode="Ignore" />
+
+        <ui:Label name="version-label" text="" class="version-label" />
     </ui:VisualElement>
 
     <ui:VisualElement name="exit-modal" class="modal-overlay hidden">
@@ -34,14 +51,34 @@
             <ui:Button name="btn-settings-close" text="닫기" class="settings-close-button" />
         </ui:VisualElement>
 
-        <ui:VisualElement name="settings-tab-bar" class="settings-tab-bar">
-            <ui:Button name="tab-video" text="비디오" class="settings-tab" />
-            <ui:Button name="tab-audio" text="오디오" class="settings-tab settings-tab--active" />
-            <ui:Button name="tab-language" text="언어" class="settings-tab" />
-        </ui:VisualElement>
+        <ui:ScrollView name="settings-content" class="settings-content" mode="Vertical" vertical-scroller-visibility="AlwaysVisible" horizontal-scroller-visibility="Hidden">
+            <ui:VisualElement name="section-mypage" class="settings-section">
+                <ui:VisualElement class="settings-section-header">
+                    <ui:VisualElement class="settings-section-line" />
+                    <ui:Label text="마이페이지" name="section-mypage-title" class="settings-section-title" />
+                    <ui:VisualElement class="settings-section-line" />
+                </ui:VisualElement>
+                <ui:VisualElement name="mypage-nickname-row" class="settings-row">
+                    <ui:Label text="닉네임" class="settings-row-label" />
+                    <ui:TextField name="mypage-nickname-field" class="settings-control" />
+                </ui:VisualElement>
+                <ui:Button name="btn-mypage-login" text="로그인 하기" class="settings-logout-button hidden" />
+                <ui:VisualElement class="settings-row">
+                    <ui:Label text="이메일" class="settings-row-label" />
+                    <ui:Label text="" name="mypage-email-value" class="settings-value-label" />
+                </ui:VisualElement>
+                <ui:VisualElement name="mypage-password-row" class="settings-row">
+                    <ui:Label text="비밀번호" class="settings-row-label" />
+                    <ui:Label text="******" name="mypage-password-value" class="settings-value-label" />
+                </ui:VisualElement>
+            </ui:VisualElement>
 
-        <ui:VisualElement name="settings-content" class="settings-content">
-            <ui:VisualElement name="video-panel" class="settings-tab-panel hidden">
+            <ui:VisualElement name="section-video" class="settings-section">
+                <ui:VisualElement class="settings-section-header">
+                    <ui:VisualElement class="settings-section-line" />
+                    <ui:Label text="비디오" name="section-video-title" class="settings-section-title" />
+                    <ui:VisualElement class="settings-section-line" />
+                </ui:VisualElement>
                 <ui:VisualElement class="settings-row">
                     <ui:Label text="화질" class="settings-row-label" />
                     <ui:DropdownField name="dropdown-quality" choices="낮음,보통,높음" index="1" class="settings-control" />
@@ -52,27 +89,53 @@
                 </ui:VisualElement>
             </ui:VisualElement>
 
-            <ui:VisualElement name="audio-panel" class="settings-tab-panel">
+            <ui:VisualElement name="section-audio" class="settings-section">
+                <ui:VisualElement class="settings-section-header">
+                    <ui:VisualElement class="settings-section-line" />
+                    <ui:Label text="오디오" name="section-audio-title" class="settings-section-title" />
+                    <ui:VisualElement class="settings-section-line" />
+                </ui:VisualElement>
                 <ui:VisualElement class="settings-row">
                     <ui:Label text="전체 볼륨" class="settings-row-label" />
-                    <ui:Toggle name="toggle-master-volume" value="true" class="settings-control" />
+                    <ui:Toggle name="toggle-master-volume" value="true" class="settings-control settings-toggle" />
                 </ui:VisualElement>
                 <ui:VisualElement class="settings-row">
                     <ui:Label text="배경음" class="settings-row-label" />
-                    <ui:Toggle name="toggle-bgm-volume" value="true" class="settings-control" />
+                    <ui:Toggle name="toggle-bgm-volume" value="true" class="settings-control settings-toggle" />
                 </ui:VisualElement>
                 <ui:VisualElement class="settings-row">
                     <ui:Label text="효과음" class="settings-row-label" />
-                    <ui:Toggle name="toggle-sfx-volume" value="true" class="settings-control" />
+                    <ui:Toggle name="toggle-sfx-volume" value="true" class="settings-control settings-toggle" />
                 </ui:VisualElement>
             </ui:VisualElement>
 
-            <ui:VisualElement name="language-panel" class="settings-tab-panel hidden">
+            <ui:VisualElement name="section-language" class="settings-section">
+                <ui:VisualElement class="settings-section-header">
+                    <ui:VisualElement class="settings-section-line" />
+                    <ui:Label text="언어" name="section-language-title" class="settings-section-title" />
+                    <ui:VisualElement class="settings-section-line" />
+                </ui:VisualElement>
                 <ui:VisualElement class="settings-row">
                     <ui:Label text="언어 선택" class="settings-row-label" />
                     <ui:RadioButtonGroup name="radio-language" choices="한국어,English" value="0" class="settings-control" />
                 </ui:VisualElement>
             </ui:VisualElement>
-        </ui:VisualElement>
+
+            <ui:VisualElement name="section-misc" class="settings-section">
+                <ui:VisualElement class="settings-section-header">
+                    <ui:VisualElement class="settings-section-line" />
+                    <ui:Label text="기타" name="section-misc-title" class="settings-section-title" />
+                    <ui:VisualElement class="settings-section-line" />
+                </ui:VisualElement>
+                <ui:VisualElement class="settings-row">
+                    <ui:Label text="연령" class="settings-row-label" />
+                    <ui:RadioButtonGroup name="radio-adult-child" choices="성인,어린이" value="0" class="settings-control" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+
+            <ui:VisualElement name="section-logout" class="settings-section">
+                <ui:Button name="btn-logout" text="로그아웃" class="settings-logout-button" />
+            </ui:VisualElement>
+        </ui:ScrollView>
     </ui:VisualElement>
 </ui:UXML>

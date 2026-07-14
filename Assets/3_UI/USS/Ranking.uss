@@ -1,0 +1,197 @@
+.hidden {
+    display: none;
+}
+
+Button {
+    transition-property: scale;
+    transition-duration: 0.08s;
+}
+
+Button:active {
+    scale: 0.94;
+}
+
+.ranking-root {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    overflow: hidden;
+    background-color: rgb(250, 240, 222);
+    /* padding은 RankingScreenController.ApplySafeArea()에서 SafeArea 기준으로 동적 설정 */
+}
+
+.ranking-title {
+    font-size: 56px;
+    -unity-font-style: bold;
+    color: rgb(90, 62, 40);
+    -unity-text-align: middle-center;
+    margin-bottom: 28px;
+    flex-shrink: 0;
+}
+
+/* 목록 전체를 감싸는 카드 */
+.ranking-panel {
+    width: 90%;
+    max-width: 900px;
+    flex-grow: 1;
+    flex-shrink: 1;
+    min-height: 0;
+    background-color: rgb(255, 253, 248);
+    border-radius: 28px;
+    padding: 12px 16px 16px 16px;
+    margin-bottom: 28px;
+}
+
+/* 컬럼 제목 줄 */
+.ranking-header-row {
+    flex-direction: row;
+    height: 72px;
+    flex-shrink: 0;
+    align-items: center;
+    border-bottom-width: 2px;
+    border-bottom-color: rgb(224, 208, 182);
+    padding: 0 20px;
+}
+
+.header-cell {
+    font-size: 28px;
+    -unity-font-style: bold;
+    color: rgb(150, 111, 71);
+    -unity-text-align: middle-center;
+}
+
+.header-cell--rank { width: 22%; }
+.header-cell--name { flex-grow: 1; -unity-text-align: middle-left; }
+.header-cell--score { width: 26%; -unity-text-align: middle-right; }
+
+/* 스크롤 없이 최대 10줄이 이 안에서 균등하게 나눠 채워진다 (드래그로 내용이 움직이던
+   문제의 원인이 ScrollView였음 - 스크롤 자체를 없애서 해결). */
+.ranking-list {
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-direction: column;
+    min-height: 0;
+}
+
+/* 한 줄 (코드에서 생성). flex-grow로 10줄이 채워질 만큼 화면 높이를 나눠 가지되,
+   max-height로 상한을 둬서 항목이 적을 때 한 줄이 과하게 늘어나 세로로 가운데
+   즈음부터 보이는 문제를 막는다 - 남는 공간은 그냥 아래쪽에 빈 채로 남는다. */
+.ranking-row {
+    flex-direction: row;
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: 0;
+    min-height: 52px;
+    max-height: 96px;
+    align-items: center;
+    padding: 0 20px;
+    margin-top: 8px;
+    border-radius: 16px;
+    background-color: rgb(248, 240, 228);
+}
+
+/* 내 순위 강조 */
+.ranking-row--me {
+    background-color: rgb(252, 226, 205);
+    border-width: 2px;
+    border-color: rgb(214, 108, 58);
+}
+
+.cell-rank {
+    width: 22%;
+    font-size: 34px;
+    -unity-font-style: bold;
+    color: rgb(90, 62, 40);
+    -unity-text-align: middle-center;
+}
+
+.cell-name {
+    flex-grow: 1;
+    font-size: 30px;
+    color: rgb(60, 45, 35);
+    -unity-text-align: middle-left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.cell-score {
+    width: 26%;
+    font-size: 32px;
+    -unity-font-style: bold;
+    color: rgb(214, 108, 58);
+    -unity-text-align: middle-right;
+}
+
+/* 상위 3등 순위 숫자 색 (금/은/동) */
+.rank-1 .cell-rank { color: rgb(212, 175, 55); }
+.rank-2 .cell-rank { color: rgb(150, 150, 158); }
+.rank-3 .cell-rank { color: rgb(176, 124, 78); }
+
+.ranking-empty {
+    font-size: 30px;
+    color: rgb(150, 111, 71);
+    -unity-text-align: middle-center;
+    margin-top: 60px;
+}
+
+/* 내 순위/점수/등급 카드 - 목록과 분리된 고정 영역 (스크롤 대상 아님) */
+.my-rank-panel {
+    width: 90%;
+    max-width: 900px;
+    height: 140px;
+    flex-shrink: 0;
+    flex-direction: row;
+    background-color: rgb(252, 226, 205);
+    border-width: 2px;
+    border-color: rgb(214, 108, 58);
+    border-radius: 24px;
+    margin-bottom: 28px;
+}
+
+.my-rank-cell {
+    flex-grow: 1;
+    flex-basis: 0;
+    align-items: center;
+    justify-content: center;
+}
+
+.my-rank-label {
+    font-size: 24px;
+    color: rgb(150, 111, 71);
+    -unity-text-align: middle-center;
+    margin-bottom: 6px;
+}
+
+.my-rank-value {
+    font-size: 38px;
+    -unity-font-style: bold;
+    color: rgb(90, 62, 40);
+    -unity-text-align: middle-center;
+}
+
+/* 등급별 색 */
+.my-grade-value.grade-bronze { color: rgb(176, 124, 78); }
+.my-grade-value.grade-silver { color: rgb(150, 150, 158); }
+.my-grade-value.grade-gold { color: rgb(212, 175, 55); }
+.my-grade-value.grade-diamond { color: rgb(80, 170, 200); }
+
+.ranking-back-button {
+    width: 80%;
+    max-width: 900px;
+    height: 110px;
+    flex-shrink: 0;
+    border-radius: 18px;
+    border-width: 0;
+    font-size: 34px;
+    color: rgb(255, 255, 255);
+    background-color: rgb(150, 111, 71);
+    -unity-text-align: middle-center;
+}
+
+.ranking-back-button:hover {
+    background-color: rgb(170, 128, 86);
+}

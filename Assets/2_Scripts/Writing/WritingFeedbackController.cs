@@ -9,13 +9,13 @@ using UnityEngine.Events;
 /// <summary>
 /// 손글씨 피드백 전체 흐름을 조율하는 컨트롤러.
 ///
-/// 흐름: [평가 버튼] → 칸 캡처(CellCapture) → 평가 요청(HandwritingEvaluator)
+/// 흐름: [평가 버튼] → 획 캡처(StrokeCapture → StrokeRasterizer로 PNG 생성) → 평가 요청(HandwritingEvaluator)
 ///       → 결과(HandwritingFeedback)를 UnityEvent로 UI에 전달
 ///
 /// 씬 설정:
 ///  1) 이 컴포넌트를 빈 오브젝트에 추가
-///  2) targetCell   : 평가할 WritingCell 지정
-///  3) capture       : CellCapture 컴포넌트 지정
+///  2) targetCell    : 평가할 WritingCell 지정
+///  3) strokeCapture : StrokeCapture 컴포넌트 지정
 ///  4) evaluator     : HandwritingEvaluator (지금은 MockHandwritingEvaluator) 지정
 ///  5) 버튼 OnClick → WritingFeedbackController.RequestFeedback
 ///  6) onFeedback / onStatus 이벤트를 TMP 텍스트 등에 연결
@@ -25,12 +25,11 @@ public class WritingFeedbackController : MonoBehaviour
     [Header("참조")]
     [SerializeField] WritingCell targetCell;
     [SerializeField] StrokeCapture strokeCapture; // 획 좌표(획순/획수)
-    [SerializeField] CellCapture imageCapture;     // PNG(글자 인식/모양)
     [SerializeField] HandwritingEvaluator evaluator;
 
     [Header("통과 기준")]
     [Tooltip("인식 글자가 목표와 일치하고 이 점수 이상이면 passed=true")]
-    [SerializeField] int passScore = 70;
+    [SerializeField] int passScore = 50;
 
     [Header("기획 판정 기준 (AI 프롬프트로 전달됨)")]
     [Tooltip("기획서에 정의된 채점/피드백 조건을 여기에 적는다. AI가 이 기준으로 판단.")]
@@ -60,6 +59,10 @@ public class WritingFeedbackController : MonoBehaviour
 
     [Tooltip("획순이 틀리면 불통과 처리 (끄면 피드백 문장만 보여줌)")]
     [SerializeField] bool failOnWrongOrder = true;
+
+    [Header("교정 겹쳐보기 (선택)")]
+    [Tooltip("판정 직후 맞음(초록)/빠뜨림(파랑)/벗어남(빨강)을 카드로 보여줄 오버레이")]
+    [SerializeField] CompareOverlay compareOverlay;
 
     string lastStrokesJson; // 획순 검사에 전달할 최근 획 데이터
 
@@ -120,6 +123,17 @@ public class WritingFeedbackController : MonoBehaviour
         if (feedback == null)
             feedback = HandwritingFeedback.Error("No evaluation result received.");
 
+        // 글자 유사도 = AI가 판단한 원점수. 아래에서 통과/불통과 판정에 따라 feedback.score가
+        // 재조정(클램프)되므로, "닮은 정도" 표시용으로 원래 값을 먼저 따로 보관해둔다.
+        feedback.similarityScore = feedback.score;
+
+        // 글자 크기·위치 정확도 — AI/획순과 독립적으로 칸 대비 잉크 좌표만으로 계산
+        if (strokeCapture != null && targetCell != null)
+        {
+            var cellStrokes = strokeCapture.GetCellNormalizedStrokes(targetCell);
+            feedback.positionScore = PositionAccuracyScorer.Score(cellStrokes);
+        }
+
         // ★ 목표 비교는 AI가 아니라 여기서 한다.
         //   (AI에게 목표를 알려주면 선입견으로 오답도 목표로 인식하므로, AI는 순수 인식만 수행)
         if (targetCell != null && !string.IsNullOrEmpty(targetCell.targetText))
@@ -129,8 +143,8 @@ public class WritingFeedbackController : MonoBehaviour
 
             if (recognized == target)
             {
-                // 글자가 맞으면 웬만하면 통과 — 점수는 가독성 참고치일 뿐 (상한 55로 클램프)
-                feedback.passed = feedback.score >= Mathf.Min(passScore, 55);
+                // 글자가 맞으면 점수가 (어린이 모드는 더 낮춘) 기준 이상일 때 통과
+                feedback.passed = feedback.score >= EffectivePassScore();
             }
             else
             {
@@ -138,25 +152,32 @@ public class WritingFeedbackController : MonoBehaviour
                 if (feedback.score > 20) feedback.score = 20;
                 feedback.passed = false;
                 feedback.message = string.IsNullOrEmpty(recognized)
-                    ? $"글자를 알아볼 수 없어요. '{target}'를 다시 써볼까요?"
-                    : $"'{target}'가 아니라 '{recognized}'로 보여요. 다시 한번 써볼까요?";
+                    ? string.Format(LocalizationManager.Get("writing_feedback.unrecognized"), target)
+                    : string.Format(LocalizationManager.Get("writing_feedback.wrong_character"), target, recognized);
             }
         }
 
         Debug.Log($"[WritingFeedback] 목표='{targetCell?.targetText}' 인식='{feedback.recognizedText}' 점수={feedback.score} 통과={feedback.passed}");
 
         // 모양 통과 시 획순 검사 — 1순위: 로컬 필순 대조 (결정적·즉시), 2순위: AI (미지원 자모만)
+        // 어린이 모드에서는 획순만으로 불통과시키지 않는다 — 안내 문구는 그대로 보여주되
+        // 통과 여부는 모양 점수 위주로 판단해서 배우는 재미를 꺾지 않는다.
+        bool strictOrder = failOnWrongOrder && !UserProfile.IsChildMode;
         string target2 = (targetCell?.targetText ?? "").Trim();
         if (feedback.passed && target2.Length == 1)
         {
             var local = StrokeOrderValidator.Validate(target2[0], strokeCapture.GetNormalizedStrokes(targetCell));
             if (local.supported)
             {
-                Debug.Log($"[StrokeOrder/로컬] {(local.ok ? "정상" : "오류")} {local.message}");
-                if (!local.ok && failOnWrongOrder)
+                feedback.strokeOrderScore = local.score;
+                Debug.Log($"[StrokeOrder/로컬] {(local.ok ? "정상" : "오류")} {local.message} (점수 {local.score})");
+                if (!local.ok)
                 {
-                    feedback.passed = false;
-                    if (feedback.score > 60) feedback.score = 60;
+                    if (strictOrder)
+                    {
+                        feedback.passed = false;
+                        if (feedback.score > 60) feedback.score = 60;
+                    }
                     feedback.message = local.message;
                 }
                 Finish(feedback);
@@ -170,7 +191,9 @@ public class WritingFeedbackController : MonoBehaviour
                 HandwritingFeedback fb = feedback;
                 strokeOrderChecker.Check(target2, lastStrokesJson, (orderOk, orderMsg) =>
                 {
-                    if (!orderOk && failOnWrongOrder)
+                    // AI 획순 검사는 참/거짓만 주므로 점수는 근사치로 환산
+                    fb.strokeOrderScore = orderOk ? 90 : 55;
+                    if (!orderOk && strictOrder)
                     {
                         fb.passed = false;
                         if (fb.score > 60) fb.score = 60;
@@ -187,10 +210,29 @@ public class WritingFeedbackController : MonoBehaviour
         Finish(feedback);
     }
 
+    // 어린이 모드는 정확한 획순/모양보다 "쓰는 재미"가 우선이라 통과 기준을 낮춘다.
+    // 최소 30점은 유지해서, 낙서 수준까지 통과시키지는 않는다.
+    int EffectivePassScore() => UserProfile.IsChildMode ? Mathf.Max(30, passScore - 15) : passScore;
+
     void Finish(HandwritingFeedback feedback)
     {
+        feedback.stars = ComputeStars(feedback);
         isEvaluating = false;
         onStatus?.Invoke("");
+
+        // 교정 겹쳐보기 — 어디가 맞고(초록) 빠지고(파랑) 벗어났는지(빨강) 카드로 표시
+        if (compareOverlay != null && evaluator is TemplateSimilarityEvaluator tse)
+            compareOverlay.Show(tse.BuildCompareTexture());
+
         onFeedback?.Invoke(feedback);
+    }
+
+    // 별점: 불통과=0, 통과=최소 1별, 점수 70↑=2별, 85↑=3별
+    static int ComputeStars(HandwritingFeedback fb)
+    {
+        if (fb == null || !fb.passed) return 0;
+        if (fb.score >= 85) return 3;
+        if (fb.score >= 70) return 2;
+        return 1;
     }
 }

@@ -29,12 +29,12 @@ public class WritingSessionController : MonoBehaviour
     [Tooltip("캡처+채점 컨트롤러")]
     [SerializeField] WritingFeedbackController feedback;
 
-    [Tooltip("통과/다음으로 넘어갈 때 획을 지울 DrowLine (선택)")]
-    [SerializeField] DrowLine drawLine;
+    [Tooltip("통과/다음으로 넘어갈 때 획을 지울 DrawLine (선택)")]
+    [SerializeField] DrawLine drawLine;
 
     [Header("통과 기준")]
-    [Tooltip("이 점수 이상이면 통과로 보고 다음 글자로 넘어간다")]
-    [SerializeField] int passScore = 70;
+    [Tooltip("이 점수 이상이면 통과로 보고 다음 글자로 넘어간다 (WritingFeedbackController.passScore와 동일한 기준)")]
+    [SerializeField] int passScore = 50;
 
     [Tooltip("불통과일 때도 쓴 획을 모두 지운다 (깨끗한 상태로 다시 쓰기)")]
     [SerializeField] bool clearOnFail = true;
@@ -84,11 +84,17 @@ public class WritingSessionController : MonoBehaviour
         {
             currentWord = word;
             charIndex = 0;
-            drawLine?.ClearAll();
+            ClearDrawing();
         }
 
         // 본보기(TraceGuide)와 채점기가 참조하는 목표 글자를 항상 최신으로
         cell.targetText = CurrentChar;
+    }
+
+    void ClearDrawing()
+    {
+        drawLine?.ClearAll();
+        UndoManager.Instance?.Clear();
     }
 
     /// <summary>UI의 [평가] 버튼 등에서 호출. 현재 글자를 채점한다.</summary>
@@ -115,11 +121,11 @@ public class WritingSessionController : MonoBehaviour
         bool pass = fb != null && (fb.passed || fb.score >= passScore);
         if (!pass)
         {
-            if (clearOnFail) drawLine?.ClearAll(); // 틀리면 획을 지우고 깨끗하게 다시
+            if (clearOnFail) ClearDrawing();
             return;
         }
 
-        drawLine?.ClearAll();
+        ClearDrawing();
         charIndex++;
 
         if (charIndex >= currentWord.Length)

@@ -15,14 +15,14 @@ EditorBuildSettings:
     path: Assets/1_Scenes/ModSelectScene.unity
     guid: 9a4f497c50009fb22ebe5f9947f19327
   - enabled: 1
-    path: Assets/1_Scenes/MainScnene.unity
-    guid: 8c9cfa26abfee488c85f1582747f6a02
-  - enabled: 1
-    path: Assets/1_Scenes/JihwanScnene.unity
+    path: Assets/1_Scenes/ChallengeScene.unity
     guid: 33286ac59de381e408fc80b052f1fd15
   - enabled: 1
     path: Assets/1_Scenes/WritingPracticeScene.unity
     guid: 2288dc8c8cff4ee4b80fc7efbb809808
+  - enabled: 1
+    path: Assets/Hong/Scene/Ranking.unity
+    guid: 3e75b207e8a5445a9ba5621fa9a9461a
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0

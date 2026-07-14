@@ -1,0 +1,20 @@
+rules_version = '2';
+
+// WritingGrandfather Firestore 보안 규칙
+// Firebase 콘솔(Firestore Database > 규칙)에 붙여넣어 사용.
+//
+// - ranking: 리더보드. 누구나 조회 가능, 자기 문서(=본인 uid)에만 쓰기.
+// - users:   개인 세이브 데이터. 본인만 읽기/쓰기.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /ranking/{userId} {
+      allow read: if true;
+      allow write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    match /users/{uid} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+    }
+  }
+}

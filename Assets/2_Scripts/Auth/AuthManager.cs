@@ -6,9 +6,6 @@ using Firebase;
 using Firebase.Auth;
 using Firebase.Extensions;
 #endif
-#if FIREBASE_ENABLED && GOOGLE_SIGNIN
-using Google;
-#endif
 
 /// <summary>
 /// Firebase 기반 인증 매니저. (씬 전환에도 유지되는 싱글톤)
@@ -17,10 +14,9 @@ using Google;
 ///  - Firebase SDK를 아직 안 넣었으면 Player Settings의 Scripting Define Symbols에
 ///    FIREBASE_ENABLED 가 없으므로, Firebase 코드는 컴파일에서 빠진다 → 프로젝트가 안 깨진다.
 ///  - SDK 임포트 후 FIREBASE_ENABLED 를 추가하면 실제 인증이 동작한다.
-///  - 구글 로그인은 추가로 Google Sign-In 플러그인 + GOOGLE_SIGNIN 심볼이 필요하다.
 ///  - 게스트 로그인은 Firebase 없이도 항상 동작한다 (계정 불필요).
 ///
-/// 사용법: UI는 SignInEmail / SignUpEmail / SignInGoogle / SignInGuest 를 호출하고
+/// 사용법: UI는 SignInEmail / SignUpEmail / SignInGuest 를 호출하고
 ///        결과 콜백 Action&lt;bool success, string message&gt; 로 처리한다.
 /// </summary>
 public class AuthManager : MonoBehaviour
@@ -32,12 +28,6 @@ public class AuthManager : MonoBehaviour
     public bool IsGuest { get; private set; }
     public string UserId { get; private set; } = "";
     public string DisplayName { get; private set; } = "";
-
-    [Header("구글 로그인")]
-    [Tooltip("Firebase 콘솔 > 프로젝트 설정 > 웹 클라이언트 ID (구글 로그인 켤 때만 사용)")]
-#pragma warning disable 0414 // GOOGLE_SIGNIN 꺼져 있을 땐 미사용 — 경고 무시
-    [SerializeField] string googleWebClientId = "764618953349-9auq48l3o95177kg9ej1bc692vp1sijd.apps.googleusercontent.com";
-#pragma warning restore 0414
 
 #if FIREBASE_ENABLED
     FirebaseAuth auth;
@@ -55,19 +45,28 @@ public class AuthManager : MonoBehaviour
     void InitFirebase()
     {
 #if FIREBASE_ENABLED
-        FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task =>
+        try
         {
-            if (task.Result == DependencyStatus.Available)
+            FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task =>
             {
-                auth = FirebaseAuth.DefaultInstance;
-                ready = true;
-                Debug.Log("[Auth] Firebase 준비 완료");
-            }
-            else
-            {
-                Debug.LogError("[Auth] Firebase 의존성 오류: " + task.Result);
-            }
-        });
+                if (task.Result == DependencyStatus.Available)
+                {
+                    auth = FirebaseAuth.DefaultInstance;
+                    ready = true;
+                    Debug.Log("[Auth] Firebase 준비 완료");
+                }
+                else
+                {
+                    Debug.LogWarning("[Auth] Firebase 의존성 오류: " + task.Result);
+                }
+            });
+        }
+        catch (Exception e)
+        {
+            // 네이티브 라이브러리(FirebaseCppApp)가 없는 환경(에디터 등)에서 발생.
+            // ready=false 상태를 유지하고 게스트 모드로 동작한다.
+            Debug.LogWarning("[Auth] Firebase 초기화 실패 — 네이티브 라이브러리를 찾을 수 없음: " + e.Message);
+        }
 #endif
     }
 
@@ -88,8 +87,11 @@ public class AuthManager : MonoBehaviour
 #if FIREBASE_ENABLED
     System.Collections.IEnumerator AutoLoginRoutine(Action<bool> onResult)
     {
+        // Firebase 초기화 대기. 콜드 스타트(앱 완전 종료 후 첫 실행)에서는 의존성 점검이
+        // 몇 초 이상 걸릴 수 있으므로 넉넉히(최대 20초) 기다린다. 너무 짧게 끊으면
+        // 실제로는 로그인돼 있는데도 로그인 화면으로 떨어져 "매번 다시 로그인" 현상이 생긴다.
         float t = 0f;
-        while (!ready && t < 5f) { t += Time.deltaTime; yield return null; } // Firebase 초기화 대기
+        while (!ready && t < 20f) { t += Time.deltaTime; yield return null; }
 
         if (ready && auth.CurrentUser != null)
         {
@@ -105,8 +107,12 @@ public class AuthManager : MonoBehaviour
     void SetGuestLocal()
     {
         IsSignedIn = true; IsGuest = true;
-        UserId = SystemInfo.deviceUniqueIdentifier; DisplayName = "게스트";
+        UserId = SystemInfo.deviceUniqueIdentifier; DisplayName = LocalizationManager.Get("auth.guest_display_name");
         PlayerPrefs.SetInt(GuestKey, 1);
+        // 모바일에서는 OS가 앱을 강제 종료할 때 OnApplicationQuit이 항상 호출된다는 보장이
+        // 없어서, Save()를 명시적으로 안 하면 방금 쓴 값이 디스크에 반영 안 된 채 날아갈 수
+        // 있다 - 이게 "다시 켜면 로그인이 풀려있음" 버그의 원인이었다.
+        PlayerPrefs.Save();
     }
 
     // ── 이메일 회원가입 ─────────────────────────────────────────────
@@ -114,15 +120,15 @@ public class AuthManager : MonoBehaviour
     {
         if (!ValidateInput(email, password, onDone)) return;
 #if FIREBASE_ENABLED
-        if (!ready) { onDone?.Invoke(false, "잠시 후 다시 시도해 주세요. (초기화 중)"); return; }
+        if (!ready) { onDone?.Invoke(false, LocalizationManager.Get("auth.please_wait_init")); return; }
         auth.CreateUserWithEmailAndPasswordAsync(email, password).ContinueWithOnMainThread(t =>
         {
             if (t.IsCanceled || t.IsFaulted) { onDone?.Invoke(false, FirebaseError(t)); return; }
             ApplyUser(auth.CurrentUser, guest: false);
-            onDone?.Invoke(true, "회원가입 완료");
+            onDone?.Invoke(true, LocalizationManager.Get("auth.signup_complete"));
         });
 #else
-        onDone?.Invoke(false, "Firebase 미설정 (FIREBASE_ENABLED 심볼 필요)");
+        onDone?.Invoke(false, LocalizationManager.Get("auth.firebase_not_configured"));
 #endif
     }
 
@@ -131,48 +137,15 @@ public class AuthManager : MonoBehaviour
     {
         if (!ValidateInput(email, password, onDone)) return;
 #if FIREBASE_ENABLED
-        if (!ready) { onDone?.Invoke(false, "잠시 후 다시 시도해 주세요. (초기화 중)"); return; }
+        if (!ready) { onDone?.Invoke(false, LocalizationManager.Get("auth.please_wait_init")); return; }
         auth.SignInWithEmailAndPasswordAsync(email, password).ContinueWithOnMainThread(t =>
         {
             if (t.IsCanceled || t.IsFaulted) { onDone?.Invoke(false, FirebaseError(t)); return; }
             ApplyUser(auth.CurrentUser, guest: false);
-            onDone?.Invoke(true, "로그인 성공");
+            onDone?.Invoke(true, LocalizationManager.Get("auth.login_success"));
         });
 #else
-        onDone?.Invoke(false, "Firebase 미설정 (FIREBASE_ENABLED 심볼 필요)");
-#endif
-    }
-
-    // ── 구글 로그인 ─────────────────────────────────────────────────
-    public void SignInGoogle(Action<bool, string> onDone)
-    {
-#if FIREBASE_ENABLED && GOOGLE_SIGNIN
-        // 구글 로그인은 안드로이드 네이티브 — 에디터에서는 동작 불가 (currentActivity 없음)
-        if (Application.platform != RuntimePlatform.Android)
-        {
-            onDone?.Invoke(false, "구글 로그인은 안드로이드 기기/빌드에서만 됩니다. 에디터에서는 이메일/게스트로 테스트하세요.");
-            return;
-        }
-        if (!ready) { onDone?.Invoke(false, "잠시 후 다시 시도해 주세요. (초기화 중)"); return; }
-        GoogleSignIn.Configuration = new GoogleSignInConfiguration
-        {
-            WebClientId = googleWebClientId,
-            RequestIdToken = true,
-            UseGameSignIn = false
-        };
-        GoogleSignIn.DefaultInstance.SignIn().ContinueWithOnMainThread(task =>
-        {
-            if (task.IsCanceled || task.IsFaulted) { onDone?.Invoke(false, "구글 로그인 취소/실패"); return; }
-            var credential = GoogleAuthProvider.GetCredential(task.Result.IdToken, null);
-            auth.SignInWithCredentialAsync(credential).ContinueWithOnMainThread(t =>
-            {
-                if (t.IsCanceled || t.IsFaulted) { onDone?.Invoke(false, FirebaseError(t)); return; }
-                ApplyUser(auth.CurrentUser, guest: false);
-                onDone?.Invoke(true, "구글 로그인 성공");
-            });
-        });
-#else
-        onDone?.Invoke(false, "구글 로그인은 Firebase + Google Sign-In 플러그인 설정이 필요합니다.");
+        onDone?.Invoke(false, LocalizationManager.Get("auth.firebase_not_configured"));
 #endif
     }
 
@@ -186,14 +159,14 @@ public class AuthManager : MonoBehaviour
             {
                 if (t.IsCanceled || t.IsFaulted) { onDone?.Invoke(false, FirebaseError(t)); return; }
                 ApplyUser(auth.CurrentUser, guest: true);
-                onDone?.Invoke(true, "게스트로 시작");
+                onDone?.Invoke(true, LocalizationManager.Get("auth.guest_start"));
             });
             return;
         }
 #endif
         // Firebase 없이도 게스트는 바로 진행 (저장은 로컬로 처리)
         SetGuestLocal();
-        onDone?.Invoke(true, "게스트로 시작");
+        onDone?.Invoke(true, LocalizationManager.Get("auth.guest_start"));
     }
 
     public void SignOut()
@@ -203,6 +176,15 @@ public class AuthManager : MonoBehaviour
 #endif
         IsSignedIn = false; IsGuest = false; UserId = ""; DisplayName = "";
         PlayerPrefs.DeleteKey(GuestKey);
+        PlayerPrefs.Save();
+    }
+
+    // 모바일 OS가 백그라운드로 넘어간 앱을 아무 예고 없이 종료시킬 수 있으므로, 포그라운드를
+    // 벗어나는 시점(pauseStatus==true)마다 저장 안 된 PlayerPrefs 변경 사항을 한 번 더
+    // 디스크에 반영해 둔다 - 로그인 상태가 날아가지 않게 하는 마지막 안전망.
+    void OnApplicationPause(bool pauseStatus)
+    {
+        if (pauseStatus) PlayerPrefs.Save();
     }
 
     // ── 내부 헬퍼 ───────────────────────────────────────────────────
@@ -215,9 +197,9 @@ public class AuthManager : MonoBehaviour
     {
         email = (email ?? "").Trim();
         if (string.IsNullOrEmpty(email) || !EmailRegex.IsMatch(email))
-        { onDone?.Invoke(false, "이메일 형식이 올바르지 않습니다. (예: name@example.com)"); return false; }
+        { onDone?.Invoke(false, LocalizationManager.Get("auth.invalid_email")); return false; }
         if (string.IsNullOrEmpty(password) || password.Length < 6)
-        { onDone?.Invoke(false, "비밀번호는 6자 이상이어야 합니다."); return false; }
+        { onDone?.Invoke(false, LocalizationManager.Get("auth.password_too_short")); return false; }
         return true;
     }
 
@@ -229,14 +211,15 @@ public class AuthManager : MonoBehaviour
         UserId = user != null ? user.UserId : "";
         DisplayName = (user != null && !string.IsNullOrEmpty(user.DisplayName))
             ? user.DisplayName
-            : (guest ? "게스트" : (user != null ? user.Email : ""));
+            : (guest ? LocalizationManager.Get("auth.guest_display_name") : (user != null ? user.Email : ""));
         PlayerPrefs.SetInt(GuestKey, guest ? 1 : 0); // 게스트=로컬저장, 실제계정=클라우드
+        PlayerPrefs.Save();
     }
 
     static string FirebaseError(System.Threading.Tasks.Task t)
     {
         var e = t.Exception?.GetBaseException();
-        return e != null ? "실패: " + e.Message : "실패";
+        return e != null ? LocalizationManager.Get("auth.failure_prefix") + " " + e.Message : LocalizationManager.Get("auth.failure");
     }
 #endif
 }

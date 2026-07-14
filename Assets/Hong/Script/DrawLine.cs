@@ -7,7 +7,7 @@ using UnityEngine.Pool;
 using UnityEngine.EventSystems;
 using Random = UnityEngine.Random;
 
-public class DrowLine : MonoBehaviour
+public class DrawLine : MonoBehaviour
 {
     // Resources/Prefabs/Line.prefab 의 파일명이 그대로 id가 됨
     const string linePoolId = "Line";
@@ -33,8 +33,24 @@ public class DrowLine : MonoBehaviour
     // false면 드로우 입력을 무시 — 지우개 모드일 때 Eraser에서 false로 설정
     public bool drawingEnabled = true;
 
+    // 특정 화면 좌표에서 지금 그리기를 시작해도 되는지 판단하는 델리게이트(선택, 비워두면 항상 허용).
+    // drawingEnabled는 PointerMoveEvent 등 다른 이벤트가 미리 계산해 둔 값을 그냥 읽는 것이라,
+    // 새 Input System의 액션 콜백(OnDrawStart/DrawLoop)과 그 이벤트가 같은 프레임 안에서 어느 쪽이
+    // 먼저 실행되는지 보장이 없어 한 프레임 지연된(아직 갱신 안 된) 값을 참조하는 경우가 있었다 -
+    // 그 결과 버튼을 눌러도 가끔 무시되거나, 버튼 위에서 그림이 같이 그려지는 문제가 생겼다.
+    // 이 델리게이트는 실제로 확인이 필요한 그 순간의 포인터 위치로 매번 새로 판정해서 그런
+    // 프레임 지연 없이 항상 정확하게 판단한다.
+    public Func<Vector2, bool> canDrawAt;
+
+    // 획 하나를 다 그렸을 때(펜을 뗀 순간) 그 획의 월드 좌표 목록을 전달한다.
+    // 실시간 획순 검사(PreciseWritingUIController)가 구독해서 즉시 판정한다.
+    public event Action<List<Vector2>> OnStrokeCompleted;
+
     // OnDrawStart가 정상적으로 완료됐을 때만 true — OnDrawEnd에서 핸들 저장 여부 판단
     bool isDrawing;
+
+    // true면 포인터를 뗄 때까지 새 그리기를 차단 (자동 판정 직후, 누른 손가락이 계속 그리는 것 방지)
+    bool suppressUntilRelease;
 
     // Camera.main은 호출할 때마다 FindWithTag로 탐색하므로 매 프레임 호출하면 비효율적
     // Awake에서 한 번만 캐싱해서 사용
@@ -83,19 +99,22 @@ public class DrowLine : MonoBehaviour
         clickAction.canceled -= OnDrawEnd;
     }
 
-    // UI 위에서 입력 중인지 확인 — 마우스와 터치 모두 처리
+    // UI 위에서 입력 중인지 확인.
+    // IsPointerOverGameObject()는 InputAction 콜백 내에서 전 프레임 상태를 반환해
+    // 버튼 클릭이 그리기로 새어나오는 문제가 있었다 - RaycastAll은 현재 위치로
+    // 즉시 판정하므로 콜백 안에서도 정확하다.
+    static readonly List<RaycastResult> _raycastResults = new List<RaycastResult>();
     bool IsPointerOverUI()
     {
-        if (EventSystem.current == null) return false;
+        if (EventSystem.current == null || Pointer.current == null) return false;
 
-        // 마우스
-        if (EventSystem.current.IsPointerOverGameObject()) return true;
-
-        // 터치 (fingerId 0 = 첫 번째 손가락)
-        if (Touchscreen.current != null && Touchscreen.current.primaryTouch.press.isPressed)
-            return EventSystem.current.IsPointerOverGameObject(0);
-
-        return false;
+        var ped = new PointerEventData(EventSystem.current)
+        {
+            position = Pointer.current.position.ReadValue()
+        };
+        _raycastResults.Clear();
+        EventSystem.current.RaycastAll(ped, _raycastResults);
+        return _raycastResults.Count > 0;
     }
 
     // started 콜백 : 마우스 왼쪽 버튼을 누르는 순간 호출
@@ -104,16 +123,19 @@ public class DrowLine : MonoBehaviour
     {
         // 지우개 모드이거나 UI 조작 중에는 드로우 차단
         isDrawing = false;
-        if (!drawingEnabled || IsPointerOverUI() || Pointer.current == null) return;
+        if (suppressUntilRelease || !drawingEnabled || IsPointerOverUI() || Pointer.current == null) return;
 
-        Vector2 startPos = cam.ScreenToWorldPoint(Pointer.current.position.ReadValue());
+        Vector2 pointerScreenPos = Pointer.current.position.ReadValue();
+        if (canDrawAt != null && !canDrawAt(pointerScreenPos)) return;
+
+        Vector2 startPos = cam.ScreenToWorldPoint(pointerScreenPos);
 
         // out으로 핸들을 받아 저장 — 반환 시 Dispose()만 호출하면 됨
         GameObject currentLineGO = PoolManager.Instance.Spawn(linePoolId, Vector3.zero, transform, out currentHandle);
 
         if (currentLineGO == null)
         {
-            Debug.LogError($"[DrowLine] '{linePoolId}' 스폰 실패 — Resources/Prefabs 안에 해당 id의 프리팹이 있는지, PooledObject 컴포넌트 id가 '{linePoolId}' 인지 확인하세요.");
+            Debug.LogError($"[DrawLine] '{linePoolId}' 스폰 실패 — Resources/Prefabs 안에 해당 id의 프리팹이 있는지, PooledObject 컴포넌트 id가 '{linePoolId}' 인지 확인하세요.");
             return;
         }
 
@@ -148,13 +170,14 @@ public class DrowLine : MonoBehaviour
 
         while (true)
         {
-            if (!drawingEnabled || IsPointerOverUI())
+            Vector2 screenPos = Pointer.current.position.ReadValue();
+            if (!drawingEnabled || IsPointerOverUI() || (canDrawAt != null && !canDrawAt(screenPos)))
             {
                 yield return null;
                 continue;
             }
 
-            Vector2 pos = cam.ScreenToWorldPoint(Pointer.current.position.ReadValue());
+            Vector2 pos = cam.ScreenToWorldPoint(screenPos);
 
             // 드로잉 포인트 추가 (드로잉 전용 threshold)
             if (Vector2.Distance(points[points.Count - 1], pos) > 0.001f)
@@ -201,6 +224,8 @@ public class DrowLine : MonoBehaviour
     // 드로우 루프를 중단하고 완성된 라인을 drawnLines에 보관함
     void OnDrawEnd(InputAction.CallbackContext ctx)
     {
+        suppressUntilRelease = false; // 포인터를 뗐으므로 차단 해제
+
         if (drawCoroutine != null)
         {
             StopCoroutine(drawCoroutine);
@@ -223,6 +248,8 @@ public class DrowLine : MonoBehaviour
                 () => RemoveLine(goRef[0]),
                 () => { goRef[0] = CreateLine(capturedPoints, capturedWidth, capturedColor); }
             );
+
+            OnStrokeCompleted?.Invoke(capturedPoints);
         }
         if (currentSfxSource != null) currentSfxSource.Stop();
         currentSfxSource = null;
@@ -233,13 +260,18 @@ public class DrowLine : MonoBehaviour
         points.Clear();
     }
 
+    // pencilSound 컴포넌트를 씬에서 연결 안 해둔 경우(예: WritingPracticeScene의 DrawLine)에도
+    // 소리가 나도록, 프로젝트에 들어있는 기본 연필 클립 이름을 폴백으로 쓴다.
+    static readonly List<string> DefaultPencilSounds = new List<string> { "pencilSound1", "pencilSound2" };
+
     int PlayRandomPencilSound(int exclude)
     {
-        // pencilSound(같은 오브젝트의 PencilSound 컴포넌트)나 SoundManager 싱글톤이 없는 씬(예: 사운드 설정 없이
-        // WritingPracticeScene을 단독으로 재생하는 경우)에서도 그리기 자체는 죽지 않도록 방어
-        if (pencilSound == null || SoundManager.Instance == null) return -1;
+        // SoundManager 싱글톤이 없으면(부트스트랩 실패 등) 그리기 자체는 죽지 않도록 방어
+        if (SoundManager.Instance == null) return -1;
 
-        var sounds = pencilSound.pencilSounds;
+        var sounds = (pencilSound != null && pencilSound.pencilSounds != null && pencilSound.pencilSounds.Count > 0)
+            ? pencilSound.pencilSounds
+            : DefaultPencilSounds;
         if (sounds == null || sounds.Count == 0) return -1;
 
         int idx = exclude;
@@ -250,6 +282,40 @@ public class DrowLine : MonoBehaviour
 
         currentSfxSource = SoundManager.Instance.PlaySfx(sounds[idx], loop: true);
         return idx;
+    }
+
+    /// <summary>
+    /// 지금 그리던 획을 강제 종료한다 (undo 기록 없이 풀로 반환).
+    /// 포인터를 누른 채라면 뗄 때까지 새 그리기를 차단 — 자동 판정 직후 손가락이
+    /// 계속 눌려 있어도 펜이 나오지 않게 한다.
+    /// </summary>
+    public void CancelCurrentStroke()
+    {
+        if (drawCoroutine != null)
+        {
+            StopCoroutine(drawCoroutine);
+            drawCoroutine = null;
+        }
+
+        if (isDrawing)
+        {
+            isDrawing = false;
+            ((IDisposable)currentHandle).Dispose(); // 그리던 라인을 풀로 반환
+            currentHandle = default;
+            points.Clear();
+        }
+
+        if (currentSfxSource != null)
+        {
+            currentSfxSource.Stop();
+            currentSfxSource = null;
+        }
+        soundTimer = 0f;
+        stillTimer = 0f;
+
+        // 아직 누르고 있으면 뗄 때까지 새 그리기 차단
+        if (Pointer.current != null && Pointer.current.press.isPressed)
+            suppressUntilRelease = true;
     }
 
     // UI Slider의 OnValueChanged에 연결해서 두께를 실시간으로 조절
@@ -314,5 +380,18 @@ public class DrowLine : MonoBehaviour
             ((IDisposable)handle).Dispose();
 
         lineHandles.Clear();
+    }
+
+    // 지금까지 그려진 모든 획의 색을 한 번에 바꾼다 - 실시간 획순 검사에서 획순을
+    // 틀렸을 때 글자 전체를 빨간색으로, 고쳐지면 다시 원래 색으로 되돌리는 데 사용.
+    public void SetInkColor(Color color)
+    {
+        foreach (var go in lineHandles.Keys)
+        {
+            var lineRenderer = go.GetComponent<LineRenderer>();
+            if (lineRenderer == null) continue;
+            lineRenderer.startColor = color;
+            lineRenderer.endColor = color;
+        }
     }
 }

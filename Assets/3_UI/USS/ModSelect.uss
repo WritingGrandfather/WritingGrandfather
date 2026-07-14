@@ -1,7 +1,22 @@
+.hidden {
+    display: none;
+}
+
 .safe-area {
     position: absolute;
     width: 100%;
     height: 100%;
+}
+
+/* 모든 Button에 공통으로 적용되는 눌림/호버 효과 - Lobby.uss와 동일한 규칙.
+   transition을 hover와 active(눌림)가 같이 쓰므로 여기 한 번만 선언한다. */
+Button {
+    transition-property: scale;
+    transition-duration: 0.08s;
+}
+
+Button:active {
+    scale: 0.94;
 }
 
 .modselect-root {
@@ -19,63 +34,119 @@
     font-size: 48px;
     -unity-font-style: bold;
     color: rgb(90, 62, 40);
-    margin-bottom: 60px;
+    margin-bottom: 12px;
     -unity-text-align: middle-center;
     white-space: nowrap;
 }
 
-.button-area {
-    width: 85%;
-    align-items: stretch;
-}
-
-.mode-card {
-    margin-bottom: 36px;
-    align-items: stretch;
-}
-
-.mode-button {
-    height: 130px;
-    border-radius: 20px;
-    border-width: 0;
-    font-size: 38px;
-    color: rgb(255, 255, 255);
-    background-color: rgb(150, 111, 71);
-    -unity-text-align: middle-center;
-}
-
-.mode-button:hover {
-    background-color: rgb(170, 128, 86);
-}
-
-.mode-button--primary {
-    background-color: rgb(214, 108, 58);
-}
-
-.mode-button--primary:hover {
-    background-color: rgb(230, 128, 76);
-}
-
-.mode-desc {
-    margin-top: 10px;
-    font-size: 22px;
+.hint-label {
+    font-size: 26px;
     color: rgb(120, 95, 75);
+    margin-bottom: 60px;
     -unity-text-align: middle-center;
     white-space: normal;
 }
 
-.back-button {
-    margin-top: 40px;
-    width: 220px;
-    height: 80px;
-    border-radius: 16px;
+/* 뒤로가기 - 화면 왼쪽 위 구석에 작은 원형 아이콘. Lobby의 설정 아이콘과 같은
+   이유로, 절대배치 자식은 부모 패딩을 안 따라가서 위치는 스크립트에서
+   따로 안 잡고 여기서는 고정 여백만 준다(ModSelect는 세이프에어리어 대응
+   컨트롤러가 아직 없어서 - 필요해지면 Lobby처럼 스크립트로 옮기면 된다). */
+.icon-button--back {
+    position: absolute;
+    top: 40px;
+    left: 40px;
+    width: 96px;
+    height: 96px;
+    border-radius: 999px;
     border-width: 0;
-    font-size: 26px;
-    color: rgb(255, 255, 255);
+    align-items: center;
+    justify-content: center;
     background-color: rgb(120, 120, 120);
-    -unity-text-align: middle-center;
 }
 
-.back-button:hover {
+.icon-button--back:hover {
     background-color: rgb(140, 140, 140);
+}
+
+.button-area {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 원형 모드 버튼 공통 - 마우스를 올리면 살짝 커지는 효과(scale)를 준다.
+   Button 타입 선택자에 이미 transition이 걸려있어서 scale 변화가 부드럽게
+   보간된다. */
+.mode-icon-button {
+    width: 240px;
+    height: 240px;
+    margin: 0 28px;
+    border-radius: 999px;
+    border-width: 0;
+    align-items: center;
+    justify-content: center;
+}
+
+.mode-icon-button:hover {
+    scale: 1.08;
+}
+
+/* 한 번 눌러서 "선택된"(설명이 떠 있는) 상태 - 한 번 더 누르면 그 모드가
+   시작된다는 걸 테두리로 알려준다. ModSelectController가 선택/해제할 때마다
+   붙이고 뗀다. */
+.mode-icon-button--selected {
+    scale: 1.08;
+    border-width: 6px;
+    border-color: rgb(90, 62, 40);
+}
+
+.mode-icon-button--primary {
+    background-color: rgb(214, 108, 58);
+}
+
+.mode-icon-button--secondary {
+    background-color: rgb(74, 122, 140);
+}
+
+.icon-img,
+.mode-icon-img {
+    width: 55%;
+    height: 55%;
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+/* 아이콘 이미지는 Assets/3_UI/Icons/ 밑에 정해진 파일명으로 넣으면 그대로
+   적용된다 (Lobby와 같은 방식) - 아직 없으면 빈 원으로 보일 뿐 에러는 안 난다. */
+.icon-img--back {
+    background-image: url("/Assets/3_UI/Icons/icon-back.png");
+}
+
+.mode-icon-img--precise {
+    background-image: url("/Assets/3_UI/Icons/icon-precise.png");
+}
+
+.mode-icon-img--challenge {
+    background-image: url("/Assets/3_UI/Icons/icon-challenge.png");
+}
+
+/* 평소엔 안 보이다가, 정밀 쓰기/도전 모드 버튼에 마우스를 올렸을 때만
+   ModSelectController가 .hidden을 떼서 보여주는 설명 카드. */
+.mode-desc-card {
+    margin-top: 48px;
+    width: 85%;
+    min-height: 140px;
+    border-radius: 24px;
+    border-width: 2px;
+    border-color: rgb(150, 111, 71);
+    background-color: rgb(255, 253, 248);
+    padding: 28px 36px;
+    align-items: center;
+    justify-content: center;
+}
+
+.mode-desc-text {
+    font-size: 32px;
+    color: rgb(90, 62, 40);
+    -unity-text-align: middle-center;
+    white-space: normal;
 }

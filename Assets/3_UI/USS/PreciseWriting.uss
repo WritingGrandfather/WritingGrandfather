@@ -2,6 +2,16 @@
     display: none;
 }
 
+/* 모든 Button에 공통으로 적용되는 눌림 효과 - Lobby.uss와 동일한 규칙 */
+Button {
+    transition-property: scale;
+    transition-duration: 0.08s;
+}
+
+Button:active {
+    scale: 0.94;
+}
+
 .safe-area {
     position: absolute;
     width: 100%;
@@ -51,6 +61,45 @@
     margin-left: 12px;
     -unity-text-align: middle-center;
     white-space: nowrap;
+}
+
+/* 직전 글자의 채점 피드백(주로 획순 오류 안내)을 다음 글자를 쓰는 동안에도 계속 보여준다.
+   안내선/획 순서 토글(bottom-bar) 아래에 위치 - 실제 좌표는 ApplyLayout()이 화면 밖으로
+   넘치지 않게 클램프해서 절대 좌표로 배치한다 (여기서는 폭/색만 담당). */
+.stroke-feedback-label {
+    font-size: 36px;
+    -unity-text-align: upper-center;
+    white-space: normal;
+    padding: 4px 24px;
+}
+
+.stroke-feedback-label--bad {
+    color: rgb(219, 38, 38);
+}
+
+.stroke-feedback-label--good {
+    color: rgb(56, 142, 60);
+}
+
+/* safe-area 안, 상단 바의 가장 오른쪽에 떠 있는 나가기 버튼.
+   top-bar 높이에 따라 늘어나지 않도록 폭/높이를 고정값으로 맞춰 정사각형을 유지한다. */
+.top-bar-exit-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 130px;
+    height: 130px;
+    border-radius: 16px;
+    border-width: 0;
+    font-size: 40px;
+    color: rgb(255, 255, 255);
+    background-color: rgba(120, 120, 120, 0.85);
+    -unity-text-align: middle-center;
+    white-space: normal;
+}
+
+.top-bar-exit-button:hover {
+    background-color: rgba(140, 140, 140, 0.9);
 }
 
 /* ---- 가이드 박스 ---- */
@@ -119,14 +168,29 @@
     background-color: rgba(140, 140, 140, 0.9);
 }
 
-/* ---- 획순 레이어 ---- */
-
-.stroke-order-layer {
+/* 획 하나 되돌리기(undo) 버튼 - 초기화(전체 삭제)와 헷갈리지 않도록 반대쪽(좌상단)에
+   두고, 색도 테마 브라운으로 구분한다. */
+.undo-button {
     position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
+    top: 14px;
+    left: 14px;
+    height: 100px;
+    padding: 0 24px;
+    border-radius: 30px;
+    border-width: 0;
+    font-size: 40px;
+    color: rgb(255, 255, 255);
+    background-color: rgba(150, 111, 71, 0.9);
+    -unity-text-align: middle-center;
+}
+
+.undo-button:hover {
+    background-color: rgba(170, 128, 86, 0.95);
+}
+
+/* 되돌릴 게 없을 때(UndoManager.CanUndo == false) 흐리게 표시 + 클릭 무시 */
+.undo-button:disabled {
+    opacity: 0.4;
 }
 
 /* ---- 완료 버튼 ---- */
@@ -207,6 +271,15 @@
     white-space: nowrap;
 }
 
+/* "n단계 완료!" 위에 뜨는 별 3개 - 별 자체는 C#에서 Painter2D로 직접 그린다(폰트에
+   ★/☆ 글리프가 없을 수도 있어서 텍스트 대신 벡터로 그림). */
+.result-stars-row {
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
 .result-row {
     flex-direction: row;
     width: 100%;
@@ -265,4 +338,22 @@
 
 .modal-button--cancel:hover {
     background-color: rgb(140, 140, 140);
+}
+
+/* 계속 하기/다시하기 버튼 아래, 결과창을 완전히 벗어나는 나가기 버튼 - 위 둘보다
+   낮은 우선순위 행동이라 폭 전체를 쓰는 대신 눈에 덜 띄게 작고 수수하게 둔다. */
+.result-exit-button {
+    width: 100%;
+    height: 100px;
+    margin-top: 16px;
+    border-radius: 18px;
+    border-width: 0;
+    font-size: 34px;
+    color: rgb(255, 255, 255);
+    background-color: rgba(120, 120, 120, 0.7);
+    -unity-text-align: middle-center;
+}
+
+.result-exit-button:hover {
+    background-color: rgba(140, 140, 140, 0.8);
 }

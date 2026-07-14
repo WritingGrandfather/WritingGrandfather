@@ -21,9 +21,15 @@ public class HandwritingEvaluationRequest
 public class HandwritingFeedback
 {
     public string recognizedText; // AI가 이미지에서 읽어낸 글자
-    public int score;             // 0~100 점수
+    public int score;             // 0~100 종합 점수 (통과 판정에 사용)
     public bool passed;           // 통과 여부
+    public int stars;             // 별점 0~3 (불통과=0, 통과=최소1, 70↑=2, 85↑=3)
     public string message;        // 사용자에게 보여줄 피드백 문장
+
+    // 세부 항목 점수 (0~100). 아직 계산 안 됐으면 -1 (UI는 이 경우 종합 score로 대체 표시).
+    public int similarityScore = -1;   // 글자 유사도 — AI가 판단한 모양/인식 신뢰도
+    public int strokeOrderScore = -1;  // 획 순서 정확도 — StrokeOrderValidator/Checker 결과
+    public int positionScore = -1;     // 글자 크기·위치 정확도 — 칸 대비 크기/중앙 정렬/이탈 정도
 
     public static HandwritingFeedback Error(string reason) =>
         new HandwritingFeedback { recognizedText = "", score = 0, passed = false, message = reason };

@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 /// <summary>
 /// 로그인 화면 컨트롤러 (UI Toolkit).
 ///
-/// 메인 버튼: 구글 로그인 / 이메일로 로그인(팝업) / 게스트로 시작
+/// 메인 버튼: 이메일로 로그인(팝업) / 게스트로 시작
 /// 하단: 회원가입(팝업)
 /// 이메일 로그인·회원가입은 각각 모달 팝업에서 처리한다.
 /// 성공하면 nextScene 으로 이동. 이전 로그인이 있으면 자동 이동.
@@ -28,9 +28,18 @@ public class LoginController : MonoBehaviour
     TextField _suEmail, _suPassword;
     Label _suMsg;
 
+    // 정적 UXML 텍스트(로컬라이제이션 대상) - 실행 중 SetMsg()로 갱신되는
+    // 상태/에러 메시지는 이번 적용 범위에서 제외했다.
+    TextElement _titleLabel, _subtitleLabel;
+    Button _btnEmailLogin, _btnGuest, _btnSignup;
+    TextElement _hintLabel;
+    Button _btnLoginConfirm, _btnLoginCancel, _btnSignupConfirm, _btnSignupCancel;
+    TextElement _loginModalTitle, _signupModalTitle;
+
     void OnEnable()
     {
         var root = GetComponent<UIDocument>().rootVisualElement;
+        UIClickSound.Attach(root);
 
         _msg = root.Q<Label>("msg");
 
@@ -45,23 +54,42 @@ public class LoginController : MonoBehaviour
         _suMsg = root.Q<Label>("signup-msg");
 
         // 메인 버튼
-        root.Q<Button>("btn-google").clicked += OnGoogle;
-        root.Q<Button>("btn-email-login").clicked += () => Show(_loginPanel, true);
-        root.Q<Button>("btn-guest").clicked += OnGuest;
-        root.Q<Button>("btn-signup").clicked += () => Show(_signupPanel, true);
+        _titleLabel = root.Q<TextElement>("title-label");
+        _subtitleLabel = root.Q<TextElement>("subtitle");
+        _btnEmailLogin = root.Q<Button>("btn-email-login");
+        _btnGuest = root.Q<Button>("btn-guest");
+        _btnSignup = root.Q<Button>("btn-signup");
+        _hintLabel = root.Q<VisualElement>("footer").Q<TextElement>(className: "hint");
+        _loginModalTitle = root.Q<VisualElement>("login-box").Q<TextElement>(className: "modal-text");
+        _signupModalTitle = root.Q<VisualElement>("signup-box").Q<TextElement>(className: "modal-text");
+        _btnLoginConfirm = root.Q<Button>("btn-login-confirm");
+        _btnLoginCancel = root.Q<Button>("btn-login-cancel");
+        _btnSignupConfirm = root.Q<Button>("btn-signup-confirm");
+        _btnSignupCancel = root.Q<Button>("btn-signup-cancel");
+
+        var versionLabel = root.Q<Label>("version-label");
+        if (versionLabel != null)
+            versionLabel.text = "v" + Application.version;
+
+        _btnEmailLogin.clicked += () => Show(_loginPanel, true);
+        _btnGuest.clicked += OnGuest;
+        _btnSignup.clicked += () => Show(_signupPanel, true);
 
         // 로그인 팝업
-        root.Q<Button>("btn-login-confirm").clicked += OnLogin;
-        root.Q<Button>("btn-login-cancel").clicked += () => Show(_loginPanel, false);
+        _btnLoginConfirm.clicked += OnLogin;
+        _btnLoginCancel.clicked += () => Show(_loginPanel, false);
 
         // 회원가입 팝업
-        root.Q<Button>("btn-signup-confirm").clicked += OnSignupConfirm;
-        root.Q<Button>("btn-signup-cancel").clicked += () => Show(_signupPanel, false);
+        _btnSignupConfirm.clicked += OnSignupConfirm;
+        _btnSignupCancel.clicked += () => Show(_signupPanel, false);
+
+        ApplyLocalization();
+        LocalizationManager.OnLanguageChanged += ApplyLocalization;
 
         // 자동 로그인: 이전에 로그인했으면 바로 게임 씬으로
         if (AuthManager.Instance != null)
         {
-            SetMsg(_msg, "자동 로그인 확인 중...");
+            SetMsg(_msg, LocalizationManager.Get("auth.checking_auto_login"));
             AuthManager.Instance.AutoLogin(auto =>
             {
                 if (auto) SceneManager.LoadScene(nextScene);
@@ -70,10 +98,37 @@ public class LoginController : MonoBehaviour
         }
     }
 
+    void OnDisable()
+    {
+        LocalizationManager.OnLanguageChanged -= ApplyLocalization;
+    }
+
+    void ApplyLocalization()
+    {
+        _titleLabel.text = LocalizationManager.Get("login.title");
+        _subtitleLabel.text = LocalizationManager.Get("login.subtitle");
+        _btnEmailLogin.text = LocalizationManager.Get("login.btn_email");
+        _btnGuest.text = LocalizationManager.Get("login.btn_guest");
+        _hintLabel.text = LocalizationManager.Get("login.hint");
+        _btnSignup.text = LocalizationManager.Get("login.btn_signup");
+
+        _loginModalTitle.text = LocalizationManager.Get("login.modal.email_title");
+        _loginEmail.label = LocalizationManager.Get("login.field.email_label");
+        _loginPassword.label = LocalizationManager.Get("login.field.password_label");
+        _btnLoginConfirm.text = LocalizationManager.Get("login.btn.login_confirm");
+        _btnLoginCancel.text = LocalizationManager.Get("login.btn.cancel");
+
+        _signupModalTitle.text = LocalizationManager.Get("login.modal.signup_title");
+        _suEmail.label = LocalizationManager.Get("login.field.email_label");
+        _suPassword.label = LocalizationManager.Get("login.field.password_label");
+        _btnSignupConfirm.text = LocalizationManager.Get("login.btn.signup_confirm");
+        _btnSignupCancel.text = LocalizationManager.Get("login.btn.cancel");
+    }
+
     // 이메일 로그인 (팝업)
     void OnLogin()
     {
-        SetMsg(_loginMsg, "로그인 중...");
+        SetMsg(_loginMsg, LocalizationManager.Get("auth.logging_in"));
         Auth()?.SignInEmail(_loginEmail.value, _loginPassword.value, (ok, m) =>
         {
             if (ok) SceneManager.LoadScene(nextScene);
@@ -84,7 +139,7 @@ public class LoginController : MonoBehaviour
     // 회원가입 (팝업)
     void OnSignupConfirm()
     {
-        SetMsg(_suMsg, "회원가입 중...");
+        SetMsg(_suMsg, LocalizationManager.Get("auth.signing_up"));
         Auth()?.SignUpEmail(_suEmail.value, _suPassword.value, (ok, m) =>
         {
             if (ok) SceneManager.LoadScene(nextScene); // 가입 성공 = 로그인 상태 → 바로 진행
@@ -92,19 +147,9 @@ public class LoginController : MonoBehaviour
         });
     }
 
-    void OnGoogle()
-    {
-        SetMsg(_msg, "구글 로그인 중...");
-        Auth()?.SignInGoogle((ok, m) =>
-        {
-            if (ok) SceneManager.LoadScene(nextScene);
-            else SetMsg(_msg, m);
-        });
-    }
-
     void OnGuest()
     {
-        SetMsg(_msg, "시작 중...");
+        SetMsg(_msg, LocalizationManager.Get("auth.starting"));
         Auth()?.SignInGuest((ok, m) =>
         {
             if (ok) SceneManager.LoadScene(nextScene);
@@ -129,7 +174,7 @@ public class LoginController : MonoBehaviour
         if (AuthManager.Instance == null)
         {
             Debug.LogError("[Login] AuthManager가 씬에 없습니다.");
-            SetMsg(_msg, "인증 매니저 없음");
+            SetMsg(_msg, LocalizationManager.Get("auth.no_manager"));
         }
         return AuthManager.Instance;
     }

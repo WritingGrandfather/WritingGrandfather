@@ -6,20 +6,20 @@ using UnityEditor.Events;
 using TMPro;
 
 /// <summary>
-/// [Tools > Build Jihwan Scene] 메뉴로 JihwanScnene을 생성한다.
+/// [Tools > Build Jihwan Scene] 메뉴로 JihwanScene을 생성한다.
 ///
 /// 방식: 팀원이 만든 그리기 UI 씬(Hong/Scene/New Scene 1.unity)을 베이스로 열고,
-///       그 위에 AI 인식·평가 부분만 얹은 뒤 JihwanScnene으로 저장한다.
+///       그 위에 AI 인식·평가 부분만 얹은 뒤 JihwanScene으로 저장한다.
 ///       (팀 원본 씬은 건드리지 않음 — 다른 경로로 저장)
 ///
 /// 팀 씬이 이미 제공: Main Camera, Pool Manager, UndoManager, Drow Line, Canvas(색상/연필/지우개/Undo/슬라이더), EventSystem
-/// 여기서 추가:       WritingCell, CellCapture, GrokEvaluator, WritingFeedbackController, [Evaluate] 버튼 + 결과/상태 텍스트
+/// 여기서 추가:       WritingCell, StrokeCapture, GrokEvaluator, WritingFeedbackController, [Evaluate] 버튼 + 결과/상태 텍스트
 ///
 /// UI 언어: 영어
 /// </summary>
 public static class JihwanSceneBuilder
 {
-    const string ScenePath = "Assets/1_Scenes/JihwanScnene.unity";
+    const string ScenePath = "Assets/1_Scenes/ChallengeScene.unity";
     const string TeamScenePath = "Assets/Hong/Scene/New Scene 1.unity";
 
     [MenuItem("Tools/Build Jihwan Scene")]
@@ -43,8 +43,8 @@ public static class JihwanSceneBuilder
         cell.targetText = "가"; // 목표 글자 (인스펙터에서 수정 가능)
         cellGO.transform.position = Vector3.zero;
 
-        // 하이브리드 캡처: 획 좌표(StrokeCapture) + PNG(CellCapture)
-        var drow = Object.FindObjectOfType<DrowLine>();
+        // 획 좌표(StrokeCapture) → StrokeRasterizer가 PNG까지 만들어주므로 별도 카메라 캡처는 불필요.
+        var drow = Object.FindObjectOfType<DrawLine>();
 
         var strokeGO = new GameObject("StrokeCapture");
         var strokeCap = strokeGO.AddComponent<StrokeCapture>();
@@ -52,12 +52,7 @@ public static class JihwanSceneBuilder
         strokeSO.FindProperty("drawLine").objectReferenceValue = drow;
         strokeSO.ApplyModifiedPropertiesWithoutUndo();
         if (drow == null)
-            Debug.LogWarning("[JihwanSceneBuilder] 팀 씬에서 DrowLine을 찾지 못했습니다. StrokeCapture의 drawLine을 수동 연결하세요.");
-
-        var imgGO = new GameObject("CellCapture");
-        var imgCap = imgGO.AddComponent<CellCapture>();
-        imgCap.resolution = 512;
-        imgCap.backgroundColor = Color.white;
+            Debug.LogWarning("[JihwanSceneBuilder] 팀 씬에서 DrawLine을 찾지 못했습니다. StrokeCapture의 drawLine을 수동 연결하세요.");
 
         var evalGO = new GameObject("OpenAIEvaluator");
         var evaluator = evalGO.AddComponent<OpenAIHandwritingEvaluator>();
@@ -85,7 +80,6 @@ public static class JihwanSceneBuilder
         var ctrlSO = new SerializedObject(ctrl);
         ctrlSO.FindProperty("targetCell").objectReferenceValue = cell;
         ctrlSO.FindProperty("strokeCapture").objectReferenceValue = strokeCap;
-        ctrlSO.FindProperty("imageCapture").objectReferenceValue = imgCap;
         ctrlSO.FindProperty("evaluator").objectReferenceValue = evaluator;
         ctrlSO.FindProperty("criteria").stringValue =
             "You are a teacher helping a learner practice Korean handwriting. " +
@@ -102,7 +96,7 @@ public static class JihwanSceneBuilder
         UnityEventTools.AddPersistentListener<HandwritingFeedback>(ctrl.onFeedback, display.OnFeedback);
         UnityEventTools.AddPersistentListener<string>(ctrl.onStatus, display.OnStatus);
 
-        // ── JihwanScnene으로 저장 (팀 원본 씬은 그대로 유지) ────────
+        // ── JihwanScene으로 저장 (팀 원본 씬은 그대로 유지) ────────
         bool ok = EditorSceneManager.SaveScene(scene, ScenePath);
         AssetDatabase.Refresh();
 
@@ -110,7 +104,7 @@ public static class JihwanSceneBuilder
         {
             Debug.Log($"[JihwanSceneBuilder] 팀 UI 기반 씬 생성 완료: {ScenePath}");
             EditorUtility.DisplayDialog("Done",
-                $"JihwanScnene created from the team UI scene.\n{ScenePath}\n\nMake sure ApiKeyConfig has your xAI key, then press Play.",
+                $"JihwanScene created from the team UI scene.\n{ScenePath}\n\nMake sure ApiKeyConfig has your xAI key, then press Play.",
                 "OK");
         }
         else

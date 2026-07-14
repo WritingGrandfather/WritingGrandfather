@@ -54,7 +54,7 @@ public static class HangulComposer
             case 'ㅏ': case 'ㅓ': case 'ㅗ': case 'ㅜ': case 'ㅢ': return 2;
             case 'ㄹ': case 'ㅁ': case 'ㅊ': case 'ㅌ': case 'ㅎ':
             case 'ㅑ': case 'ㅕ': case 'ㅛ': case 'ㅠ': case 'ㅐ': case 'ㅔ': case 'ㅚ': case 'ㅟ': return 3;
-            case 'ㅂ': case 'ㄸ': case 'ㅆ':
+            case 'ㅂ': case 'ㄸ': case 'ㅆ': case 'ㅍ': case 'ㅉ':
             case 'ㅒ': case 'ㅖ': case 'ㅘ': case 'ㅝ': return 4;
             case 'ㅙ': case 'ㅞ': return 5;
             case 'ㅃ': return 8;

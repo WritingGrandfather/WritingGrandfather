@@ -113,3 +113,7 @@ InitTestScene*.unity*
 /[Aa]ssets/Firebase/Plugins/x86_64/*.bundle
 /[Aa]ssets/Firebase/Plugins/x86_64/*.bundle.meta
 /[Aa]ssets/GeneratedLocalRepo/
+
+# 채점 디버그 덤프 (로컬 전용 — 커밋 금지). 테스트할 때마다 로컬에서 계속 바뀌는
+# 스크린샷/JSON이라 다른 사람 커밋과 매번 충돌해서 pull이 막히던 원인이었다.
+/DebugCapture/

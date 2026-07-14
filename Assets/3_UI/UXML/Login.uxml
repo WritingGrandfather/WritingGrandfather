@@ -1,43 +1,55 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
-    <Style src="project://database/Assets/3_UI/USS/Login.uss?fileID=7433441132597879392&amp;guid=0bd1cb3f1bccc9842a4a211edea7397b&amp;type=3"/>
+    <Style src="../USS/Login.uss" />
+
     <ui:VisualElement name="login-root" class="login-root">
+
         <ui:VisualElement name="header" class="header">
-            <ui:Label text="글씨 쓰는 할배" name="title-label" class="title-label"/>
-            <ui:Label text="로그인하고 시작하세요" name="subtitle" class="subtitle"/>
+            <ui:Label text="글씨 쓰는 할배" name="title-label" class="title-label" />
+            <ui:Label text="로그인하고 시작하세요" name="subtitle" class="subtitle" />
         </ui:VisualElement>
-        <ui:VisualElement name="middle" class="middle" style="max-width: 1000px;">
-            <ui:Button name="btn-google" text="구글로 로그인" class="menu-button menu-button--google"/>
-            <ui:Button name="btn-email-login" text="이메일로 로그인" class="menu-button menu-button--primary"/>
-            <ui:Button name="btn-guest" text="게스트로 시작" class="menu-button menu-button--guest"/>
-            <ui:Label name="msg" text="" class="msg"/>
+
+        <ui:VisualElement class="spacer" />
+
+        <ui:VisualElement name="middle" class="middle">
+            <ui:Button name="btn-email-login" text="이메일로 로그인" class="menu-button menu-button--primary" />
+            <ui:Button name="btn-guest" text="게스트로 시작" class="menu-button menu-button--guest" />
+            <ui:Label name="msg" text="" class="msg" />
         </ui:VisualElement>
+
+        <ui:VisualElement class="spacer" />
+
         <ui:VisualElement name="footer" class="footer">
-            <ui:Label text="계정이 없으신가요?" class="hint"/>
-            <ui:Button name="btn-signup" text="회원가입" class="link-button"/>
+            <ui:Label text="계정이 없으신가요?" class="hint" />
+            <ui:Button name="btn-signup" text="회원가입" class="link-button" />
         </ui:VisualElement>
+
+        <ui:Label name="version-label" text="" class="version-label" />
+
         <ui:VisualElement name="login-panel" class="modal-overlay hidden">
             <ui:VisualElement name="login-box" class="modal-box">
-                <ui:Label text="이메일로 로그인" class="modal-text"/>
-                <ui:TextField name="field-login-email" label="이메일" class="input"/>
-                <ui:TextField name="field-login-password" label="비밀번호" password="true" class="input"/>
-                <ui:Label name="login-msg" text="" class="msg"/>
+                <ui:Label text="이메일로 로그인" class="modal-text" />
+                <ui:TextField name="field-login-email" label="이메일" class="input" />
+                <ui:TextField name="field-login-password" label="비밀번호" password="true" class="input" />
+                <ui:Label name="login-msg" text="" class="msg" />
                 <ui:VisualElement name="login-buttons" class="modal-button-row">
-                    <ui:Button name="btn-login-confirm" text="로그인" class="modal-button modal-button--confirm"/>
-                    <ui:Button name="btn-login-cancel" text="취소" class="modal-button modal-button--cancel"/>
+                    <ui:Button name="btn-login-confirm" text="로그인" class="modal-button modal-button--confirm" />
+                    <ui:Button name="btn-login-cancel" text="취소" class="modal-button modal-button--cancel" />
                 </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
+
         <ui:VisualElement name="signup-panel" class="modal-overlay hidden">
             <ui:VisualElement name="signup-box" class="modal-box">
-                <ui:Label text="회원가입" class="modal-text"/>
-                <ui:TextField name="field-signup-email" label="이메일" class="input"/>
-                <ui:TextField name="field-signup-password" label="비밀번호" password="true" class="input"/>
-                <ui:Label name="signup-msg" text="" class="msg"/>
+                <ui:Label text="회원가입" class="modal-text" />
+                <ui:TextField name="field-signup-email" label="이메일" class="input" />
+                <ui:TextField name="field-signup-password" label="비밀번호" password="true" class="input" />
+                <ui:Label name="signup-msg" text="" class="msg" />
                 <ui:VisualElement name="signup-buttons" class="modal-button-row">
-                    <ui:Button name="btn-signup-confirm" text="가입" class="modal-button modal-button--confirm"/>
-                    <ui:Button name="btn-signup-cancel" text="취소" class="modal-button modal-button--cancel"/>
+                    <ui:Button name="btn-signup-confirm" text="가입" class="modal-button modal-button--confirm" />
+                    <ui:Button name="btn-signup-cancel" text="취소" class="modal-button modal-button--cancel" />
                 </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
+
     </ui:VisualElement>
 </ui:UXML>

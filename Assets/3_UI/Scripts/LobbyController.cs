@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
@@ -5,57 +7,150 @@ using UnityEngine.UIElements;
 [RequireComponent(typeof(UIDocument))]
 public class LobbyController : MonoBehaviour
 {
-    [SerializeField] float baseMargin = 32f;
+    // 아래 값들은 전부 코드에서만 관리한다 (Inspector에 노출 안 함) - SerializeField로
+    // 두면 씬 파일에 그 시점 값이 저장돼서, 나중에 여기 기본값을 바꿔도 씬에 남은
+    // 예전 값이 계속 이겨버리는 문제가 반복됐었다 (랭킹 버튼 추가/타이틀 크기 변경
+    // 때 실제로 겪음). const/static readonly라 항상 이 파일의 값 그대로 적용된다.
+    const float baseMargin = 32f;
+    // 설정 아이콘을 세이프에어리어 구석에 바짝 붙일 때 쓰는 여백 (baseMargin보다 작게)
+    const float settingsIconMargin = 12f;
+    // 로그아웃 시 이동할 씬 이름 (Build Settings에 등록되어 있어야 함)
+    const string loginScene = "LoginScene";
 
     // Text elements that shrink together with the content box when SafeArea
     // insets eat into it, so text never gets clipped instead of just resized.
     // Matches the font-size values in Lobby.uss - keep both in sync.
-    [SerializeField] string[] titleLabelNames = { "title-label-line1", "title-label-line2" };
-    [SerializeField] float titleBaseFontSize = 52f;
-    [SerializeField] string[] menuButtonNames = { "btn-start", "btn-settings", "btn-exit" };
-    [SerializeField] float menuButtonBaseFontSize = 34f;
-    // title-area (190) + its margin-bottom (40) + button-area (3 * (120 + 14)) in Lobby.uss.
-    [SerializeField] float designContentHeight = 632f;
+    static readonly string[] titleLabelNames = { "title-label" };
+    // titleLabelNames와 같은 순서로 대응되는 localization.csv 키.
+    static readonly string[] TitleLabelKeys = { "lobby.title.full" };
+    const float titleBaseFontSize = 102f;
+    // title-area의 margin-top(110) + height(350) + margin-bottom(40) + button-area
+    // (원형 아이콘 버튼 중 가장 큰 시작 버튼 높이 280px) in Lobby.uss. 타이틀과
+    // 버튼 사이 간격은 이제 flex-spacer 두 개가 만들어주므로(화면이 넉넉하면
+    // 늘어나고, 좁으면 0으로 줄어듦) 고정값 계산에는 안 넣는다. 메뉴 버튼은
+    // 고정 크기 원형 아이콘이라(가변 길이 텍스트가 아님) 별도 텍스트
+    // 스케일링이 필요 없다.
+    const float designContentHeight = 780f;
     // .title-area's own "padding: 0 40px" (both sides) in Lobby.uss.
-    [SerializeField] float titleAreaHorizontalPadding = 80f;
-    // .button-area's "width: 80%" in Lobby.uss.
-    [SerializeField] float buttonAreaWidthFraction = 0.8f;
-    [SerializeField] float minFontScale = 0.5f;
+    const float titleAreaHorizontalPadding = 80f;
+    const float minFontScale = 0.5f;
 
     // Settings panel text also needs to shrink on narrow screens, same reason
     // as the lobby title/menu buttons above. Matches Settings.uss values.
-    [SerializeField] float settingsTitleBaseFontSize = 44f;
-    [SerializeField] float settingsTabBaseFontSize = 28f;
+    const float settingsTitleBaseFontSize = 44f;
+    // .settings-section-title's font-size in Settings.uss (비디오/오디오/언어 등 분류 제목).
+    const float settingsSectionTitleBaseFontSize = 56f;
     // .settings-header's "padding: 24px 32px" (both sides) in Settings.uss.
-    [SerializeField] float settingsHeaderHorizontalPadding = 64f;
-    // .settings-tab-bar's "padding: 0 24px" (both sides) in Settings.uss.
-    [SerializeField] float settingsTabBarHorizontalPadding = 48f;
-    // each .settings-tab's "margin: 0 6px" (both sides) in Settings.uss.
-    [SerializeField] float settingsTabHorizontalMargin = 12f;
-    [SerializeField] float settingsRowLabelBaseFontSize = 30f;
+    const float settingsHeaderHorizontalPadding = 64f;
+    // .settings-row-label's font-size in Settings.uss.
+    const float settingsRowLabelBaseFontSize = 48f;
     // .settings-content's "padding: 8px 40px 32px" (both sides) in Settings.uss.
-    [SerializeField] float settingsContentHorizontalPadding = 80f;
+    const float settingsContentHorizontalPadding = 80f;
     // .settings-row-label's "width: 32%" in Settings.uss.
-    [SerializeField] float settingsRowLabelWidthFraction = 0.32f;
+    const float settingsRowLabelWidthFraction = 0.32f;
+
+    // 배경에 흘러가는 단어들 - 실제 게임 스테이지 데이터(StageData 등)와는
+    // 무관한, 이 장식 전용의 고정 목록. 그냥 화면이 심심해 보이지 않게 하는
+    // 용도라 번역도 따로 안 한다.
+    static readonly string[] BgWordPool =
+    {
+        "가나다라", "따라쓰기", "또박또박", "한글자씩", "정성껏", "연습", "배움", "성장",
+    };
+    const int BgWordCount = 7;
+    const float BgWordMinFontSize = 32f;
+    const float BgWordMaxFontSize = 60f;
+    const float BgWordMinSpeed = 24f;
+    const float BgWordMaxSpeed = 55f;
+    const float BgWordMinAlpha = 0.08f;
+    const float BgWordMaxAlpha = 0.20f;
+    // 화면 왼쪽 바깥 이 정도 거리에서 다시 나타나게 한다 (완전히 화면 밖으로
+    // 나간 뒤 재등장이라 튀어나오는 게 안 보임).
+    const float BgWordSpawnOffscreenX = -400f;
+
+    class BgWord
+    {
+        public Label Element;
+        public float X;
+        public float SpeedPxPerSec;
+    }
+
+    VisualElement _bgWordsLayer;
+    readonly List<BgWord> _bgWords = new List<BgWord>();
 
     VisualElement _lobbyRoot;
     VisualElement _exitModal;
+    Button _btnSettingsIcon;
+    Label _versionLabel;
     TextElement[] _titleLabels;
-    TextElement[] _menuButtons;
-    Rect _appliedSafeArea;
-    Vector2Int _appliedScreenSize;
-    Vector2 _appliedPanelSize;
+
+    TextElement _modalTextLine1;
+    TextElement _modalTextLine2;
+    Button _btnExitConfirm;
+    Button _btnExitCancel;
 
     VisualElement _settingsPanel;
     TextElement _settingsTitle;
     Button _settingsCloseButton;
-    Button[] _settingsTabButtons;
-    VisualElement[] _settingsTabPanels;
+    TextElement[] _settingsSectionTitles;
     TextElement[] _settingsRowLabels;
+    // _settingsRowLabels는 이름이 아니라 UXML 문서 순서(닉네임/이메일/비밀번호/화질/
+    // 프레임/전체 볼륨/배경음/효과음/언어 선택/연령)로 모은 것이라, 이 배열도 그 순서와
+    // 반드시 일치해야 한다 - Lobby.uxml에서 행 라벨 순서가 바뀌면 여기도 같이 바꿔야 한다.
+    static readonly string[] SettingsRowLabelKeys =
+    {
+        "lobby.settings.nickname_label",
+        "login.field.email_label",
+        "login.field.password_label",
+        "lobby.settings.quality_label",
+        "lobby.settings.framerate_label",
+        "lobby.settings.master_volume_label",
+        "lobby.settings.bgm_label",
+        "lobby.settings.sfx_label",
+        "lobby.settings.language_label",
+        "lobby.settings.adult_child_label",
+    };
+
+    DropdownField _dropdownQuality;
+    DropdownField _dropdownFramerate;
+    RadioButtonGroup _radioLanguage;
+    RadioButtonGroup _radioAdultChild;
+
+    Toggle _toggleMasterVolume;
+    Toggle _toggleBgmVolume;
+    Toggle _toggleSfxVolume;
+
+    Label _mypageEmailValue;
+    VisualElement _mypagePasswordRow;
+    VisualElement _mypageNicknameRow;
+    Button _btnMypageLogin;
+    Button _btnLogout;
+    VisualElement _sectionLogout;
+
+    // 닉네임은 계정 인증 정보가 아니라 이 화면(랭킹 표시용)만의 로컬 설정이라
+    // AuthManager를 건드리지 않고 PlayerPrefs에 직접 저장한다. 랭킹에 실제로
+    // 반영하는 연동은 나중에 별도로 처리한다.
+    const string NicknamePrefsKey = "user_nickname";
+    TextField _nicknameField;
 
     void OnEnable()
     {
         var root = GetComponent<UIDocument>().rootVisualElement;
+        UIClickSound.Attach(root);
+
+        // 이전 씬(로그인 등)에서 누른 클릭의 포인터-업이 씬 전환 도중/직후에
+        // 도착하면, 그 자리에 새로 생긴 이 씬의 버튼(예: 로그인의 "게스트로
+        // 시작"과 같은 화면 위치에 오는 "설정")이 즉시 눌려버리는 문제가
+        // 있었다 - 로비로 들어오자마자 설정 화면이 바로 열려 보이는 원인.
+        // 씬이 뜨자마자 아주 짧은 시간 동안 화면 전체를 덮는 투명 오버레이로
+        // 포인터 입력을 흡수해서, 그 시점의 클릭이 실제 버튼에 닿지 않게 막는다.
+        var inputGuard = new VisualElement();
+        inputGuard.style.position = Position.Absolute;
+        inputGuard.style.left = 0;
+        inputGuard.style.top = 0;
+        inputGuard.style.right = 0;
+        inputGuard.style.bottom = 0;
+        root.Add(inputGuard);
+        root.schedule.Execute(() => inputGuard.RemoveFromHierarchy()).StartingIn(1000);
 
         // root.panel은 최소 한 프레임의 레이아웃/어태치 과정을 거쳐야 값이
         // 채워지므로, 아직 비어 있으면 패널에 붙는 시점(AttachToPanelEvent)에
@@ -66,51 +161,306 @@ public class LobbyController : MonoBehaviour
             root.RegisterCallback<AttachToPanelEvent>(_ => HoistStyleSheetsToPanelRoot(root));
 
         root.Q<Button>("btn-start").clicked += OnStartClicked;
-        root.Q<Button>("btn-settings").clicked += OnSettingsClicked;
+        root.Q<Button>("btn-ranking").clicked += OnRankingClicked;
         root.Q<Button>("btn-exit").clicked += OnExitClicked;
 
+        _btnSettingsIcon = root.Q<Button>("btn-settings");
+        _btnSettingsIcon.clicked += OnSettingsClicked;
+
         _exitModal = root.Q<VisualElement>("exit-modal");
-        root.Q<Button>("btn-exit-confirm").clicked += OnExitConfirmClicked;
-        root.Q<Button>("btn-exit-cancel").clicked += OnExitCancelClicked;
+        _modalTextLine1 = root.Q<TextElement>("modal-text-line1");
+        _modalTextLine2 = root.Q<TextElement>("modal-text-line2");
+        _btnExitConfirm = root.Q<Button>("btn-exit-confirm");
+        _btnExitCancel = root.Q<Button>("btn-exit-cancel");
+        _btnExitConfirm.clicked += OnExitConfirmClicked;
+        _btnExitCancel.clicked += OnExitCancelClicked;
 
         _lobbyRoot = root.Q<VisualElement>("lobby-root");
         _titleLabels = System.Array.ConvertAll(titleLabelNames, name => _lobbyRoot.Q<TextElement>(name));
-        _menuButtons = System.Array.ConvertAll(menuButtonNames, name => _lobbyRoot.Q<TextElement>(name));
         _lobbyRoot.RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
+
+        _versionLabel = root.Q<Label>("version-label");
+        if (_versionLabel != null)
+            _versionLabel.text = "v" + Application.version;
+
+        _bgWordsLayer = root.Q<VisualElement>("bg-words-layer");
+        if (_bgWordsLayer != null)
+            SpawnBgWords();
 
         _settingsPanel = root.Q<VisualElement>("settings-panel");
         _settingsTitle = root.Q<TextElement>("settings-title");
         _settingsCloseButton = root.Q<Button>("btn-settings-close");
         _settingsCloseButton.clicked += OnSettingsCloseClicked;
 
-        // 탭 버튼과 탭 콘텐츠 패널을 같은 순서(비디오/오디오/언어)로 짝지어
-        // 인덱스만으로 서로 매칭할 수 있게 함 - Lobby.uxml의 탭 순서와 일치해야 함.
-        _settingsTabButtons = new[]
+        // 마이페이지/비디오/오디오/언어/기타 섹션 제목을 같은 순서로 모아, 인덱스만으로
+        // 로컬라이제이션 키와 매칭할 수 있게 함 - Lobby.uxml의 섹션 순서와 일치해야 함.
+        _settingsSectionTitles = new TextElement[]
         {
-            root.Q<Button>("tab-video"),
-            root.Q<Button>("tab-audio"),
-            root.Q<Button>("tab-language"),
+            root.Q<Label>("section-mypage-title"),
+            root.Q<Label>("section-video-title"),
+            root.Q<Label>("section-audio-title"),
+            root.Q<Label>("section-language-title"),
+            root.Q<Label>("section-misc-title"),
         };
-        _settingsTabPanels = new[]
-        {
-            root.Q<VisualElement>("video-panel"),
-            root.Q<VisualElement>("audio-panel"),
-            root.Q<VisualElement>("language-panel"),
-        };
-        // 화질/밝기/전체 볼륨 등 모든 탭 패널에 걸쳐 있는 행 라벨을 한 번에 모음 -
-        // 탭이 숨겨져 있어도(display:none) 텍스트 측정 자체는 문제없이 동작한다.
+        // 화질/프레임/전체 볼륨 등 모든 섹션에 걸쳐 있는 행 라벨을 한 번에 모음 -
+        // 이제 모든 섹션이 항상 같이 표시되므로 순서만 UXML 문서 순서와 맞으면 된다.
         _settingsRowLabels = root.Query<Label>().Class("settings-row-label").Build().ToList().ToArray();
-        for (int i = 0; i < _settingsTabButtons.Length; i++)
-        {
-            // 클로저가 루프 변수 i를 그대로 캡처하면 모든 버튼이 마지막 인덱스를
-            // 참조하게 되므로, 로컬 변수 tabIndex에 복사해서 캡처한다.
-            int tabIndex = i;
-            _settingsTabButtons[i].clicked += () => ShowSettingsTab(tabIndex);
-        }
 
-        FixRadioButtonCheckmarks(root);
+        _dropdownQuality = root.Q<DropdownField>("dropdown-quality");
+        _dropdownFramerate = root.Q<DropdownField>("dropdown-framerate");
+        SetupVideoSettings();
+
+        _radioLanguage = root.Q<RadioButtonGroup>("radio-language");
+        // UXML의 value="0"(한국어) 대신, 이전에 저장해 둔 언어 설정을 그대로
+        // 반영한다. SetValueWithoutNotify를 써서 OnLanguageRadioChanged가 다시
+        // 호출되며 SetLanguage를 한 번 더 트리거하는 걸 막는다.
+        _radioLanguage.SetValueWithoutNotify(LocalizationManager.CurrentLanguage == Language.Korean ? 0 : 1);
+        _radioLanguage.RegisterValueChangedCallback(OnLanguageRadioChanged);
+
+        _radioAdultChild = root.Q<RadioButtonGroup>("radio-adult-child");
+        // UXML 기본값(0=성인)과 동일하게, 저장된 적 없으면 UserProfile.IsChildMode도 false(성인)이다.
+        _radioAdultChild.SetValueWithoutNotify(UserProfile.IsChildMode ? 1 : 0);
+        _radioAdultChild.RegisterValueChangedCallback(OnAdultChildRadioChanged);
+
+        SetupAudioToggles(root);
+
+        _mypageEmailValue = root.Q<Label>("mypage-email-value");
+        _mypagePasswordRow = root.Q<VisualElement>("mypage-password-row");
+        _mypageNicknameRow = root.Q<VisualElement>("mypage-nickname-row");
+        _btnMypageLogin = root.Q<Button>("btn-mypage-login");
+        _btnLogout = root.Q<Button>("btn-logout");
+        _sectionLogout = root.Q<VisualElement>("section-logout");
+
+        _nicknameField = root.Q<TextField>("mypage-nickname-field");
+        _nicknameField.SetValueWithoutNotify(PlayerPrefs.GetString(NicknamePrefsKey, ""));
+        _nicknameField.RegisterValueChangedCallback(OnNicknameChanged);
+        _btnLogout.clicked += OnLogoutClicked;
+        // 게스트가 닉네임 칸 대신 보는 "로그인 하기" 버튼도 로그아웃과 똑같이
+        // 게스트 세션을 정리하고 로그인 화면으로 보내면 된다 (재로그인 시
+        // 자동 로그인이 다시 게스트로 튕기지 않으려면 SignOut으로 게스트
+        // PlayerPrefs 플래그를 지워야 한다).
+        _btnMypageLogin.clicked += OnLogoutClicked;
+
+        LocalizationManager.OnLanguageChanged += OnLanguageChanged;
+        ApplyLocalization();
+        RefreshMyPage();
 
         ApplySafeArea();
+    }
+
+    void OnLanguageRadioChanged(ChangeEvent<int> evt)
+    {
+        LocalizationManager.SetLanguage(evt.newValue == 0 ? Language.Korean : Language.English);
+    }
+
+    // choices 순서가 [성인, 어린이]라 value 1 = 어린이 모드.
+    void OnAdultChildRadioChanged(ChangeEvent<int> evt)
+    {
+        UserProfile.IsChildMode = evt.newValue == 1;
+    }
+
+    // 화질/프레임 드롭다운을 저장된 값으로 복원하고, 바뀔 때마다 실제로 적용 + 저장한다.
+    // (이전에는 choices/index만 UI에 표시될 뿐 QualitySettings/targetFrameRate에 전혀
+    // 반영되지 않아 선택해도 아무 효과가 없었다.)
+    const string QualityPrefsKey = "settings.quality_index";   // 0=낮음,1=보통,2=높음 (UI 인덱스)
+    const string FrameratePrefsKey = "settings.framerate_index"; // 0=30fps,1=60fps
+
+    void SetupVideoSettings()
+    {
+        int savedQuality = PlayerPrefs.GetInt(QualityPrefsKey, 1); // 기본: 보통
+        _dropdownQuality.index = savedQuality;
+        ApplyQualityLevel(savedQuality);
+        _dropdownQuality.RegisterValueChangedCallback(evt =>
+        {
+            int index = _dropdownQuality.index;
+            PlayerPrefs.SetInt(QualityPrefsKey, index);
+            PlayerPrefs.Save();
+            ApplyQualityLevel(index);
+        });
+
+        int savedFramerate = PlayerPrefs.GetInt(FrameratePrefsKey, 1); // 기본: 60fps
+        _dropdownFramerate.index = savedFramerate;
+        ApplyFramerate(savedFramerate);
+        _dropdownFramerate.RegisterValueChangedCallback(evt =>
+        {
+            int index = _dropdownFramerate.index;
+            PlayerPrefs.SetInt(FrameratePrefsKey, index);
+            PlayerPrefs.Save();
+            ApplyFramerate(index);
+        });
+    }
+
+    // UI 인덱스(낮음/보통/높음)를 프로젝트의 실제 Quality Level(Very Low~Ultra 등)로 매핑한다.
+    // 이름으로 찾아서 프로젝트 설정이 바뀌어도 안전하게 대응하고, 못 찾으면 인덱스+1로 대체한다.
+    static void ApplyQualityLevel(int uiIndex)
+    {
+        string[] wantedNames = { "Low", "Medium", "High" };
+        string wanted = wantedNames[Mathf.Clamp(uiIndex, 0, wantedNames.Length - 1)];
+
+        var names = QualitySettings.names;
+        int level = Array.IndexOf(names, wanted);
+        if (level < 0) level = Mathf.Clamp(uiIndex + 1, 0, names.Length - 1);
+
+        QualitySettings.SetQualityLevel(level, true);
+    }
+
+    static void ApplyFramerate(int uiIndex)
+    {
+        Application.targetFrameRate = uiIndex == 0 ? 30 : 60;
+    }
+
+    void OnNicknameChanged(ChangeEvent<string> evt)
+    {
+        PlayerPrefs.SetString(NicknamePrefsKey, evt.newValue);
+        PlayerPrefs.Save();
+    }
+
+    // 오디오 on/off 토글(전체/배경음/효과음)을 저장된 상태로 초기화하고, 바뀔 때마다
+    // PlayerPrefs에 저장한 뒤 SoundManager가 즉시 다시 읽어 반영하게 한다. PlayerPrefs를
+    // 단일 원본으로 삼아, SoundManager 인스턴스가 아직 없어도(씬 순서 문제) 값은 항상 저장된다.
+    void SetupAudioToggles(VisualElement root)
+    {
+        _toggleMasterVolume = root.Q<Toggle>("toggle-master-volume");
+        _toggleBgmVolume    = root.Q<Toggle>("toggle-bgm-volume");
+        _toggleSfxVolume    = root.Q<Toggle>("toggle-sfx-volume");
+
+        BindAudioToggle(_toggleMasterVolume, SoundManager.PrefMaster);
+        BindAudioToggle(_toggleBgmVolume,    SoundManager.PrefBgm);
+        BindAudioToggle(_toggleSfxVolume,    SoundManager.PrefSfx);
+    }
+
+    void BindAudioToggle(Toggle toggle, string prefKey)
+    {
+        if (toggle == null) return;
+        toggle.SetValueWithoutNotify(PlayerPrefs.GetInt(prefKey, 1) == 1);
+        toggle.RegisterValueChangedCallback(evt =>
+        {
+            PlayerPrefs.SetInt(prefKey, evt.newValue ? 1 : 0);
+            PlayerPrefs.Save();
+            SoundManager.Instance?.ReloadVolumePrefs();
+        });
+    }
+
+    // 언어가 바뀌면 모든 텍스트를 다시 채운다 - 폰트 스케일은 ApplySafeArea()가
+    // 매 프레임 다시 계산하므로 별도로 캐시를 무효화할 필요가 없다.
+    void OnLanguageChanged()
+    {
+        ApplyLocalization();
+    }
+
+    void ApplyLocalization()
+    {
+        for (int i = 0; i < _titleLabels.Length; i++)
+            _titleLabels[i].text = LocalizationManager.Get(TitleLabelKeys[i]);
+
+        // 시작/랭킹/나가기/설정 버튼은 이제 번역 대상 텍스트가 아니라 고정된
+        // 유니코드 아이콘 글자(▶/★/✕/⚙)라 언어가 바뀌어도 그대로 둔다.
+
+        _modalTextLine1.text = LocalizationManager.Get("lobby.exit.confirm_line1");
+        _modalTextLine2.text = LocalizationManager.Get("lobby.exit.confirm_line2");
+        _btnExitConfirm.text = LocalizationManager.Get("lobby.exit.confirm_yes");
+        _btnExitCancel.text = LocalizationManager.Get("lobby.exit.confirm_no");
+
+        _settingsTitle.text = LocalizationManager.Get("lobby.settings.title");
+        _settingsCloseButton.text = LocalizationManager.Get("lobby.settings.close");
+
+        _settingsSectionTitles[0].text = LocalizationManager.Get("lobby.settings.tab_mypage");
+        _settingsSectionTitles[1].text = LocalizationManager.Get("lobby.settings.tab_video");
+        _settingsSectionTitles[2].text = LocalizationManager.Get("lobby.settings.tab_audio");
+        _settingsSectionTitles[3].text = LocalizationManager.Get("lobby.settings.tab_language");
+        _settingsSectionTitles[4].text = LocalizationManager.Get("lobby.settings.tab_misc");
+
+        _btnLogout.text = LocalizationManager.Get("lobby.settings.logout_button");
+        _btnMypageLogin.text = LocalizationManager.Get("lobby.settings.login_button");
+
+        for (int i = 0; i < _settingsRowLabels.Length; i++)
+            _settingsRowLabels[i].text = LocalizationManager.Get(SettingsRowLabelKeys[i]);
+
+        // DropdownField.value는 (인덱스가 아니라) 선택된 문자열 그 자체라서,
+        // choices를 통째로 새 언어 문자열로 갈아끼우면 이전 value("보통" 등)가
+        // 새 choices 목록 어디에도 없어 선택이 깨진다. 인덱스를 먼저 기억해 뒀다가
+        // choices를 바꾼 뒤 그 인덱스로 다시 선택해서 같은 항목이 유지되게 한다.
+        int qualityIndex = _dropdownQuality.index;
+        _dropdownQuality.choices = new List<string>
+        {
+            LocalizationManager.Get("lobby.settings.quality_low"),
+            LocalizationManager.Get("lobby.settings.quality_medium"),
+            LocalizationManager.Get("lobby.settings.quality_high"),
+        };
+        _dropdownQuality.index = qualityIndex;
+
+        int framerateIndex = _dropdownFramerate.index;
+        _dropdownFramerate.choices = new List<string>
+        {
+            LocalizationManager.Get("lobby.settings.fps_30"),
+            LocalizationManager.Get("lobby.settings.fps_60"),
+        };
+        _dropdownFramerate.index = framerateIndex;
+        // 언어 이름 자체(한국어/English)는 항상 그 언어 고유 표기로 보여준다 -
+        // 라디오 그룹의 choices는 UI 언어가 바뀌어도 안 바뀐다.
+        _radioLanguage.choices = new List<string>
+        {
+            LocalizationManager.Get("lobby.settings.lang_korean"),
+            LocalizationManager.Get("lobby.settings.lang_english"),
+        };
+
+        // RadioButtonGroup.choices를 새로 대입하면 내부적으로 RadioButton들을
+        // 통째로 다시 만든다 - 그러면 이전에 만들어 둔 체크마크(들)는 새로
+        // 생성된 것으로 교체돼서, 위치/크기를 맞춰주는 FixRadioButtonCheckmarks
+        // 보정도 매번(언어가 바뀔 때마다) 다시 걸어줘야 한다.
+        FixRadioButtonCheckmarks(_radioLanguage);
+
+        // 언어 라디오와 달리 성인/어린이는 고유명사가 아니라 UI 언어에 맞춰
+        // 번역돼야 하므로, dropdown들과 같은 방식으로 선택된 인덱스를
+        // 기억했다가 choices를 바꾼 뒤 그대로 복원한다.
+        int adultChildIndex = _radioAdultChild.value;
+        _radioAdultChild.choices = new List<string>
+        {
+            LocalizationManager.Get("lobby.settings.adult_label"),
+            LocalizationManager.Get("lobby.settings.child_label"),
+        };
+        _radioAdultChild.SetValueWithoutNotify(adultChildIndex);
+        FixRadioButtonCheckmarks(_radioAdultChild);
+    }
+
+    // AuthManager(로그인 씬과 공유하는 DontDestroyOnLoad 싱글톤)의 DisplayName을
+    // 그대로 가져와 보여준다 - 이메일 계정은 AuthManager.ApplyUser()에서 표시
+    // 이름이 없으면 이메일 자체를 DisplayName으로 채워두므로 이것으로 충분하다.
+    void RefreshMyPage()
+    {
+        if (_mypageEmailValue == null)
+            return;
+
+        var auth = AuthManager.Instance;
+        _mypageEmailValue.text = auth != null ? auth.DisplayName : "";
+
+        // 게스트 로그인은 계정/비밀번호 자체가 없으므로 비밀번호 행을 통째로 숨긴다.
+        bool isGuest = auth != null && auth.IsGuest;
+        if (_mypagePasswordRow != null)
+        {
+            if (isGuest) _mypagePasswordRow.AddToClassList("hidden");
+            else _mypagePasswordRow.RemoveFromClassList("hidden");
+        }
+
+        // 게스트는 닉네임도 계정에 묶여있지 않은 임시 상태라 편집칸 대신
+        // "로그인 하기" 버튼을 보여주고, 실제 계정으로 로그인했으면 반대로 한다.
+        if (_mypageNicknameRow != null)
+        {
+            if (isGuest) _mypageNicknameRow.AddToClassList("hidden");
+            else _mypageNicknameRow.RemoveFromClassList("hidden");
+        }
+        if (_btnMypageLogin != null)
+        {
+            if (isGuest) _btnMypageLogin.RemoveFromClassList("hidden");
+            else _btnMypageLogin.AddToClassList("hidden");
+        }
+
+        // 게스트는 로그아웃할 계정이 없으니 맨 아래 로그아웃 섹션 자체를 숨긴다.
+        if (_sectionLogout != null)
+        {
+            if (isGuest) _sectionLogout.AddToClassList("hidden");
+            else _sectionLogout.RemoveFromClassList("hidden");
+        }
     }
 
     // DropdownField를 눌렀을 때 뜨는 선택지 목록(GenericDropdownMenu)은 UXML로
@@ -200,6 +550,10 @@ public class LobbyController : MonoBehaviour
     void OnDisable()
     {
         _lobbyRoot?.UnregisterCallback<GeometryChangedEvent>(OnGeometryChanged);
+        _radioLanguage?.UnregisterValueChangedCallback(OnLanguageRadioChanged);
+        _radioAdultChild?.UnregisterValueChangedCallback(OnAdultChildRadioChanged);
+        _nicknameField?.UnregisterValueChangedCallback(OnNicknameChanged);
+        LocalizationManager.OnLanguageChanged -= OnLanguageChanged;
     }
 
     void OnGeometryChanged(GeometryChangedEvent evt)
@@ -212,11 +566,76 @@ public class LobbyController : MonoBehaviour
         // Device Simulator switching devices doesn't always raise a
         // GeometryChangedEvent, so poll Screen.safeArea directly as well.
         ApplySafeArea();
+        UpdateBgWords();
+    }
+
+    void SpawnBgWords()
+    {
+        for (int i = 0; i < BgWordCount; i++)
+            _bgWords.Add(CreateBgWord(i));
+    }
+
+    BgWord CreateBgWord(int index)
+    {
+        var label = new Label(BgWordPool[UnityEngine.Random.Range(0, BgWordPool.Length)]);
+        label.pickingMode = PickingMode.Ignore;
+        label.AddToClassList("bg-word");
+        label.style.fontSize = UnityEngine.Random.Range(BgWordMinFontSize, BgWordMaxFontSize);
+        label.style.color = new Color(150f / 255f, 111f / 255f, 71f / 255f,
+            UnityEngine.Random.Range(BgWordMinAlpha, BgWordMaxAlpha));
+
+        // 화면 높이를 단어 개수만큼 나눠서 각자 다른 줄에 두고, 살짝만
+        // 흔들어서 완전히 일정한 격자로는 안 보이게 한다.
+        float yFraction = (index + 0.5f) / BgWordCount;
+        label.style.top = new Length(
+            Mathf.Clamp01(yFraction + UnityEngine.Random.Range(-0.04f, 0.04f)) * 100f, LengthUnit.Percent);
+
+        _bgWordsLayer.Add(label);
+
+        var word = new BgWord
+        {
+            Element = label,
+            SpeedPxPerSec = UnityEngine.Random.Range(BgWordMinSpeed, BgWordMaxSpeed),
+            // 레이아웃 폭을 아직 모르는 시점(OnEnable)이라 대략 넉넉한 값 기준으로
+            // 시작 위치를 흩뿌린다 - 실제 폭은 UpdateBgWords()가 매 프레임 다시 잰다.
+            X = BgWordSpawnOffscreenX + (float)index / BgWordCount * 1600f,
+        };
+        label.style.left = word.X;
+        return word;
+    }
+
+    void UpdateBgWords()
+    {
+        if (_bgWordsLayer == null || _bgWords.Count == 0)
+            return;
+
+        float width = _bgWordsLayer.resolvedStyle.width;
+        if (float.IsNaN(width) || width <= 0f)
+            return;
+
+        foreach (var word in _bgWords)
+        {
+            word.X += word.SpeedPxPerSec * Time.deltaTime;
+            if (word.X > width + 20f)
+            {
+                // 화면 오른쪽으로 완전히 나가면 왼쪽 바깥에서 다시 시작 -
+                // 매번 같은 단어만 보이지 않게 새로 하나 뽑는다.
+                word.X = BgWordSpawnOffscreenX;
+                word.Element.text = BgWordPool[UnityEngine.Random.Range(0, BgWordPool.Length)];
+            }
+            word.Element.style.left = word.X;
+        }
     }
 
     void OnStartClicked()
     {
         SceneManager.LoadScene("ModSelectScene");
+    }
+
+    void OnRankingClicked()
+    {
+        RankingScreenController.CallerScene = SceneManager.GetActiveScene().name;
+        SceneManager.LoadScene("Ranking");
     }
 
     // 설정 패널은 항상 트리에 존재하고 .hidden 클래스(Lobby.uss)로만 표시 여부를
@@ -226,11 +645,9 @@ public class LobbyController : MonoBehaviour
     {
         _settingsPanel.RemoveFromClassList("hidden");
 
-        // While hidden (display:none) the panel's children have no resolved
-        // size, so the safe-area/font-scale values computed during that time
-        // are stale. Clear the cache so the next ApplySafeArea() (from the
-        // very next Update()) recomputes them against real, laid-out sizes.
-        _appliedPanelSize = default;
+        // 설정을 열 때마다 다시 채워서, 로그인 상태가 바뀐 뒤에도 이전 값이
+        // 남아있지 않게 한다.
+        RefreshMyPage();
     }
 
     void OnSettingsCloseClicked()
@@ -238,14 +655,13 @@ public class LobbyController : MonoBehaviour
         _settingsPanel.AddToClassList("hidden");
     }
 
-    // 선택된 탭만 활성 스타일 + 해당 탭 패널을 보여주고, 나머지는 비활성 처리.
-    void ShowSettingsTab(int tabIndex)
+    // AuthManager.SignOut()은 LoginController.cs가 아니라 씬 전환에도 유지되는
+    // AuthManager 싱글톤(Assets/2_Scripts/Auth/AuthManager.cs)에 이미 있는 공개
+    // 메서드라, 그 두 스크립트는 건드리지 않고 여기서 그대로 호출만 한다.
+    void OnLogoutClicked()
     {
-        for (int i = 0; i < _settingsTabButtons.Length; i++)
-        {
-            _settingsTabButtons[i].EnableInClassList("settings-tab--active", i == tabIndex);
-            _settingsTabPanels[i].EnableInClassList("hidden", i != tabIndex);
-        }
+        AuthManager.Instance?.SignOut();
+        SceneManager.LoadScene(loginScene);
     }
 
     void OnExitClicked()
@@ -280,16 +696,14 @@ public class LobbyController : MonoBehaviour
         if (panelWidth <= 0f || panelHeight <= 0f)
             return;
 
-        // panelWidth/panelHeight can take a frame or two to catch up after
-        // Screen.safeArea/Screen.width/height change (e.g. Device Simulator
-        // switching profiles), since PanelSettings needs a layout pass to
-        // re-derive its scale factor. Keep re-checking every frame - not just
-        // when safeArea/screenSize change - until the panel size itself has
-        // also settled, otherwise this can lock in padding computed against a
-        // stale (previous device's) panel size.
-        var panelSize = new Vector2(panelWidth, panelHeight);
-        if (safeArea == _appliedSafeArea && screenSize == _appliedScreenSize && panelSize == _appliedPanelSize)
-            return;
+        // 예전엔 safeArea/screenSize/panelSize가 이전 프레임과 같으면 여기서
+        // return해서 재계산을 건너뛰었는데, 그러다 콜드 스타트에 언어가 처음부터
+        // 영어(등 새 글리프)인 경우 첫 프레임의 MeasureTextSize 결과가 (화면
+        // 크기는 안 바뀐 채로) 잘못된 값으로 "적용 완료" 캐시에 그대로 굳어버려
+        // 제목 폰트가 화면 밖으로 넘치는 채 다시는 재계산이 안 되는 버그가
+        // 있었다. 화면 크기가 실제로 바뀌었는지 여부와 무관하게 매 프레임
+        // 다시 계산하면, 첫 프레임 측정이 잘못돼도 다음 프레임에 저절로
+        // 정정된다 - 로비 화면이라 매 프레임 다시 재도 비용이 크지 않다.
 
         // Let Unity's own screen-to-panel transform do the conversion instead of
         // re-deriving PanelSettings' scale factor by hand - it already accounts
@@ -319,6 +733,23 @@ public class LobbyController : MonoBehaviour
             _settingsPanel.style.paddingBottom = paddingBottom;
         }
 
+        // position:absolute인 자식은 부모(lobby-root)의 패딩을 따라가지 않고
+        // 부모의 테두리 기준으로 붙는다 - 위에서 lobbyRoot에 준 패딩은 이
+        // 아이콘 버튼에는 아무 영향이 없어서, 세이프에어리어 값을 top/right에
+        // 직접 넣어줘야 노치 등을 피해서 항상 안전하게 붙는다.
+        // 설정 아이콘은 다른 콘텐츠(baseMargin)만큼 안 띄우고, 세이프에어리어
+        // 바로 바깥쪽 아주 작은 여백(settingsIconMargin)만 두고 구석에 바짝 붙인다.
+        if (_btnSettingsIcon != null)
+        {
+            _btnSettingsIcon.style.top = Mathf.Max(0f, topLeft.y) + settingsIconMargin;
+            _btnSettingsIcon.style.right = Mathf.Max(0f, panelWidth - bottomRight.x) + settingsIconMargin;
+        }
+
+        // 버전 표시도 같은 이유(절대배치 자식은 부모 패딩을 안 따라감)로
+        // 화면 맨 아래에 고정하려면 bottom을 세이프에어리어 값으로 직접 줘야 한다.
+        if (_versionLabel != null)
+            _versionLabel.style.bottom = paddingBottom;
+
         // Only SafeArea-driven shrinkage should scale the text down - measured
         // against the panel's actual current size, not an assumed constant.
         float availableContentHeight = panelHeight - paddingTop - paddingBottom;
@@ -326,10 +757,8 @@ public class LobbyController : MonoBehaviour
 
         float contentWidth = panelWidth - paddingLeft - paddingRight;
         float titleAvailableWidth = Mathf.Max(0f, contentWidth - titleAreaHorizontalPadding);
-        float buttonAvailableWidth = Mathf.Max(0f, contentWidth * buttonAreaWidthFraction);
 
         ApplyTextScale(_titleLabels, titleBaseFontSize, titleAvailableWidth, heightFontScale);
-        ApplyTextScale(_menuButtons, menuButtonBaseFontSize, buttonAvailableWidth, heightFontScale);
 
         // Settings panel isn't height-constrained the way the lobby's title/
         // buttons are (no equivalent designContentHeight for it), so only
@@ -346,11 +775,13 @@ public class LobbyController : MonoBehaviour
             ApplyTextScale(new[] { _settingsTitle }, settingsTitleBaseFontSize, settingsTitleAvailableWidth, 1f);
         }
 
-        if (_settingsTabButtons != null)
+        if (_settingsSectionTitles != null)
         {
-            float tabsMargin = settingsTabHorizontalMargin * _settingsTabButtons.Length;
-            float settingsTabAvailableWidth = Mathf.Max(0f, (contentWidth - settingsTabBarHorizontalPadding - tabsMargin) / _settingsTabButtons.Length);
-            ApplyTextScale(_settingsTabButtons, settingsTabBaseFontSize, settingsTabAvailableWidth, 1f);
+            // 섹션 제목은 좌우 구분선과 한 줄에 나란히 있지만, 그 선들은
+            // flex-grow로 남는 폭을 채울 뿐이라 제목 자체의 사용 가능 폭은
+            // 콘텐츠 폭 전체(줄어들 필요가 있을 만큼 좁아지는 경우는 드묾)로 잡는다.
+            float settingsSectionTitleAvailableWidth = Mathf.Max(0f, contentWidth - settingsContentHorizontalPadding);
+            ApplyTextScale(_settingsSectionTitles, settingsSectionTitleBaseFontSize, settingsSectionTitleAvailableWidth, 1f);
         }
 
         if (_settingsRowLabels != null)
@@ -359,10 +790,6 @@ public class LobbyController : MonoBehaviour
             float settingsRowLabelAvailableWidth = settingsRowWidth * settingsRowLabelWidthFraction;
             ApplyTextScale(_settingsRowLabels, settingsRowLabelBaseFontSize, settingsRowLabelAvailableWidth, 1f);
         }
-
-        _appliedSafeArea = safeArea;
-        _appliedScreenSize = screenSize;
-        _appliedPanelSize = panelSize;
     }
 
     void ApplyTextScale(TextElement[] elements, float baseFontSize, float availableWidth, float heightFontScale)

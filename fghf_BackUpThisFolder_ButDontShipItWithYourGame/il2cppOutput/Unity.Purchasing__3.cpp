@@ -1,0 +1,3666 @@
+﻿#include "pch-cpp.hpp"
+
+
+
+
+
+struct InterfaceActionInvoker0
+{
+	typedef void (*Action)(void*, const RuntimeMethod*);
+
+	static inline void Invoke (Il2CppMethodSlot slot, RuntimeClass* declaringInterface, RuntimeObject* obj)
+	{
+		const VirtualInvokeData& invokeData = il2cpp_codegen_get_interface_invoke_data(slot, obj, declaringInterface);
+		((Action)invokeData.methodPtr)(obj, invokeData.method);
+	}
+};
+template <typename T1>
+struct InterfaceActionInvoker1
+{
+	typedef void (*Action)(void*, T1, const RuntimeMethod*);
+
+	static inline void Invoke (Il2CppMethodSlot slot, RuntimeClass* declaringInterface, RuntimeObject* obj, T1 p1)
+	{
+		const VirtualInvokeData& invokeData = il2cpp_codegen_get_interface_invoke_data(slot, obj, declaringInterface);
+		((Action)invokeData.methodPtr)(obj, p1, invokeData.method);
+	}
+};
+template <typename T1, typename T2>
+struct InterfaceActionInvoker2
+{
+	typedef void (*Action)(void*, T1, T2, const RuntimeMethod*);
+
+	static inline void Invoke (Il2CppMethodSlot slot, RuntimeClass* declaringInterface, RuntimeObject* obj, T1 p1, T2 p2)
+	{
+		const VirtualInvokeData& invokeData = il2cpp_codegen_get_interface_invoke_data(slot, obj, declaringInterface);
+		((Action)invokeData.methodPtr)(obj, p1, p2, invokeData.method);
+	}
+};
+template <typename T1, typename T2, typename T3>
+struct InterfaceActionInvoker3
+{
+	typedef void (*Action)(void*, T1, T2, T3, const RuntimeMethod*);
+
+	static inline void Invoke (Il2CppMethodSlot slot, RuntimeClass* declaringInterface, RuntimeObject* obj, T1 p1, T2 p2, T3 p3)
+	{
+		const VirtualInvokeData& invokeData = il2cpp_codegen_get_interface_invoke_data(slot, obj, declaringInterface);
+		((Action)invokeData.methodPtr)(obj, p1, p2, p3, invokeData.method);
+	}
+};
+template <typename R>
+struct InterfaceFuncInvoker0
+{
+	typedef R (*Func)(void*, const RuntimeMethod*);
+
+	static inline R Invoke (Il2CppMethodSlot slot, RuntimeClass* declaringInterface, RuntimeObject* obj)
+	{
+		const VirtualInvokeData& invokeData = il2cpp_codegen_get_interface_invoke_data(slot, obj, declaringInterface);
+		return ((Func)invokeData.methodPtr)(obj, invokeData.method);
+	}
+};
+template <typename R, typename T1, typename T2>
+struct InterfaceFuncInvoker2
+{
+	typedef R (*Func)(void*, T1, T2, const RuntimeMethod*);
+
+	static inline R Invoke (Il2CppMethodSlot slot, RuntimeClass* declaringInterface, RuntimeObject* obj, T1 p1, T2 p2)
+	{
+		const VirtualInvokeData& invokeData = il2cpp_codegen_get_interface_invoke_data(slot, obj, declaringInterface);
+		return ((Func)invokeData.methodPtr)(obj, p1, p2, invokeData.method);
+	}
+};
+
+struct Action_1_t39A998EC27FE5D8CEAC2D6D914EFB0C5A8263A74;
+struct Action_1_tB0F611356BF76ADE6D1A6EDCB79F9AFE5B4CFFF8;
+struct Action_1_t74AA9BF64892A77C3EE3E0698DE24564689089B3;
+struct Action_1_t771052195FBE392217EF7E7C6975EDAFE339920B;
+struct Action_1_tBE5538667781E618B8E77753B19A6A0967172899;
+struct Action_1_t6F9EB113EB3F16226AEF811A2744F4111C116C87;
+struct Action_1_t78AC65A76DD59B1A53FE258B0BD54C51E83402C4;
+struct Action_1_t7C54CFA15F75FC02C04AE25BFE75BE14EEB72172;
+struct Action_1_t6A830418A2909DBA1CAE3BCDE612FCC834617FB1;
+struct Action_1_t89E7476130EB87E6F9C9FCBB2D6407FB99F11F84;
+struct Action_1_t72FA39D13EDBA01E6406940383843C97282A3EC2;
+struct Action_1_tC53E1F0E64BDEA92F20DD7ECA7A981032CB36D56;
+struct Action_1_t3CB5D1A819C3ED3F99E9E39F890F18633253949A;
+struct Action_2_t8EADE87044ADE97906736D729EA2E3EF97F34F3D;
+struct Action_2_t557C07266DE68D7A1708D82DB27944851C0718F7;
+struct Dictionary_2_t1CDD1E7F08101D48F492ACEE2FB221C189839C18;
+struct Dictionary_2_t46B2DB028096FA2B828359E52F37F3105A83AD83;
+struct Func_2_t995D09EA9CCB87BB3A12428E71E769B1C78E7B96;
+struct Func_2_tE1F0D41563EE092E5E5540B061449FDE88F1DC00;
+struct HashSet_1_tEFC6605F7DE53F71946C33FD371E53C3100F2178;
+struct IEnumerable_1_t339DB68E686354A3A45651000C35D460D8E80213;
+struct IEnumerable_1_tF95C9E01A913DD50575531C8305932628663D9E9;
+struct IEnumerator_1_t43D2E4BA9246755F293DFA74F001FB1A70A648FD;
+struct IEnumerator_1_tFD0D0803A181170868F6E613A0C34AD42F9225B1;
+struct IEqualityComparer_1_tAE94C8F24AD5B94D4EE85CA9FC59E3409D41CAF7;
+struct IList_1_tEC8DAD13EA42DDB0EE034B5BF7FEFBED01BB0ABF;
+struct IReadOnlyDictionary_2_tD38BB3D5CF1B604D95354E070EF7D17708342F48;
+struct IReadOnlyList_1_t7BB300FE9C8B0D3BCB34B752D2516BD12EB5E8CF;
+struct KeyCollection_t2EDD317F5771E575ACB63527B5AFB71291040342;
+struct List_1_tA239CB83DE5615F348BB0507E45F490F4F7C9A8D;
+struct List_1_t919E5CB114972DFCF14DD79496128FBE2062B41A;
+struct List_1_tA265F918639F90CCD79CA8254869495172C9BF18;
+struct List_1_t2801F698EAD8786A7B70E25C1DAD1A8801E530C5;
+struct List_1_tF470A3BE5C1B5B68E1325EF3F109D172E60BD7CD;
+struct ReadOnlyCollection_1_t5397DF0DB61D1090E7BBC89395CECB8D020CED92;
+struct ReadOnlyCollection_1_tD966099914D9A6AA006D07A9D9C780C7ACB4F8BF;
+struct ReadOnlyObservableCollection_1_t09916B7A0FC0410428D732A0A2C4F3FE1C76F704;
+struct ValueCollection_t238D0D2427C6B841A01F522A41540165A2C4AE76;
+struct EntryU5BU5D_t1AF33AD0B7330843448956EC4277517081658AE7;
+struct CharU5BU5D_t799905CF001DD5F13F7DBB310181FC4D8B7D0AAB;
+struct DelegateU5BU5D_tC5AB7E8F745616680F337909D3A8E6C722CDF771;
+struct Int32U5BU5D_t19C97395396A72ECAF310612F0760F165060314C;
+struct ObjectU5BU5D_t8061030B0A12A55D5AD8652A20C922FE99450918;
+struct OrderU5BU5D_tA242D047EF851F6F495F23200CAB36304D708219;
+struct ProductU5BU5D_tE81B9EA5AF42D35CED9E5F1A31843D77B9447B49;
+struct StringU5BU5D_t7674CD946EC0CE7B3AE0BE70E6EE85F2ECD9F248;
+struct AppReceiptUseCase_tD67CA43290DE93F4AC3FA34D4B93D024C93FBC4B;
+struct ApplePurchaseFulfilledPayload_tC3EC1DF5A08D02CF4EF0E6406DB0DE74154E5FD6;
+struct AppleRefreshAppReceiptUseCase_t349126EC10F41CA1B136BD4A69FF4D66FE4540C9;
+struct AppleRestoreTransactionsUseCase_t7D30E2DB9D52FDDA1AD6DA44C1C8FC61C77D9D1A;
+struct AppleStoreExtendedProductService_t117E7DCBE1444273630CDE4B76E6FF2572E9C042;
+struct AppleStoreExtendedPurchaseService_t40CCAC0C4DD434BDE35AFB84B680C696FAC6FC06;
+struct AppleStoreExtendedService_t01BBE266FCCFF985A5E6E8FC28DE77E8F0686235;
+struct AppleStorefront_t8B07F04F81769777BB479316ABFC495331B15516;
+struct CanMakePaymentsUseCase_t3497E559B984C1F5BB974079809B8CD93E0F497D;
+struct CartItem_t2AD57E121E5F61C1B5A69160E39D32C1E126C42F;
+struct CatalogListing_tC4E89A5FBD6F52F0EC11E5C4C88B5082BBB87B90;
+struct ClearAppleTransactionLogsUseCase_t9575A50BADC3E55B744A6AF134E487EC57A1FBA4;
+struct ConfirmedOrder_t27BA06F8EB8FD59B566EB3A751383DC30DD752F6;
+struct ContinuePromotionalPurchasesUseCase_tC287244E1CB9346314A4293220218AE9BDDFABF8;
+struct DelegateData_t9B286B493293CD2D23A5B2B5EF0E5B1324C2B77E;
+struct FailedOrder_t4FF159EDE64FC2EAFB4439A3AEC7F46B62F55BD8;
+struct FetchStorefrontUseCase_t025C5FC7A9A9AD97003D23B065A3416C824656AB;
+struct IAnalyticsClient_t82648512EEDB10106ACF1F35A0F82F8323EE126E;
+struct IAppReceiptUseCase_tE7691280797F817A51E027011A69FE8C7CCC4A6E;
+struct IAppleAppReceiptViewer_t7DA912481C791B332B0A21A2BE56C4D83F10B738;
+struct IAppleOrderInfo_tA2DFD4ECE3C3FEFCFDD20EBA824BD8E02EB9EDF9;
+struct IAppleStoreCallbacks_tE9D30B49184B828C4D6744D7617BE1CD23FB920D;
+struct ICanMakePaymentsUseCase_t196915540C2F7F36EA76EF2091784E67292EECCD;
+struct ICart_t54844F3BE8B3D7FDCD3505D0F05B4E1C5F4DFAB5;
+struct ICheckEntitlementUseCase_t4461F762F7DADC4190A8A86A7F9F7B42A5CB2632;
+struct IClearAppleTransactionLogsUseCase_t99D2FCEBA59F909747541E5C5240D1DCA327096D;
+struct IConfirmOrderUseCase_tEB09579C895A30CD1F1DD011EDC45C773F3BE97E;
+struct IContinuePromotionalPurchasesUseCase_t77D422AFAD64C8CE323543D058ED2AA03A3D9971;
+struct IFetchProductsUseCase_tBE48A83B874825878F282B90067258C171377AB7;
+struct IFetchPurchasesUseCase_tA5FF54870E14F12FB1949FFD65B3ADE3D4CA2466;
+struct IFetchStorePromotionOrderUseCase_t58323ECEE70E2C084E09A091E48852147D21A91F;
+struct IFetchStorePromotionVisibilityUseCase_t6579EBA62AADE3651C198DD9B76B3992FA765F18;
+struct IFetchStorefrontUseCase_t1CE67DD98DDEC76DA170C61085F5344B7FB3EB11;
+struct IGetIntroductoryPriceDictionaryUseCase_t9B3569DD9E5D7304E2FC40EC45DF348B6F513CEA;
+struct IGetProductDetailsUseCase_t2F04D77A6EE2AD720A140A322E4B2C67EE257BD8;
+struct INativeAppleStore_t323BA5F90A2D47ADD128FFA1A623AF498D477DD3;
+struct IOnEntitlementRevokedUseCase_t7BF1751DBD45170F87CDDE2057AFEEE9442BC823;
+struct IOrderInfo_t8F6EE055337893DD2EA2A1E2F9AA581DF29C52F0;
+struct IPresentCodeRedemptionSheetUseCase_tCC7D8251AD12909F283FCF9E806971EFBD2CE7D1;
+struct IProductCache_t6CDFBA33153F2306B370368D1F861A0271201D03;
+struct IPurchaseCache_tFC8B4C9C5E0C0AA6353F5340D958A5C9B5364E2F;
+struct IPurchaseEventEmitter_t76133134D3F4C48F9E67D4BE4147A0C256E443C3;
+struct IPurchaseUseCase_t881CD89699CF3EA894E448FA07B63C75F9CF9CDB;
+struct IRefreshAppReceiptUseCase_t2BE13A8D74D9AF2D1C8695649A898F05B5026F12;
+struct IRestoreTransactionsUseCase_t7CB4F5539B7A109DB1272A644FAB6EE627B29F3B;
+struct IRetryPolicy_t4461F1E6BC78A537FDFA771BA6C4E2BAED63889B;
+struct ISetAppAccountTokenUseCase_t9DFC9FF2BF3C41CAC11D053E23C566ECEA9E728C;
+struct ISetPromotionalPurchaseInterceptorCallbackUseCase_t6D8A28CAB01ACAC32572D90332EC54A1F86AECD5;
+struct ISetStorePromotionOrderUseCase_t29CAC78301017DAB94B77AE4E3DCB8689CEB102A;
+struct ISetStorePromotionVisibilityUseCase_tA11507C264C0D9E7BBB7CE50C0A3717788789BF9;
+struct ISimulateAskToBuyUseCase_tD70AAFF339A10F16551E12DC188E64F843C022D9;
+struct IStoreConnectUseCase_t623E8C311AC22ADE7A6D3DEE885A5E50648B01DC;
+struct IStoreWrapper_t0FB353744DBE496942B823F02655E331B7D2E789;
+struct MethodInfo_t;
+struct NotifyCollectionChangedEventHandler_t521FADBD1190F88022BC2160A5F82FDFC08364AF;
+struct Order_tD1825298A09BBF359EC2F7B272C72E11C0508A4F;
+struct PendingOrder_tA824D1CD7AE6E3362EFE213FDA0228EC4889A4B1;
+struct PresentCodeRedemptionSheetUseCase_t1B9A1605F0976BF3016728FE0505D043B30F3FD6;
+struct Product_tD279BF775D345330FEE8405D2F53EC5D6B971C76;
+struct ProductDefinition_tB486F56477C49E81BA6704C2DD31F373CDCCC1BD;
+struct ProductMetadata_t2D6C6454A305A6790D8903169E3B136EB13417E1;
+struct ProductService_t593738048B6845C91DA73CE3C06278A052F2535A;
+struct PropertyChangedEventHandler_tF1250C146BE6FB43477D29C5D18A10B6329419DA;
+struct PurchaseService_tA32C67F8193AAE937E736946E3BB1B5DE025A57B;
+struct SetAppAccountTokenUseCase_tC12D074DE746D9174E42EB24A243131405C52EB4;
+struct SetPromotionalPurchaseInterceptorCallbackUseCase_t3F098D096B662588687A2386BA19EF56B2B84069;
+struct SimulateAskToBuyUseCase_t2D30F910CB5D2EC5C1D0D01CEA1EA3AA910D11F3;
+struct StoreService_t631148A0254FF7BA14318F549E8E1D5B50DB31E9;
+struct String_t;
+struct Void_t4861ACF8F4594C3437BB48B6E56783494B843915;
+struct U3CU3Ec__DisplayClass16_0_t1E2C6B3967FBD757B17649ACEB6B1E70BE95232C;
+
+IL2CPP_EXTERN_C RuntimeClass* Action_1_t3CB5D1A819C3ED3F99E9E39F890F18633253949A_il2cpp_TypeInfo_var;
+IL2CPP_EXTERN_C RuntimeClass* ApplePurchaseFulfilledPayload_tC3EC1DF5A08D02CF4EF0E6406DB0DE74154E5FD6_il2cpp_TypeInfo_var;
+IL2CPP_EXTERN_C RuntimeClass* Func_2_t995D09EA9CCB87BB3A12428E71E769B1C78E7B96_il2cpp_TypeInfo_var;
+IL2CPP_EXTERN_C RuntimeClass* Guid_t_il2cpp_TypeInfo_var;
+IL2CPP_EXTERN_C RuntimeClass* IAppReceiptUseCase_tE7691280797F817A51E027011A69FE8C7CCC4A6E_il2cpp_TypeInfo_var;
+IL2CPP_EXTERN_C RuntimeClass* IAppleAppReceiptViewer_t7DA912481C791B332B0A21A2BE56C4D83F10B738_il2cpp_TypeInfo_var;
+IL2CPP_EXTERN_C RuntimeClass* IAppleOrderInfo_tA2DFD4ECE3C3FEFCFDD20EBA824BD8E02EB9EDF9_il2cpp_TypeInfo_var;
+IL2CPP_EXTERN_C RuntimeClass* IAppleStoreCallbacks_tE9D30B49184B828C4D6744D7617BE1CD23FB920D_il2cpp_TypeInfo_var;
+IL2CPP_EXTERN_C RuntimeClass* ICanMakePaymentsUseCase_t196915540C2F7F36EA76EF2091784E67292EECCD_il2cpp_TypeInfo_var;
+IL2CPP_EXTERN_C RuntimeClass* ICart_t54844F3BE8B3D7FDCD3505D0F05B4E1C5F4DFAB5_il2cpp_TypeInfo_var;
+IL2CPP_EXTERN_C RuntimeClass* IClearAppleTransactionLogsUseCase_t99D2FCEBA59F909747541E5C5240D1DCA327096D_il2cpp_TypeInfo_var;
+IL2CPP_EXTERN_C RuntimeClass* IContinuePromotionalPurchasesUseCase_t77D422AFAD64C8CE323543D058ED2AA03A3D9971_il2cpp_TypeInfo_var;
+IL2CPP_EXTERN_C RuntimeClass* IDisposable_t030E0496B4E0E4E4F086825007979AF51F7248C5_il2cpp_TypeInfo_var;
+IL2CPP_EXTERN_C RuntimeClass* IEnumerator_1_tFD0D0803A181170868F6E613A0C34AD42F9225B1_il2cpp_TypeInfo_var;
+IL2CPP_EXTERN_C RuntimeClass* IEnumerator_t7B609C2FFA6EB5167D9C62A0C32A21DE2F666DAA_il2cpp_TypeInfo_var;
+IL2CPP_EXTERN_C RuntimeClass* IFetchStorePromotionOrderUseCase_t58323ECEE70E2C084E09A091E48852147D21A91F_il2cpp_TypeInfo_var;
+IL2CPP_EXTERN_C RuntimeClass* IFetchStorePromotionVisibilityUseCase_t6579EBA62AADE3651C198DD9B76B3992FA765F18_il2cpp_TypeInfo_var;
+IL2CPP_EXTERN_C RuntimeClass* IFetchStorefrontUseCase_t1CE67DD98DDEC76DA170C61085F5344B7FB3EB11_il2cpp_TypeInfo_var;
+IL2CPP_EXTERN_C RuntimeClass* IGetIntroductoryPriceDictionaryUseCase_t9B3569DD9E5D7304E2FC40EC45DF348B6F513CEA_il2cpp_TypeInfo_var;
+IL2CPP_EXTERN_C RuntimeClass* IGetProductDetailsUseCase_t2F04D77A6EE2AD720A140A322E4B2C67EE257BD8_il2cpp_TypeInfo_var;
+IL2CPP_EXTERN_C RuntimeClass* INativeAppleStore_t323BA5F90A2D47ADD128FFA1A623AF498D477DD3_il2cpp_TypeInfo_var;
+IL2CPP_EXTERN_C RuntimeClass* IOnEntitlementRevokedUseCase_t7BF1751DBD45170F87CDDE2057AFEEE9442BC823_il2cpp_TypeInfo_var;
+IL2CPP_EXTERN_C RuntimeClass* IOrderInfo_t8F6EE055337893DD2EA2A1E2F9AA581DF29C52F0_il2cpp_TypeInfo_var;
+IL2CPP_EXTERN_C RuntimeClass* IPresentCodeRedemptionSheetUseCase_tCC7D8251AD12909F283FCF9E806971EFBD2CE7D1_il2cpp_TypeInfo_var;
+IL2CPP_EXTERN_C RuntimeClass* IPurchaseCache_tFC8B4C9C5E0C0AA6353F5340D958A5C9B5364E2F_il2cpp_TypeInfo_var;
+IL2CPP_EXTERN_C RuntimeClass* IPurchaseEventEmitter_t76133134D3F4C48F9E67D4BE4147A0C256E443C3_il2cpp_TypeInfo_var;
+IL2CPP_EXTERN_C RuntimeClass* IReadOnlyDictionary_2_tD38BB3D5CF1B604D95354E070EF7D17708342F48_il2cpp_TypeInfo_var;
+IL2CPP_EXTERN_C RuntimeClass* IRefreshAppReceiptUseCase_t2BE13A8D74D9AF2D1C8695649A898F05B5026F12_il2cpp_TypeInfo_var;
+IL2CPP_EXTERN_C RuntimeClass* IRestoreTransactionsUseCase_t7CB4F5539B7A109DB1272A644FAB6EE627B29F3B_il2cpp_TypeInfo_var;
+IL2CPP_EXTERN_C RuntimeClass* ISetAppAccountTokenUseCase_t9DFC9FF2BF3C41CAC11D053E23C566ECEA9E728C_il2cpp_TypeInfo_var;
+IL2CPP_EXTERN_C RuntimeClass* ISetPromotionalPurchaseInterceptorCallbackUseCase_t6D8A28CAB01ACAC32572D90332EC54A1F86AECD5_il2cpp_TypeInfo_var;
+IL2CPP_EXTERN_C RuntimeClass* ISetStorePromotionOrderUseCase_t29CAC78301017DAB94B77AE4E3DCB8689CEB102A_il2cpp_TypeInfo_var;
+IL2CPP_EXTERN_C RuntimeClass* ISetStorePromotionVisibilityUseCase_tA11507C264C0D9E7BBB7CE50C0A3717788789BF9_il2cpp_TypeInfo_var;
+IL2CPP_EXTERN_C RuntimeClass* ISimulateAskToBuyUseCase_tD70AAFF339A10F16551E12DC188E64F843C022D9_il2cpp_TypeInfo_var;
+IL2CPP_EXTERN_C RuntimeClass* List_1_t919E5CB114972DFCF14DD79496128FBE2062B41A_il2cpp_TypeInfo_var;
+IL2CPP_EXTERN_C RuntimeClass* List_1_tF470A3BE5C1B5B68E1325EF3F109D172E60BD7CD_il2cpp_TypeInfo_var;
+IL2CPP_EXTERN_C RuntimeClass* ProductService_t593738048B6845C91DA73CE3C06278A052F2535A_il2cpp_TypeInfo_var;
+IL2CPP_EXTERN_C RuntimeClass* U3CU3Ec__DisplayClass16_0_t1E2C6B3967FBD757B17649ACEB6B1E70BE95232C_il2cpp_TypeInfo_var;
+IL2CPP_EXTERN_C String_t* _stringLiteral5C46E3C70513356424939193A664CB57A081F38E;
+IL2CPP_EXTERN_C const RuntimeMethod* AppleStoreExtendedPurchaseService_OnEntitlementRevokedUseCaseOnOnEntitlementRevoked_m70DFE0F3995ADF367C200E1B3EE3ECF658439DB9_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* Enumerable_Any_TisCartItem_t2AD57E121E5F61C1B5A69160E39D32C1E126C42F_mE8451689CD14AA40FBB0F4F29898052F0EABF27E_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* Enumerator_Dispose_m592BCCE7B7933454DED2130C810F059F8D85B1D7_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* Enumerator_Dispose_mBF1D7C4CFFF58FDB26E02FB65F2A2A5E5A521575_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* Enumerator_Dispose_mE7EB1A0596B8FCD94810032FCC90E7152F62E8E2_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* Enumerator_MoveNext_m7FED4F315AB2ED673E86E582BF05718D521E00AB_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* Enumerator_MoveNext_mDAA44E71D6F94F08DDAC87984FA9293CD56E9A2D_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* Enumerator_MoveNext_mDB47EEC4531D33B9C33FD2E70BA15E1535A0F3ED_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* Enumerator_get_Current_m143541DD8FBCD313E7554EA738FA813B8F4DB11A_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* Enumerator_get_Current_mA6F6593813BC6EB76D243A5FD1D394B215544989_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* Enumerator_get_Current_mA9E751EDCB5C5CC787A81AE8870F206B5141ECAE_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* List_1_Add_mB55089BBCF9305BFEB258D61B7CAD36258B3132B_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* List_1_Add_mF10DB1D3CBB0B14215F0E4F8AB4934A1955E5351_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* List_1_GetEnumerator_m5781A42C52C1C875D1D4DD8B1D76453E6E702F6E_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* List_1_GetEnumerator_m7692B5F182858B7D5C72C920D09AD48738D1E70D_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* List_1_GetEnumerator_mA1AAA15279E06F34260FBF611D8914642D714850_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* List_1__ctor_m6841FD3CEDEA8EA46737298B557279EBF6385082_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* List_1__ctor_mCA8DD57EAC70C2B5923DBB9D5A77CEAC22E7068E_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* Nullable_1_GetValueOrDefault_mC6EDE8162AB388B6482F745FF996B594ACC373AC_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* Nullable_1_get_HasValue_mA4048346752BF05849998E450987EB444BE2AD63_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* Nullable_1_get_Value_mDE8CD36894715AA51DF861D2679324AC2F6E1C79_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* ReadOnlyCollection_1_GetEnumerator_mEB629D8CA2A9B0DD0FEFA4323A21581E5BFB040E_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* U3CU3Ec__DisplayClass16_0_U3CDoesOrderContainAnyRevokedProductIdsU3Eb__0_mDCB95899C2C51D91DF4B8AE007ED4CA8193F1BA5_RuntimeMethod_var;
+struct Delegate_t_marshaled_com;
+struct Delegate_t_marshaled_pinvoke;
+
+struct ObjectU5BU5D_t8061030B0A12A55D5AD8652A20C922FE99450918;
+
+IL2CPP_EXTERN_C_BEGIN
+IL2CPP_EXTERN_C_END
+
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winvalid-offsetof"
+#pragma clang diagnostic ignored "-Wunused-variable"
+#endif
+struct Dictionary_2_t46B2DB028096FA2B828359E52F37F3105A83AD83  : public RuntimeObject
+{
+	Int32U5BU5D_t19C97395396A72ECAF310612F0760F165060314C* ____buckets;
+	EntryU5BU5D_t1AF33AD0B7330843448956EC4277517081658AE7* ____entries;
+	int32_t ____count;
+	int32_t ____freeList;
+	int32_t ____freeCount;
+	int32_t ____version;
+	RuntimeObject* ____comparer;
+	KeyCollection_t2EDD317F5771E575ACB63527B5AFB71291040342* ____keys;
+	ValueCollection_t238D0D2427C6B841A01F522A41540165A2C4AE76* ____values;
+	RuntimeObject* ____syncRoot;
+};
+struct List_1_tA239CB83DE5615F348BB0507E45F490F4F7C9A8D  : public RuntimeObject
+{
+	ObjectU5BU5D_t8061030B0A12A55D5AD8652A20C922FE99450918* ____items;
+	int32_t ____size;
+	int32_t ____version;
+	RuntimeObject* ____syncRoot;
+};
+struct List_1_t919E5CB114972DFCF14DD79496128FBE2062B41A  : public RuntimeObject
+{
+	OrderU5BU5D_tA242D047EF851F6F495F23200CAB36304D708219* ____items;
+	int32_t ____size;
+	int32_t ____version;
+	RuntimeObject* ____syncRoot;
+};
+struct List_1_t2801F698EAD8786A7B70E25C1DAD1A8801E530C5  : public RuntimeObject
+{
+	ProductU5BU5D_tE81B9EA5AF42D35CED9E5F1A31843D77B9447B49* ____items;
+	int32_t ____size;
+	int32_t ____version;
+	RuntimeObject* ____syncRoot;
+};
+struct List_1_tF470A3BE5C1B5B68E1325EF3F109D172E60BD7CD  : public RuntimeObject
+{
+	StringU5BU5D_t7674CD946EC0CE7B3AE0BE70E6EE85F2ECD9F248* ____items;
+	int32_t ____size;
+	int32_t ____version;
+	RuntimeObject* ____syncRoot;
+};
+struct ReadOnlyCollection_1_tD966099914D9A6AA006D07A9D9C780C7ACB4F8BF  : public RuntimeObject
+{
+	RuntimeObject* ___list;
+	RuntimeObject* ____syncRoot;
+};
+struct U3CPrivateImplementationDetailsU3E_tC759C7C02FEFB2FAF9D65664F93041F705C62A0D  : public RuntimeObject
+{
+};
+struct AppReceiptUseCase_tD67CA43290DE93F4AC3FA34D4B93D024C93FBC4B  : public RuntimeObject
+{
+	RuntimeObject* ___m_AppleAppReceiptViewer;
+};
+struct AppleRefreshAppReceiptUseCase_t349126EC10F41CA1B136BD4A69FF4D66FE4540C9  : public RuntimeObject
+{
+	RuntimeObject* ___m_AppleStoreCallbacks;
+	RuntimeObject* ___m_NativeAppleStore;
+};
+struct AppleRestoreTransactionsUseCase_t7D30E2DB9D52FDDA1AD6DA44C1C8FC61C77D9D1A  : public RuntimeObject
+{
+	RuntimeObject* ___m_AppleStoreCallbacks;
+	RuntimeObject* ___m_NativeAppleStore;
+};
+struct CanMakePaymentsUseCase_t3497E559B984C1F5BB974079809B8CD93E0F497D  : public RuntimeObject
+{
+	RuntimeObject* ___m_NativeAppleStore;
+};
+struct CartItem_t2AD57E121E5F61C1B5A69160E39D32C1E126C42F  : public RuntimeObject
+{
+	Product_tD279BF775D345330FEE8405D2F53EC5D6B971C76* ___U3CProductU3Ek__BackingField;
+	String_t* ___U3CCatalogListingIdU3Ek__BackingField;
+	int32_t ___U3CQuantityU3Ek__BackingField;
+};
+struct CatalogListing_tC4E89A5FBD6F52F0EC11E5C4C88B5082BBB87B90  : public RuntimeObject
+{
+	String_t* ___U3CidU3Ek__BackingField;
+	ProductDefinition_tB486F56477C49E81BA6704C2DD31F373CDCCC1BD* ___U3CdefinitionU3Ek__BackingField;
+	ProductMetadata_t2D6C6454A305A6790D8903169E3B136EB13417E1* ___U3CmetadataU3Ek__BackingField;
+	bool ___U3CavailableToPurchaseU3Ek__BackingField;
+};
+struct ClearAppleTransactionLogsUseCase_t9575A50BADC3E55B744A6AF134E487EC57A1FBA4  : public RuntimeObject
+{
+	RuntimeObject* ___m_AppleStoreCallbacks;
+};
+struct ContinuePromotionalPurchasesUseCase_tC287244E1CB9346314A4293220218AE9BDDFABF8  : public RuntimeObject
+{
+	RuntimeObject* ___m_NativeAppleStore;
+};
+struct FetchStorefrontUseCase_t025C5FC7A9A9AD97003D23B065A3416C824656AB  : public RuntimeObject
+{
+	RuntimeObject* ___m_AppleStoreCallbacks;
+};
+struct Order_tD1825298A09BBF359EC2F7B272C72E11C0508A4F  : public RuntimeObject
+{
+	RuntimeObject* ___U3CCartOrderedU3Ek__BackingField;
+	RuntimeObject* ___U3CInfoU3Ek__BackingField;
+};
+struct PresentCodeRedemptionSheetUseCase_t1B9A1605F0976BF3016728FE0505D043B30F3FD6  : public RuntimeObject
+{
+	RuntimeObject* ___m_NativeAppleStore;
+};
+struct ProductService_t593738048B6845C91DA73CE3C06278A052F2535A  : public RuntimeObject
+{
+	RuntimeObject* ___m_FetchProductsUseCase;
+	RuntimeObject* ___m_StoreWrapper;
+	RuntimeObject* ___m_ProductCache;
+	Action_1_t39A998EC27FE5D8CEAC2D6D914EFB0C5A8263A74* ___OnProductsFetched;
+	Action_1_t72FA39D13EDBA01E6406940383843C97282A3EC2* ___OnProductsFetchFailed;
+};
+struct PurchaseService_tA32C67F8193AAE937E736946E3BB1B5DE025A57B  : public RuntimeObject
+{
+	RuntimeObject* ___m_FetchPurchasesUseCase;
+	RuntimeObject* ___m_PurchaseUseCase;
+	RuntimeObject* ___m_ConfirmOrderUseCase;
+	RuntimeObject* ___m_CheckEntitlementUseCase;
+	RuntimeObject* ___m_PurchaseCache;
+	RuntimeObject* ___m_StoreWrapper;
+	RuntimeObject* ___m_AnalyticsClient;
+	bool ___m_ProcessFetchedPendingOrders;
+	bool ___m_IsBuiltinStore;
+	RuntimeObject* ___BuiltinStores;
+	HashSet_1_tEFC6605F7DE53F71946C33FD371E53C3100F2178* ___m_PurchasesProcessedInSession;
+	bool ___m_AnyPurchaseStarted;
+	Action_1_t6A830418A2909DBA1CAE3BCDE612FCC834617FB1* ___OnPurchasePending;
+	Action_1_t78AC65A76DD59B1A53FE258B0BD54C51E83402C4* ___OnPurchaseConfirmed;
+	Action_1_tBE5538667781E618B8E77753B19A6A0967172899* ___OnPurchaseFailed;
+	Action_1_t74AA9BF64892A77C3EE3E0698DE24564689089B3* ___OnPurchaseDeferred;
+	Action_1_t7C54CFA15F75FC02C04AE25BFE75BE14EEB72172* ___OnPurchasesFetched;
+	Action_1_tC53E1F0E64BDEA92F20DD7ECA7A981032CB36D56* ___OnPurchasesFetchFailed;
+	Action_1_t771052195FBE392217EF7E7C6975EDAFE339920B* ___OnCheckEntitlement;
+};
+struct SetAppAccountTokenUseCase_tC12D074DE746D9174E42EB24A243131405C52EB4  : public RuntimeObject
+{
+	RuntimeObject* ___m_AppleStoreCallbacks;
+};
+struct SetPromotionalPurchaseInterceptorCallbackUseCase_t3F098D096B662588687A2386BA19EF56B2B84069  : public RuntimeObject
+{
+	RuntimeObject* ___m_AppleStoreCallbacks;
+};
+struct SimulateAskToBuyUseCase_t2D30F910CB5D2EC5C1D0D01CEA1EA3AA910D11F3  : public RuntimeObject
+{
+	RuntimeObject* ___m_AppleStoreCallbacks;
+};
+struct StoreService_t631148A0254FF7BA14318F549E8E1D5B50DB31E9  : public RuntimeObject
+{
+	RuntimeObject* ___m_StoreConnectUseCase;
+	RuntimeObject* ___m_StoreWrapper;
+};
+struct String_t  : public RuntimeObject
+{
+	int32_t ____stringLength;
+	Il2CppChar ____firstChar;
+};
+struct ValueType_t6D9B272BD21782F0A9A14F2E41F85A50E97A986F  : public RuntimeObject
+{
+};
+struct ValueType_t6D9B272BD21782F0A9A14F2E41F85A50E97A986F_marshaled_pinvoke
+{
+};
+struct ValueType_t6D9B272BD21782F0A9A14F2E41F85A50E97A986F_marshaled_com
+{
+};
+struct U3CU3Ec__DisplayClass16_0_t1E2C6B3967FBD757B17649ACEB6B1E70BE95232C  : public RuntimeObject
+{
+	String_t* ___productId;
+};
+struct Enumerator_t9473BAB568A27E2339D48C1F91319E0F6D244D7A 
+{
+	List_1_tA239CB83DE5615F348BB0507E45F490F4F7C9A8D* ____list;
+	int32_t ____index;
+	int32_t ____version;
+	RuntimeObject* ____current;
+};
+struct Enumerator_t10DB350FCF2DB955A3C5EE7DCC1C04FD93E211B5 
+{
+	List_1_t919E5CB114972DFCF14DD79496128FBE2062B41A* ____list;
+	int32_t ____index;
+	int32_t ____version;
+	Order_tD1825298A09BBF359EC2F7B272C72E11C0508A4F* ____current;
+};
+struct Enumerator_t75DFD6EC1FADAB357C227A0B6F845A843A192263 
+{
+	List_1_t2801F698EAD8786A7B70E25C1DAD1A8801E530C5* ____list;
+	int32_t ____index;
+	int32_t ____version;
+	Product_tD279BF775D345330FEE8405D2F53EC5D6B971C76* ____current;
+};
+struct Enumerator_tA7A4B718FE1ED1D87565680D8C8195EC8AEAB3D1 
+{
+	List_1_tF470A3BE5C1B5B68E1325EF3F109D172E60BD7CD* ____list;
+	int32_t ____index;
+	int32_t ____version;
+	String_t* ____current;
+};
+struct ReadOnlyObservableCollection_1_t09916B7A0FC0410428D732A0A2C4F3FE1C76F704  : public ReadOnlyCollection_1_tD966099914D9A6AA006D07A9D9C780C7ACB4F8BF
+{
+	NotifyCollectionChangedEventHandler_t521FADBD1190F88022BC2160A5F82FDFC08364AF* ___CollectionChanged;
+	PropertyChangedEventHandler_tF1250C146BE6FB43477D29C5D18A10B6329419DA* ___PropertyChanged;
+};
+struct AppleStoreExtendedProductService_t117E7DCBE1444273630CDE4B76E6FF2572E9C042  : public ProductService_t593738048B6845C91DA73CE3C06278A052F2535A
+{
+	RuntimeObject* ___m_FetchStorePromotionOrderUseCase;
+	RuntimeObject* ___m_FetchStorePromotionVisibilityUseCase;
+	RuntimeObject* ___m_GetIntroductoryPriceDictionaryUseCase;
+	RuntimeObject* ___m_GetProductDetailsUseCase;
+	RuntimeObject* ___m_SetStorePromotionOrderUseCase;
+	RuntimeObject* ___m_SetStorePromotionVisibilityUseCase;
+};
+struct AppleStoreExtendedPurchaseService_t40CCAC0C4DD434BDE35AFB84B680C696FAC6FC06  : public PurchaseService_tA32C67F8193AAE937E736946E3BB1B5DE025A57B
+{
+	RuntimeObject* ___m_AppReceiptUseCase;
+	RuntimeObject* ___m_ContinuePromotionalPurchasesUseCase;
+	RuntimeObject* ___m_PresentCodeRedemptionSheetUseCase;
+	RuntimeObject* ___m_RestoreTransactionsUseCase;
+	RuntimeObject* ___m_SetPromotionalPurchaseInterceptorCallbackUseCase;
+	RuntimeObject* ___m_SimulateAskToBuyUseCase;
+	RuntimeObject* ___m_OnEntitlementRevokedUseCase;
+	RuntimeObject* ___m_RefreshAppReceiptUseCase;
+	RuntimeObject* ___m_PurchaseEvent;
+};
+struct AppleStoreExtendedService_t01BBE266FCCFF985A5E6E8FC28DE77E8F0686235  : public StoreService_t631148A0254FF7BA14318F549E8E1D5B50DB31E9
+{
+	RuntimeObject* ___m_CanMakePaymentsUseCase;
+	RuntimeObject* ___m_ClearAppleTransactionLogsUseCase;
+	RuntimeObject* ___m_SetAppAccountTokenUseCase;
+	RuntimeObject* ___m_FetchStorefrontUseCase;
+};
+struct Boolean_t09A6377A54BE2F9E6985A8149F19234FD7DDFE22 
+{
+	bool ___m_value;
+};
+struct ConfirmedOrder_t27BA06F8EB8FD59B566EB3A751383DC30DD752F6  : public Order_tD1825298A09BBF359EC2F7B272C72E11C0508A4F
+{
+};
+struct Enum_t2A1A94B24E3B776EEF4E5E485E290BB9D4D072E2  : public ValueType_t6D9B272BD21782F0A9A14F2E41F85A50E97A986F
+{
+};
+struct Enum_t2A1A94B24E3B776EEF4E5E485E290BB9D4D072E2_marshaled_pinvoke
+{
+};
+struct Enum_t2A1A94B24E3B776EEF4E5E485E290BB9D4D072E2_marshaled_com
+{
+};
+struct Guid_t 
+{
+	int32_t ____a;
+	int16_t ____b;
+	int16_t ____c;
+	uint8_t ____d;
+	uint8_t ____e;
+	uint8_t ____f;
+	uint8_t ____g;
+	uint8_t ____h;
+	uint8_t ____i;
+	uint8_t ____j;
+	uint8_t ____k;
+};
+struct Int32_t680FF22E76F6EFAD4375103CBBFFA0421349384C 
+{
+	int32_t ___m_value;
+};
+struct IntPtr_t 
+{
+	void* ___m_value;
+};
+struct PendingOrder_tA824D1CD7AE6E3362EFE213FDA0228EC4889A4B1  : public Order_tD1825298A09BBF359EC2F7B272C72E11C0508A4F
+{
+};
+struct Void_t4861ACF8F4594C3437BB48B6E56783494B843915 
+{
+	union
+	{
+		struct
+		{
+		};
+		uint8_t Void_t4861ACF8F4594C3437BB48B6E56783494B843915__padding[1];
+	};
+};
+#pragma pack(push, tp, 1)
+struct __StaticArrayInitTypeSizeU3D12_tE52839A5A5AB54D8974D62366AD75FCD09158A0D 
+{
+	union
+	{
+		struct
+		{
+			union
+			{
+			};
+		};
+		uint8_t __StaticArrayInitTypeSizeU3D12_tE52839A5A5AB54D8974D62366AD75FCD09158A0D__padding[12];
+	};
+};
+#pragma pack(pop, tp)
+#pragma pack(push, tp, 1)
+struct __StaticArrayInitTypeSizeU3D152_tD4634A336B09ACF1AD15067FB936E5FFB9AE8E83 
+{
+	union
+	{
+		struct
+		{
+			union
+			{
+			};
+		};
+		uint8_t __StaticArrayInitTypeSizeU3D152_tD4634A336B09ACF1AD15067FB936E5FFB9AE8E83__padding[152];
+	};
+};
+#pragma pack(pop, tp)
+#pragma pack(push, tp, 1)
+struct __StaticArrayInitTypeSizeU3D21104_t371036A07BBB1234CE1DC900F2B0C4E566EAA778 
+{
+	union
+	{
+		struct
+		{
+			union
+			{
+			};
+		};
+		uint8_t __StaticArrayInitTypeSizeU3D21104_t371036A07BBB1234CE1DC900F2B0C4E566EAA778__padding[21104];
+	};
+};
+#pragma pack(pop, tp)
+#pragma pack(push, tp, 1)
+struct __StaticArrayInitTypeSizeU3D348_tBA6058924B6BB7AFA588462151E3060D3070D870 
+{
+	union
+	{
+		struct
+		{
+			union
+			{
+			};
+		};
+		uint8_t __StaticArrayInitTypeSizeU3D348_tBA6058924B6BB7AFA588462151E3060D3070D870__padding[348];
+	};
+};
+#pragma pack(pop, tp)
+#pragma pack(push, tp, 1)
+struct __StaticArrayInitTypeSizeU3D47071_t40A2209F95432842F8E60C60C27FCA945E4090FF 
+{
+	union
+	{
+		struct
+		{
+			union
+			{
+			};
+		};
+		uint8_t __StaticArrayInitTypeSizeU3D47071_t40A2209F95432842F8E60C60C27FCA945E4090FF__padding[47071];
+	};
+};
+#pragma pack(pop, tp)
+struct Nullable_1_t0ECB838EB0C9A81655750B26970F21CF9A83A5F7 
+{
+	bool ___hasValue;
+	Guid_t ___value;
+};
+struct AppleStorePromotionVisibility_tC4FE1A02E901A27ABA8B9EFEB09D22D49E8EAB6E 
+{
+	int32_t ___value__;
+};
+struct Delegate_t  : public RuntimeObject
+{
+	intptr_t ___method_ptr;
+	intptr_t ___invoke_impl;
+	RuntimeObject* ___m_target;
+	intptr_t ___method;
+	intptr_t ___delegate_trampoline;
+	intptr_t ___extra_arg;
+	intptr_t ___method_code;
+	intptr_t ___interp_method;
+	intptr_t ___interp_invoke_impl;
+	MethodInfo_t* ___method_info;
+	MethodInfo_t* ___original_method_info;
+	DelegateData_t9B286B493293CD2D23A5B2B5EF0E5B1324C2B77E* ___data;
+	bool ___method_is_virtual;
+};
+struct Delegate_t_marshaled_pinvoke
+{
+	intptr_t ___method_ptr;
+	intptr_t ___invoke_impl;
+	Il2CppIUnknown* ___m_target;
+	intptr_t ___method;
+	intptr_t ___delegate_trampoline;
+	intptr_t ___extra_arg;
+	intptr_t ___method_code;
+	intptr_t ___interp_method;
+	intptr_t ___interp_invoke_impl;
+	MethodInfo_t* ___method_info;
+	MethodInfo_t* ___original_method_info;
+	DelegateData_t9B286B493293CD2D23A5B2B5EF0E5B1324C2B77E* ___data;
+	int32_t ___method_is_virtual;
+};
+struct Delegate_t_marshaled_com
+{
+	intptr_t ___method_ptr;
+	intptr_t ___invoke_impl;
+	Il2CppIUnknown* ___m_target;
+	intptr_t ___method;
+	intptr_t ___delegate_trampoline;
+	intptr_t ___extra_arg;
+	intptr_t ___method_code;
+	intptr_t ___interp_method;
+	intptr_t ___interp_invoke_impl;
+	MethodInfo_t* ___method_info;
+	MethodInfo_t* ___original_method_info;
+	DelegateData_t9B286B493293CD2D23A5B2B5EF0E5B1324C2B77E* ___data;
+	int32_t ___method_is_virtual;
+};
+struct OwnershipType_t2358ABCF2B9990227FE80AE659F0A5FB386775A4 
+{
+	int32_t ___value__;
+};
+struct ProductType_t3E3C0899CBE746FF7DBF4CC3071C10CDB9600DB3 
+{
+	int32_t ___value__;
+};
+struct PurchaseFailureReason_t0567DFEBCC078229A0C360E2CE3F0E6CFA8B819E 
+{
+	int32_t ___value__;
+};
+struct ApplePurchaseFulfilledPayload_tC3EC1DF5A08D02CF4EF0E6406DB0DE74154E5FD6  : public RuntimeObject
+{
+	String_t* ___U3CJwsRepresentationU3Ek__BackingField;
+	String_t* ___U3COriginalTransactionIdU3Ek__BackingField;
+	int32_t ___U3COwnershipU3Ek__BackingField;
+	String_t* ___U3CAppReceiptU3Ek__BackingField;
+	String_t* ___U3CAppAccountTokenU3Ek__BackingField;
+};
+struct FailedOrder_t4FF159EDE64FC2EAFB4439A3AEC7F46B62F55BD8  : public Order_tD1825298A09BBF359EC2F7B272C72E11C0508A4F
+{
+	int32_t ___m_FailureReason;
+	String_t* ___m_Details;
+};
+struct MulticastDelegate_t  : public Delegate_t
+{
+	DelegateU5BU5D_tC5AB7E8F745616680F337909D3A8E6C722CDF771* ___delegates;
+};
+struct MulticastDelegate_t_marshaled_pinvoke : public Delegate_t_marshaled_pinvoke
+{
+	Delegate_t_marshaled_pinvoke** ___delegates;
+};
+struct MulticastDelegate_t_marshaled_com : public Delegate_t_marshaled_com
+{
+	Delegate_t_marshaled_com** ___delegates;
+};
+struct Product_tD279BF775D345330FEE8405D2F53EC5D6B971C76  : public RuntimeObject
+{
+	Dictionary_2_t1CDD1E7F08101D48F492ACEE2FB221C189839C18* ___m_CatalogListings;
+	CatalogListing_tC4E89A5FBD6F52F0EC11E5C4C88B5082BBB87B90* ___m_BaseListing;
+	String_t* ___U3CuSkuU3Ek__BackingField;
+	int32_t ___U3CtypeU3Ek__BackingField;
+	RuntimeObject* ___U3CcatalogListingsU3Ek__BackingField;
+	String_t* ___U3CtransactionIDU3Ek__BackingField;
+	String_t* ___U3CappleOriginalTransactionIDU3Ek__BackingField;
+	bool ___U3CappleProductIsRestoredU3Ek__BackingField;
+	String_t* ___m_Receipt;
+};
+struct ProductDefinition_tB486F56477C49E81BA6704C2DD31F373CDCCC1BD  : public RuntimeObject
+{
+	String_t* ___U3CcatalogListingIdU3Ek__BackingField;
+	String_t* ___U3CidU3Ek__BackingField;
+	String_t* ___U3CstoreSpecificIdU3Ek__BackingField;
+	int32_t ___U3CtypeU3Ek__BackingField;
+	bool ___U3CenabledU3Ek__BackingField;
+	List_1_tA265F918639F90CCD79CA8254869495172C9BF18* ___m_Payouts;
+};
+struct Action_1_t39A998EC27FE5D8CEAC2D6D914EFB0C5A8263A74  : public MulticastDelegate_t
+{
+};
+struct Action_1_tB0F611356BF76ADE6D1A6EDCB79F9AFE5B4CFFF8  : public MulticastDelegate_t
+{
+};
+struct Action_1_t6F9EB113EB3F16226AEF811A2744F4111C116C87  : public MulticastDelegate_t
+{
+};
+struct Action_1_t89E7476130EB87E6F9C9FCBB2D6407FB99F11F84  : public MulticastDelegate_t
+{
+};
+struct Action_1_t3CB5D1A819C3ED3F99E9E39F890F18633253949A  : public MulticastDelegate_t
+{
+};
+struct Action_2_t8EADE87044ADE97906736D729EA2E3EF97F34F3D  : public MulticastDelegate_t
+{
+};
+struct Action_2_t557C07266DE68D7A1708D82DB27944851C0718F7  : public MulticastDelegate_t
+{
+};
+struct Func_2_t995D09EA9CCB87BB3A12428E71E769B1C78E7B96  : public MulticastDelegate_t
+{
+};
+struct List_1_tA239CB83DE5615F348BB0507E45F490F4F7C9A8D_StaticFields
+{
+	ObjectU5BU5D_t8061030B0A12A55D5AD8652A20C922FE99450918* ___s_emptyArray;
+};
+struct List_1_t919E5CB114972DFCF14DD79496128FBE2062B41A_StaticFields
+{
+	OrderU5BU5D_tA242D047EF851F6F495F23200CAB36304D708219* ___s_emptyArray;
+};
+struct List_1_t2801F698EAD8786A7B70E25C1DAD1A8801E530C5_StaticFields
+{
+	ProductU5BU5D_tE81B9EA5AF42D35CED9E5F1A31843D77B9447B49* ___s_emptyArray;
+};
+struct List_1_tF470A3BE5C1B5B68E1325EF3F109D172E60BD7CD_StaticFields
+{
+	StringU5BU5D_t7674CD946EC0CE7B3AE0BE70E6EE85F2ECD9F248* ___s_emptyArray;
+};
+struct U3CPrivateImplementationDetailsU3E_tC759C7C02FEFB2FAF9D65664F93041F705C62A0D_StaticFields
+{
+	__StaticArrayInitTypeSizeU3D12_tE52839A5A5AB54D8974D62366AD75FCD09158A0D ___2DD185EC88BD7D381FDBFD8433AFEDEADA87AC6B52A4BDF7B287D1C49F65387A;
+	__StaticArrayInitTypeSizeU3D152_tD4634A336B09ACF1AD15067FB936E5FFB9AE8E83 ___567D9CAAF1F0B005745AB3CB9C90C6E104F8A11B8871541240607A459C7B39EB;
+	__StaticArrayInitTypeSizeU3D21104_t371036A07BBB1234CE1DC900F2B0C4E566EAA778 ___84872C405809A2DB6FAA8B30947F27E4F960220F79CFECA3DE8699B87FD79817;
+	__StaticArrayInitTypeSizeU3D348_tBA6058924B6BB7AFA588462151E3060D3070D870 ___DA246798064D67541022D7879E72EDCD026BC7D7D7ACE4B3D50A72999E81EF77;
+	__StaticArrayInitTypeSizeU3D47071_t40A2209F95432842F8E60C60C27FCA945E4090FF ___FC8D088E4111B45D0D192161504A2D4A52AA3A9695508EE98319343E9830C952;
+};
+struct ProductService_t593738048B6845C91DA73CE3C06278A052F2535A_StaticFields
+{
+	RuntimeObject* ___k_DefaultRetryPolicy;
+};
+struct String_t_StaticFields
+{
+	String_t* ___Empty;
+};
+struct Boolean_t09A6377A54BE2F9E6985A8149F19234FD7DDFE22_StaticFields
+{
+	String_t* ___TrueString;
+	String_t* ___FalseString;
+};
+struct Guid_t_StaticFields
+{
+	Guid_t ___Empty;
+};
+struct IntPtr_t_StaticFields
+{
+	intptr_t ___Zero;
+};
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
+struct ObjectU5BU5D_t8061030B0A12A55D5AD8652A20C922FE99450918  : public RuntimeArray
+{
+	ALIGN_FIELD (8) RuntimeObject* m_Items[1];
+
+	inline RuntimeObject* GetAt(il2cpp_array_size_t index) const
+	{
+		IL2CPP_ARRAY_BOUNDS_CHECK(index, (uint32_t)(this)->max_length);
+		return m_Items[index];
+	}
+	inline RuntimeObject** GetAddressAt(il2cpp_array_size_t index)
+	{
+		IL2CPP_ARRAY_BOUNDS_CHECK(index, (uint32_t)(this)->max_length);
+		return m_Items + index;
+	}
+	inline void SetAt(il2cpp_array_size_t index, RuntimeObject* value)
+	{
+		IL2CPP_ARRAY_BOUNDS_CHECK(index, (uint32_t)(this)->max_length);
+		m_Items[index] = value;
+		Il2CppCodeGenWriteBarrier((void**)m_Items + index, (void*)value);
+	}
+	inline RuntimeObject* GetAtUnchecked(il2cpp_array_size_t index) const
+	{
+		return m_Items[index];
+	}
+	inline RuntimeObject** GetAddressAtUnchecked(il2cpp_array_size_t index)
+	{
+		return m_Items + index;
+	}
+	inline void SetAtUnchecked(il2cpp_array_size_t index, RuntimeObject* value)
+	{
+		m_Items[index] = value;
+		Il2CppCodeGenWriteBarrier((void**)m_Items + index, (void*)value);
+	}
+};
+
+
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void Action_1_Invoke_mF2422B2DD29F74CE66F791C3F68E288EC7C3DB9E_gshared_inline (Action_1_t6F9EB113EB3F16226AEF811A2744F4111C116C87* __this, RuntimeObject* ___0_obj, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void List_1__ctor_m7F078BB342729BDF11327FD89D7872265328F690_gshared (List_1_tA239CB83DE5615F348BB0507E45F490F4F7C9A8D* __this, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR Enumerator_t9473BAB568A27E2339D48C1F91319E0F6D244D7A List_1_GetEnumerator_mD8294A7FA2BEB1929487127D476F8EC1CDC23BFC_gshared (List_1_tA239CB83DE5615F348BB0507E45F490F4F7C9A8D* __this, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void Enumerator_Dispose_mD9DC3E3C3697830A4823047AB29A77DBBB5ED419_gshared (Enumerator_t9473BAB568A27E2339D48C1F91319E0F6D244D7A* __this, const RuntimeMethod* method) ;
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR RuntimeObject* Enumerator_get_Current_m6330F15D18EE4F547C05DF9BF83C5EB710376027_gshared_inline (Enumerator_t9473BAB568A27E2339D48C1F91319E0F6D244D7A* __this, const RuntimeMethod* method) ;
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void List_1_Add_mEBCF994CC3814631017F46A387B1A192ED6C85C7_gshared_inline (List_1_tA239CB83DE5615F348BB0507E45F490F4F7C9A8D* __this, RuntimeObject* ___0_item, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool Enumerator_MoveNext_mE921CC8F29FBBDE7CC3209A0ED0D921D58D00BCB_gshared (Enumerator_t9473BAB568A27E2339D48C1F91319E0F6D244D7A* __this, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void Action_1__ctor_m2E1DFA67718FC1A0B6E5DFEB78831FFE9C059EB4_gshared (Action_1_t6F9EB113EB3F16226AEF811A2744F4111C116C87* __this, RuntimeObject* ___0_object, intptr_t ___1_method, const RuntimeMethod* method) ;
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR bool Nullable_1_get_HasValue_mA4048346752BF05849998E450987EB444BE2AD63_gshared_inline (Nullable_1_t0ECB838EB0C9A81655750B26970F21CF9A83A5F7* __this, const RuntimeMethod* method) ;
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR Guid_t Nullable_1_GetValueOrDefault_mC6EDE8162AB388B6482F745FF996B594ACC373AC_gshared_inline (Nullable_1_t0ECB838EB0C9A81655750B26970F21CF9A83A5F7* __this, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR Guid_t Nullable_1_get_Value_mDE8CD36894715AA51DF861D2679324AC2F6E1C79_gshared (Nullable_1_t0ECB838EB0C9A81655750B26970F21CF9A83A5F7* __this, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* ReadOnlyCollection_1_GetEnumerator_m487A0501D6F875A04F7D8F93F1CB3C813994AA64_gshared (ReadOnlyCollection_1_t5397DF0DB61D1090E7BBC89395CECB8D020CED92* __this, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void Func_2__ctor_m13C0A7F33154D861E2A041B52E88461832DA1697_gshared (Func_2_tE1F0D41563EE092E5E5540B061449FDE88F1DC00* __this, RuntimeObject* ___0_object, intptr_t ___1_method, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool Enumerable_Any_TisRuntimeObject_mF6C6AC8DF8971883615734832D09C9210B956F0F_gshared (RuntimeObject* ___0_source, Func_2_tE1F0D41563EE092E5E5540B061449FDE88F1DC00* ___1_predicate, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_NO_INLINE IL2CPP_METHOD_ATTR void List_1_AddWithResize_m79A9BF770BEF9C06BE40D5401E55E375F2726CC4_gshared (List_1_tA239CB83DE5615F348BB0507E45F490F4F7C9A8D* __this, RuntimeObject* ___0_item, const RuntimeMethod* method) ;
+
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void Object__ctor_mE837C6B9FA8C6D5D109F4B2EC885D79919AC0EA2 (RuntimeObject* __this, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void ProductService__ctor_mD2F39B34197B845B5E9C0B516A528D958D146A51 (ProductService_t593738048B6845C91DA73CE3C06278A052F2535A* __this, RuntimeObject* ___0_fetchProductsUseCase, RuntimeObject* ___1_storeWrapper, const RuntimeMethod* method) ;
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR CatalogListing_tC4E89A5FBD6F52F0EC11E5C4C88B5082BBB87B90* Product_get_baseListing_mCF03D15D6B35685708E05438A4639055E3BA7708_inline (Product_tD279BF775D345330FEE8405D2F53EC5D6B971C76* __this, const RuntimeMethod* method) ;
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR String_t* CatalogListing_get_id_mEB65318F7C3212BCC0409DCE6F502F468FFF8E64_inline (CatalogListing_tC4E89A5FBD6F52F0EC11E5C4C88B5082BBB87B90* __this, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void AppleStoreExtendedProductService_FetchStorePromotionVisibility_m69E0845B273CACD997B8CCD6A4FFDF86E7CD1ECC (AppleStoreExtendedProductService_t117E7DCBE1444273630CDE4B76E6FF2572E9C042* __this, String_t* ___0_catalogListingId, Action_2_t557C07266DE68D7A1708D82DB27944851C0718F7* ___1_successCallback, Action_1_t3CB5D1A819C3ED3F99E9E39F890F18633253949A* ___2_errorCallback, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR Product_tD279BF775D345330FEE8405D2F53EC5D6B971C76* ProductService_GetProductById_m04FCB5F62BB680CB26C26FBD41A64F9914824359 (ProductService_t593738048B6845C91DA73CE3C06278A052F2535A* __this, String_t* ___0_productId, const RuntimeMethod* method) ;
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR RuntimeObject* Product_get_catalogListings_mE5C0B40D760197D0C023367603A2B394AB60349B_inline (Product_tD279BF775D345330FEE8405D2F53EC5D6B971C76* __this, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* String_Concat_m9E3155FB84015C823606188F53B47CB44C444991 (String_t* ___0_str0, String_t* ___1_str1, const RuntimeMethod* method) ;
+inline void Action_1_Invoke_m690438AAE38F9762172E3AE0A33D0B42ACD35790_inline (Action_1_t3CB5D1A819C3ED3F99E9E39F890F18633253949A* __this, String_t* ___0_obj, const RuntimeMethod* method)
+{
+	((  void (*) (Action_1_t3CB5D1A819C3ED3F99E9E39F890F18633253949A*, String_t*, const RuntimeMethod*))Action_1_Invoke_mF2422B2DD29F74CE66F791C3F68E288EC7C3DB9E_gshared_inline)(__this, ___0_obj, method);
+}
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR ProductDefinition_tB486F56477C49E81BA6704C2DD31F373CDCCC1BD* CatalogListing_get_definition_m3068AE720A3F2359E0D787C8BB8436A095F4E31E_inline (CatalogListing_tC4E89A5FBD6F52F0EC11E5C4C88B5082BBB87B90* __this, const RuntimeMethod* method) ;
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR String_t* ProductDefinition_get_storeSpecificId_m67EC5C2564476BD154C8164613AB62A4DBEADEAC_inline (ProductDefinition_tB486F56477C49E81BA6704C2DD31F373CDCCC1BD* __this, const RuntimeMethod* method) ;
+inline void List_1__ctor_mCA8DD57EAC70C2B5923DBB9D5A77CEAC22E7068E (List_1_tF470A3BE5C1B5B68E1325EF3F109D172E60BD7CD* __this, const RuntimeMethod* method)
+{
+	((  void (*) (List_1_tF470A3BE5C1B5B68E1325EF3F109D172E60BD7CD*, const RuntimeMethod*))List_1__ctor_m7F078BB342729BDF11327FD89D7872265328F690_gshared)(__this, method);
+}
+inline Enumerator_t75DFD6EC1FADAB357C227A0B6F845A843A192263 List_1_GetEnumerator_m5781A42C52C1C875D1D4DD8B1D76453E6E702F6E (List_1_t2801F698EAD8786A7B70E25C1DAD1A8801E530C5* __this, const RuntimeMethod* method)
+{
+	return ((  Enumerator_t75DFD6EC1FADAB357C227A0B6F845A843A192263 (*) (List_1_t2801F698EAD8786A7B70E25C1DAD1A8801E530C5*, const RuntimeMethod*))List_1_GetEnumerator_mD8294A7FA2BEB1929487127D476F8EC1CDC23BFC_gshared)(__this, method);
+}
+inline void Enumerator_Dispose_mBF1D7C4CFFF58FDB26E02FB65F2A2A5E5A521575 (Enumerator_t75DFD6EC1FADAB357C227A0B6F845A843A192263* __this, const RuntimeMethod* method)
+{
+	((  void (*) (Enumerator_t75DFD6EC1FADAB357C227A0B6F845A843A192263*, const RuntimeMethod*))Enumerator_Dispose_mD9DC3E3C3697830A4823047AB29A77DBBB5ED419_gshared)(__this, method);
+}
+inline Product_tD279BF775D345330FEE8405D2F53EC5D6B971C76* Enumerator_get_Current_mA9E751EDCB5C5CC787A81AE8870F206B5141ECAE_inline (Enumerator_t75DFD6EC1FADAB357C227A0B6F845A843A192263* __this, const RuntimeMethod* method)
+{
+	return ((  Product_tD279BF775D345330FEE8405D2F53EC5D6B971C76* (*) (Enumerator_t75DFD6EC1FADAB357C227A0B6F845A843A192263*, const RuntimeMethod*))Enumerator_get_Current_m6330F15D18EE4F547C05DF9BF83C5EB710376027_gshared_inline)(__this, method);
+}
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool String_IsNullOrEmpty_mEA9E3FB005AC28FE02E69FCF95A7B8456192B478 (String_t* ___0_value, const RuntimeMethod* method) ;
+inline void List_1_Add_mF10DB1D3CBB0B14215F0E4F8AB4934A1955E5351_inline (List_1_tF470A3BE5C1B5B68E1325EF3F109D172E60BD7CD* __this, String_t* ___0_item, const RuntimeMethod* method)
+{
+	((  void (*) (List_1_tF470A3BE5C1B5B68E1325EF3F109D172E60BD7CD*, String_t*, const RuntimeMethod*))List_1_Add_mEBCF994CC3814631017F46A387B1A192ED6C85C7_gshared_inline)(__this, ___0_item, method);
+}
+inline bool Enumerator_MoveNext_m7FED4F315AB2ED673E86E582BF05718D521E00AB (Enumerator_t75DFD6EC1FADAB357C227A0B6F845A843A192263* __this, const RuntimeMethod* method)
+{
+	return ((  bool (*) (Enumerator_t75DFD6EC1FADAB357C227A0B6F845A843A192263*, const RuntimeMethod*))Enumerator_MoveNext_mE921CC8F29FBBDE7CC3209A0ED0D921D58D00BCB_gshared)(__this, method);
+}
+inline Enumerator_tA7A4B718FE1ED1D87565680D8C8195EC8AEAB3D1 List_1_GetEnumerator_m7692B5F182858B7D5C72C920D09AD48738D1E70D (List_1_tF470A3BE5C1B5B68E1325EF3F109D172E60BD7CD* __this, const RuntimeMethod* method)
+{
+	return ((  Enumerator_tA7A4B718FE1ED1D87565680D8C8195EC8AEAB3D1 (*) (List_1_tF470A3BE5C1B5B68E1325EF3F109D172E60BD7CD*, const RuntimeMethod*))List_1_GetEnumerator_mD8294A7FA2BEB1929487127D476F8EC1CDC23BFC_gshared)(__this, method);
+}
+inline void Enumerator_Dispose_m592BCCE7B7933454DED2130C810F059F8D85B1D7 (Enumerator_tA7A4B718FE1ED1D87565680D8C8195EC8AEAB3D1* __this, const RuntimeMethod* method)
+{
+	((  void (*) (Enumerator_tA7A4B718FE1ED1D87565680D8C8195EC8AEAB3D1*, const RuntimeMethod*))Enumerator_Dispose_mD9DC3E3C3697830A4823047AB29A77DBBB5ED419_gshared)(__this, method);
+}
+inline String_t* Enumerator_get_Current_m143541DD8FBCD313E7554EA738FA813B8F4DB11A_inline (Enumerator_tA7A4B718FE1ED1D87565680D8C8195EC8AEAB3D1* __this, const RuntimeMethod* method)
+{
+	return ((  String_t* (*) (Enumerator_tA7A4B718FE1ED1D87565680D8C8195EC8AEAB3D1*, const RuntimeMethod*))Enumerator_get_Current_m6330F15D18EE4F547C05DF9BF83C5EB710376027_gshared_inline)(__this, method);
+}
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR Product_tD279BF775D345330FEE8405D2F53EC5D6B971C76* ProductService_GetProductByCatalogListingId_m03A4A115360BE81B54F73AA758367E372BD762D4 (ProductService_t593738048B6845C91DA73CE3C06278A052F2535A* __this, String_t* ___0_catalogListingId, const RuntimeMethod* method) ;
+inline bool Enumerator_MoveNext_mDB47EEC4531D33B9C33FD2E70BA15E1535A0F3ED (Enumerator_tA7A4B718FE1ED1D87565680D8C8195EC8AEAB3D1* __this, const RuntimeMethod* method)
+{
+	return ((  bool (*) (Enumerator_tA7A4B718FE1ED1D87565680D8C8195EC8AEAB3D1*, const RuntimeMethod*))Enumerator_MoveNext_mE921CC8F29FBBDE7CC3209A0ED0D921D58D00BCB_gshared)(__this, method);
+}
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void AppleStoreExtendedProductService_SetStorePromotionVisibility_mDE9A898AD03C324F3943146CA1A2A983BC35C422 (AppleStoreExtendedProductService_t117E7DCBE1444273630CDE4B76E6FF2572E9C042* __this, String_t* ___0_catalogListingId, int32_t ___1_visible, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void PurchaseService__ctor_mB69105353ABC0943FD8D9113E6862F26C7E69662 (PurchaseService_tA32C67F8193AAE937E736946E3BB1B5DE025A57B* __this, RuntimeObject* ___0_fetchPurchasesUseCase, RuntimeObject* ___1_purchaseUseCase, RuntimeObject* ___2_confirmOrderUseCase, RuntimeObject* ___3_checkEntitlementUseCase, RuntimeObject* ___4_storeWrapper, RuntimeObject* ___5_analyticsClient, const RuntimeMethod* method) ;
+inline void Action_1__ctor_m9DC2953C55C4D7D4B7BEFE03D84DA1F9362D652C (Action_1_t3CB5D1A819C3ED3F99E9E39F890F18633253949A* __this, RuntimeObject* ___0_object, intptr_t ___1_method, const RuntimeMethod* method)
+{
+	((  void (*) (Action_1_t3CB5D1A819C3ED3F99E9E39F890F18633253949A*, RuntimeObject*, intptr_t, const RuntimeMethod*))Action_1__ctor_m2E1DFA67718FC1A0B6E5DFEB78831FFE9C059EB4_gshared)(__this, ___0_object, ___1_method, method);
+}
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR ApplePurchaseFulfilledPayload_tC3EC1DF5A08D02CF4EF0E6406DB0DE74154E5FD6* AppleStoreExtendedPurchaseService_BuildApplePayload_mC393F05CBBC26B78894025374A8F83C2F1CA18DD (Order_tD1825298A09BBF359EC2F7B272C72E11C0508A4F* ___0_order, const RuntimeMethod* method) ;
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR RuntimeObject* Order_get_Info_m00C5CEF797606F36178D40872C6D15342AF5DAFF_inline (Order_tD1825298A09BBF359EC2F7B272C72E11C0508A4F* __this, const RuntimeMethod* method) ;
+inline bool Nullable_1_get_HasValue_mA4048346752BF05849998E450987EB444BE2AD63_inline (Nullable_1_t0ECB838EB0C9A81655750B26970F21CF9A83A5F7* __this, const RuntimeMethod* method)
+{
+	return ((  bool (*) (Nullable_1_t0ECB838EB0C9A81655750B26970F21CF9A83A5F7*, const RuntimeMethod*))Nullable_1_get_HasValue_mA4048346752BF05849998E450987EB444BE2AD63_gshared_inline)(__this, method);
+}
+inline Guid_t Nullable_1_GetValueOrDefault_mC6EDE8162AB388B6482F745FF996B594ACC373AC_inline (Nullable_1_t0ECB838EB0C9A81655750B26970F21CF9A83A5F7* __this, const RuntimeMethod* method)
+{
+	return ((  Guid_t (*) (Nullable_1_t0ECB838EB0C9A81655750B26970F21CF9A83A5F7*, const RuntimeMethod*))Nullable_1_GetValueOrDefault_mC6EDE8162AB388B6482F745FF996B594ACC373AC_gshared_inline)(__this, method);
+}
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool Guid_op_Equality_mAD728A1A4FB970715E84B7D346E094FE5EF2A240 (Guid_t ___0_a, Guid_t ___1_b, const RuntimeMethod* method) ;
+inline Guid_t Nullable_1_get_Value_mDE8CD36894715AA51DF861D2679324AC2F6E1C79 (Nullable_1_t0ECB838EB0C9A81655750B26970F21CF9A83A5F7* __this, const RuntimeMethod* method)
+{
+	return ((  Guid_t (*) (Nullable_1_t0ECB838EB0C9A81655750B26970F21CF9A83A5F7*, const RuntimeMethod*))Nullable_1_get_Value_mDE8CD36894715AA51DF861D2679324AC2F6E1C79_gshared)(__this, method);
+}
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* Guid_ToString_m2BFFD5FA726E03FA707AAFCCF065896C46D5290C (Guid_t* __this, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void ApplePurchaseFulfilledPayload__ctor_m88B66BCFC2E7F740E95E48F5BF6DAC07216679A9 (ApplePurchaseFulfilledPayload_tC3EC1DF5A08D02CF4EF0E6406DB0DE74154E5FD6* __this, const RuntimeMethod* method) ;
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void ApplePurchaseFulfilledPayload_set_JwsRepresentation_mBE0801BD2AF38B33020435076C14A83F564B89E2_inline (ApplePurchaseFulfilledPayload_tC3EC1DF5A08D02CF4EF0E6406DB0DE74154E5FD6* __this, String_t* ___0_value, const RuntimeMethod* method) ;
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void ApplePurchaseFulfilledPayload_set_OriginalTransactionId_mCBFC16405946899F3172F4CB5FCF9920379FCC7B_inline (ApplePurchaseFulfilledPayload_tC3EC1DF5A08D02CF4EF0E6406DB0DE74154E5FD6* __this, String_t* ___0_value, const RuntimeMethod* method) ;
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void ApplePurchaseFulfilledPayload_set_Ownership_m80E2B542B30FABA53119F3EC48355DD6D534DC94_inline (ApplePurchaseFulfilledPayload_tC3EC1DF5A08D02CF4EF0E6406DB0DE74154E5FD6* __this, int32_t ___0_value, const RuntimeMethod* method) ;
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void ApplePurchaseFulfilledPayload_set_AppReceipt_m3B22B4C1BD714251A9ACD425BFEDA83D123843FD_inline (ApplePurchaseFulfilledPayload_tC3EC1DF5A08D02CF4EF0E6406DB0DE74154E5FD6* __this, String_t* ___0_value, const RuntimeMethod* method) ;
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void ApplePurchaseFulfilledPayload_set_AppAccountToken_mD3F7F9FF8DFDAF2B2FECC8EA7EADF4DDFE78DFD2_inline (ApplePurchaseFulfilledPayload_tC3EC1DF5A08D02CF4EF0E6406DB0DE74154E5FD6* __this, String_t* ___0_value, const RuntimeMethod* method) ;
+inline void List_1__ctor_m6841FD3CEDEA8EA46737298B557279EBF6385082 (List_1_t919E5CB114972DFCF14DD79496128FBE2062B41A* __this, const RuntimeMethod* method)
+{
+	((  void (*) (List_1_t919E5CB114972DFCF14DD79496128FBE2062B41A*, const RuntimeMethod*))List_1__ctor_m7F078BB342729BDF11327FD89D7872265328F690_gshared)(__this, method);
+}
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR ReadOnlyObservableCollection_1_t09916B7A0FC0410428D732A0A2C4F3FE1C76F704* PurchaseService_GetPurchases_mCB90A14123A72354D2772F663FD23EC24D4AF4A4 (PurchaseService_tA32C67F8193AAE937E736946E3BB1B5DE025A57B* __this, const RuntimeMethod* method) ;
+inline RuntimeObject* ReadOnlyCollection_1_GetEnumerator_mEB629D8CA2A9B0DD0FEFA4323A21581E5BFB040E (ReadOnlyCollection_1_tD966099914D9A6AA006D07A9D9C780C7ACB4F8BF* __this, const RuntimeMethod* method)
+{
+	return ((  RuntimeObject* (*) (ReadOnlyCollection_1_tD966099914D9A6AA006D07A9D9C780C7ACB4F8BF*, const RuntimeMethod*))ReadOnlyCollection_1_GetEnumerator_m487A0501D6F875A04F7D8F93F1CB3C813994AA64_gshared)(__this, method);
+}
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool AppleStoreExtendedPurchaseService_DoesOrderContainAnyRevokedProductIds_m72311534F47EC217C9D7B986F2DB70D84E1E314D (String_t* ___0_productId, Order_tD1825298A09BBF359EC2F7B272C72E11C0508A4F* ___1_order, const RuntimeMethod* method) ;
+inline void List_1_Add_mB55089BBCF9305BFEB258D61B7CAD36258B3132B_inline (List_1_t919E5CB114972DFCF14DD79496128FBE2062B41A* __this, Order_tD1825298A09BBF359EC2F7B272C72E11C0508A4F* ___0_item, const RuntimeMethod* method)
+{
+	((  void (*) (List_1_t919E5CB114972DFCF14DD79496128FBE2062B41A*, Order_tD1825298A09BBF359EC2F7B272C72E11C0508A4F*, const RuntimeMethod*))List_1_Add_mEBCF994CC3814631017F46A387B1A192ED6C85C7_gshared_inline)(__this, ___0_item, method);
+}
+inline Enumerator_t10DB350FCF2DB955A3C5EE7DCC1C04FD93E211B5 List_1_GetEnumerator_mA1AAA15279E06F34260FBF611D8914642D714850 (List_1_t919E5CB114972DFCF14DD79496128FBE2062B41A* __this, const RuntimeMethod* method)
+{
+	return ((  Enumerator_t10DB350FCF2DB955A3C5EE7DCC1C04FD93E211B5 (*) (List_1_t919E5CB114972DFCF14DD79496128FBE2062B41A*, const RuntimeMethod*))List_1_GetEnumerator_mD8294A7FA2BEB1929487127D476F8EC1CDC23BFC_gshared)(__this, method);
+}
+inline void Enumerator_Dispose_mE7EB1A0596B8FCD94810032FCC90E7152F62E8E2 (Enumerator_t10DB350FCF2DB955A3C5EE7DCC1C04FD93E211B5* __this, const RuntimeMethod* method)
+{
+	((  void (*) (Enumerator_t10DB350FCF2DB955A3C5EE7DCC1C04FD93E211B5*, const RuntimeMethod*))Enumerator_Dispose_mD9DC3E3C3697830A4823047AB29A77DBBB5ED419_gshared)(__this, method);
+}
+inline Order_tD1825298A09BBF359EC2F7B272C72E11C0508A4F* Enumerator_get_Current_mA6F6593813BC6EB76D243A5FD1D394B215544989_inline (Enumerator_t10DB350FCF2DB955A3C5EE7DCC1C04FD93E211B5* __this, const RuntimeMethod* method)
+{
+	return ((  Order_tD1825298A09BBF359EC2F7B272C72E11C0508A4F* (*) (Enumerator_t10DB350FCF2DB955A3C5EE7DCC1C04FD93E211B5*, const RuntimeMethod*))Enumerator_get_Current_m6330F15D18EE4F547C05DF9BF83C5EB710376027_gshared_inline)(__this, method);
+}
+inline bool Enumerator_MoveNext_mDAA44E71D6F94F08DDAC87984FA9293CD56E9A2D (Enumerator_t10DB350FCF2DB955A3C5EE7DCC1C04FD93E211B5* __this, const RuntimeMethod* method)
+{
+	return ((  bool (*) (Enumerator_t10DB350FCF2DB955A3C5EE7DCC1C04FD93E211B5*, const RuntimeMethod*))Enumerator_MoveNext_mE921CC8F29FBBDE7CC3209A0ED0D921D58D00BCB_gshared)(__this, method);
+}
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CU3Ec__DisplayClass16_0__ctor_m86121372364EC9C850C2445A067A19204F157C52 (U3CU3Ec__DisplayClass16_0_t1E2C6B3967FBD757B17649ACEB6B1E70BE95232C* __this, const RuntimeMethod* method) ;
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR RuntimeObject* Order_get_CartOrdered_m134E21BEDE41F469365E67B54F1132986016525A_inline (Order_tD1825298A09BBF359EC2F7B272C72E11C0508A4F* __this, const RuntimeMethod* method) ;
+inline void Func_2__ctor_mC5EBBE95C40E439401506EAD3D75FD49D8653994 (Func_2_t995D09EA9CCB87BB3A12428E71E769B1C78E7B96* __this, RuntimeObject* ___0_object, intptr_t ___1_method, const RuntimeMethod* method)
+{
+	((  void (*) (Func_2_t995D09EA9CCB87BB3A12428E71E769B1C78E7B96*, RuntimeObject*, intptr_t, const RuntimeMethod*))Func_2__ctor_m13C0A7F33154D861E2A041B52E88461832DA1697_gshared)(__this, ___0_object, ___1_method, method);
+}
+inline bool Enumerable_Any_TisCartItem_t2AD57E121E5F61C1B5A69160E39D32C1E126C42F_mE8451689CD14AA40FBB0F4F29898052F0EABF27E (RuntimeObject* ___0_source, Func_2_t995D09EA9CCB87BB3A12428E71E769B1C78E7B96* ___1_predicate, const RuntimeMethod* method)
+{
+	return ((  bool (*) (RuntimeObject*, Func_2_t995D09EA9CCB87BB3A12428E71E769B1C78E7B96*, const RuntimeMethod*))Enumerable_Any_TisRuntimeObject_mF6C6AC8DF8971883615734832D09C9210B956F0F_gshared)(___0_source, ___1_predicate, method);
+}
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool PurchaseService_IsStoreConnected_mBFBE2081DF62ABD805E1CCB762BB5EA3E225EE61 (PurchaseService_tA32C67F8193AAE937E736946E3BB1B5DE025A57B* __this, const RuntimeMethod* method) ;
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR Product_tD279BF775D345330FEE8405D2F53EC5D6B971C76* CartItem_get_Product_m1CEE0F7667AB0B7C4454FC03F60C44890FFEF9F9_inline (CartItem_t2AD57E121E5F61C1B5A69160E39D32C1E126C42F* __this, const RuntimeMethod* method) ;
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR String_t* CartItem_get_CatalogListingId_m5FF60887B8750BF2ED60D1EEDEEB8AD11A744F24_inline (CartItem_t2AD57E121E5F61C1B5A69160E39D32C1E126C42F* __this, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool String_Contains_m6D77B121FADA7CA5F397C0FABB65DA62DF03B6C3 (String_t* __this, String_t* ___0_value, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void StoreService__ctor_mC31FD6601BB49CD778A26EF96BD826BF19016541 (StoreService_t631148A0254FF7BA14318F549E8E1D5B50DB31E9* __this, RuntimeObject* ___0_connectUseCase, RuntimeObject* ___1_storeWrapper, const RuntimeMethod* method) ;
+inline void List_1_AddWithResize_m79A9BF770BEF9C06BE40D5401E55E375F2726CC4 (List_1_tA239CB83DE5615F348BB0507E45F490F4F7C9A8D* __this, RuntimeObject* ___0_item, const RuntimeMethod* method)
+{
+	((  void (*) (List_1_tA239CB83DE5615F348BB0507E45F490F4F7C9A8D*, RuntimeObject*, const RuntimeMethod*))List_1_AddWithResize_m79A9BF770BEF9C06BE40D5401E55E375F2726CC4_gshared)(__this, ___0_item, method);
+}
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winvalid-offsetof"
+#pragma clang diagnostic ignored "-Wunused-variable"
+#endif
+// Method Definition Index: 84259
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void AppleRefreshAppReceiptUseCase__ctor_m94783AB118AA2D697BACEA9E5A628F77D72461D6 (AppleRefreshAppReceiptUseCase_t349126EC10F41CA1B136BD4A69FF4D66FE4540C9* __this, RuntimeObject* ___0_appleStoreCallbacks, RuntimeObject* ___1_nativeStore, const RuntimeMethod* method) 
+{
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/UseCases/AppleRefreshAppReceiptUseCase.cs:16>
+		Object__ctor_mE837C6B9FA8C6D5D109F4B2EC885D79919AC0EA2(__this, NULL);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/UseCases/AppleRefreshAppReceiptUseCase.cs:18>
+		RuntimeObject* L_0 = ___0_appleStoreCallbacks;
+		__this->___m_AppleStoreCallbacks = L_0;
+		Il2CppCodeGenWriteBarrier((void**)(&__this->___m_AppleStoreCallbacks), (void*)L_0);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/UseCases/AppleRefreshAppReceiptUseCase.cs:19>
+		RuntimeObject* L_1 = ___1_nativeStore;
+		__this->___m_NativeAppleStore = L_1;
+		Il2CppCodeGenWriteBarrier((void**)(&__this->___m_NativeAppleStore), (void*)L_1);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/UseCases/AppleRefreshAppReceiptUseCase.cs:20>
+		return;
+	}
+}
+// Method Definition Index: 84260
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void AppleRefreshAppReceiptUseCase_RefreshAppReceipt_m493D5D954BBC28C4C06A1ABDED4D52AB13AAFE83 (AppleRefreshAppReceiptUseCase_t349126EC10F41CA1B136BD4A69FF4D66FE4540C9* __this, Action_1_t3CB5D1A819C3ED3F99E9E39F890F18633253949A* ___0_successCallback, Action_1_t3CB5D1A819C3ED3F99E9E39F890F18633253949A* ___1_errorCallback, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&IAppleStoreCallbacks_tE9D30B49184B828C4D6744D7617BE1CD23FB920D_il2cpp_TypeInfo_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&INativeAppleStore_t323BA5F90A2D47ADD128FFA1A623AF498D477DD3_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/UseCases/AppleRefreshAppReceiptUseCase.cs:24>
+		RuntimeObject* L_0 = __this->___m_AppleStoreCallbacks;
+		Action_1_t3CB5D1A819C3ED3F99E9E39F890F18633253949A* L_1 = ___0_successCallback;
+		Action_1_t3CB5D1A819C3ED3F99E9E39F890F18633253949A* L_2 = ___1_errorCallback;
+		NullCheck(L_0);
+		InterfaceActionInvoker2< Action_1_t3CB5D1A819C3ED3F99E9E39F890F18633253949A*, Action_1_t3CB5D1A819C3ED3F99E9E39F890F18633253949A* >::Invoke(9, IAppleStoreCallbacks_tE9D30B49184B828C4D6744D7617BE1CD23FB920D_il2cpp_TypeInfo_var, L_0, L_1, L_2);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/UseCases/AppleRefreshAppReceiptUseCase.cs:25>
+		RuntimeObject* L_3 = __this->___m_NativeAppleStore;
+		NullCheck(L_3);
+		InterfaceActionInvoker0::Invoke(14, INativeAppleStore_t323BA5F90A2D47ADD128FFA1A623AF498D477DD3_il2cpp_TypeInfo_var, L_3);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/UseCases/AppleRefreshAppReceiptUseCase.cs:26>
+		return;
+	}
+}
+// Method Definition Index: 84261
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void AppleRefreshAppReceiptUseCase_SetRefreshAppReceipt_m045DD543C37817E984ED83586FBA5C1FB86BE365 (AppleRefreshAppReceiptUseCase_t349126EC10F41CA1B136BD4A69FF4D66FE4540C9* __this, bool ___0_refreshAppReceipt, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&IAppleStoreCallbacks_tE9D30B49184B828C4D6744D7617BE1CD23FB920D_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/UseCases/AppleRefreshAppReceiptUseCase.cs:30>
+		RuntimeObject* L_0 = __this->___m_AppleStoreCallbacks;
+		bool L_1 = ___0_refreshAppReceipt;
+		NullCheck(L_0);
+		InterfaceActionInvoker1< bool >::Invoke(10, IAppleStoreCallbacks_tE9D30B49184B828C4D6744D7617BE1CD23FB920D_il2cpp_TypeInfo_var, L_0, L_1);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/UseCases/AppleRefreshAppReceiptUseCase.cs:31>
+		return;
+	}
+}
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winvalid-offsetof"
+#pragma clang diagnostic ignored "-Wunused-variable"
+#endif
+// Method Definition Index: 84262
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void AppleRestoreTransactionsUseCase__ctor_m0490209E4E88420D557FC8C35529467C873573DF (AppleRestoreTransactionsUseCase_t7D30E2DB9D52FDDA1AD6DA44C1C8FC61C77D9D1A* __this, RuntimeObject* ___0_appleStoreCallbacks, RuntimeObject* ___1_nativeStore, const RuntimeMethod* method) 
+{
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/UseCases/AppleRestoreTransactionsUseCase.cs:15>
+		Object__ctor_mE837C6B9FA8C6D5D109F4B2EC885D79919AC0EA2(__this, NULL);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/UseCases/AppleRestoreTransactionsUseCase.cs:17>
+		RuntimeObject* L_0 = ___0_appleStoreCallbacks;
+		__this->___m_AppleStoreCallbacks = L_0;
+		Il2CppCodeGenWriteBarrier((void**)(&__this->___m_AppleStoreCallbacks), (void*)L_0);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/UseCases/AppleRestoreTransactionsUseCase.cs:18>
+		RuntimeObject* L_1 = ___1_nativeStore;
+		__this->___m_NativeAppleStore = L_1;
+		Il2CppCodeGenWriteBarrier((void**)(&__this->___m_NativeAppleStore), (void*)L_1);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/UseCases/AppleRestoreTransactionsUseCase.cs:19>
+		return;
+	}
+}
+// Method Definition Index: 84263
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void AppleRestoreTransactionsUseCase_RestoreTransactions_m2A7DBF9BED62022BD969EAD5D4B1378848EBF1A9 (AppleRestoreTransactionsUseCase_t7D30E2DB9D52FDDA1AD6DA44C1C8FC61C77D9D1A* __this, Action_2_t8EADE87044ADE97906736D729EA2E3EF97F34F3D* ___0_callback, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&IAppleStoreCallbacks_tE9D30B49184B828C4D6744D7617BE1CD23FB920D_il2cpp_TypeInfo_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&INativeAppleStore_t323BA5F90A2D47ADD128FFA1A623AF498D477DD3_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/UseCases/AppleRestoreTransactionsUseCase.cs:23>
+		RuntimeObject* L_0 = __this->___m_AppleStoreCallbacks;
+		Action_2_t8EADE87044ADE97906736D729EA2E3EF97F34F3D* L_1 = ___0_callback;
+		NullCheck(L_0);
+		InterfaceActionInvoker1< Action_2_t8EADE87044ADE97906736D729EA2E3EF97F34F3D* >::Invoke(2, IAppleStoreCallbacks_tE9D30B49184B828C4D6744D7617BE1CD23FB920D_il2cpp_TypeInfo_var, L_0, L_1);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/UseCases/AppleRestoreTransactionsUseCase.cs:24>
+		RuntimeObject* L_2 = __this->___m_NativeAppleStore;
+		NullCheck(L_2);
+		InterfaceActionInvoker0::Invoke(2, INativeAppleStore_t323BA5F90A2D47ADD128FFA1A623AF498D477DD3_il2cpp_TypeInfo_var, L_2);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/UseCases/AppleRestoreTransactionsUseCase.cs:25>
+		return;
+	}
+}
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winvalid-offsetof"
+#pragma clang diagnostic ignored "-Wunused-variable"
+#endif
+// Method Definition Index: 84264
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void AppReceiptUseCase__ctor_mFB4D0B122DFB344E500E53A5612DF59EA00722AF (AppReceiptUseCase_tD67CA43290DE93F4AC3FA34D4B93D024C93FBC4B* __this, RuntimeObject* ___0_appleAppReceiptViewer, const RuntimeMethod* method) 
+{
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/UseCases/AppReceiptUseCase.cs:14>
+		Object__ctor_mE837C6B9FA8C6D5D109F4B2EC885D79919AC0EA2(__this, NULL);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/UseCases/AppReceiptUseCase.cs:16>
+		RuntimeObject* L_0 = ___0_appleAppReceiptViewer;
+		__this->___m_AppleAppReceiptViewer = L_0;
+		Il2CppCodeGenWriteBarrier((void**)(&__this->___m_AppleAppReceiptViewer), (void*)L_0);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/UseCases/AppReceiptUseCase.cs:17>
+		return;
+	}
+}
+// Method Definition Index: 84265
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* AppReceiptUseCase_AppReceipt_mC6EE6ADFCA75389B8F85CF13AE9EED6C7C4DF907 (AppReceiptUseCase_tD67CA43290DE93F4AC3FA34D4B93D024C93FBC4B* __this, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&IAppleAppReceiptViewer_t7DA912481C791B332B0A21A2BE56C4D83F10B738_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	String_t* V_0 = NULL;
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/UseCases/AppReceiptUseCase.cs:21>
+		RuntimeObject* L_0 = __this->___m_AppleAppReceiptViewer;
+		NullCheck(L_0);
+		String_t* L_1;
+		L_1 = InterfaceFuncInvoker0< String_t* >::Invoke(0, IAppleAppReceiptViewer_t7DA912481C791B332B0A21A2BE56C4D83F10B738_il2cpp_TypeInfo_var, L_0);
+		V_0 = L_1;
+		goto IL_000f;
+	}
+
+IL_000f:
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/UseCases/AppReceiptUseCase.cs:22>
+		String_t* L_2 = V_0;
+		return L_2;
+	}
+}
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winvalid-offsetof"
+#pragma clang diagnostic ignored "-Wunused-variable"
+#endif
+// Method Definition Index: 84266
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void ContinuePromotionalPurchasesUseCase__ctor_m5DD8B3D9B891C9CC3F8236D601D3AAE5DF90774E (ContinuePromotionalPurchasesUseCase_tC287244E1CB9346314A4293220218AE9BDDFABF8* __this, RuntimeObject* ___0_nativeStore, const RuntimeMethod* method) 
+{
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/UseCases/ContinuePromotionalPurchasesUseCase.cs:14>
+		Object__ctor_mE837C6B9FA8C6D5D109F4B2EC885D79919AC0EA2(__this, NULL);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/UseCases/ContinuePromotionalPurchasesUseCase.cs:16>
+		RuntimeObject* L_0 = ___0_nativeStore;
+		__this->___m_NativeAppleStore = L_0;
+		Il2CppCodeGenWriteBarrier((void**)(&__this->___m_NativeAppleStore), (void*)L_0);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/UseCases/ContinuePromotionalPurchasesUseCase.cs:17>
+		return;
+	}
+}
+// Method Definition Index: 84267
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void ContinuePromotionalPurchasesUseCase_ContinuePromotionalPurchases_m5CF15C1D5386A35A8F9F7F0D0F1CF80AAB054D1C (ContinuePromotionalPurchasesUseCase_tC287244E1CB9346314A4293220218AE9BDDFABF8* __this, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&INativeAppleStore_t323BA5F90A2D47ADD128FFA1A623AF498D477DD3_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/UseCases/ContinuePromotionalPurchasesUseCase.cs:21>
+		RuntimeObject* L_0 = __this->___m_NativeAppleStore;
+		NullCheck(L_0);
+		InterfaceActionInvoker0::Invoke(11, INativeAppleStore_t323BA5F90A2D47ADD128FFA1A623AF498D477DD3_il2cpp_TypeInfo_var, L_0);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/UseCases/ContinuePromotionalPurchasesUseCase.cs:22>
+		return;
+	}
+}
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winvalid-offsetof"
+#pragma clang diagnostic ignored "-Wunused-variable"
+#endif
+// Method Definition Index: 84268
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void PresentCodeRedemptionSheetUseCase__ctor_m9DCAA5CA53E127410ED078C8ABD5D155F690156C (PresentCodeRedemptionSheetUseCase_t1B9A1605F0976BF3016728FE0505D043B30F3FD6* __this, RuntimeObject* ___0_nativeStore, const RuntimeMethod* method) 
+{
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/UseCases/PresentCodeRedemptionSheetUseCase.cs:14>
+		Object__ctor_mE837C6B9FA8C6D5D109F4B2EC885D79919AC0EA2(__this, NULL);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/UseCases/PresentCodeRedemptionSheetUseCase.cs:16>
+		RuntimeObject* L_0 = ___0_nativeStore;
+		__this->___m_NativeAppleStore = L_0;
+		Il2CppCodeGenWriteBarrier((void**)(&__this->___m_NativeAppleStore), (void*)L_0);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/UseCases/PresentCodeRedemptionSheetUseCase.cs:17>
+		return;
+	}
+}
+// Method Definition Index: 84269
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void PresentCodeRedemptionSheetUseCase_PresentCodeRedemptionSheet_m611DE47FE69F9E4CE764CD97EB6ECD2690310BAE (PresentCodeRedemptionSheetUseCase_t1B9A1605F0976BF3016728FE0505D043B30F3FD6* __this, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&INativeAppleStore_t323BA5F90A2D47ADD128FFA1A623AF498D477DD3_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/UseCases/PresentCodeRedemptionSheetUseCase.cs:21>
+		RuntimeObject* L_0 = __this->___m_NativeAppleStore;
+		NullCheck(L_0);
+		InterfaceActionInvoker0::Invoke(12, INativeAppleStore_t323BA5F90A2D47ADD128FFA1A623AF498D477DD3_il2cpp_TypeInfo_var, L_0);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/UseCases/PresentCodeRedemptionSheetUseCase.cs:22>
+		return;
+	}
+}
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winvalid-offsetof"
+#pragma clang diagnostic ignored "-Wunused-variable"
+#endif
+// Method Definition Index: 84270
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SetPromotionalPurchaseInterceptorCallbackUseCase__ctor_mFA8BDF520FE14906F2D8A45BEA900A7940914695 (SetPromotionalPurchaseInterceptorCallbackUseCase_t3F098D096B662588687A2386BA19EF56B2B84069* __this, RuntimeObject* ___0_appleStoreCallbacks, const RuntimeMethod* method) 
+{
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/UseCases/SetPromotionalPurchaseInterceptorCallbackUseCase.cs:14>
+		Object__ctor_mE837C6B9FA8C6D5D109F4B2EC885D79919AC0EA2(__this, NULL);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/UseCases/SetPromotionalPurchaseInterceptorCallbackUseCase.cs:16>
+		RuntimeObject* L_0 = ___0_appleStoreCallbacks;
+		__this->___m_AppleStoreCallbacks = L_0;
+		Il2CppCodeGenWriteBarrier((void**)(&__this->___m_AppleStoreCallbacks), (void*)L_0);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/UseCases/SetPromotionalPurchaseInterceptorCallbackUseCase.cs:17>
+		return;
+	}
+}
+// Method Definition Index: 84271
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SetPromotionalPurchaseInterceptorCallbackUseCase_add_OnPromotionalPurchaseIntercepted_m7812713693D3CB7E554CF1B851AA4A1135AB50F6 (SetPromotionalPurchaseInterceptorCallbackUseCase_t3F098D096B662588687A2386BA19EF56B2B84069* __this, Action_1_t89E7476130EB87E6F9C9FCBB2D6407FB99F11F84* ___0_value, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&IAppleStoreCallbacks_tE9D30B49184B828C4D6744D7617BE1CD23FB920D_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/UseCases/SetPromotionalPurchaseInterceptorCallbackUseCase.cs:21>
+		RuntimeObject* L_0 = __this->___m_AppleStoreCallbacks;
+		Action_1_t89E7476130EB87E6F9C9FCBB2D6407FB99F11F84* L_1 = ___0_value;
+		NullCheck(L_0);
+		InterfaceActionInvoker1< Action_1_t89E7476130EB87E6F9C9FCBB2D6407FB99F11F84* >::Invoke(7, IAppleStoreCallbacks_tE9D30B49184B828C4D6744D7617BE1CD23FB920D_il2cpp_TypeInfo_var, L_0, L_1);
+		return;
+	}
+}
+// Method Definition Index: 84272
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SetPromotionalPurchaseInterceptorCallbackUseCase_remove_OnPromotionalPurchaseIntercepted_m847BA5802C231FD67CB81DFE549863CBFC8C147C (SetPromotionalPurchaseInterceptorCallbackUseCase_t3F098D096B662588687A2386BA19EF56B2B84069* __this, Action_1_t89E7476130EB87E6F9C9FCBB2D6407FB99F11F84* ___0_value, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&IAppleStoreCallbacks_tE9D30B49184B828C4D6744D7617BE1CD23FB920D_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/UseCases/SetPromotionalPurchaseInterceptorCallbackUseCase.cs:22>
+		RuntimeObject* L_0 = __this->___m_AppleStoreCallbacks;
+		Action_1_t89E7476130EB87E6F9C9FCBB2D6407FB99F11F84* L_1 = ___0_value;
+		NullCheck(L_0);
+		InterfaceActionInvoker1< Action_1_t89E7476130EB87E6F9C9FCBB2D6407FB99F11F84* >::Invoke(8, IAppleStoreCallbacks_tE9D30B49184B828C4D6744D7617BE1CD23FB920D_il2cpp_TypeInfo_var, L_0, L_1);
+		return;
+	}
+}
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winvalid-offsetof"
+#pragma clang diagnostic ignored "-Wunused-variable"
+#endif
+// Method Definition Index: 84273
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SimulateAskToBuyUseCase__ctor_m26FB4938E69C5A82256A36FB7A69ACE62CC32193 (SimulateAskToBuyUseCase_t2D30F910CB5D2EC5C1D0D01CEA1EA3AA910D11F3* __this, RuntimeObject* ___0_appleStoreCallbacks, const RuntimeMethod* method) 
+{
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/UseCases/SimulateAskToBuyUseCase.cs:14>
+		Object__ctor_mE837C6B9FA8C6D5D109F4B2EC885D79919AC0EA2(__this, NULL);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/UseCases/SimulateAskToBuyUseCase.cs:16>
+		RuntimeObject* L_0 = ___0_appleStoreCallbacks;
+		__this->___m_AppleStoreCallbacks = L_0;
+		Il2CppCodeGenWriteBarrier((void**)(&__this->___m_AppleStoreCallbacks), (void*)L_0);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/UseCases/SimulateAskToBuyUseCase.cs:17>
+		return;
+	}
+}
+// Method Definition Index: 84274
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool SimulateAskToBuyUseCase_SimulateAskToBuy_mCBB0207354675548B9140AD602936EAAEEC2BE5D (SimulateAskToBuyUseCase_t2D30F910CB5D2EC5C1D0D01CEA1EA3AA910D11F3* __this, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&IAppleStoreCallbacks_tE9D30B49184B828C4D6744D7617BE1CD23FB920D_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	bool V_0 = false;
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/UseCases/SimulateAskToBuyUseCase.cs:21>
+		RuntimeObject* L_0 = __this->___m_AppleStoreCallbacks;
+		NullCheck(L_0);
+		bool L_1;
+		L_1 = InterfaceFuncInvoker0< bool >::Invoke(4, IAppleStoreCallbacks_tE9D30B49184B828C4D6744D7617BE1CD23FB920D_il2cpp_TypeInfo_var, L_0);
+		V_0 = L_1;
+		goto IL_000f;
+	}
+
+IL_000f:
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/UseCases/SimulateAskToBuyUseCase.cs:22>
+		bool L_2 = V_0;
+		return L_2;
+	}
+}
+// Method Definition Index: 84275
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SimulateAskToBuyUseCase_SetSimulateAskToBuy_mF62DEE3E28296A72BB8DE427E101015ABB6FA64D (SimulateAskToBuyUseCase_t2D30F910CB5D2EC5C1D0D01CEA1EA3AA910D11F3* __this, bool ___0_value, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&IAppleStoreCallbacks_tE9D30B49184B828C4D6744D7617BE1CD23FB920D_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/UseCases/SimulateAskToBuyUseCase.cs:26>
+		RuntimeObject* L_0 = __this->___m_AppleStoreCallbacks;
+		bool L_1 = ___0_value;
+		NullCheck(L_0);
+		InterfaceActionInvoker1< bool >::Invoke(5, IAppleStoreCallbacks_tE9D30B49184B828C4D6744D7617BE1CD23FB920D_il2cpp_TypeInfo_var, L_0, L_1);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/UseCases/SimulateAskToBuyUseCase.cs:27>
+		return;
+	}
+}
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winvalid-offsetof"
+#pragma clang diagnostic ignored "-Wunused-variable"
+#endif
+// Method Definition Index: 84276
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void CanMakePaymentsUseCase__ctor_m31AA0616DA088019427DB78FDF1588C06B6BE05B (CanMakePaymentsUseCase_t3497E559B984C1F5BB974079809B8CD93E0F497D* __this, RuntimeObject* ___0_nativeStore, const RuntimeMethod* method) 
+{
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Store/AppleAppStore/Extensions/UseCases/CanMakePaymentsUseCase.cs:14>
+		Object__ctor_mE837C6B9FA8C6D5D109F4B2EC885D79919AC0EA2(__this, NULL);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Store/AppleAppStore/Extensions/UseCases/CanMakePaymentsUseCase.cs:16>
+		RuntimeObject* L_0 = ___0_nativeStore;
+		__this->___m_NativeAppleStore = L_0;
+		Il2CppCodeGenWriteBarrier((void**)(&__this->___m_NativeAppleStore), (void*)L_0);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Store/AppleAppStore/Extensions/UseCases/CanMakePaymentsUseCase.cs:17>
+		return;
+	}
+}
+// Method Definition Index: 84277
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool CanMakePaymentsUseCase_CanMakePayments_m616029AA61F6FE09EE3CF66C54DA6F2472DCE88F (CanMakePaymentsUseCase_t3497E559B984C1F5BB974079809B8CD93E0F497D* __this, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&INativeAppleStore_t323BA5F90A2D47ADD128FFA1A623AF498D477DD3_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	bool V_0 = false;
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Store/AppleAppStore/Extensions/UseCases/CanMakePaymentsUseCase.cs:21>
+		RuntimeObject* L_0 = __this->___m_NativeAppleStore;
+		NullCheck(L_0);
+		bool L_1;
+		L_1 = InterfaceFuncInvoker0< bool >::Invoke(5, INativeAppleStore_t323BA5F90A2D47ADD128FFA1A623AF498D477DD3_il2cpp_TypeInfo_var, L_0);
+		V_0 = L_1;
+		goto IL_000f;
+	}
+
+IL_000f:
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Store/AppleAppStore/Extensions/UseCases/CanMakePaymentsUseCase.cs:22>
+		bool L_2 = V_0;
+		return L_2;
+	}
+}
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winvalid-offsetof"
+#pragma clang diagnostic ignored "-Wunused-variable"
+#endif
+// Method Definition Index: 84278
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FetchStorefrontUseCase__ctor_m6D748EF9A3247B3AC458EF9C8B2A8057926996A5 (FetchStorefrontUseCase_t025C5FC7A9A9AD97003D23B065A3416C824656AB* __this, RuntimeObject* ___0_appleStoreCallbacks, const RuntimeMethod* method) 
+{
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Store/AppleAppStore/Extensions/UseCases/FetchStorefrontUseCase.cs:14>
+		Object__ctor_mE837C6B9FA8C6D5D109F4B2EC885D79919AC0EA2(__this, NULL);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Store/AppleAppStore/Extensions/UseCases/FetchStorefrontUseCase.cs:16>
+		RuntimeObject* L_0 = ___0_appleStoreCallbacks;
+		__this->___m_AppleStoreCallbacks = L_0;
+		Il2CppCodeGenWriteBarrier((void**)(&__this->___m_AppleStoreCallbacks), (void*)L_0);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Store/AppleAppStore/Extensions/UseCases/FetchStorefrontUseCase.cs:17>
+		return;
+	}
+}
+// Method Definition Index: 84279
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FetchStorefrontUseCase_FetchStorefront_m101B590C7CDF9D5D850612FD551237BF7AFEC9C7 (FetchStorefrontUseCase_t025C5FC7A9A9AD97003D23B065A3416C824656AB* __this, Action_1_tB0F611356BF76ADE6D1A6EDCB79F9AFE5B4CFFF8* ___0_successCallback, Action_1_t3CB5D1A819C3ED3F99E9E39F890F18633253949A* ___1_errorCallback, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&IAppleStoreCallbacks_tE9D30B49184B828C4D6744D7617BE1CD23FB920D_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Store/AppleAppStore/Extensions/UseCases/FetchStorefrontUseCase.cs:21>
+		RuntimeObject* L_0 = __this->___m_AppleStoreCallbacks;
+		Action_1_tB0F611356BF76ADE6D1A6EDCB79F9AFE5B4CFFF8* L_1 = ___0_successCallback;
+		Action_1_t3CB5D1A819C3ED3F99E9E39F890F18633253949A* L_2 = ___1_errorCallback;
+		NullCheck(L_0);
+		InterfaceActionInvoker2< Action_1_tB0F611356BF76ADE6D1A6EDCB79F9AFE5B4CFFF8*, Action_1_t3CB5D1A819C3ED3F99E9E39F890F18633253949A* >::Invoke(11, IAppleStoreCallbacks_tE9D30B49184B828C4D6744D7617BE1CD23FB920D_il2cpp_TypeInfo_var, L_0, L_1, L_2);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Store/AppleAppStore/Extensions/UseCases/FetchStorefrontUseCase.cs:22>
+		RuntimeObject* L_3 = __this->___m_AppleStoreCallbacks;
+		NullCheck(L_3);
+		InterfaceActionInvoker0::Invoke(12, IAppleStoreCallbacks_tE9D30B49184B828C4D6744D7617BE1CD23FB920D_il2cpp_TypeInfo_var, L_3);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Store/AppleAppStore/Extensions/UseCases/FetchStorefrontUseCase.cs:23>
+		return;
+	}
+}
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winvalid-offsetof"
+#pragma clang diagnostic ignored "-Wunused-variable"
+#endif
+// Method Definition Index: 84280
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SetAppAccountTokenUseCase__ctor_m6D868B3C6C1CBBDF38601BE20AAE095E4200A658 (SetAppAccountTokenUseCase_tC12D074DE746D9174E42EB24A243131405C52EB4* __this, RuntimeObject* ___0_appleStoreCallbacks, const RuntimeMethod* method) 
+{
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Store/AppleAppStore/Extensions/UseCases/SetAppAccountTokenUseCase.cs:14>
+		Object__ctor_mE837C6B9FA8C6D5D109F4B2EC885D79919AC0EA2(__this, NULL);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Store/AppleAppStore/Extensions/UseCases/SetAppAccountTokenUseCase.cs:16>
+		RuntimeObject* L_0 = ___0_appleStoreCallbacks;
+		__this->___m_AppleStoreCallbacks = L_0;
+		Il2CppCodeGenWriteBarrier((void**)(&__this->___m_AppleStoreCallbacks), (void*)L_0);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Store/AppleAppStore/Extensions/UseCases/SetAppAccountTokenUseCase.cs:17>
+		return;
+	}
+}
+// Method Definition Index: 84281
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SetAppAccountTokenUseCase_SetAppAccountToken_mE432CF51938233423D2910AB44F5C0A95FC27BBD (SetAppAccountTokenUseCase_tC12D074DE746D9174E42EB24A243131405C52EB4* __this, Guid_t ___0_token, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&IAppleStoreCallbacks_tE9D30B49184B828C4D6744D7617BE1CD23FB920D_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Store/AppleAppStore/Extensions/UseCases/SetAppAccountTokenUseCase.cs:20>
+		RuntimeObject* L_0 = __this->___m_AppleStoreCallbacks;
+		Guid_t L_1 = ___0_token;
+		NullCheck(L_0);
+		InterfaceActionInvoker1< Guid_t >::Invoke(6, IAppleStoreCallbacks_tE9D30B49184B828C4D6744D7617BE1CD23FB920D_il2cpp_TypeInfo_var, L_0, L_1);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Store/AppleAppStore/Extensions/UseCases/SetAppAccountTokenUseCase.cs:21>
+		return;
+	}
+}
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winvalid-offsetof"
+#pragma clang diagnostic ignored "-Wunused-variable"
+#endif
+// Method Definition Index: 84297
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void ClearAppleTransactionLogsUseCase__ctor_m964EDF0856BD1192456CF7F246205EB63DF87834 (ClearAppleTransactionLogsUseCase_t9575A50BADC3E55B744A6AF134E487EC57A1FBA4* __this, RuntimeObject* ___0_appleStoreCallbacks, const RuntimeMethod* method) 
+{
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Store/AppleAppStore/Extensions/UseCases/ClearAppleTransactionLogsUseCase.cs:10>
+		Object__ctor_mE837C6B9FA8C6D5D109F4B2EC885D79919AC0EA2(__this, NULL);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Store/AppleAppStore/Extensions/UseCases/ClearAppleTransactionLogsUseCase.cs:12>
+		RuntimeObject* L_0 = ___0_appleStoreCallbacks;
+		__this->___m_AppleStoreCallbacks = L_0;
+		Il2CppCodeGenWriteBarrier((void**)(&__this->___m_AppleStoreCallbacks), (void*)L_0);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Store/AppleAppStore/Extensions/UseCases/ClearAppleTransactionLogsUseCase.cs:13>
+		return;
+	}
+}
+// Method Definition Index: 84298
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void ClearAppleTransactionLogsUseCase_ClearTransactionLog_mECA6DAD5E1F8D7B250AB55ADC902B557D61B8A3D (ClearAppleTransactionLogsUseCase_t9575A50BADC3E55B744A6AF134E487EC57A1FBA4* __this, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&IAppleStoreCallbacks_tE9D30B49184B828C4D6744D7617BE1CD23FB920D_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Store/AppleAppStore/Extensions/UseCases/ClearAppleTransactionLogsUseCase.cs:17>
+		RuntimeObject* L_0 = __this->___m_AppleStoreCallbacks;
+		NullCheck(L_0);
+		InterfaceActionInvoker0::Invoke(3, IAppleStoreCallbacks_tE9D30B49184B828C4D6744D7617BE1CD23FB920D_il2cpp_TypeInfo_var, L_0);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Store/AppleAppStore/Extensions/UseCases/ClearAppleTransactionLogsUseCase.cs:18>
+		return;
+	}
+}
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winvalid-offsetof"
+#pragma clang diagnostic ignored "-Wunused-variable"
+#endif
+// Method Definition Index: 84303
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void AppleStoreExtendedProductService__ctor_m63018BDAA1348853348605D5A6203610F4DE0C04 (AppleStoreExtendedProductService_t117E7DCBE1444273630CDE4B76E6FF2572E9C042* __this, RuntimeObject* ___0_fetchStorePromotionOrderUseCase, RuntimeObject* ___1_fetchStorePromotionVisibilityUseCase, RuntimeObject* ___2_getIntroductoryPriceDictionaryUseCase, RuntimeObject* ___3_getProductDetailsUseCase, RuntimeObject* ___4_setStorePromotionOrderUseCase, RuntimeObject* ___5_setStorePromotionVisibilityUseCase, RuntimeObject* ___6_fetchProductsUseCase, RuntimeObject* ___7_storeWrapper, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&ProductService_t593738048B6845C91DA73CE3C06278A052F2535A_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Product/AppleAppStore/AppleStoreExtendedProductService.cs:29>
+		RuntimeObject* L_0 = ___6_fetchProductsUseCase;
+		RuntimeObject* L_1 = ___7_storeWrapper;
+		il2cpp_codegen_runtime_class_init_inline(ProductService_t593738048B6845C91DA73CE3C06278A052F2535A_il2cpp_TypeInfo_var);
+		ProductService__ctor_mD2F39B34197B845B5E9C0B516A528D958D146A51(__this, L_0, L_1, NULL);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Product/AppleAppStore/AppleStoreExtendedProductService.cs:31>
+		RuntimeObject* L_2 = ___0_fetchStorePromotionOrderUseCase;
+		__this->___m_FetchStorePromotionOrderUseCase = L_2;
+		Il2CppCodeGenWriteBarrier((void**)(&__this->___m_FetchStorePromotionOrderUseCase), (void*)L_2);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Product/AppleAppStore/AppleStoreExtendedProductService.cs:32>
+		RuntimeObject* L_3 = ___1_fetchStorePromotionVisibilityUseCase;
+		__this->___m_FetchStorePromotionVisibilityUseCase = L_3;
+		Il2CppCodeGenWriteBarrier((void**)(&__this->___m_FetchStorePromotionVisibilityUseCase), (void*)L_3);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Product/AppleAppStore/AppleStoreExtendedProductService.cs:33>
+		RuntimeObject* L_4 = ___2_getIntroductoryPriceDictionaryUseCase;
+		__this->___m_GetIntroductoryPriceDictionaryUseCase = L_4;
+		Il2CppCodeGenWriteBarrier((void**)(&__this->___m_GetIntroductoryPriceDictionaryUseCase), (void*)L_4);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Product/AppleAppStore/AppleStoreExtendedProductService.cs:34>
+		RuntimeObject* L_5 = ___3_getProductDetailsUseCase;
+		__this->___m_GetProductDetailsUseCase = L_5;
+		Il2CppCodeGenWriteBarrier((void**)(&__this->___m_GetProductDetailsUseCase), (void*)L_5);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Product/AppleAppStore/AppleStoreExtendedProductService.cs:35>
+		RuntimeObject* L_6 = ___4_setStorePromotionOrderUseCase;
+		__this->___m_SetStorePromotionOrderUseCase = L_6;
+		Il2CppCodeGenWriteBarrier((void**)(&__this->___m_SetStorePromotionOrderUseCase), (void*)L_6);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Product/AppleAppStore/AppleStoreExtendedProductService.cs:36>
+		RuntimeObject* L_7 = ___5_setStorePromotionVisibilityUseCase;
+		__this->___m_SetStorePromotionVisibilityUseCase = L_7;
+		Il2CppCodeGenWriteBarrier((void**)(&__this->___m_SetStorePromotionVisibilityUseCase), (void*)L_7);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Product/AppleAppStore/AppleStoreExtendedProductService.cs:37>
+		return;
+	}
+}
+// Method Definition Index: 84304
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void AppleStoreExtendedProductService_FetchStorePromotionOrder_m7E66DBF4CCAFBEB84D6D7E6F4BA31F0F46BC25A5 (AppleStoreExtendedProductService_t117E7DCBE1444273630CDE4B76E6FF2572E9C042* __this, Action_1_t39A998EC27FE5D8CEAC2D6D914EFB0C5A8263A74* ___0_successCallback, Action_1_t3CB5D1A819C3ED3F99E9E39F890F18633253949A* ___1_errorCallback, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&IFetchStorePromotionOrderUseCase_t58323ECEE70E2C084E09A091E48852147D21A91F_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Product/AppleAppStore/AppleStoreExtendedProductService.cs:41>
+		RuntimeObject* L_0 = __this->___m_FetchStorePromotionOrderUseCase;
+		Action_1_t39A998EC27FE5D8CEAC2D6D914EFB0C5A8263A74* L_1 = ___0_successCallback;
+		Action_1_t3CB5D1A819C3ED3F99E9E39F890F18633253949A* L_2 = ___1_errorCallback;
+		NullCheck(L_0);
+		InterfaceActionInvoker2< Action_1_t39A998EC27FE5D8CEAC2D6D914EFB0C5A8263A74*, Action_1_t3CB5D1A819C3ED3F99E9E39F890F18633253949A* >::Invoke(0, IFetchStorePromotionOrderUseCase_t58323ECEE70E2C084E09A091E48852147D21A91F_il2cpp_TypeInfo_var, L_0, L_1, L_2);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Product/AppleAppStore/AppleStoreExtendedProductService.cs:42>
+		return;
+	}
+}
+// Method Definition Index: 84305
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void AppleStoreExtendedProductService_FetchStorePromotionVisibility_m068BC704AA23D1847A5DE0EEEFBEBDA62F704B55 (AppleStoreExtendedProductService_t117E7DCBE1444273630CDE4B76E6FF2572E9C042* __this, Product_tD279BF775D345330FEE8405D2F53EC5D6B971C76* ___0_product, Action_2_t557C07266DE68D7A1708D82DB27944851C0718F7* ___1_successCallback, Action_1_t3CB5D1A819C3ED3F99E9E39F890F18633253949A* ___2_errorCallback, const RuntimeMethod* method) 
+{
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Product/AppleAppStore/AppleStoreExtendedProductService.cs:46>
+		Product_tD279BF775D345330FEE8405D2F53EC5D6B971C76* L_0 = ___0_product;
+		NullCheck(L_0);
+		CatalogListing_tC4E89A5FBD6F52F0EC11E5C4C88B5082BBB87B90* L_1;
+		L_1 = Product_get_baseListing_mCF03D15D6B35685708E05438A4639055E3BA7708_inline(L_0, NULL);
+		NullCheck(L_1);
+		String_t* L_2;
+		L_2 = CatalogListing_get_id_mEB65318F7C3212BCC0409DCE6F502F468FFF8E64_inline(L_1, NULL);
+		Action_2_t557C07266DE68D7A1708D82DB27944851C0718F7* L_3 = ___1_successCallback;
+		Action_1_t3CB5D1A819C3ED3F99E9E39F890F18633253949A* L_4 = ___2_errorCallback;
+		AppleStoreExtendedProductService_FetchStorePromotionVisibility_m69E0845B273CACD997B8CCD6A4FFDF86E7CD1ECC(__this, L_2, L_3, L_4, NULL);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Product/AppleAppStore/AppleStoreExtendedProductService.cs:47>
+		return;
+	}
+}
+// Method Definition Index: 84306
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void AppleStoreExtendedProductService_FetchStorePromotionVisibility_m69E0845B273CACD997B8CCD6A4FFDF86E7CD1ECC (AppleStoreExtendedProductService_t117E7DCBE1444273630CDE4B76E6FF2572E9C042* __this, String_t* ___0_catalogListingId, Action_2_t557C07266DE68D7A1708D82DB27944851C0718F7* ___1_successCallback, Action_1_t3CB5D1A819C3ED3F99E9E39F890F18633253949A* ___2_errorCallback, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&IFetchStorePromotionVisibilityUseCase_t6579EBA62AADE3651C198DD9B76B3992FA765F18_il2cpp_TypeInfo_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&IReadOnlyDictionary_2_tD38BB3D5CF1B604D95354E070EF7D17708342F48_il2cpp_TypeInfo_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&_stringLiteral5C46E3C70513356424939193A664CB57A081F38E);
+		s_Il2CppMethodInitialized = true;
+	}
+	Product_tD279BF775D345330FEE8405D2F53EC5D6B971C76* V_0 = NULL;
+	CatalogListing_tC4E89A5FBD6F52F0EC11E5C4C88B5082BBB87B90* V_1 = NULL;
+	bool V_2 = false;
+	int32_t G_B3_0 = 0;
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Product/AppleAppStore/AppleStoreExtendedProductService.cs:51>
+		String_t* L_0 = ___0_catalogListingId;
+		Product_tD279BF775D345330FEE8405D2F53EC5D6B971C76* L_1;
+		L_1 = ProductService_GetProductById_m04FCB5F62BB680CB26C26FBD41A64F9914824359(__this, L_0, NULL);
+		V_0 = L_1;
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Product/AppleAppStore/AppleStoreExtendedProductService.cs:52>
+		Product_tD279BF775D345330FEE8405D2F53EC5D6B971C76* L_2 = V_0;
+		if (!L_2)
+		{
+			goto IL_001f;
+		}
+	}
+	{
+		Product_tD279BF775D345330FEE8405D2F53EC5D6B971C76* L_3 = V_0;
+		NullCheck(L_3);
+		RuntimeObject* L_4;
+		L_4 = Product_get_catalogListings_mE5C0B40D760197D0C023367603A2B394AB60349B_inline(L_3, NULL);
+		String_t* L_5 = ___0_catalogListingId;
+		NullCheck(L_4);
+		bool L_6;
+		L_6 = InterfaceFuncInvoker2< bool, String_t*, CatalogListing_tC4E89A5FBD6F52F0EC11E5C4C88B5082BBB87B90** >::Invoke(1, IReadOnlyDictionary_2_tD38BB3D5CF1B604D95354E070EF7D17708342F48_il2cpp_TypeInfo_var, L_4, L_5, (&V_1));
+		G_B3_0 = ((((int32_t)L_6) == ((int32_t)0))? 1 : 0);
+		goto IL_0020;
+	}
+
+IL_001f:
+	{
+		G_B3_0 = 1;
+	}
+
+IL_0020:
+	{
+		V_2 = (bool)G_B3_0;
+		bool L_7 = V_2;
+		if (!L_7)
+		{
+			goto IL_003e;
+		}
+	}
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Product/AppleAppStore/AppleStoreExtendedProductService.cs:54>
+		Action_1_t3CB5D1A819C3ED3F99E9E39F890F18633253949A* L_8 = ___2_errorCallback;
+		if (L_8)
+		{
+			goto IL_002a;
+		}
+	}
+	{
+		goto IL_003c;
+	}
+
+IL_002a:
+	{
+		Action_1_t3CB5D1A819C3ED3F99E9E39F890F18633253949A* L_9 = ___2_errorCallback;
+		String_t* L_10 = ___0_catalogListingId;
+		String_t* L_11;
+		L_11 = String_Concat_m9E3155FB84015C823606188F53B47CB44C444991(_stringLiteral5C46E3C70513356424939193A664CB57A081F38E, L_10, NULL);
+		NullCheck(L_9);
+		Action_1_Invoke_m690438AAE38F9762172E3AE0A33D0B42ACD35790_inline(L_9, L_11, NULL);
+	}
+
+IL_003c:
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Product/AppleAppStore/AppleStoreExtendedProductService.cs:55>
+		goto IL_0057;
+	}
+
+IL_003e:
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Product/AppleAppStore/AppleStoreExtendedProductService.cs:57>
+		RuntimeObject* L_12 = __this->___m_FetchStorePromotionVisibilityUseCase;
+		CatalogListing_tC4E89A5FBD6F52F0EC11E5C4C88B5082BBB87B90* L_13 = V_1;
+		NullCheck(L_13);
+		ProductDefinition_tB486F56477C49E81BA6704C2DD31F373CDCCC1BD* L_14;
+		L_14 = CatalogListing_get_definition_m3068AE720A3F2359E0D787C8BB8436A095F4E31E_inline(L_13, NULL);
+		NullCheck(L_14);
+		String_t* L_15;
+		L_15 = ProductDefinition_get_storeSpecificId_m67EC5C2564476BD154C8164613AB62A4DBEADEAC_inline(L_14, NULL);
+		Action_2_t557C07266DE68D7A1708D82DB27944851C0718F7* L_16 = ___1_successCallback;
+		Action_1_t3CB5D1A819C3ED3F99E9E39F890F18633253949A* L_17 = ___2_errorCallback;
+		NullCheck(L_12);
+		InterfaceActionInvoker3< String_t*, Action_2_t557C07266DE68D7A1708D82DB27944851C0718F7*, Action_1_t3CB5D1A819C3ED3F99E9E39F890F18633253949A* >::Invoke(0, IFetchStorePromotionVisibilityUseCase_t6579EBA62AADE3651C198DD9B76B3992FA765F18_il2cpp_TypeInfo_var, L_12, L_15, L_16, L_17);
+	}
+
+IL_0057:
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Product/AppleAppStore/AppleStoreExtendedProductService.cs:58>
+		return;
+	}
+}
+// Method Definition Index: 84307
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR Dictionary_2_t46B2DB028096FA2B828359E52F37F3105A83AD83* AppleStoreExtendedProductService_GetIntroductoryPriceDictionary_m91DEDC004AC9531825FB8CA6C17C5D6B3F91AD32 (AppleStoreExtendedProductService_t117E7DCBE1444273630CDE4B76E6FF2572E9C042* __this, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&IGetIntroductoryPriceDictionaryUseCase_t9B3569DD9E5D7304E2FC40EC45DF348B6F513CEA_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	Dictionary_2_t46B2DB028096FA2B828359E52F37F3105A83AD83* V_0 = NULL;
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Product/AppleAppStore/AppleStoreExtendedProductService.cs:62>
+		RuntimeObject* L_0 = __this->___m_GetIntroductoryPriceDictionaryUseCase;
+		NullCheck(L_0);
+		Dictionary_2_t46B2DB028096FA2B828359E52F37F3105A83AD83* L_1;
+		L_1 = InterfaceFuncInvoker0< Dictionary_2_t46B2DB028096FA2B828359E52F37F3105A83AD83* >::Invoke(0, IGetIntroductoryPriceDictionaryUseCase_t9B3569DD9E5D7304E2FC40EC45DF348B6F513CEA_il2cpp_TypeInfo_var, L_0);
+		V_0 = L_1;
+		goto IL_000f;
+	}
+
+IL_000f:
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Product/AppleAppStore/AppleStoreExtendedProductService.cs:63>
+		Dictionary_2_t46B2DB028096FA2B828359E52F37F3105A83AD83* L_2 = V_0;
+		return L_2;
+	}
+}
+// Method Definition Index: 84308
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR Dictionary_2_t46B2DB028096FA2B828359E52F37F3105A83AD83* AppleStoreExtendedProductService_GetProductDetails_m0DB897D77D09C17EDFC392DA6C67FB158CCA15C5 (AppleStoreExtendedProductService_t117E7DCBE1444273630CDE4B76E6FF2572E9C042* __this, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&IGetProductDetailsUseCase_t2F04D77A6EE2AD720A140A322E4B2C67EE257BD8_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	Dictionary_2_t46B2DB028096FA2B828359E52F37F3105A83AD83* V_0 = NULL;
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Product/AppleAppStore/AppleStoreExtendedProductService.cs:67>
+		RuntimeObject* L_0 = __this->___m_GetProductDetailsUseCase;
+		NullCheck(L_0);
+		Dictionary_2_t46B2DB028096FA2B828359E52F37F3105A83AD83* L_1;
+		L_1 = InterfaceFuncInvoker0< Dictionary_2_t46B2DB028096FA2B828359E52F37F3105A83AD83* >::Invoke(0, IGetProductDetailsUseCase_t2F04D77A6EE2AD720A140A322E4B2C67EE257BD8_il2cpp_TypeInfo_var, L_0);
+		V_0 = L_1;
+		goto IL_000f;
+	}
+
+IL_000f:
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Product/AppleAppStore/AppleStoreExtendedProductService.cs:68>
+		Dictionary_2_t46B2DB028096FA2B828359E52F37F3105A83AD83* L_2 = V_0;
+		return L_2;
+	}
+}
+// Method Definition Index: 84309
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void AppleStoreExtendedProductService_SetStorePromotionOrder_m777793DE5877FC37A445C599E73B15707E37E9C3 (AppleStoreExtendedProductService_t117E7DCBE1444273630CDE4B76E6FF2572E9C042* __this, List_1_t2801F698EAD8786A7B70E25C1DAD1A8801E530C5* ___0_products, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&Enumerator_Dispose_mBF1D7C4CFFF58FDB26E02FB65F2A2A5E5A521575_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&Enumerator_MoveNext_m7FED4F315AB2ED673E86E582BF05718D521E00AB_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&Enumerator_get_Current_mA9E751EDCB5C5CC787A81AE8870F206B5141ECAE_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&ISetStorePromotionOrderUseCase_t29CAC78301017DAB94B77AE4E3DCB8689CEB102A_il2cpp_TypeInfo_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_Add_mF10DB1D3CBB0B14215F0E4F8AB4934A1955E5351_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_GetEnumerator_m5781A42C52C1C875D1D4DD8B1D76453E6E702F6E_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1__ctor_mCA8DD57EAC70C2B5923DBB9D5A77CEAC22E7068E_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_tF470A3BE5C1B5B68E1325EF3F109D172E60BD7CD_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	List_1_tF470A3BE5C1B5B68E1325EF3F109D172E60BD7CD* V_0 = NULL;
+	Enumerator_t75DFD6EC1FADAB357C227A0B6F845A843A192263 V_1;
+	memset((&V_1), 0, sizeof(V_1));
+	Product_tD279BF775D345330FEE8405D2F53EC5D6B971C76* V_2 = NULL;
+	String_t* V_3 = NULL;
+	bool V_4 = false;
+	String_t* G_B7_0 = NULL;
+	CatalogListing_tC4E89A5FBD6F52F0EC11E5C4C88B5082BBB87B90* G_B6_0 = NULL;
+	CatalogListing_tC4E89A5FBD6F52F0EC11E5C4C88B5082BBB87B90* G_B5_0 = NULL;
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Product/AppleAppStore/AppleStoreExtendedProductService.cs:72>
+		List_1_tF470A3BE5C1B5B68E1325EF3F109D172E60BD7CD* L_0 = (List_1_tF470A3BE5C1B5B68E1325EF3F109D172E60BD7CD*)il2cpp_codegen_object_new(List_1_tF470A3BE5C1B5B68E1325EF3F109D172E60BD7CD_il2cpp_TypeInfo_var);
+		List_1__ctor_mCA8DD57EAC70C2B5923DBB9D5A77CEAC22E7068E(L_0, List_1__ctor_mCA8DD57EAC70C2B5923DBB9D5A77CEAC22E7068E_RuntimeMethod_var);
+		V_0 = L_0;
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Product/AppleAppStore/AppleStoreExtendedProductService.cs:73>
+		List_1_t2801F698EAD8786A7B70E25C1DAD1A8801E530C5* L_1 = ___0_products;
+		NullCheck(L_1);
+		Enumerator_t75DFD6EC1FADAB357C227A0B6F845A843A192263 L_2;
+		L_2 = List_1_GetEnumerator_m5781A42C52C1C875D1D4DD8B1D76453E6E702F6E(L_1, List_1_GetEnumerator_m5781A42C52C1C875D1D4DD8B1D76453E6E702F6E_RuntimeMethod_var);
+		V_1 = L_2;
+	}
+	{
+		auto __finallyBlock = il2cpp::utils::Finally([&]
+		{
+
+FINALLY_005d:
+			{
+				Enumerator_Dispose_mBF1D7C4CFFF58FDB26E02FB65F2A2A5E5A521575((&V_1), Enumerator_Dispose_mBF1D7C4CFFF58FDB26E02FB65F2A2A5E5A521575_RuntimeMethod_var);
+				return;
+			}
+		});
+		try
+		{
+			{
+				goto IL_0052_1;
+			}
+
+IL_0011_1:
+			{
+				//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Product/AppleAppStore/AppleStoreExtendedProductService.cs:73>
+				Product_tD279BF775D345330FEE8405D2F53EC5D6B971C76* L_3;
+				L_3 = Enumerator_get_Current_mA9E751EDCB5C5CC787A81AE8870F206B5141ECAE_inline((&V_1), Enumerator_get_Current_mA9E751EDCB5C5CC787A81AE8870F206B5141ECAE_RuntimeMethod_var);
+				V_2 = L_3;
+				//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Product/AppleAppStore/AppleStoreExtendedProductService.cs:75>
+				Product_tD279BF775D345330FEE8405D2F53EC5D6B971C76* L_4 = V_2;
+				if (L_4)
+				{
+					goto IL_0020_1;
+				}
+			}
+			{
+				G_B7_0 = ((String_t*)(NULL));
+				goto IL_0037_1;
+			}
+
+IL_0020_1:
+			{
+				Product_tD279BF775D345330FEE8405D2F53EC5D6B971C76* L_5 = V_2;
+				NullCheck(L_5);
+				CatalogListing_tC4E89A5FBD6F52F0EC11E5C4C88B5082BBB87B90* L_6;
+				L_6 = Product_get_baseListing_mCF03D15D6B35685708E05438A4639055E3BA7708_inline(L_5, NULL);
+				CatalogListing_tC4E89A5FBD6F52F0EC11E5C4C88B5082BBB87B90* L_7 = L_6;
+				if (L_7)
+				{
+					G_B6_0 = L_7;
+					goto IL_002d_1;
+				}
+				G_B5_0 = L_7;
+			}
+			{
+				G_B7_0 = ((String_t*)(NULL));
+				goto IL_0037_1;
+			}
+
+IL_002d_1:
+			{
+				NullCheck(G_B6_0);
+				ProductDefinition_tB486F56477C49E81BA6704C2DD31F373CDCCC1BD* L_8;
+				L_8 = CatalogListing_get_definition_m3068AE720A3F2359E0D787C8BB8436A095F4E31E_inline(G_B6_0, NULL);
+				NullCheck(L_8);
+				String_t* L_9;
+				L_9 = ProductDefinition_get_storeSpecificId_m67EC5C2564476BD154C8164613AB62A4DBEADEAC_inline(L_8, NULL);
+				G_B7_0 = L_9;
+			}
+
+IL_0037_1:
+			{
+				V_3 = G_B7_0;
+				//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Product/AppleAppStore/AppleStoreExtendedProductService.cs:76>
+				String_t* L_10 = V_3;
+				bool L_11;
+				L_11 = String_IsNullOrEmpty_mEA9E3FB005AC28FE02E69FCF95A7B8456192B478(L_10, NULL);
+				V_4 = (bool)((((int32_t)L_11) == ((int32_t)0))? 1 : 0);
+				bool L_12 = V_4;
+				if (!L_12)
+				{
+					goto IL_0051_1;
+				}
+			}
+			{
+				//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Product/AppleAppStore/AppleStoreExtendedProductService.cs:78>
+				List_1_tF470A3BE5C1B5B68E1325EF3F109D172E60BD7CD* L_13 = V_0;
+				String_t* L_14 = V_3;
+				NullCheck(L_13);
+				List_1_Add_mF10DB1D3CBB0B14215F0E4F8AB4934A1955E5351_inline(L_13, L_14, List_1_Add_mF10DB1D3CBB0B14215F0E4F8AB4934A1955E5351_RuntimeMethod_var);
+			}
+
+IL_0051_1:
+			{
+			}
+
+IL_0052_1:
+			{
+				//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Product/AppleAppStore/AppleStoreExtendedProductService.cs:73>
+				bool L_15;
+				L_15 = Enumerator_MoveNext_m7FED4F315AB2ED673E86E582BF05718D521E00AB((&V_1), Enumerator_MoveNext_m7FED4F315AB2ED673E86E582BF05718D521E00AB_RuntimeMethod_var);
+				if (L_15)
+				{
+					goto IL_0011_1;
+				}
+			}
+			{
+				goto IL_006c;
+			}
+		}
+		catch(Il2CppExceptionWrapper& e)
+		{
+			__finallyBlock.StoreException(e.ex);
+		}
+	}
+
+IL_006c:
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Product/AppleAppStore/AppleStoreExtendedProductService.cs:81>
+		RuntimeObject* L_16 = __this->___m_SetStorePromotionOrderUseCase;
+		List_1_tF470A3BE5C1B5B68E1325EF3F109D172E60BD7CD* L_17 = V_0;
+		NullCheck(L_16);
+		InterfaceActionInvoker1< List_1_tF470A3BE5C1B5B68E1325EF3F109D172E60BD7CD* >::Invoke(0, ISetStorePromotionOrderUseCase_t29CAC78301017DAB94B77AE4E3DCB8689CEB102A_il2cpp_TypeInfo_var, L_16, L_17);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Product/AppleAppStore/AppleStoreExtendedProductService.cs:82>
+		return;
+	}
+}
+// Method Definition Index: 84310
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void AppleStoreExtendedProductService_SetStorePromotionOrder_mA2CD44ADC0B501905D8E40718A053CE5F29C5043 (AppleStoreExtendedProductService_t117E7DCBE1444273630CDE4B76E6FF2572E9C042* __this, List_1_tF470A3BE5C1B5B68E1325EF3F109D172E60BD7CD* ___0_catalogListingIds, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&Enumerator_Dispose_m592BCCE7B7933454DED2130C810F059F8D85B1D7_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&Enumerator_MoveNext_mDB47EEC4531D33B9C33FD2E70BA15E1535A0F3ED_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&Enumerator_get_Current_m143541DD8FBCD313E7554EA738FA813B8F4DB11A_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&IReadOnlyDictionary_2_tD38BB3D5CF1B604D95354E070EF7D17708342F48_il2cpp_TypeInfo_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&ISetStorePromotionOrderUseCase_t29CAC78301017DAB94B77AE4E3DCB8689CEB102A_il2cpp_TypeInfo_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_Add_mF10DB1D3CBB0B14215F0E4F8AB4934A1955E5351_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_GetEnumerator_m7692B5F182858B7D5C72C920D09AD48738D1E70D_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1__ctor_mCA8DD57EAC70C2B5923DBB9D5A77CEAC22E7068E_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_tF470A3BE5C1B5B68E1325EF3F109D172E60BD7CD_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	List_1_tF470A3BE5C1B5B68E1325EF3F109D172E60BD7CD* V_0 = NULL;
+	Enumerator_tA7A4B718FE1ED1D87565680D8C8195EC8AEAB3D1 V_1;
+	memset((&V_1), 0, sizeof(V_1));
+	String_t* V_2 = NULL;
+	Product_tD279BF775D345330FEE8405D2F53EC5D6B971C76* V_3 = NULL;
+	CatalogListing_tC4E89A5FBD6F52F0EC11E5C4C88B5082BBB87B90* V_4 = NULL;
+	bool V_5 = false;
+	ProductDefinition_tB486F56477C49E81BA6704C2DD31F373CDCCC1BD* G_B6_0 = NULL;
+	ProductDefinition_tB486F56477C49E81BA6704C2DD31F373CDCCC1BD* G_B5_0 = NULL;
+	String_t* G_B7_0 = NULL;
+	int32_t G_B9_0 = 0;
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Product/AppleAppStore/AppleStoreExtendedProductService.cs:86>
+		List_1_tF470A3BE5C1B5B68E1325EF3F109D172E60BD7CD* L_0 = (List_1_tF470A3BE5C1B5B68E1325EF3F109D172E60BD7CD*)il2cpp_codegen_object_new(List_1_tF470A3BE5C1B5B68E1325EF3F109D172E60BD7CD_il2cpp_TypeInfo_var);
+		List_1__ctor_mCA8DD57EAC70C2B5923DBB9D5A77CEAC22E7068E(L_0, List_1__ctor_mCA8DD57EAC70C2B5923DBB9D5A77CEAC22E7068E_RuntimeMethod_var);
+		V_0 = L_0;
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Product/AppleAppStore/AppleStoreExtendedProductService.cs:87>
+		List_1_tF470A3BE5C1B5B68E1325EF3F109D172E60BD7CD* L_1 = ___0_catalogListingIds;
+		NullCheck(L_1);
+		Enumerator_tA7A4B718FE1ED1D87565680D8C8195EC8AEAB3D1 L_2;
+		L_2 = List_1_GetEnumerator_m7692B5F182858B7D5C72C920D09AD48738D1E70D(L_1, List_1_GetEnumerator_m7692B5F182858B7D5C72C920D09AD48738D1E70D_RuntimeMethod_var);
+		V_1 = L_2;
+	}
+	{
+		auto __finallyBlock = il2cpp::utils::Finally([&]
+		{
+
+FINALLY_007a:
+			{
+				Enumerator_Dispose_m592BCCE7B7933454DED2130C810F059F8D85B1D7((&V_1), Enumerator_Dispose_m592BCCE7B7933454DED2130C810F059F8D85B1D7_RuntimeMethod_var);
+				return;
+			}
+		});
+		try
+		{
+			{
+				goto IL_006f_1;
+			}
+
+IL_0011_1:
+			{
+				//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Product/AppleAppStore/AppleStoreExtendedProductService.cs:87>
+				String_t* L_3;
+				L_3 = Enumerator_get_Current_m143541DD8FBCD313E7554EA738FA813B8F4DB11A_inline((&V_1), Enumerator_get_Current_m143541DD8FBCD313E7554EA738FA813B8F4DB11A_RuntimeMethod_var);
+				V_2 = L_3;
+				//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Product/AppleAppStore/AppleStoreExtendedProductService.cs:89>
+				String_t* L_4 = V_2;
+				Product_tD279BF775D345330FEE8405D2F53EC5D6B971C76* L_5;
+				L_5 = ProductService_GetProductByCatalogListingId_m03A4A115360BE81B54F73AA758367E372BD762D4(__this, L_4, NULL);
+				V_3 = L_5;
+				//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Product/AppleAppStore/AppleStoreExtendedProductService.cs:90>
+				//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Product/AppleAppStore/AppleStoreExtendedProductService.cs:91>
+				//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Product/AppleAppStore/AppleStoreExtendedProductService.cs:92>
+				Product_tD279BF775D345330FEE8405D2F53EC5D6B971C76* L_6 = V_3;
+				if (!L_6)
+				{
+					goto IL_0052_1;
+				}
+			}
+			{
+				Product_tD279BF775D345330FEE8405D2F53EC5D6B971C76* L_7 = V_3;
+				NullCheck(L_7);
+				RuntimeObject* L_8;
+				L_8 = Product_get_catalogListings_mE5C0B40D760197D0C023367603A2B394AB60349B_inline(L_7, NULL);
+				String_t* L_9 = V_2;
+				NullCheck(L_8);
+				bool L_10;
+				L_10 = InterfaceFuncInvoker2< bool, String_t*, CatalogListing_tC4E89A5FBD6F52F0EC11E5C4C88B5082BBB87B90** >::Invoke(1, IReadOnlyDictionary_2_tD38BB3D5CF1B604D95354E070EF7D17708342F48_il2cpp_TypeInfo_var, L_8, L_9, (&V_4));
+				if (!L_10)
+				{
+					goto IL_0052_1;
+				}
+			}
+			{
+				CatalogListing_tC4E89A5FBD6F52F0EC11E5C4C88B5082BBB87B90* L_11 = V_4;
+				NullCheck(L_11);
+				ProductDefinition_tB486F56477C49E81BA6704C2DD31F373CDCCC1BD* L_12;
+				L_12 = CatalogListing_get_definition_m3068AE720A3F2359E0D787C8BB8436A095F4E31E_inline(L_11, NULL);
+				ProductDefinition_tB486F56477C49E81BA6704C2DD31F373CDCCC1BD* L_13 = L_12;
+				if (L_13)
+				{
+					G_B6_0 = L_13;
+					goto IL_0043_1;
+				}
+				G_B5_0 = L_13;
+			}
+			{
+				G_B7_0 = ((String_t*)(NULL));
+				goto IL_0048_1;
+			}
+
+IL_0043_1:
+			{
+				NullCheck(G_B6_0);
+				String_t* L_14;
+				L_14 = ProductDefinition_get_storeSpecificId_m67EC5C2564476BD154C8164613AB62A4DBEADEAC_inline(G_B6_0, NULL);
+				G_B7_0 = L_14;
+			}
+
+IL_0048_1:
+			{
+				bool L_15;
+				L_15 = String_IsNullOrEmpty_mEA9E3FB005AC28FE02E69FCF95A7B8456192B478(G_B7_0, NULL);
+				G_B9_0 = ((((int32_t)L_15) == ((int32_t)0))? 1 : 0);
+				goto IL_0053_1;
+			}
+
+IL_0052_1:
+			{
+				G_B9_0 = 0;
+			}
+
+IL_0053_1:
+			{
+				V_5 = (bool)G_B9_0;
+				bool L_16 = V_5;
+				if (!L_16)
+				{
+					goto IL_006e_1;
+				}
+			}
+			{
+				//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Product/AppleAppStore/AppleStoreExtendedProductService.cs:94>
+				List_1_tF470A3BE5C1B5B68E1325EF3F109D172E60BD7CD* L_17 = V_0;
+				CatalogListing_tC4E89A5FBD6F52F0EC11E5C4C88B5082BBB87B90* L_18 = V_4;
+				NullCheck(L_18);
+				ProductDefinition_tB486F56477C49E81BA6704C2DD31F373CDCCC1BD* L_19;
+				L_19 = CatalogListing_get_definition_m3068AE720A3F2359E0D787C8BB8436A095F4E31E_inline(L_18, NULL);
+				NullCheck(L_19);
+				String_t* L_20;
+				L_20 = ProductDefinition_get_storeSpecificId_m67EC5C2564476BD154C8164613AB62A4DBEADEAC_inline(L_19, NULL);
+				NullCheck(L_17);
+				List_1_Add_mF10DB1D3CBB0B14215F0E4F8AB4934A1955E5351_inline(L_17, L_20, List_1_Add_mF10DB1D3CBB0B14215F0E4F8AB4934A1955E5351_RuntimeMethod_var);
+			}
+
+IL_006e_1:
+			{
+			}
+
+IL_006f_1:
+			{
+				//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Product/AppleAppStore/AppleStoreExtendedProductService.cs:87>
+				bool L_21;
+				L_21 = Enumerator_MoveNext_mDB47EEC4531D33B9C33FD2E70BA15E1535A0F3ED((&V_1), Enumerator_MoveNext_mDB47EEC4531D33B9C33FD2E70BA15E1535A0F3ED_RuntimeMethod_var);
+				if (L_21)
+				{
+					goto IL_0011_1;
+				}
+			}
+			{
+				goto IL_0089;
+			}
+		}
+		catch(Il2CppExceptionWrapper& e)
+		{
+			__finallyBlock.StoreException(e.ex);
+		}
+	}
+
+IL_0089:
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Product/AppleAppStore/AppleStoreExtendedProductService.cs:97>
+		RuntimeObject* L_22 = __this->___m_SetStorePromotionOrderUseCase;
+		List_1_tF470A3BE5C1B5B68E1325EF3F109D172E60BD7CD* L_23 = V_0;
+		NullCheck(L_22);
+		InterfaceActionInvoker1< List_1_tF470A3BE5C1B5B68E1325EF3F109D172E60BD7CD* >::Invoke(0, ISetStorePromotionOrderUseCase_t29CAC78301017DAB94B77AE4E3DCB8689CEB102A_il2cpp_TypeInfo_var, L_22, L_23);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Product/AppleAppStore/AppleStoreExtendedProductService.cs:98>
+		return;
+	}
+}
+// Method Definition Index: 84311
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void AppleStoreExtendedProductService_SetStorePromotionVisibility_m9D7A59C5794EBCEA0B3725252DF7E22ABDDFC355 (AppleStoreExtendedProductService_t117E7DCBE1444273630CDE4B76E6FF2572E9C042* __this, Product_tD279BF775D345330FEE8405D2F53EC5D6B971C76* ___0_product, int32_t ___1_visible, const RuntimeMethod* method) 
+{
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Product/AppleAppStore/AppleStoreExtendedProductService.cs:102>
+		Product_tD279BF775D345330FEE8405D2F53EC5D6B971C76* L_0 = ___0_product;
+		NullCheck(L_0);
+		CatalogListing_tC4E89A5FBD6F52F0EC11E5C4C88B5082BBB87B90* L_1;
+		L_1 = Product_get_baseListing_mCF03D15D6B35685708E05438A4639055E3BA7708_inline(L_0, NULL);
+		NullCheck(L_1);
+		String_t* L_2;
+		L_2 = CatalogListing_get_id_mEB65318F7C3212BCC0409DCE6F502F468FFF8E64_inline(L_1, NULL);
+		int32_t L_3 = ___1_visible;
+		AppleStoreExtendedProductService_SetStorePromotionVisibility_mDE9A898AD03C324F3943146CA1A2A983BC35C422(__this, L_2, L_3, NULL);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Product/AppleAppStore/AppleStoreExtendedProductService.cs:103>
+		return;
+	}
+}
+// Method Definition Index: 84312
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void AppleStoreExtendedProductService_SetStorePromotionVisibility_mDE9A898AD03C324F3943146CA1A2A983BC35C422 (AppleStoreExtendedProductService_t117E7DCBE1444273630CDE4B76E6FF2572E9C042* __this, String_t* ___0_catalogListingId, int32_t ___1_visible, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&IReadOnlyDictionary_2_tD38BB3D5CF1B604D95354E070EF7D17708342F48_il2cpp_TypeInfo_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&ISetStorePromotionVisibilityUseCase_tA11507C264C0D9E7BBB7CE50C0A3717788789BF9_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	Product_tD279BF775D345330FEE8405D2F53EC5D6B971C76* V_0 = NULL;
+	CatalogListing_tC4E89A5FBD6F52F0EC11E5C4C88B5082BBB87B90* V_1 = NULL;
+	bool V_2 = false;
+	int32_t G_B3_0 = 0;
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Product/AppleAppStore/AppleStoreExtendedProductService.cs:107>
+		String_t* L_0 = ___0_catalogListingId;
+		Product_tD279BF775D345330FEE8405D2F53EC5D6B971C76* L_1;
+		L_1 = ProductService_GetProductById_m04FCB5F62BB680CB26C26FBD41A64F9914824359(__this, L_0, NULL);
+		V_0 = L_1;
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Product/AppleAppStore/AppleStoreExtendedProductService.cs:108>
+		Product_tD279BF775D345330FEE8405D2F53EC5D6B971C76* L_2 = V_0;
+		if (!L_2)
+		{
+			goto IL_001f;
+		}
+	}
+	{
+		Product_tD279BF775D345330FEE8405D2F53EC5D6B971C76* L_3 = V_0;
+		NullCheck(L_3);
+		RuntimeObject* L_4;
+		L_4 = Product_get_catalogListings_mE5C0B40D760197D0C023367603A2B394AB60349B_inline(L_3, NULL);
+		String_t* L_5 = ___0_catalogListingId;
+		NullCheck(L_4);
+		bool L_6;
+		L_6 = InterfaceFuncInvoker2< bool, String_t*, CatalogListing_tC4E89A5FBD6F52F0EC11E5C4C88B5082BBB87B90** >::Invoke(1, IReadOnlyDictionary_2_tD38BB3D5CF1B604D95354E070EF7D17708342F48_il2cpp_TypeInfo_var, L_4, L_5, (&V_1));
+		G_B3_0 = ((((int32_t)L_6) == ((int32_t)0))? 1 : 0);
+		goto IL_0020;
+	}
+
+IL_001f:
+	{
+		G_B3_0 = 1;
+	}
+
+IL_0020:
+	{
+		V_2 = (bool)G_B3_0;
+		bool L_7 = V_2;
+		if (!L_7)
+		{
+			goto IL_0027;
+		}
+	}
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Product/AppleAppStore/AppleStoreExtendedProductService.cs:110>
+		goto IL_003f;
+	}
+
+IL_0027:
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Product/AppleAppStore/AppleStoreExtendedProductService.cs:112>
+		RuntimeObject* L_8 = __this->___m_SetStorePromotionVisibilityUseCase;
+		CatalogListing_tC4E89A5FBD6F52F0EC11E5C4C88B5082BBB87B90* L_9 = V_1;
+		NullCheck(L_9);
+		ProductDefinition_tB486F56477C49E81BA6704C2DD31F373CDCCC1BD* L_10;
+		L_10 = CatalogListing_get_definition_m3068AE720A3F2359E0D787C8BB8436A095F4E31E_inline(L_9, NULL);
+		NullCheck(L_10);
+		String_t* L_11;
+		L_11 = ProductDefinition_get_storeSpecificId_m67EC5C2564476BD154C8164613AB62A4DBEADEAC_inline(L_10, NULL);
+		int32_t L_12 = ___1_visible;
+		NullCheck(L_8);
+		InterfaceActionInvoker2< String_t*, int32_t >::Invoke(0, ISetStorePromotionVisibilityUseCase_tA11507C264C0D9E7BBB7CE50C0A3717788789BF9_il2cpp_TypeInfo_var, L_8, L_11, L_12);
+	}
+
+IL_003f:
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Product/AppleAppStore/AppleStoreExtendedProductService.cs:113>
+		return;
+	}
+}
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winvalid-offsetof"
+#pragma clang diagnostic ignored "-Wunused-variable"
+#endif
+// Method Definition Index: 84313
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void AppleStoreExtendedPurchaseService__ctor_m0C88E5762A029E996DB99BC4D72C786A24608883 (AppleStoreExtendedPurchaseService_t40CCAC0C4DD434BDE35AFB84B680C696FAC6FC06* __this, RuntimeObject* ___0_appReceiptUseCase, RuntimeObject* ___1_continuePromotionalPurchasesUseCase, RuntimeObject* ___2_presentCodeRedemptionSheetUseCase, RuntimeObject* ___3_restoreTransactionsUseCase, RuntimeObject* ___4_setPromotionalPurchaseInterceptorCallbackUseCase, RuntimeObject* ___5_simulateAskToBuyUseCase, RuntimeObject* ___6_fetchPurchasesUseCase, RuntimeObject* ___7_purchaseUseCase, RuntimeObject* ___8_confirmOrderUseCase, RuntimeObject* ___9_checkEntitlementUseCase, RuntimeObject* ___10_onEntitlementRevokedUseCase, RuntimeObject* ___11_storeWrapper, RuntimeObject* ___12_analyticsClient, RuntimeObject* ___13_refreshAppReceiptUseCase, RuntimeObject* ___14_purchaseEvent, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&Action_1_t3CB5D1A819C3ED3F99E9E39F890F18633253949A_il2cpp_TypeInfo_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&AppleStoreExtendedPurchaseService_OnEntitlementRevokedUseCaseOnOnEntitlementRevoked_m70DFE0F3995ADF367C200E1B3EE3ECF658439DB9_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&IOnEntitlementRevokedUseCase_t7BF1751DBD45170F87CDDE2057AFEEE9442BC823_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:48>
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:49>
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:50>
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:51>
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:52>
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:53>
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:54>
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:55>
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:56>
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:57>
+		RuntimeObject* L_0 = ___6_fetchPurchasesUseCase;
+		RuntimeObject* L_1 = ___7_purchaseUseCase;
+		RuntimeObject* L_2 = ___8_confirmOrderUseCase;
+		RuntimeObject* L_3 = ___9_checkEntitlementUseCase;
+		RuntimeObject* L_4 = ___11_storeWrapper;
+		RuntimeObject* L_5 = ___12_analyticsClient;
+		PurchaseService__ctor_mB69105353ABC0943FD8D9113E6862F26C7E69662(__this, L_0, L_1, L_2, L_3, L_4, L_5, NULL);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:59>
+		RuntimeObject* L_6 = ___0_appReceiptUseCase;
+		__this->___m_AppReceiptUseCase = L_6;
+		Il2CppCodeGenWriteBarrier((void**)(&__this->___m_AppReceiptUseCase), (void*)L_6);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:60>
+		RuntimeObject* L_7 = ___1_continuePromotionalPurchasesUseCase;
+		__this->___m_ContinuePromotionalPurchasesUseCase = L_7;
+		Il2CppCodeGenWriteBarrier((void**)(&__this->___m_ContinuePromotionalPurchasesUseCase), (void*)L_7);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:61>
+		RuntimeObject* L_8 = ___2_presentCodeRedemptionSheetUseCase;
+		__this->___m_PresentCodeRedemptionSheetUseCase = L_8;
+		Il2CppCodeGenWriteBarrier((void**)(&__this->___m_PresentCodeRedemptionSheetUseCase), (void*)L_8);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:62>
+		RuntimeObject* L_9 = ___3_restoreTransactionsUseCase;
+		__this->___m_RestoreTransactionsUseCase = L_9;
+		Il2CppCodeGenWriteBarrier((void**)(&__this->___m_RestoreTransactionsUseCase), (void*)L_9);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:63>
+		RuntimeObject* L_10 = ___4_setPromotionalPurchaseInterceptorCallbackUseCase;
+		__this->___m_SetPromotionalPurchaseInterceptorCallbackUseCase = L_10;
+		Il2CppCodeGenWriteBarrier((void**)(&__this->___m_SetPromotionalPurchaseInterceptorCallbackUseCase), (void*)L_10);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:64>
+		RuntimeObject* L_11 = ___5_simulateAskToBuyUseCase;
+		__this->___m_SimulateAskToBuyUseCase = L_11;
+		Il2CppCodeGenWriteBarrier((void**)(&__this->___m_SimulateAskToBuyUseCase), (void*)L_11);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:65>
+		RuntimeObject* L_12 = ___10_onEntitlementRevokedUseCase;
+		__this->___m_OnEntitlementRevokedUseCase = L_12;
+		Il2CppCodeGenWriteBarrier((void**)(&__this->___m_OnEntitlementRevokedUseCase), (void*)L_12);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:67>
+		RuntimeObject* L_13 = __this->___m_OnEntitlementRevokedUseCase;
+		Action_1_t3CB5D1A819C3ED3F99E9E39F890F18633253949A* L_14 = (Action_1_t3CB5D1A819C3ED3F99E9E39F890F18633253949A*)il2cpp_codegen_object_new(Action_1_t3CB5D1A819C3ED3F99E9E39F890F18633253949A_il2cpp_TypeInfo_var);
+		Action_1__ctor_m9DC2953C55C4D7D4B7BEFE03D84DA1F9362D652C(L_14, __this, (intptr_t)((void*)AppleStoreExtendedPurchaseService_OnEntitlementRevokedUseCaseOnOnEntitlementRevoked_m70DFE0F3995ADF367C200E1B3EE3ECF658439DB9_RuntimeMethod_var), NULL);
+		NullCheck(L_13);
+		InterfaceActionInvoker1< Action_1_t3CB5D1A819C3ED3F99E9E39F890F18633253949A* >::Invoke(0, IOnEntitlementRevokedUseCase_t7BF1751DBD45170F87CDDE2057AFEEE9442BC823_il2cpp_TypeInfo_var, L_13, L_14);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:68>
+		RuntimeObject* L_15 = ___13_refreshAppReceiptUseCase;
+		__this->___m_RefreshAppReceiptUseCase = L_15;
+		Il2CppCodeGenWriteBarrier((void**)(&__this->___m_RefreshAppReceiptUseCase), (void*)L_15);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:69>
+		RuntimeObject* L_16 = ___14_purchaseEvent;
+		__this->___m_PurchaseEvent = L_16;
+		Il2CppCodeGenWriteBarrier((void**)(&__this->___m_PurchaseEvent), (void*)L_16);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:70>
+		return;
+	}
+}
+// Method Definition Index: 84314
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void AppleStoreExtendedPurchaseService_SendPurchaseIntentStartEvent_m35DDD77FA00660AF4BD1CF6E0A144357C833B304 (AppleStoreExtendedPurchaseService_t40CCAC0C4DD434BDE35AFB84B680C696FAC6FC06* __this, RuntimeObject* ___0_cart, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&IPurchaseEventEmitter_t76133134D3F4C48F9E67D4BE4147A0C256E443C3_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:74>
+		RuntimeObject* L_0 = __this->___m_PurchaseEvent;
+		RuntimeObject* L_1 = ___0_cart;
+		NullCheck(L_0);
+		InterfaceActionInvoker1< RuntimeObject* >::Invoke(0, IPurchaseEventEmitter_t76133134D3F4C48F9E67D4BE4147A0C256E443C3_il2cpp_TypeInfo_var, L_0, L_1);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:75>
+		return;
+	}
+}
+// Method Definition Index: 84315
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void AppleStoreExtendedPurchaseService_SendPurchasePaidEvent_m3ACCB3E2829DC2A8047173B0850E68DC41C190D6 (AppleStoreExtendedPurchaseService_t40CCAC0C4DD434BDE35AFB84B680C696FAC6FC06* __this, PendingOrder_tA824D1CD7AE6E3362EFE213FDA0228EC4889A4B1* ___0_order, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&IPurchaseEventEmitter_t76133134D3F4C48F9E67D4BE4147A0C256E443C3_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:79>
+		RuntimeObject* L_0 = __this->___m_PurchaseEvent;
+		PendingOrder_tA824D1CD7AE6E3362EFE213FDA0228EC4889A4B1* L_1 = ___0_order;
+		PendingOrder_tA824D1CD7AE6E3362EFE213FDA0228EC4889A4B1* L_2 = ___0_order;
+		ApplePurchaseFulfilledPayload_tC3EC1DF5A08D02CF4EF0E6406DB0DE74154E5FD6* L_3;
+		L_3 = AppleStoreExtendedPurchaseService_BuildApplePayload_mC393F05CBBC26B78894025374A8F83C2F1CA18DD(L_2, NULL);
+		NullCheck(L_0);
+		InterfaceActionInvoker2< PendingOrder_tA824D1CD7AE6E3362EFE213FDA0228EC4889A4B1*, RuntimeObject* >::Invoke(1, IPurchaseEventEmitter_t76133134D3F4C48F9E67D4BE4147A0C256E443C3_il2cpp_TypeInfo_var, L_0, L_1, L_3);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:80>
+		return;
+	}
+}
+// Method Definition Index: 84316
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void AppleStoreExtendedPurchaseService_SendPurchaseFailedEvent_mED21790E5384B8272638F41AB037147D7D88FA33 (AppleStoreExtendedPurchaseService_t40CCAC0C4DD434BDE35AFB84B680C696FAC6FC06* __this, FailedOrder_t4FF159EDE64FC2EAFB4439A3AEC7F46B62F55BD8* ___0_order, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&IPurchaseEventEmitter_t76133134D3F4C48F9E67D4BE4147A0C256E443C3_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:84>
+		RuntimeObject* L_0 = __this->___m_PurchaseEvent;
+		FailedOrder_t4FF159EDE64FC2EAFB4439A3AEC7F46B62F55BD8* L_1 = ___0_order;
+		NullCheck(L_0);
+		InterfaceActionInvoker1< FailedOrder_t4FF159EDE64FC2EAFB4439A3AEC7F46B62F55BD8* >::Invoke(2, IPurchaseEventEmitter_t76133134D3F4C48F9E67D4BE4147A0C256E443C3_il2cpp_TypeInfo_var, L_0, L_1);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:85>
+		return;
+	}
+}
+// Method Definition Index: 84317
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void AppleStoreExtendedPurchaseService_SendPurchaseFulfilledEvent_m98F55A1F1993F90CCF4F7E49EBA0360150E4A636 (AppleStoreExtendedPurchaseService_t40CCAC0C4DD434BDE35AFB84B680C696FAC6FC06* __this, ConfirmedOrder_t27BA06F8EB8FD59B566EB3A751383DC30DD752F6* ___0_order, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&IPurchaseEventEmitter_t76133134D3F4C48F9E67D4BE4147A0C256E443C3_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	ApplePurchaseFulfilledPayload_tC3EC1DF5A08D02CF4EF0E6406DB0DE74154E5FD6* V_0 = NULL;
+	bool V_1 = false;
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:89>
+		ConfirmedOrder_t27BA06F8EB8FD59B566EB3A751383DC30DD752F6* L_0 = ___0_order;
+		ApplePurchaseFulfilledPayload_tC3EC1DF5A08D02CF4EF0E6406DB0DE74154E5FD6* L_1;
+		L_1 = AppleStoreExtendedPurchaseService_BuildApplePayload_mC393F05CBBC26B78894025374A8F83C2F1CA18DD(L_0, NULL);
+		V_0 = L_1;
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:90>
+		ApplePurchaseFulfilledPayload_tC3EC1DF5A08D02CF4EF0E6406DB0DE74154E5FD6* L_2 = V_0;
+		V_1 = (bool)((((RuntimeObject*)(ApplePurchaseFulfilledPayload_tC3EC1DF5A08D02CF4EF0E6406DB0DE74154E5FD6*)L_2) == ((RuntimeObject*)(RuntimeObject*)NULL))? 1 : 0);
+		bool L_3 = V_1;
+		if (!L_3)
+		{
+			goto IL_0012;
+		}
+	}
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:90>
+		goto IL_0020;
+	}
+
+IL_0012:
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:91>
+		RuntimeObject* L_4 = __this->___m_PurchaseEvent;
+		ConfirmedOrder_t27BA06F8EB8FD59B566EB3A751383DC30DD752F6* L_5 = ___0_order;
+		ApplePurchaseFulfilledPayload_tC3EC1DF5A08D02CF4EF0E6406DB0DE74154E5FD6* L_6 = V_0;
+		NullCheck(L_4);
+		InterfaceActionInvoker2< ConfirmedOrder_t27BA06F8EB8FD59B566EB3A751383DC30DD752F6*, RuntimeObject* >::Invoke(3, IPurchaseEventEmitter_t76133134D3F4C48F9E67D4BE4147A0C256E443C3_il2cpp_TypeInfo_var, L_4, L_5, L_6);
+	}
+
+IL_0020:
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:92>
+		return;
+	}
+}
+// Method Definition Index: 84318
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR ApplePurchaseFulfilledPayload_tC3EC1DF5A08D02CF4EF0E6406DB0DE74154E5FD6* AppleStoreExtendedPurchaseService_BuildApplePayload_mC393F05CBBC26B78894025374A8F83C2F1CA18DD (Order_tD1825298A09BBF359EC2F7B272C72E11C0508A4F* ___0_order, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&ApplePurchaseFulfilledPayload_tC3EC1DF5A08D02CF4EF0E6406DB0DE74154E5FD6_il2cpp_TypeInfo_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&Guid_t_il2cpp_TypeInfo_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&IAppleOrderInfo_tA2DFD4ECE3C3FEFCFDD20EBA824BD8E02EB9EDF9_il2cpp_TypeInfo_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&IOrderInfo_t8F6EE055337893DD2EA2A1E2F9AA581DF29C52F0_il2cpp_TypeInfo_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&Nullable_1_GetValueOrDefault_mC6EDE8162AB388B6482F745FF996B594ACC373AC_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&Nullable_1_get_HasValue_mA4048346752BF05849998E450987EB444BE2AD63_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&Nullable_1_get_Value_mDE8CD36894715AA51DF861D2679324AC2F6E1C79_RuntimeMethod_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	RuntimeObject* V_0 = NULL;
+	Nullable_1_t0ECB838EB0C9A81655750B26970F21CF9A83A5F7 V_1;
+	memset((&V_1), 0, sizeof(V_1));
+	String_t* V_2 = NULL;
+	bool V_3 = false;
+	ApplePurchaseFulfilledPayload_tC3EC1DF5A08D02CF4EF0E6406DB0DE74154E5FD6* V_4 = NULL;
+	Nullable_1_t0ECB838EB0C9A81655750B26970F21CF9A83A5F7 V_5;
+	memset((&V_5), 0, sizeof(V_5));
+	Guid_t V_6;
+	memset((&V_6), 0, sizeof(V_6));
+	RuntimeObject* G_B2_0 = NULL;
+	RuntimeObject* G_B1_0 = NULL;
+	RuntimeObject* G_B3_0 = NULL;
+	int32_t G_B11_0 = 0;
+	String_t* G_B14_0 = NULL;
+	ApplePurchaseFulfilledPayload_tC3EC1DF5A08D02CF4EF0E6406DB0DE74154E5FD6* G_B16_0 = NULL;
+	ApplePurchaseFulfilledPayload_tC3EC1DF5A08D02CF4EF0E6406DB0DE74154E5FD6* G_B16_1 = NULL;
+	ApplePurchaseFulfilledPayload_tC3EC1DF5A08D02CF4EF0E6406DB0DE74154E5FD6* G_B15_0 = NULL;
+	ApplePurchaseFulfilledPayload_tC3EC1DF5A08D02CF4EF0E6406DB0DE74154E5FD6* G_B15_1 = NULL;
+	String_t* G_B17_0 = NULL;
+	ApplePurchaseFulfilledPayload_tC3EC1DF5A08D02CF4EF0E6406DB0DE74154E5FD6* G_B17_1 = NULL;
+	ApplePurchaseFulfilledPayload_tC3EC1DF5A08D02CF4EF0E6406DB0DE74154E5FD6* G_B17_2 = NULL;
+	ApplePurchaseFulfilledPayload_tC3EC1DF5A08D02CF4EF0E6406DB0DE74154E5FD6* G_B19_0 = NULL;
+	ApplePurchaseFulfilledPayload_tC3EC1DF5A08D02CF4EF0E6406DB0DE74154E5FD6* G_B19_1 = NULL;
+	ApplePurchaseFulfilledPayload_tC3EC1DF5A08D02CF4EF0E6406DB0DE74154E5FD6* G_B18_0 = NULL;
+	ApplePurchaseFulfilledPayload_tC3EC1DF5A08D02CF4EF0E6406DB0DE74154E5FD6* G_B18_1 = NULL;
+	String_t* G_B20_0 = NULL;
+	ApplePurchaseFulfilledPayload_tC3EC1DF5A08D02CF4EF0E6406DB0DE74154E5FD6* G_B20_1 = NULL;
+	ApplePurchaseFulfilledPayload_tC3EC1DF5A08D02CF4EF0E6406DB0DE74154E5FD6* G_B20_2 = NULL;
+	ApplePurchaseFulfilledPayload_tC3EC1DF5A08D02CF4EF0E6406DB0DE74154E5FD6* G_B22_0 = NULL;
+	ApplePurchaseFulfilledPayload_tC3EC1DF5A08D02CF4EF0E6406DB0DE74154E5FD6* G_B22_1 = NULL;
+	ApplePurchaseFulfilledPayload_tC3EC1DF5A08D02CF4EF0E6406DB0DE74154E5FD6* G_B21_0 = NULL;
+	ApplePurchaseFulfilledPayload_tC3EC1DF5A08D02CF4EF0E6406DB0DE74154E5FD6* G_B21_1 = NULL;
+	int32_t G_B23_0 = 0;
+	ApplePurchaseFulfilledPayload_tC3EC1DF5A08D02CF4EF0E6406DB0DE74154E5FD6* G_B23_1 = NULL;
+	ApplePurchaseFulfilledPayload_tC3EC1DF5A08D02CF4EF0E6406DB0DE74154E5FD6* G_B23_2 = NULL;
+	ApplePurchaseFulfilledPayload_tC3EC1DF5A08D02CF4EF0E6406DB0DE74154E5FD6* G_B25_0 = NULL;
+	ApplePurchaseFulfilledPayload_tC3EC1DF5A08D02CF4EF0E6406DB0DE74154E5FD6* G_B25_1 = NULL;
+	ApplePurchaseFulfilledPayload_tC3EC1DF5A08D02CF4EF0E6406DB0DE74154E5FD6* G_B24_0 = NULL;
+	ApplePurchaseFulfilledPayload_tC3EC1DF5A08D02CF4EF0E6406DB0DE74154E5FD6* G_B24_1 = NULL;
+	String_t* G_B26_0 = NULL;
+	ApplePurchaseFulfilledPayload_tC3EC1DF5A08D02CF4EF0E6406DB0DE74154E5FD6* G_B26_1 = NULL;
+	ApplePurchaseFulfilledPayload_tC3EC1DF5A08D02CF4EF0E6406DB0DE74154E5FD6* G_B26_2 = NULL;
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:96>
+		Order_tD1825298A09BBF359EC2F7B272C72E11C0508A4F* L_0 = ___0_order;
+		NullCheck(L_0);
+		RuntimeObject* L_1;
+		L_1 = Order_get_Info_m00C5CEF797606F36178D40872C6D15342AF5DAFF_inline(L_0, NULL);
+		RuntimeObject* L_2 = L_1;
+		if (L_2)
+		{
+			G_B2_0 = L_2;
+			goto IL_000e;
+		}
+		G_B1_0 = L_2;
+	}
+	{
+		G_B3_0 = ((RuntimeObject*)(NULL));
+		goto IL_0013;
+	}
+
+IL_000e:
+	{
+		NullCheck(G_B2_0);
+		RuntimeObject* L_3;
+		L_3 = InterfaceFuncInvoker0< RuntimeObject* >::Invoke(0, IOrderInfo_t8F6EE055337893DD2EA2A1E2F9AA581DF29C52F0_il2cpp_TypeInfo_var, G_B2_0);
+		G_B3_0 = L_3;
+	}
+
+IL_0013:
+	{
+		V_0 = G_B3_0;
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:97>
+		RuntimeObject* L_4 = V_0;
+		V_3 = (bool)((((RuntimeObject*)(RuntimeObject*)L_4) == ((RuntimeObject*)(RuntimeObject*)NULL))? 1 : 0);
+		bool L_5 = V_3;
+		if (!L_5)
+		{
+			goto IL_0024;
+		}
+	}
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:97>
+		V_4 = (ApplePurchaseFulfilledPayload_tC3EC1DF5A08D02CF4EF0E6406DB0DE74154E5FD6*)NULL;
+		goto IL_00dd;
+	}
+
+IL_0024:
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:100>
+		RuntimeObject* L_6 = V_0;
+		NullCheck(L_6);
+		Nullable_1_t0ECB838EB0C9A81655750B26970F21CF9A83A5F7 L_7;
+		L_7 = InterfaceFuncInvoker0< Nullable_1_t0ECB838EB0C9A81655750B26970F21CF9A83A5F7 >::Invoke(7, IAppleOrderInfo_tA2DFD4ECE3C3FEFCFDD20EBA824BD8E02EB9EDF9_il2cpp_TypeInfo_var, L_6);
+		V_1 = L_7;
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:101>
+		bool L_8;
+		L_8 = Nullable_1_get_HasValue_mA4048346752BF05849998E450987EB444BE2AD63_inline((&V_1), Nullable_1_get_HasValue_mA4048346752BF05849998E450987EB444BE2AD63_RuntimeMethod_var);
+		if (!L_8)
+		{
+			goto IL_007e;
+		}
+	}
+	{
+		Nullable_1_t0ECB838EB0C9A81655750B26970F21CF9A83A5F7 L_9 = V_1;
+		V_5 = L_9;
+		Guid_t L_10 = ((Guid_t_StaticFields*)il2cpp_codegen_static_fields_for(Guid_t_il2cpp_TypeInfo_var))->___Empty;
+		V_6 = L_10;
+		bool L_11;
+		L_11 = Nullable_1_get_HasValue_mA4048346752BF05849998E450987EB444BE2AD63_inline((&V_5), Nullable_1_get_HasValue_mA4048346752BF05849998E450987EB444BE2AD63_RuntimeMethod_var);
+		if (L_11)
+		{
+			goto IL_004a;
+		}
+	}
+	{
+		G_B11_0 = 0;
+		goto IL_0064;
+	}
+
+IL_004a:
+	{
+		bool L_12;
+		L_12 = Nullable_1_get_HasValue_mA4048346752BF05849998E450987EB444BE2AD63_inline((&V_5), Nullable_1_get_HasValue_mA4048346752BF05849998E450987EB444BE2AD63_RuntimeMethod_var);
+		if (L_12)
+		{
+			goto IL_0056;
+		}
+	}
+	{
+		G_B11_0 = 1;
+		goto IL_0064;
+	}
+
+IL_0056:
+	{
+		Guid_t L_13;
+		L_13 = Nullable_1_GetValueOrDefault_mC6EDE8162AB388B6482F745FF996B594ACC373AC_inline((&V_5), Nullable_1_GetValueOrDefault_mC6EDE8162AB388B6482F745FF996B594ACC373AC_RuntimeMethod_var);
+		Guid_t L_14 = V_6;
+		bool L_15;
+		L_15 = Guid_op_Equality_mAD728A1A4FB970715E84B7D346E094FE5EF2A240(L_13, L_14, NULL);
+		G_B11_0 = ((int32_t)(L_15));
+	}
+
+IL_0064:
+	{
+		if (G_B11_0)
+		{
+			goto IL_007e;
+		}
+	}
+	{
+		Guid_t L_16;
+		L_16 = Nullable_1_get_Value_mDE8CD36894715AA51DF861D2679324AC2F6E1C79((&V_1), Nullable_1_get_Value_mDE8CD36894715AA51DF861D2679324AC2F6E1C79_RuntimeMethod_var);
+		V_6 = L_16;
+		String_t* L_17;
+		L_17 = Guid_ToString_m2BFFD5FA726E03FA707AAFCCF065896C46D5290C((&V_6), NULL);
+		G_B14_0 = L_17;
+		goto IL_007f;
+	}
+
+IL_007e:
+	{
+		G_B14_0 = ((String_t*)(NULL));
+	}
+
+IL_007f:
+	{
+		V_2 = G_B14_0;
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:102>
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:103>
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:104>
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:105>
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:106>
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:107>
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:108>
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:109>
+		ApplePurchaseFulfilledPayload_tC3EC1DF5A08D02CF4EF0E6406DB0DE74154E5FD6* L_18 = (ApplePurchaseFulfilledPayload_tC3EC1DF5A08D02CF4EF0E6406DB0DE74154E5FD6*)il2cpp_codegen_object_new(ApplePurchaseFulfilledPayload_tC3EC1DF5A08D02CF4EF0E6406DB0DE74154E5FD6_il2cpp_TypeInfo_var);
+		ApplePurchaseFulfilledPayload__ctor_m88B66BCFC2E7F740E95E48F5BF6DAC07216679A9(L_18, NULL);
+		ApplePurchaseFulfilledPayload_tC3EC1DF5A08D02CF4EF0E6406DB0DE74154E5FD6* L_19 = L_18;
+		RuntimeObject* L_20 = V_0;
+		if (L_20)
+		{
+			G_B16_0 = L_19;
+			G_B16_1 = L_19;
+			goto IL_008c;
+		}
+		G_B15_0 = L_19;
+		G_B15_1 = L_19;
+	}
+	{
+		G_B17_0 = ((String_t*)(NULL));
+		G_B17_1 = G_B15_0;
+		G_B17_2 = G_B15_1;
+		goto IL_0092;
+	}
+
+IL_008c:
+	{
+		RuntimeObject* L_21 = V_0;
+		NullCheck(L_21);
+		String_t* L_22;
+		L_22 = InterfaceFuncInvoker0< String_t* >::Invoke(9, IAppleOrderInfo_tA2DFD4ECE3C3FEFCFDD20EBA824BD8E02EB9EDF9_il2cpp_TypeInfo_var, L_21);
+		G_B17_0 = L_22;
+		G_B17_1 = G_B16_0;
+		G_B17_2 = G_B16_1;
+	}
+
+IL_0092:
+	{
+		NullCheck(G_B17_1);
+		ApplePurchaseFulfilledPayload_set_JwsRepresentation_mBE0801BD2AF38B33020435076C14A83F564B89E2_inline(G_B17_1, G_B17_0, NULL);
+		ApplePurchaseFulfilledPayload_tC3EC1DF5A08D02CF4EF0E6406DB0DE74154E5FD6* L_23 = G_B17_2;
+		RuntimeObject* L_24 = V_0;
+		if (L_24)
+		{
+			G_B19_0 = L_23;
+			G_B19_1 = L_23;
+			goto IL_009f;
+		}
+		G_B18_0 = L_23;
+		G_B18_1 = L_23;
+	}
+	{
+		G_B20_0 = ((String_t*)(NULL));
+		G_B20_1 = G_B18_0;
+		G_B20_2 = G_B18_1;
+		goto IL_00a5;
+	}
+
+IL_009f:
+	{
+		RuntimeObject* L_25 = V_0;
+		NullCheck(L_25);
+		String_t* L_26;
+		L_26 = InterfaceFuncInvoker0< String_t* >::Invoke(1, IAppleOrderInfo_tA2DFD4ECE3C3FEFCFDD20EBA824BD8E02EB9EDF9_il2cpp_TypeInfo_var, L_25);
+		G_B20_0 = L_26;
+		G_B20_1 = G_B19_0;
+		G_B20_2 = G_B19_1;
+	}
+
+IL_00a5:
+	{
+		NullCheck(G_B20_1);
+		ApplePurchaseFulfilledPayload_set_OriginalTransactionId_mCBFC16405946899F3172F4CB5FCF9920379FCC7B_inline(G_B20_1, G_B20_0, NULL);
+		ApplePurchaseFulfilledPayload_tC3EC1DF5A08D02CF4EF0E6406DB0DE74154E5FD6* L_27 = G_B20_2;
+		RuntimeObject* L_28 = V_0;
+		if (L_28)
+		{
+			G_B22_0 = L_27;
+			G_B22_1 = L_27;
+			goto IL_00b2;
+		}
+		G_B21_0 = L_27;
+		G_B21_1 = L_27;
+	}
+	{
+		G_B23_0 = (-1);
+		G_B23_1 = G_B21_0;
+		G_B23_2 = G_B21_1;
+		goto IL_00b8;
+	}
+
+IL_00b2:
+	{
+		RuntimeObject* L_29 = V_0;
+		NullCheck(L_29);
+		int32_t L_30;
+		L_30 = InterfaceFuncInvoker0< int32_t >::Invoke(3, IAppleOrderInfo_tA2DFD4ECE3C3FEFCFDD20EBA824BD8E02EB9EDF9_il2cpp_TypeInfo_var, L_29);
+		G_B23_0 = ((int32_t)(L_30));
+		G_B23_1 = G_B22_0;
+		G_B23_2 = G_B22_1;
+	}
+
+IL_00b8:
+	{
+		NullCheck(G_B23_1);
+		ApplePurchaseFulfilledPayload_set_Ownership_m80E2B542B30FABA53119F3EC48355DD6D534DC94_inline(G_B23_1, G_B23_0, NULL);
+		ApplePurchaseFulfilledPayload_tC3EC1DF5A08D02CF4EF0E6406DB0DE74154E5FD6* L_31 = G_B23_2;
+		RuntimeObject* L_32 = V_0;
+		if (L_32)
+		{
+			G_B25_0 = L_31;
+			G_B25_1 = L_31;
+			goto IL_00c5;
+		}
+		G_B24_0 = L_31;
+		G_B24_1 = L_31;
+	}
+	{
+		G_B26_0 = ((String_t*)(NULL));
+		G_B26_1 = G_B24_0;
+		G_B26_2 = G_B24_1;
+		goto IL_00cb;
+	}
+
+IL_00c5:
+	{
+		RuntimeObject* L_33 = V_0;
+		NullCheck(L_33);
+		String_t* L_34;
+		L_34 = InterfaceFuncInvoker0< String_t* >::Invoke(0, IAppleOrderInfo_tA2DFD4ECE3C3FEFCFDD20EBA824BD8E02EB9EDF9_il2cpp_TypeInfo_var, L_33);
+		G_B26_0 = L_34;
+		G_B26_1 = G_B25_0;
+		G_B26_2 = G_B25_1;
+	}
+
+IL_00cb:
+	{
+		NullCheck(G_B26_1);
+		ApplePurchaseFulfilledPayload_set_AppReceipt_m3B22B4C1BD714251A9ACD425BFEDA83D123843FD_inline(G_B26_1, G_B26_0, NULL);
+		ApplePurchaseFulfilledPayload_tC3EC1DF5A08D02CF4EF0E6406DB0DE74154E5FD6* L_35 = G_B26_2;
+		String_t* L_36 = V_2;
+		NullCheck(L_35);
+		ApplePurchaseFulfilledPayload_set_AppAccountToken_mD3F7F9FF8DFDAF2B2FECC8EA7EADF4DDFE78DFD2_inline(L_35, L_36, NULL);
+		V_4 = L_35;
+		goto IL_00dd;
+	}
+
+IL_00dd:
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:110>
+		ApplePurchaseFulfilledPayload_tC3EC1DF5A08D02CF4EF0E6406DB0DE74154E5FD6* L_37 = V_4;
+		return L_37;
+	}
+}
+// Method Definition Index: 84319
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void AppleStoreExtendedPurchaseService_OnEntitlementRevokedUseCaseOnOnEntitlementRevoked_m70DFE0F3995ADF367C200E1B3EE3ECF658439DB9 (AppleStoreExtendedPurchaseService_t40CCAC0C4DD434BDE35AFB84B680C696FAC6FC06* __this, String_t* ___0_productId, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&Enumerator_Dispose_mE7EB1A0596B8FCD94810032FCC90E7152F62E8E2_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&Enumerator_MoveNext_mDAA44E71D6F94F08DDAC87984FA9293CD56E9A2D_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&Enumerator_get_Current_mA6F6593813BC6EB76D243A5FD1D394B215544989_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&IDisposable_t030E0496B4E0E4E4F086825007979AF51F7248C5_il2cpp_TypeInfo_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&IEnumerator_1_tFD0D0803A181170868F6E613A0C34AD42F9225B1_il2cpp_TypeInfo_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&IEnumerator_t7B609C2FFA6EB5167D9C62A0C32A21DE2F666DAA_il2cpp_TypeInfo_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&IPurchaseCache_tFC8B4C9C5E0C0AA6353F5340D958A5C9B5364E2F_il2cpp_TypeInfo_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_Add_mB55089BBCF9305BFEB258D61B7CAD36258B3132B_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_GetEnumerator_mA1AAA15279E06F34260FBF611D8914642D714850_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1__ctor_m6841FD3CEDEA8EA46737298B557279EBF6385082_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_t919E5CB114972DFCF14DD79496128FBE2062B41A_il2cpp_TypeInfo_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&ReadOnlyCollection_1_GetEnumerator_mEB629D8CA2A9B0DD0FEFA4323A21581E5BFB040E_RuntimeMethod_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	List_1_t919E5CB114972DFCF14DD79496128FBE2062B41A* V_0 = NULL;
+	RuntimeObject* V_1 = NULL;
+	Order_tD1825298A09BBF359EC2F7B272C72E11C0508A4F* V_2 = NULL;
+	bool V_3 = false;
+	Enumerator_t10DB350FCF2DB955A3C5EE7DCC1C04FD93E211B5 V_4;
+	memset((&V_4), 0, sizeof(V_4));
+	Order_tD1825298A09BBF359EC2F7B272C72E11C0508A4F* V_5 = NULL;
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:114>
+		List_1_t919E5CB114972DFCF14DD79496128FBE2062B41A* L_0 = (List_1_t919E5CB114972DFCF14DD79496128FBE2062B41A*)il2cpp_codegen_object_new(List_1_t919E5CB114972DFCF14DD79496128FBE2062B41A_il2cpp_TypeInfo_var);
+		List_1__ctor_m6841FD3CEDEA8EA46737298B557279EBF6385082(L_0, List_1__ctor_m6841FD3CEDEA8EA46737298B557279EBF6385082_RuntimeMethod_var);
+		V_0 = L_0;
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:116>
+		ReadOnlyObservableCollection_1_t09916B7A0FC0410428D732A0A2C4F3FE1C76F704* L_1;
+		L_1 = PurchaseService_GetPurchases_mCB90A14123A72354D2772F663FD23EC24D4AF4A4(__this, NULL);
+		NullCheck(L_1);
+		RuntimeObject* L_2;
+		L_2 = ReadOnlyCollection_1_GetEnumerator_mEB629D8CA2A9B0DD0FEFA4323A21581E5BFB040E(L_1, ReadOnlyCollection_1_GetEnumerator_mEB629D8CA2A9B0DD0FEFA4323A21581E5BFB040E_RuntimeMethod_var);
+		V_1 = L_2;
+	}
+	{
+		auto __finallyBlock = il2cpp::utils::Finally([&]
+		{
+
+FINALLY_003e:
+			{
+				{
+					RuntimeObject* L_3 = V_1;
+					if (!L_3)
+					{
+						goto IL_0048;
+					}
+				}
+				{
+					RuntimeObject* L_4 = V_1;
+					NullCheck(L_4);
+					InterfaceActionInvoker0::Invoke(0, IDisposable_t030E0496B4E0E4E4F086825007979AF51F7248C5_il2cpp_TypeInfo_var, L_4);
+				}
+
+IL_0048:
+				{
+					return;
+				}
+			}
+		});
+		try
+		{
+			{
+				goto IL_0034_1;
+			}
+
+IL_0016_1:
+			{
+				//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:116>
+				RuntimeObject* L_5 = V_1;
+				NullCheck(L_5);
+				Order_tD1825298A09BBF359EC2F7B272C72E11C0508A4F* L_6;
+				L_6 = InterfaceFuncInvoker0< Order_tD1825298A09BBF359EC2F7B272C72E11C0508A4F* >::Invoke(0, IEnumerator_1_tFD0D0803A181170868F6E613A0C34AD42F9225B1_il2cpp_TypeInfo_var, L_5);
+				V_2 = L_6;
+				//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:118>
+				String_t* L_7 = ___0_productId;
+				Order_tD1825298A09BBF359EC2F7B272C72E11C0508A4F* L_8 = V_2;
+				bool L_9;
+				L_9 = AppleStoreExtendedPurchaseService_DoesOrderContainAnyRevokedProductIds_m72311534F47EC217C9D7B986F2DB70D84E1E314D(L_7, L_8, NULL);
+				V_3 = L_9;
+				bool L_10 = V_3;
+				if (!L_10)
+				{
+					goto IL_0033_1;
+				}
+			}
+			{
+				//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:120>
+				List_1_t919E5CB114972DFCF14DD79496128FBE2062B41A* L_11 = V_0;
+				Order_tD1825298A09BBF359EC2F7B272C72E11C0508A4F* L_12 = V_2;
+				NullCheck(L_11);
+				List_1_Add_mB55089BBCF9305BFEB258D61B7CAD36258B3132B_inline(L_11, L_12, List_1_Add_mB55089BBCF9305BFEB258D61B7CAD36258B3132B_RuntimeMethod_var);
+			}
+
+IL_0033_1:
+			{
+			}
+
+IL_0034_1:
+			{
+				//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:116>
+				RuntimeObject* L_13 = V_1;
+				NullCheck(L_13);
+				bool L_14;
+				L_14 = InterfaceFuncInvoker0< bool >::Invoke(0, IEnumerator_t7B609C2FFA6EB5167D9C62A0C32A21DE2F666DAA_il2cpp_TypeInfo_var, L_13);
+				if (L_14)
+				{
+					goto IL_0016_1;
+				}
+			}
+			{
+				goto IL_0049;
+			}
+		}
+		catch(Il2CppExceptionWrapper& e)
+		{
+			__finallyBlock.StoreException(e.ex);
+		}
+	}
+
+IL_0049:
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:124>
+		List_1_t919E5CB114972DFCF14DD79496128FBE2062B41A* L_15 = V_0;
+		NullCheck(L_15);
+		Enumerator_t10DB350FCF2DB955A3C5EE7DCC1C04FD93E211B5 L_16;
+		L_16 = List_1_GetEnumerator_mA1AAA15279E06F34260FBF611D8914642D714850(L_15, List_1_GetEnumerator_mA1AAA15279E06F34260FBF611D8914642D714850_RuntimeMethod_var);
+		V_4 = L_16;
+	}
+	{
+		auto __finallyBlock = il2cpp::utils::Finally([&]
+		{
+
+FINALLY_0078:
+			{
+				Enumerator_Dispose_mE7EB1A0596B8FCD94810032FCC90E7152F62E8E2((&V_4), Enumerator_Dispose_mE7EB1A0596B8FCD94810032FCC90E7152F62E8E2_RuntimeMethod_var);
+				return;
+			}
+		});
+		try
+		{
+			{
+				goto IL_006d_1;
+			}
+
+IL_0054_1:
+			{
+				//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:124>
+				Order_tD1825298A09BBF359EC2F7B272C72E11C0508A4F* L_17;
+				L_17 = Enumerator_get_Current_mA6F6593813BC6EB76D243A5FD1D394B215544989_inline((&V_4), Enumerator_get_Current_mA6F6593813BC6EB76D243A5FD1D394B215544989_RuntimeMethod_var);
+				V_5 = L_17;
+				//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:126>
+				RuntimeObject* L_18 = ((PurchaseService_tA32C67F8193AAE937E736946E3BB1B5DE025A57B*)__this)->___m_PurchaseCache;
+				Order_tD1825298A09BBF359EC2F7B272C72E11C0508A4F* L_19 = V_5;
+				NullCheck(L_18);
+				InterfaceActionInvoker1< Order_tD1825298A09BBF359EC2F7B272C72E11C0508A4F* >::Invoke(1, IPurchaseCache_tFC8B4C9C5E0C0AA6353F5340D958A5C9B5364E2F_il2cpp_TypeInfo_var, L_18, L_19);
+			}
+
+IL_006d_1:
+			{
+				//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:124>
+				bool L_20;
+				L_20 = Enumerator_MoveNext_mDAA44E71D6F94F08DDAC87984FA9293CD56E9A2D((&V_4), Enumerator_MoveNext_mDAA44E71D6F94F08DDAC87984FA9293CD56E9A2D_RuntimeMethod_var);
+				if (L_20)
+				{
+					goto IL_0054_1;
+				}
+			}
+			{
+				goto IL_0087;
+			}
+		}
+		catch(Il2CppExceptionWrapper& e)
+		{
+			__finallyBlock.StoreException(e.ex);
+		}
+	}
+
+IL_0087:
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:128>
+		return;
+	}
+}
+// Method Definition Index: 84320
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool AppleStoreExtendedPurchaseService_DoesOrderContainAnyRevokedProductIds_m72311534F47EC217C9D7B986F2DB70D84E1E314D (String_t* ___0_productId, Order_tD1825298A09BBF359EC2F7B272C72E11C0508A4F* ___1_order, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&Enumerable_Any_TisCartItem_t2AD57E121E5F61C1B5A69160E39D32C1E126C42F_mE8451689CD14AA40FBB0F4F29898052F0EABF27E_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&Func_2_t995D09EA9CCB87BB3A12428E71E769B1C78E7B96_il2cpp_TypeInfo_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&ICart_t54844F3BE8B3D7FDCD3505D0F05B4E1C5F4DFAB5_il2cpp_TypeInfo_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&U3CU3Ec__DisplayClass16_0_U3CDoesOrderContainAnyRevokedProductIdsU3Eb__0_mDCB95899C2C51D91DF4B8AE007ED4CA8193F1BA5_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&U3CU3Ec__DisplayClass16_0_t1E2C6B3967FBD757B17649ACEB6B1E70BE95232C_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	U3CU3Ec__DisplayClass16_0_t1E2C6B3967FBD757B17649ACEB6B1E70BE95232C* V_0 = NULL;
+	bool V_1 = false;
+	{
+		U3CU3Ec__DisplayClass16_0_t1E2C6B3967FBD757B17649ACEB6B1E70BE95232C* L_0 = (U3CU3Ec__DisplayClass16_0_t1E2C6B3967FBD757B17649ACEB6B1E70BE95232C*)il2cpp_codegen_object_new(U3CU3Ec__DisplayClass16_0_t1E2C6B3967FBD757B17649ACEB6B1E70BE95232C_il2cpp_TypeInfo_var);
+		U3CU3Ec__DisplayClass16_0__ctor_m86121372364EC9C850C2445A067A19204F157C52(L_0, NULL);
+		V_0 = L_0;
+		U3CU3Ec__DisplayClass16_0_t1E2C6B3967FBD757B17649ACEB6B1E70BE95232C* L_1 = V_0;
+		String_t* L_2 = ___0_productId;
+		NullCheck(L_1);
+		L_1->___productId = L_2;
+		Il2CppCodeGenWriteBarrier((void**)(&L_1->___productId), (void*)L_2);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:132>
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:133>
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:134>
+		Order_tD1825298A09BBF359EC2F7B272C72E11C0508A4F* L_3 = ___1_order;
+		NullCheck(L_3);
+		RuntimeObject* L_4;
+		L_4 = Order_get_CartOrdered_m134E21BEDE41F469365E67B54F1132986016525A_inline(L_3, NULL);
+		NullCheck(L_4);
+		RuntimeObject* L_5;
+		L_5 = InterfaceFuncInvoker0< RuntimeObject* >::Invoke(0, ICart_t54844F3BE8B3D7FDCD3505D0F05B4E1C5F4DFAB5_il2cpp_TypeInfo_var, L_4);
+		U3CU3Ec__DisplayClass16_0_t1E2C6B3967FBD757B17649ACEB6B1E70BE95232C* L_6 = V_0;
+		Func_2_t995D09EA9CCB87BB3A12428E71E769B1C78E7B96* L_7 = (Func_2_t995D09EA9CCB87BB3A12428E71E769B1C78E7B96*)il2cpp_codegen_object_new(Func_2_t995D09EA9CCB87BB3A12428E71E769B1C78E7B96_il2cpp_TypeInfo_var);
+		Func_2__ctor_mC5EBBE95C40E439401506EAD3D75FD49D8653994(L_7, L_6, (intptr_t)((void*)U3CU3Ec__DisplayClass16_0_U3CDoesOrderContainAnyRevokedProductIdsU3Eb__0_mDCB95899C2C51D91DF4B8AE007ED4CA8193F1BA5_RuntimeMethod_var), NULL);
+		bool L_8;
+		L_8 = Enumerable_Any_TisCartItem_t2AD57E121E5F61C1B5A69160E39D32C1E126C42F_mE8451689CD14AA40FBB0F4F29898052F0EABF27E(L_5, L_7, Enumerable_Any_TisCartItem_t2AD57E121E5F61C1B5A69160E39D32C1E126C42F_mE8451689CD14AA40FBB0F4F29898052F0EABF27E_RuntimeMethod_var);
+		V_1 = L_8;
+		goto IL_002d;
+	}
+
+IL_002d:
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:135>
+		bool L_9 = V_1;
+		return L_9;
+	}
+}
+// Method Definition Index: 84321
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* AppleStoreExtendedPurchaseService_get_appReceipt_m169FF1399BC78EFC8179BB8BA72549F9104F14B9 (AppleStoreExtendedPurchaseService_t40CCAC0C4DD434BDE35AFB84B680C696FAC6FC06* __this, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&IAppReceiptUseCase_tE7691280797F817A51E027011A69FE8C7CCC4A6E_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:137>
+		RuntimeObject* L_0 = __this->___m_AppReceiptUseCase;
+		NullCheck(L_0);
+		String_t* L_1;
+		L_1 = InterfaceFuncInvoker0< String_t* >::Invoke(0, IAppReceiptUseCase_tE7691280797F817A51E027011A69FE8C7CCC4A6E_il2cpp_TypeInfo_var, L_0);
+		return L_1;
+	}
+}
+// Method Definition Index: 84322
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void AppleStoreExtendedPurchaseService_add_OnEntitlementRevoked_m66D90E4CA13B4F7906D2D09BCD57DC25A8372682 (AppleStoreExtendedPurchaseService_t40CCAC0C4DD434BDE35AFB84B680C696FAC6FC06* __this, Action_1_t3CB5D1A819C3ED3F99E9E39F890F18633253949A* ___0_value, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&IOnEntitlementRevokedUseCase_t7BF1751DBD45170F87CDDE2057AFEEE9442BC823_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:141>
+		RuntimeObject* L_0 = __this->___m_OnEntitlementRevokedUseCase;
+		Action_1_t3CB5D1A819C3ED3F99E9E39F890F18633253949A* L_1 = ___0_value;
+		NullCheck(L_0);
+		InterfaceActionInvoker1< Action_1_t3CB5D1A819C3ED3F99E9E39F890F18633253949A* >::Invoke(0, IOnEntitlementRevokedUseCase_t7BF1751DBD45170F87CDDE2057AFEEE9442BC823_il2cpp_TypeInfo_var, L_0, L_1);
+		return;
+	}
+}
+// Method Definition Index: 84323
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void AppleStoreExtendedPurchaseService_remove_OnEntitlementRevoked_mD129C6C593B8BA92B2C37081AC2314D979F434AE (AppleStoreExtendedPurchaseService_t40CCAC0C4DD434BDE35AFB84B680C696FAC6FC06* __this, Action_1_t3CB5D1A819C3ED3F99E9E39F890F18633253949A* ___0_value, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&IOnEntitlementRevokedUseCase_t7BF1751DBD45170F87CDDE2057AFEEE9442BC823_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:142>
+		RuntimeObject* L_0 = __this->___m_OnEntitlementRevokedUseCase;
+		Action_1_t3CB5D1A819C3ED3F99E9E39F890F18633253949A* L_1 = ___0_value;
+		NullCheck(L_0);
+		InterfaceActionInvoker1< Action_1_t3CB5D1A819C3ED3F99E9E39F890F18633253949A* >::Invoke(1, IOnEntitlementRevokedUseCase_t7BF1751DBD45170F87CDDE2057AFEEE9442BC823_il2cpp_TypeInfo_var, L_0, L_1);
+		return;
+	}
+}
+// Method Definition Index: 84324
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void AppleStoreExtendedPurchaseService_PresentCodeRedemptionSheet_m306200BFC95A5297A23F3D56C31DD14F876BB253 (AppleStoreExtendedPurchaseService_t40CCAC0C4DD434BDE35AFB84B680C696FAC6FC06* __this, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&IPresentCodeRedemptionSheetUseCase_tCC7D8251AD12909F283FCF9E806971EFBD2CE7D1_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:147>
+		bool L_0;
+		L_0 = PurchaseService_IsStoreConnected_mBFBE2081DF62ABD805E1CCB762BB5EA3E225EE61(__this, NULL);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:148>
+		RuntimeObject* L_1 = __this->___m_PresentCodeRedemptionSheetUseCase;
+		NullCheck(L_1);
+		InterfaceActionInvoker0::Invoke(0, IPresentCodeRedemptionSheetUseCase_tCC7D8251AD12909F283FCF9E806971EFBD2CE7D1_il2cpp_TypeInfo_var, L_1);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:149>
+		return;
+	}
+}
+// Method Definition Index: 84325
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void AppleStoreExtendedPurchaseService_RestoreTransactionsInternal_mA8D760AAB45FE42E367FF3D77E7B89F6BCF8AC1D (AppleStoreExtendedPurchaseService_t40CCAC0C4DD434BDE35AFB84B680C696FAC6FC06* __this, Action_2_t8EADE87044ADE97906736D729EA2E3EF97F34F3D* ___0_callback, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&IRestoreTransactionsUseCase_t7CB4F5539B7A109DB1272A644FAB6EE627B29F3B_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:153>
+		RuntimeObject* L_0 = __this->___m_RestoreTransactionsUseCase;
+		Action_2_t8EADE87044ADE97906736D729EA2E3EF97F34F3D* L_1 = ___0_callback;
+		NullCheck(L_0);
+		InterfaceActionInvoker1< Action_2_t8EADE87044ADE97906736D729EA2E3EF97F34F3D* >::Invoke(0, IRestoreTransactionsUseCase_t7CB4F5539B7A109DB1272A644FAB6EE627B29F3B_il2cpp_TypeInfo_var, L_0, L_1);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:154>
+		return;
+	}
+}
+// Method Definition Index: 84326
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void AppleStoreExtendedPurchaseService_add_OnPromotionalPurchaseIntercepted_m8A3F4E9204A3CE0156435E83992EE20A10F1E01E (AppleStoreExtendedPurchaseService_t40CCAC0C4DD434BDE35AFB84B680C696FAC6FC06* __this, Action_1_t89E7476130EB87E6F9C9FCBB2D6407FB99F11F84* ___0_value, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&ISetPromotionalPurchaseInterceptorCallbackUseCase_t6D8A28CAB01ACAC32572D90332EC54A1F86AECD5_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:158>
+		RuntimeObject* L_0 = __this->___m_SetPromotionalPurchaseInterceptorCallbackUseCase;
+		Action_1_t89E7476130EB87E6F9C9FCBB2D6407FB99F11F84* L_1 = ___0_value;
+		NullCheck(L_0);
+		InterfaceActionInvoker1< Action_1_t89E7476130EB87E6F9C9FCBB2D6407FB99F11F84* >::Invoke(0, ISetPromotionalPurchaseInterceptorCallbackUseCase_t6D8A28CAB01ACAC32572D90332EC54A1F86AECD5_il2cpp_TypeInfo_var, L_0, L_1);
+		return;
+	}
+}
+// Method Definition Index: 84327
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void AppleStoreExtendedPurchaseService_remove_OnPromotionalPurchaseIntercepted_mAD8F53BCBD81EADF0CECDBF414AED08F6441C848 (AppleStoreExtendedPurchaseService_t40CCAC0C4DD434BDE35AFB84B680C696FAC6FC06* __this, Action_1_t89E7476130EB87E6F9C9FCBB2D6407FB99F11F84* ___0_value, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&ISetPromotionalPurchaseInterceptorCallbackUseCase_t6D8A28CAB01ACAC32572D90332EC54A1F86AECD5_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:159>
+		RuntimeObject* L_0 = __this->___m_SetPromotionalPurchaseInterceptorCallbackUseCase;
+		Action_1_t89E7476130EB87E6F9C9FCBB2D6407FB99F11F84* L_1 = ___0_value;
+		NullCheck(L_0);
+		InterfaceActionInvoker1< Action_1_t89E7476130EB87E6F9C9FCBB2D6407FB99F11F84* >::Invoke(1, ISetPromotionalPurchaseInterceptorCallbackUseCase_t6D8A28CAB01ACAC32572D90332EC54A1F86AECD5_il2cpp_TypeInfo_var, L_0, L_1);
+		return;
+	}
+}
+// Method Definition Index: 84328
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void AppleStoreExtendedPurchaseService_ContinuePromotionalPurchases_mC6E06D66463AC38D51A31A4E9381A59DD49284D1 (AppleStoreExtendedPurchaseService_t40CCAC0C4DD434BDE35AFB84B680C696FAC6FC06* __this, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&IContinuePromotionalPurchasesUseCase_t77D422AFAD64C8CE323543D058ED2AA03A3D9971_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:164>
+		RuntimeObject* L_0 = __this->___m_ContinuePromotionalPurchasesUseCase;
+		NullCheck(L_0);
+		InterfaceActionInvoker0::Invoke(0, IContinuePromotionalPurchasesUseCase_t77D422AFAD64C8CE323543D058ED2AA03A3D9971_il2cpp_TypeInfo_var, L_0);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:165>
+		return;
+	}
+}
+// Method Definition Index: 84329
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool AppleStoreExtendedPurchaseService_get_simulateAskToBuy_m0EF6C516FF0A91B445B96437498B651AAC2A3E4F (AppleStoreExtendedPurchaseService_t40CCAC0C4DD434BDE35AFB84B680C696FAC6FC06* __this, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&ISimulateAskToBuyUseCase_tD70AAFF339A10F16551E12DC188E64F843C022D9_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:169>
+		RuntimeObject* L_0 = __this->___m_SimulateAskToBuyUseCase;
+		NullCheck(L_0);
+		bool L_1;
+		L_1 = InterfaceFuncInvoker0< bool >::Invoke(0, ISimulateAskToBuyUseCase_tD70AAFF339A10F16551E12DC188E64F843C022D9_il2cpp_TypeInfo_var, L_0);
+		return L_1;
+	}
+}
+// Method Definition Index: 84330
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void AppleStoreExtendedPurchaseService_set_simulateAskToBuy_mD124136C5F22665E6AE4D58F090AFF6E0CE57AA3 (AppleStoreExtendedPurchaseService_t40CCAC0C4DD434BDE35AFB84B680C696FAC6FC06* __this, bool ___0_value, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&ISimulateAskToBuyUseCase_tD70AAFF339A10F16551E12DC188E64F843C022D9_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:170>
+		RuntimeObject* L_0 = __this->___m_SimulateAskToBuyUseCase;
+		bool L_1 = ___0_value;
+		NullCheck(L_0);
+		InterfaceActionInvoker1< bool >::Invoke(1, ISimulateAskToBuyUseCase_tD70AAFF339A10F16551E12DC188E64F843C022D9_il2cpp_TypeInfo_var, L_0, L_1);
+		return;
+	}
+}
+// Method Definition Index: 84331
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void AppleStoreExtendedPurchaseService_RefreshAppReceipt_m1BA055AB0959BF2E7DD98596ABE54267E6C6820C (AppleStoreExtendedPurchaseService_t40CCAC0C4DD434BDE35AFB84B680C696FAC6FC06* __this, Action_1_t3CB5D1A819C3ED3F99E9E39F890F18633253949A* ___0_successCallback, Action_1_t3CB5D1A819C3ED3F99E9E39F890F18633253949A* ___1_errorCallback, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&IRefreshAppReceiptUseCase_t2BE13A8D74D9AF2D1C8695649A898F05B5026F12_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:176>
+		RuntimeObject* L_0 = __this->___m_RefreshAppReceiptUseCase;
+		Action_1_t3CB5D1A819C3ED3F99E9E39F890F18633253949A* L_1 = ___0_successCallback;
+		Action_1_t3CB5D1A819C3ED3F99E9E39F890F18633253949A* L_2 = ___1_errorCallback;
+		NullCheck(L_0);
+		InterfaceActionInvoker2< Action_1_t3CB5D1A819C3ED3F99E9E39F890F18633253949A*, Action_1_t3CB5D1A819C3ED3F99E9E39F890F18633253949A* >::Invoke(0, IRefreshAppReceiptUseCase_t2BE13A8D74D9AF2D1C8695649A898F05B5026F12_il2cpp_TypeInfo_var, L_0, L_1, L_2);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:177>
+		return;
+	}
+}
+// Method Definition Index: 84332
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void AppleStoreExtendedPurchaseService_SetRefreshAppReceipt_mDC8C3BD4E55B68A6F80010CF08C049ACA3F6BBDD (AppleStoreExtendedPurchaseService_t40CCAC0C4DD434BDE35AFB84B680C696FAC6FC06* __this, bool ___0_refreshAppReceipt, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&IRefreshAppReceiptUseCase_t2BE13A8D74D9AF2D1C8695649A898F05B5026F12_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:182>
+		RuntimeObject* L_0 = __this->___m_RefreshAppReceiptUseCase;
+		bool L_1 = ___0_refreshAppReceipt;
+		NullCheck(L_0);
+		InterfaceActionInvoker1< bool >::Invoke(1, IRefreshAppReceiptUseCase_t2BE13A8D74D9AF2D1C8695649A898F05B5026F12_il2cpp_TypeInfo_var, L_0, L_1);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:183>
+		return;
+	}
+}
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winvalid-offsetof"
+#pragma clang diagnostic ignored "-Wunused-variable"
+#endif
+// Method Definition Index: 84333
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CU3Ec__DisplayClass16_0__ctor_m86121372364EC9C850C2445A067A19204F157C52 (U3CU3Ec__DisplayClass16_0_t1E2C6B3967FBD757B17649ACEB6B1E70BE95232C* __this, const RuntimeMethod* method) 
+{
+	{
+		Object__ctor_mE837C6B9FA8C6D5D109F4B2EC885D79919AC0EA2(__this, NULL);
+		return;
+	}
+}
+// Method Definition Index: 84334
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool U3CU3Ec__DisplayClass16_0_U3CDoesOrderContainAnyRevokedProductIdsU3Eb__0_mDCB95899C2C51D91DF4B8AE007ED4CA8193F1BA5 (U3CU3Ec__DisplayClass16_0_t1E2C6B3967FBD757B17649ACEB6B1E70BE95232C* __this, CartItem_t2AD57E121E5F61C1B5A69160E39D32C1E126C42F* ___0_cartItem, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&IReadOnlyDictionary_2_tD38BB3D5CF1B604D95354E070EF7D17708342F48_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	CatalogListing_tC4E89A5FBD6F52F0EC11E5C4C88B5082BBB87B90* V_0 = NULL;
+	int32_t G_B3_0 = 0;
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:133>
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/AppleAppStore/Extensions/AppleStoreExtendedPurchaseService.cs:134>
+		CartItem_t2AD57E121E5F61C1B5A69160E39D32C1E126C42F* L_0 = ___0_cartItem;
+		NullCheck(L_0);
+		Product_tD279BF775D345330FEE8405D2F53EC5D6B971C76* L_1;
+		L_1 = CartItem_get_Product_m1CEE0F7667AB0B7C4454FC03F60C44890FFEF9F9_inline(L_0, NULL);
+		NullCheck(L_1);
+		RuntimeObject* L_2;
+		L_2 = Product_get_catalogListings_mE5C0B40D760197D0C023367603A2B394AB60349B_inline(L_1, NULL);
+		CartItem_t2AD57E121E5F61C1B5A69160E39D32C1E126C42F* L_3 = ___0_cartItem;
+		NullCheck(L_3);
+		String_t* L_4;
+		L_4 = CartItem_get_CatalogListingId_m5FF60887B8750BF2ED60D1EEDEEB8AD11A744F24_inline(L_3, NULL);
+		NullCheck(L_2);
+		bool L_5;
+		L_5 = InterfaceFuncInvoker2< bool, String_t*, CatalogListing_tC4E89A5FBD6F52F0EC11E5C4C88B5082BBB87B90** >::Invoke(1, IReadOnlyDictionary_2_tD38BB3D5CF1B604D95354E070EF7D17708342F48_il2cpp_TypeInfo_var, L_2, L_4, (&V_0));
+		if (!L_5)
+		{
+			goto IL_0032;
+		}
+	}
+	{
+		String_t* L_6 = __this->___productId;
+		CatalogListing_tC4E89A5FBD6F52F0EC11E5C4C88B5082BBB87B90* L_7 = V_0;
+		NullCheck(L_7);
+		ProductDefinition_tB486F56477C49E81BA6704C2DD31F373CDCCC1BD* L_8;
+		L_8 = CatalogListing_get_definition_m3068AE720A3F2359E0D787C8BB8436A095F4E31E_inline(L_7, NULL);
+		NullCheck(L_8);
+		String_t* L_9;
+		L_9 = ProductDefinition_get_storeSpecificId_m67EC5C2564476BD154C8164613AB62A4DBEADEAC_inline(L_8, NULL);
+		NullCheck(L_6);
+		bool L_10;
+		L_10 = String_Contains_m6D77B121FADA7CA5F397C0FABB65DA62DF03B6C3(L_6, L_9, NULL);
+		G_B3_0 = ((int32_t)(L_10));
+		goto IL_0033;
+	}
+
+IL_0032:
+	{
+		G_B3_0 = 0;
+	}
+
+IL_0033:
+	{
+		return (bool)G_B3_0;
+	}
+}
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winvalid-offsetof"
+#pragma clang diagnostic ignored "-Wunused-variable"
+#endif
+// Method Definition Index: 84335
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void AppleStoreExtendedService__ctor_m376FB6D7B5FE4E543F39773E55697C38DEB7A167 (AppleStoreExtendedService_t01BBE266FCCFF985A5E6E8FC28DE77E8F0686235* __this, RuntimeObject* ___0_canMakePaymentsUseCase, RuntimeObject* ___1_clearAppleTransactionLogsUseCase, RuntimeObject* ___2_setAppAccountTokenUseCase, RuntimeObject* ___3_fetchStorefrontUseCase, RuntimeObject* ___4_connectUseCase, RuntimeObject* ___5_storeWrapper, const RuntimeMethod* method) 
+{
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Store/AppleAppStore/AppleStoreExtendedService.cs:24>
+		RuntimeObject* L_0 = ___4_connectUseCase;
+		RuntimeObject* L_1 = ___5_storeWrapper;
+		StoreService__ctor_mC31FD6601BB49CD778A26EF96BD826BF19016541(__this, L_0, L_1, NULL);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Store/AppleAppStore/AppleStoreExtendedService.cs:26>
+		RuntimeObject* L_2 = ___0_canMakePaymentsUseCase;
+		__this->___m_CanMakePaymentsUseCase = L_2;
+		Il2CppCodeGenWriteBarrier((void**)(&__this->___m_CanMakePaymentsUseCase), (void*)L_2);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Store/AppleAppStore/AppleStoreExtendedService.cs:27>
+		RuntimeObject* L_3 = ___1_clearAppleTransactionLogsUseCase;
+		__this->___m_ClearAppleTransactionLogsUseCase = L_3;
+		Il2CppCodeGenWriteBarrier((void**)(&__this->___m_ClearAppleTransactionLogsUseCase), (void*)L_3);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Store/AppleAppStore/AppleStoreExtendedService.cs:28>
+		RuntimeObject* L_4 = ___2_setAppAccountTokenUseCase;
+		__this->___m_SetAppAccountTokenUseCase = L_4;
+		Il2CppCodeGenWriteBarrier((void**)(&__this->___m_SetAppAccountTokenUseCase), (void*)L_4);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Store/AppleAppStore/AppleStoreExtendedService.cs:29>
+		RuntimeObject* L_5 = ___3_fetchStorefrontUseCase;
+		__this->___m_FetchStorefrontUseCase = L_5;
+		Il2CppCodeGenWriteBarrier((void**)(&__this->___m_FetchStorefrontUseCase), (void*)L_5);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Store/AppleAppStore/AppleStoreExtendedService.cs:30>
+		return;
+	}
+}
+// Method Definition Index: 84336
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool AppleStoreExtendedService_get_canMakePayments_m22DCF9F7241C0F05AA75E3A38943654DC5C00DBA (AppleStoreExtendedService_t01BBE266FCCFF985A5E6E8FC28DE77E8F0686235* __this, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&ICanMakePaymentsUseCase_t196915540C2F7F36EA76EF2091784E67292EECCD_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Store/AppleAppStore/AppleStoreExtendedService.cs:32>
+		RuntimeObject* L_0 = __this->___m_CanMakePaymentsUseCase;
+		NullCheck(L_0);
+		bool L_1;
+		L_1 = InterfaceFuncInvoker0< bool >::Invoke(0, ICanMakePaymentsUseCase_t196915540C2F7F36EA76EF2091784E67292EECCD_il2cpp_TypeInfo_var, L_0);
+		return L_1;
+	}
+}
+// Method Definition Index: 84337
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void AppleStoreExtendedService_SetAppAccountToken_m6C3CE01F18AD4409DA91FABF42252DC579750657 (AppleStoreExtendedService_t01BBE266FCCFF985A5E6E8FC28DE77E8F0686235* __this, Guid_t ___0_appAccountToken, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&ISetAppAccountTokenUseCase_t9DFC9FF2BF3C41CAC11D053E23C566ECEA9E728C_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Store/AppleAppStore/AppleStoreExtendedService.cs:36>
+		RuntimeObject* L_0 = __this->___m_SetAppAccountTokenUseCase;
+		Guid_t L_1 = ___0_appAccountToken;
+		NullCheck(L_0);
+		InterfaceActionInvoker1< Guid_t >::Invoke(0, ISetAppAccountTokenUseCase_t9DFC9FF2BF3C41CAC11D053E23C566ECEA9E728C_il2cpp_TypeInfo_var, L_0, L_1);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Store/AppleAppStore/AppleStoreExtendedService.cs:37>
+		return;
+	}
+}
+// Method Definition Index: 84338
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void AppleStoreExtendedService_ClearTransactionLog_m501BC1829309B51394CDB1BD9573D037B476EC8B (AppleStoreExtendedService_t01BBE266FCCFF985A5E6E8FC28DE77E8F0686235* __this, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&IClearAppleTransactionLogsUseCase_t99D2FCEBA59F909747541E5C5240D1DCA327096D_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Store/AppleAppStore/AppleStoreExtendedService.cs:42>
+		RuntimeObject* L_0 = __this->___m_ClearAppleTransactionLogsUseCase;
+		NullCheck(L_0);
+		InterfaceActionInvoker0::Invoke(0, IClearAppleTransactionLogsUseCase_t99D2FCEBA59F909747541E5C5240D1DCA327096D_il2cpp_TypeInfo_var, L_0);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Store/AppleAppStore/AppleStoreExtendedService.cs:44>
+		return;
+	}
+}
+// Method Definition Index: 84339
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void AppleStoreExtendedService_FetchStorefront_m10A9684A431B5A5567991EA38238C65C9A2F90C8 (AppleStoreExtendedService_t01BBE266FCCFF985A5E6E8FC28DE77E8F0686235* __this, Action_1_tB0F611356BF76ADE6D1A6EDCB79F9AFE5B4CFFF8* ___0_successCallback, Action_1_t3CB5D1A819C3ED3F99E9E39F890F18633253949A* ___1_errorCallback, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&IFetchStorefrontUseCase_t1CE67DD98DDEC76DA170C61085F5344B7FB3EB11_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Store/AppleAppStore/AppleStoreExtendedService.cs:48>
+		RuntimeObject* L_0 = __this->___m_FetchStorefrontUseCase;
+		Action_1_tB0F611356BF76ADE6D1A6EDCB79F9AFE5B4CFFF8* L_1 = ___0_successCallback;
+		Action_1_t3CB5D1A819C3ED3F99E9E39F890F18633253949A* L_2 = ___1_errorCallback;
+		NullCheck(L_0);
+		InterfaceActionInvoker2< Action_1_tB0F611356BF76ADE6D1A6EDCB79F9AFE5B4CFFF8*, Action_1_t3CB5D1A819C3ED3F99E9E39F890F18633253949A* >::Invoke(0, IFetchStorefrontUseCase_t1CE67DD98DDEC76DA170C61085F5344B7FB3EB11_il2cpp_TypeInfo_var, L_0, L_1, L_2);
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Store/AppleAppStore/AppleStoreExtendedService.cs:49>
+		return;
+	}
+}
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winvalid-offsetof"
+#pragma clang diagnostic ignored "-Wunused-variable"
+#endif
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winvalid-offsetof"
+#pragma clang diagnostic ignored "-Wunused-variable"
+#endif
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winvalid-offsetof"
+#pragma clang diagnostic ignored "-Wunused-variable"
+#endif
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winvalid-offsetof"
+#pragma clang diagnostic ignored "-Wunused-variable"
+#endif
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winvalid-offsetof"
+#pragma clang diagnostic ignored "-Wunused-variable"
+#endif
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winvalid-offsetof"
+#pragma clang diagnostic ignored "-Wunused-variable"
+#endif
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
+// Method Definition Index: 83587
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR CatalogListing_tC4E89A5FBD6F52F0EC11E5C4C88B5082BBB87B90* Product_get_baseListing_mCF03D15D6B35685708E05438A4639055E3BA7708_inline (Product_tD279BF775D345330FEE8405D2F53EC5D6B971C76* __this, const RuntimeMethod* method) 
+{
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Product.cs:97>
+		CatalogListing_tC4E89A5FBD6F52F0EC11E5C4C88B5082BBB87B90* L_0 = __this->___m_BaseListing;
+		return L_0;
+	}
+}
+// Method Definition Index: 82049
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR String_t* CatalogListing_get_id_mEB65318F7C3212BCC0409DCE6F502F468FFF8E64_inline (CatalogListing_tC4E89A5FBD6F52F0EC11E5C4C88B5082BBB87B90* __this, const RuntimeMethod* method) 
+{
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/CatalogListing.cs:21>
+		String_t* L_0 = __this->___U3CidU3Ek__BackingField;
+		return L_0;
+	}
+}
+// Method Definition Index: 83586
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR RuntimeObject* Product_get_catalogListings_mE5C0B40D760197D0C023367603A2B394AB60349B_inline (Product_tD279BF775D345330FEE8405D2F53EC5D6B971C76* __this, const RuntimeMethod* method) 
+{
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Product.cs:90>
+		RuntimeObject* L_0 = __this->___U3CcatalogListingsU3Ek__BackingField;
+		return L_0;
+	}
+}
+// Method Definition Index: 82050
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR ProductDefinition_tB486F56477C49E81BA6704C2DD31F373CDCCC1BD* CatalogListing_get_definition_m3068AE720A3F2359E0D787C8BB8436A095F4E31E_inline (CatalogListing_tC4E89A5FBD6F52F0EC11E5C4C88B5082BBB87B90* __this, const RuntimeMethod* method) 
+{
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/CatalogListing.cs:26>
+		ProductDefinition_tB486F56477C49E81BA6704C2DD31F373CDCCC1BD* L_0 = __this->___U3CdefinitionU3Ek__BackingField;
+		return L_0;
+	}
+}
+// Method Definition Index: 83632
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR String_t* ProductDefinition_get_storeSpecificId_m67EC5C2564476BD154C8164613AB62A4DBEADEAC_inline (ProductDefinition_tB486F56477C49E81BA6704C2DD31F373CDCCC1BD* __this, const RuntimeMethod* method) 
+{
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/ProductDefinition.cs:121>
+		String_t* L_0 = __this->___U3CstoreSpecificIdU3Ek__BackingField;
+		return L_0;
+	}
+}
+// Method Definition Index: 82488
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR RuntimeObject* Order_get_Info_m00C5CEF797606F36178D40872C6D15342AF5DAFF_inline (Order_tD1825298A09BBF359EC2F7B272C72E11C0508A4F* __this, const RuntimeMethod* method) 
+{
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/Models/Order.cs:18>
+		RuntimeObject* L_0 = __this->___U3CInfoU3Ek__BackingField;
+		return L_0;
+	}
+}
+// Method Definition Index: 83200
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void ApplePurchaseFulfilledPayload_set_JwsRepresentation_mBE0801BD2AF38B33020435076C14A83F564B89E2_inline (ApplePurchaseFulfilledPayload_tC3EC1DF5A08D02CF4EF0E6406DB0DE74154E5FD6* __this, String_t* ___0_value, const RuntimeMethod* method) 
+{
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Insights/IPurchaseFulfilledPayload.cs:15>
+		String_t* L_0 = ___0_value;
+		__this->___U3CJwsRepresentationU3Ek__BackingField = L_0;
+		Il2CppCodeGenWriteBarrier((void**)(&__this->___U3CJwsRepresentationU3Ek__BackingField), (void*)L_0);
+		return;
+	}
+}
+// Method Definition Index: 83202
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void ApplePurchaseFulfilledPayload_set_OriginalTransactionId_mCBFC16405946899F3172F4CB5FCF9920379FCC7B_inline (ApplePurchaseFulfilledPayload_tC3EC1DF5A08D02CF4EF0E6406DB0DE74154E5FD6* __this, String_t* ___0_value, const RuntimeMethod* method) 
+{
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Insights/IPurchaseFulfilledPayload.cs:16>
+		String_t* L_0 = ___0_value;
+		__this->___U3COriginalTransactionIdU3Ek__BackingField = L_0;
+		Il2CppCodeGenWriteBarrier((void**)(&__this->___U3COriginalTransactionIdU3Ek__BackingField), (void*)L_0);
+		return;
+	}
+}
+// Method Definition Index: 83204
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void ApplePurchaseFulfilledPayload_set_Ownership_m80E2B542B30FABA53119F3EC48355DD6D534DC94_inline (ApplePurchaseFulfilledPayload_tC3EC1DF5A08D02CF4EF0E6406DB0DE74154E5FD6* __this, int32_t ___0_value, const RuntimeMethod* method) 
+{
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Insights/IPurchaseFulfilledPayload.cs:17>
+		int32_t L_0 = ___0_value;
+		__this->___U3COwnershipU3Ek__BackingField = L_0;
+		return;
+	}
+}
+// Method Definition Index: 83206
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void ApplePurchaseFulfilledPayload_set_AppReceipt_m3B22B4C1BD714251A9ACD425BFEDA83D123843FD_inline (ApplePurchaseFulfilledPayload_tC3EC1DF5A08D02CF4EF0E6406DB0DE74154E5FD6* __this, String_t* ___0_value, const RuntimeMethod* method) 
+{
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Insights/IPurchaseFulfilledPayload.cs:18>
+		String_t* L_0 = ___0_value;
+		__this->___U3CAppReceiptU3Ek__BackingField = L_0;
+		Il2CppCodeGenWriteBarrier((void**)(&__this->___U3CAppReceiptU3Ek__BackingField), (void*)L_0);
+		return;
+	}
+}
+// Method Definition Index: 83208
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void ApplePurchaseFulfilledPayload_set_AppAccountToken_mD3F7F9FF8DFDAF2B2FECC8EA7EADF4DDFE78DFD2_inline (ApplePurchaseFulfilledPayload_tC3EC1DF5A08D02CF4EF0E6406DB0DE74154E5FD6* __this, String_t* ___0_value, const RuntimeMethod* method) 
+{
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Insights/IPurchaseFulfilledPayload.cs:19>
+		String_t* L_0 = ___0_value;
+		__this->___U3CAppAccountTokenU3Ek__BackingField = L_0;
+		Il2CppCodeGenWriteBarrier((void**)(&__this->___U3CAppAccountTokenU3Ek__BackingField), (void*)L_0);
+		return;
+	}
+}
+// Method Definition Index: 82486
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR RuntimeObject* Order_get_CartOrdered_m134E21BEDE41F469365E67B54F1132986016525A_inline (Order_tD1825298A09BBF359EC2F7B272C72E11C0508A4F* __this, const RuntimeMethod* method) 
+{
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/Models/Order.cs:13>
+		RuntimeObject* L_0 = __this->___U3CCartOrderedU3Ek__BackingField;
+		return L_0;
+	}
+}
+// Method Definition Index: 82418
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR Product_tD279BF775D345330FEE8405D2F53EC5D6B971C76* CartItem_get_Product_m1CEE0F7667AB0B7C4454FC03F60C44890FFEF9F9_inline (CartItem_t2AD57E121E5F61C1B5A69160E39D32C1E126C42F* __this, const RuntimeMethod* method) 
+{
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/Models/CartItem.cs:14>
+		Product_tD279BF775D345330FEE8405D2F53EC5D6B971C76* L_0 = __this->___U3CProductU3Ek__BackingField;
+		return L_0;
+	}
+}
+// Method Definition Index: 82419
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR String_t* CartItem_get_CatalogListingId_m5FF60887B8750BF2ED60D1EEDEEB8AD11A744F24_inline (CartItem_t2AD57E121E5F61C1B5A69160E39D32C1E126C42F* __this, const RuntimeMethod* method) 
+{
+	{
+		//<source_info:./Library/PackageCache/com.unity.purchasing@db17cc2e78b3/Runtime/Purchasing/Core/Purchasing/Models/CartItem.cs:21>
+		String_t* L_0 = __this->___U3CCatalogListingIdU3Ek__BackingField;
+		return L_0;
+	}
+}
+// Method Definition Index: 876
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void Action_1_Invoke_mF2422B2DD29F74CE66F791C3F68E288EC7C3DB9E_gshared_inline (Action_1_t6F9EB113EB3F16226AEF811A2744F4111C116C87* __this, RuntimeObject* ___0_obj, const RuntimeMethod* method) 
+{
+	typedef void (*FunctionPointerType) (RuntimeObject*, RuntimeObject*, const RuntimeMethod*);
+	((FunctionPointerType)__this->___invoke_impl)((Il2CppObject*)__this->___method_code, ___0_obj, reinterpret_cast<RuntimeMethod*>(__this->___method));
+}
+// Method Definition Index: 11528
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR RuntimeObject* Enumerator_get_Current_m6330F15D18EE4F547C05DF9BF83C5EB710376027_gshared_inline (Enumerator_t9473BAB568A27E2339D48C1F91319E0F6D244D7A* __this, const RuntimeMethod* method) 
+{
+	{
+		RuntimeObject* L_0 = __this->____current;
+		return L_0;
+	}
+}
+// Method Definition Index: 11475
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void List_1_Add_mEBCF994CC3814631017F46A387B1A192ED6C85C7_gshared_inline (List_1_tA239CB83DE5615F348BB0507E45F490F4F7C9A8D* __this, RuntimeObject* ___0_item, const RuntimeMethod* method) 
+{
+	ObjectU5BU5D_t8061030B0A12A55D5AD8652A20C922FE99450918* V_0 = NULL;
+	int32_t V_1 = 0;
+	{
+		int32_t L_0 = __this->____version;
+		__this->____version = ((int32_t)il2cpp_codegen_add(L_0, 1));
+		ObjectU5BU5D_t8061030B0A12A55D5AD8652A20C922FE99450918* L_1 = __this->____items;
+		V_0 = L_1;
+		int32_t L_2 = __this->____size;
+		V_1 = L_2;
+		int32_t L_3 = V_1;
+		ObjectU5BU5D_t8061030B0A12A55D5AD8652A20C922FE99450918* L_4 = V_0;
+		NullCheck(L_4);
+		if ((!(((uint32_t)L_3) < ((uint32_t)((int32_t)(((RuntimeArray*)L_4)->max_length))))))
+		{
+			goto IL_0034;
+		}
+	}
+	{
+		int32_t L_5 = V_1;
+		__this->____size = ((int32_t)il2cpp_codegen_add(L_5, 1));
+		ObjectU5BU5D_t8061030B0A12A55D5AD8652A20C922FE99450918* L_6 = V_0;
+		int32_t L_7 = V_1;
+		RuntimeObject* L_8 = ___0_item;
+		NullCheck(L_6);
+		(L_6)->SetAt(static_cast<il2cpp_array_size_t>(L_7), (RuntimeObject*)L_8);
+		return;
+	}
+
+IL_0034:
+	{
+		RuntimeObject* L_9 = ___0_item;
+		List_1_AddWithResize_m79A9BF770BEF9C06BE40D5401E55E375F2726CC4(__this, L_9, il2cpp_rgctx_method(method->klass->rgctx_data, 14));
+		return;
+	}
+}
+// Method Definition Index: 2221
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR bool Nullable_1_get_HasValue_mA4048346752BF05849998E450987EB444BE2AD63_gshared_inline (Nullable_1_t0ECB838EB0C9A81655750B26970F21CF9A83A5F7* __this, const RuntimeMethod* method) 
+{
+	{
+		bool L_0 = __this->___hasValue;
+		return L_0;
+	}
+}
+// Method Definition Index: 2223
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR Guid_t Nullable_1_GetValueOrDefault_mC6EDE8162AB388B6482F745FF996B594ACC373AC_gshared_inline (Nullable_1_t0ECB838EB0C9A81655750B26970F21CF9A83A5F7* __this, const RuntimeMethod* method) 
+{
+	{
+		Guid_t L_0 = __this->___value;
+		return L_0;
+	}
+}

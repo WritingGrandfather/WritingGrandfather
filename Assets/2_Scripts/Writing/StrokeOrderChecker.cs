@@ -10,7 +10,10 @@ using UnityEngine.Networking;
 ///
 /// 획 데이터에는 그린 순서(배열 순서)와 진행 방향(path)이 들어 있어
 /// "ㅏ보다 ㄱ을 먼저 썼는가", "가로획을 왼→오른쪽으로 그었는가" 등을 판정할 수 있다.
-/// API 키는 ApiKeyConfig(Assets/Resources/ApiKeyConfig.asset) 사용.
+///
+/// ⚠️ OpenAIHandwritingEvaluator와 마찬가지로 진짜 OpenAI 키는 클라이언트에 두지 않는다 —
+/// Firebase Cloud Functions 프록시(functions/index.js의 openaiProxy)를 거치고, ApiKeyConfig에는
+/// 프록시 전용 공유 비밀값만 넣는다. 자세한 내용은 functions/README.md 참고.
 /// </summary>
 public class StrokeOrderChecker : MonoBehaviour
 {
@@ -24,7 +27,9 @@ public class StrokeOrderChecker : MonoBehaviour
     [Tooltip("응답 최대 토큰 (gpt-5 계열은 최소 4096으로 자동 보정)")]
     public int maxTokens = 4096;
 
-    const string Endpoint = "https://api.openai.com/v1/chat/completions";
+    [Header("프록시 서버 (Firebase Cloud Functions)")]
+    [Tooltip("배포된 openaiProxy 함수의 URL. OpenAIHandwritingEvaluator.proxyUrl과 보통 같은 값을 넣는다.")]
+    public string proxyUrl = "https://REPLACE-WITH-DEPLOYED-OPENAIPROXY-URL";
 
     bool IsReasoningFamily =>
         !string.IsNullOrEmpty(model) &&
@@ -50,21 +55,23 @@ public class StrokeOrderChecker : MonoBehaviour
     IEnumerator Run(string targetChar, string strokesJson, Action<bool, string> onDone)
     {
         var config = ApiKeyConfig.Instance;
-        if (config == null || string.IsNullOrEmpty(config.ApiKey) || string.IsNullOrEmpty(model))
+        if (config == null || string.IsNullOrEmpty(config.ApiKey) || string.IsNullOrEmpty(model) ||
+            string.IsNullOrEmpty(proxyUrl) || proxyUrl.Contains("REPLACE-WITH"))
         {
-            Debug.LogWarning("[StrokeOrder] API 키/모델이 없어 획순 검사를 건너뜁니다.");
+            Debug.LogWarning("[StrokeOrder] 프록시 URL/공유 비밀값/모델이 없어 획순 검사를 건너뜁니다.");
             onDone?.Invoke(true, null);
             yield break;
         }
 
         string body = BuildRequestJson(BuildPrompt(targetChar, strokesJson));
 
-        using (var www = new UnityWebRequest(Endpoint, "POST"))
+        using (var www = new UnityWebRequest(proxyUrl, "POST"))
         {
             www.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(body));
             www.downloadHandler = new DownloadHandlerBuffer();
             www.SetRequestHeader("content-type", "application/json");
-            www.SetRequestHeader("Authorization", "Bearer " + config.ApiKey);
+            // 진짜 OpenAI 키가 아니라 프록시 전용 공유 비밀값 - 서버(functions/index.js)가 검증한다.
+            www.SetRequestHeader("X-Proxy-Key", config.ApiKey);
 
             yield return www.SendWebRequest();
 
