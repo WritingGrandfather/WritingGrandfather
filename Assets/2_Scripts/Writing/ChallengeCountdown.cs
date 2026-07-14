@@ -43,6 +43,10 @@ public class ChallengeCountdown : MonoBehaviour
 
     void Awake()
     {
+        // 이전 씬에서 게임 오버(PlayerHp.Die)로 timeScale이 0이 된 채 넘어올 수 있음.
+        // 카운트다운 코루틴이 WaitForSecondsRealtime을 쓰더라도 확실히 초기화한다.
+        Time.timeScale = 1f;
+
         // 카운트다운 동안 게임 정지
         if (spawner != null) spawner.enabled = false;
         if (session != null) session.enabled = false;
@@ -75,14 +79,15 @@ public class ChallengeCountdown : MonoBehaviour
         if (font != null) mr.material = font.material;
         mr.sortingOrder = sortingOrder;
 
+        // WaitForSecondsRealtime: Time.timeScale 영향을 받지 않아 timeScale=0 상태에서도 진행됨
         for (int i = Mathf.Max(1, countFrom); i >= 1; i--)
         {
             tm.text = i.ToString();
-            yield return new WaitForSeconds(stepDuration);
+            yield return new WaitForSecondsRealtime(stepDuration);
         }
 
         tm.text = LocalizationManager.Get("challenge.countdown_start");
-        yield return new WaitForSeconds(startTextDuration);
+        yield return new WaitForSecondsRealtime(startTextDuration);
         Destroy(go);
 
         // 게임 시작
