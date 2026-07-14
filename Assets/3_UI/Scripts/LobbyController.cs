@@ -82,9 +82,6 @@ public class LobbyController : MonoBehaviour
     Button _btnSettingsIcon;
     Label _versionLabel;
     TextElement[] _titleLabels;
-    Rect _appliedSafeArea;
-    Vector2Int _appliedScreenSize;
-    Vector2 _appliedPanelSize;
 
     TextElement _modalTextLine1;
     TextElement _modalTextLine2;
@@ -344,12 +341,11 @@ public class LobbyController : MonoBehaviour
         });
     }
 
-    // 언어가 바뀌면 모든 텍스트를 다시 채우고, 언어별로 글자 폭이 달라질 수
-    // 있으므로 폰트 스케일 캐시도 무효화해서 다음 Update()에서 다시 계산되게 한다.
+    // 언어가 바뀌면 모든 텍스트를 다시 채운다 - 폰트 스케일은 ApplySafeArea()가
+    // 매 프레임 다시 계산하므로 별도로 캐시를 무효화할 필요가 없다.
     void OnLanguageChanged()
     {
         ApplyLocalization();
-        _appliedPanelSize = default;
     }
 
     void ApplyLocalization()
@@ -649,12 +645,6 @@ public class LobbyController : MonoBehaviour
     {
         _settingsPanel.RemoveFromClassList("hidden");
 
-        // While hidden (display:none) the panel's children have no resolved
-        // size, so the safe-area/font-scale values computed during that time
-        // are stale. Clear the cache so the next ApplySafeArea() (from the
-        // very next Update()) recomputes them against real, laid-out sizes.
-        _appliedPanelSize = default;
-
         // 설정을 열 때마다 다시 채워서, 로그인 상태가 바뀐 뒤에도 이전 값이
         // 남아있지 않게 한다.
         RefreshMyPage();
@@ -706,16 +696,14 @@ public class LobbyController : MonoBehaviour
         if (panelWidth <= 0f || panelHeight <= 0f)
             return;
 
-        // panelWidth/panelHeight can take a frame or two to catch up after
-        // Screen.safeArea/Screen.width/height change (e.g. Device Simulator
-        // switching profiles), since PanelSettings needs a layout pass to
-        // re-derive its scale factor. Keep re-checking every frame - not just
-        // when safeArea/screenSize change - until the panel size itself has
-        // also settled, otherwise this can lock in padding computed against a
-        // stale (previous device's) panel size.
-        var panelSize = new Vector2(panelWidth, panelHeight);
-        if (safeArea == _appliedSafeArea && screenSize == _appliedScreenSize && panelSize == _appliedPanelSize)
-            return;
+        // 예전엔 safeArea/screenSize/panelSize가 이전 프레임과 같으면 여기서
+        // return해서 재계산을 건너뛰었는데, 그러다 콜드 스타트에 언어가 처음부터
+        // 영어(등 새 글리프)인 경우 첫 프레임의 MeasureTextSize 결과가 (화면
+        // 크기는 안 바뀐 채로) 잘못된 값으로 "적용 완료" 캐시에 그대로 굳어버려
+        // 제목 폰트가 화면 밖으로 넘치는 채 다시는 재계산이 안 되는 버그가
+        // 있었다. 화면 크기가 실제로 바뀌었는지 여부와 무관하게 매 프레임
+        // 다시 계산하면, 첫 프레임 측정이 잘못돼도 다음 프레임에 저절로
+        // 정정된다 - 로비 화면이라 매 프레임 다시 재도 비용이 크지 않다.
 
         // Let Unity's own screen-to-panel transform do the conversion instead of
         // re-deriving PanelSettings' scale factor by hand - it already accounts
@@ -802,10 +790,6 @@ public class LobbyController : MonoBehaviour
             float settingsRowLabelAvailableWidth = settingsRowWidth * settingsRowLabelWidthFraction;
             ApplyTextScale(_settingsRowLabels, settingsRowLabelBaseFontSize, settingsRowLabelAvailableWidth, 1f);
         }
-
-        _appliedSafeArea = safeArea;
-        _appliedScreenSize = screenSize;
-        _appliedPanelSize = panelSize;
     }
 
     void ApplyTextScale(TextElement[] elements, float baseFontSize, float availableWidth, float heightFontScale)
