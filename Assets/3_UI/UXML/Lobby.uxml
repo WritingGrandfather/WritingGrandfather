@@ -3,6 +3,8 @@
     <Style src="../USS/Settings.uss" />
 
     <ui:VisualElement name="lobby-root" class="lobby-root">
+        <ui:VisualElement name="bg-words-layer" class="bg-words-layer" picking-mode="Ignore" />
+
         <ui:Button name="btn-settings" text="" class="icon-button icon-button--settings">
             <ui:VisualElement class="icon-img icon-img--settings" picking-mode="Ignore" />
         </ui:Button>

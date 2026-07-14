@@ -49,6 +49,34 @@ public class LobbyController : MonoBehaviour
     // .settings-row-label's "width: 32%" in Settings.uss.
     const float settingsRowLabelWidthFraction = 0.32f;
 
+    // 배경에 흘러가는 단어들 - 실제 게임 스테이지 데이터(StageData 등)와는
+    // 무관한, 이 장식 전용의 고정 목록. 그냥 화면이 심심해 보이지 않게 하는
+    // 용도라 번역도 따로 안 한다.
+    static readonly string[] BgWordPool =
+    {
+        "가나다라", "따라쓰기", "또박또박", "한글자씩", "정성껏", "연습", "배움", "성장",
+    };
+    const int BgWordCount = 7;
+    const float BgWordMinFontSize = 32f;
+    const float BgWordMaxFontSize = 60f;
+    const float BgWordMinSpeed = 24f;
+    const float BgWordMaxSpeed = 55f;
+    const float BgWordMinAlpha = 0.08f;
+    const float BgWordMaxAlpha = 0.20f;
+    // 화면 왼쪽 바깥 이 정도 거리에서 다시 나타나게 한다 (완전히 화면 밖으로
+    // 나간 뒤 재등장이라 튀어나오는 게 안 보임).
+    const float BgWordSpawnOffscreenX = -400f;
+
+    class BgWord
+    {
+        public Label Element;
+        public float X;
+        public float SpeedPxPerSec;
+    }
+
+    VisualElement _bgWordsLayer;
+    readonly List<BgWord> _bgWords = new List<BgWord>();
+
     VisualElement _lobbyRoot;
     VisualElement _exitModal;
     Button _btnSettingsIcon;
@@ -157,6 +185,10 @@ public class LobbyController : MonoBehaviour
         _versionLabel = root.Q<Label>("version-label");
         if (_versionLabel != null)
             _versionLabel.text = "v" + Application.version;
+
+        _bgWordsLayer = root.Q<VisualElement>("bg-words-layer");
+        if (_bgWordsLayer != null)
+            SpawnBgWords();
 
         _settingsPanel = root.Q<VisualElement>("settings-panel");
         _settingsTitle = root.Q<TextElement>("settings-title");
@@ -538,6 +570,65 @@ public class LobbyController : MonoBehaviour
         // Device Simulator switching devices doesn't always raise a
         // GeometryChangedEvent, so poll Screen.safeArea directly as well.
         ApplySafeArea();
+        UpdateBgWords();
+    }
+
+    void SpawnBgWords()
+    {
+        for (int i = 0; i < BgWordCount; i++)
+            _bgWords.Add(CreateBgWord(i));
+    }
+
+    BgWord CreateBgWord(int index)
+    {
+        var label = new Label(BgWordPool[UnityEngine.Random.Range(0, BgWordPool.Length)]);
+        label.pickingMode = PickingMode.Ignore;
+        label.AddToClassList("bg-word");
+        label.style.fontSize = UnityEngine.Random.Range(BgWordMinFontSize, BgWordMaxFontSize);
+        label.style.color = new Color(150f / 255f, 111f / 255f, 71f / 255f,
+            UnityEngine.Random.Range(BgWordMinAlpha, BgWordMaxAlpha));
+
+        // 화면 높이를 단어 개수만큼 나눠서 각자 다른 줄에 두고, 살짝만
+        // 흔들어서 완전히 일정한 격자로는 안 보이게 한다.
+        float yFraction = (index + 0.5f) / BgWordCount;
+        label.style.top = new Length(
+            Mathf.Clamp01(yFraction + UnityEngine.Random.Range(-0.04f, 0.04f)) * 100f, LengthUnit.Percent);
+
+        _bgWordsLayer.Add(label);
+
+        var word = new BgWord
+        {
+            Element = label,
+            SpeedPxPerSec = UnityEngine.Random.Range(BgWordMinSpeed, BgWordMaxSpeed),
+            // 레이아웃 폭을 아직 모르는 시점(OnEnable)이라 대략 넉넉한 값 기준으로
+            // 시작 위치를 흩뿌린다 - 실제 폭은 UpdateBgWords()가 매 프레임 다시 잰다.
+            X = BgWordSpawnOffscreenX + (float)index / BgWordCount * 1600f,
+        };
+        label.style.left = word.X;
+        return word;
+    }
+
+    void UpdateBgWords()
+    {
+        if (_bgWordsLayer == null || _bgWords.Count == 0)
+            return;
+
+        float width = _bgWordsLayer.resolvedStyle.width;
+        if (float.IsNaN(width) || width <= 0f)
+            return;
+
+        foreach (var word in _bgWords)
+        {
+            word.X += word.SpeedPxPerSec * Time.deltaTime;
+            if (word.X > width + 20f)
+            {
+                // 화면 오른쪽으로 완전히 나가면 왼쪽 바깥에서 다시 시작 -
+                // 매번 같은 단어만 보이지 않게 새로 하나 뽑는다.
+                word.X = BgWordSpawnOffscreenX;
+                word.Element.text = BgWordPool[UnityEngine.Random.Range(0, BgWordPool.Length)];
+            }
+            word.Element.style.left = word.X;
+        }
     }
 
     void OnStartClicked()
