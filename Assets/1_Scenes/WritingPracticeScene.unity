@@ -323,6 +323,7 @@ MonoBehaviour:
   feedbackController: {fileID: 676139461}
   writingCell: {fileID: 1261887764}
   compareOverlay: {fileID: 0}
+  templateEvaluator: {fileID: 2091857816}
   stages:
   - {fileID: 11400000, guid: 86a7e7c65bf7243f9964986964bcad04, type: 2}
   - {fileID: 11400000, guid: f3bb46fd134234e869d7fcb3fbdd7f8f, type: 2}

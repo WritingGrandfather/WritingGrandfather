@@ -77,6 +77,16 @@ public class TemplateSimilarityEvaluator : HandwritingEvaluator
     [Tooltip("켜면 본보기/유저 마스크 비교 이미지를 DebugCapture 폴더에 저장")]
     [SerializeField] bool debugDump = true;
 
+    // traceGuide(월드 스페이스 SpriteRenderer 본보기) 대신 UI Toolkit 라벨로 본보기를 그리는
+    // 화면(PreciseWritingUIController 등)에서, 그 라벨의 실제 표시 비율을 여기로 동기화한다.
+    // traceGuide 없이도 "화면에 보이는 본보기"와 "채점 기준 본보기"가 같은 크기·위치가 되어,
+    // 화면 본보기에 맞춰 정확히 쓴 글씨가 크기 차이만으로 벗어난 잉크(오탈락)로 오채점되는 것을 막는다.
+    public void SyncGhostLabelScale(float heightRatio, float offsetY = 0f)
+    {
+        templateHeightRatio = Mathf.Clamp(heightRatio, 0.2f, 1f);
+        templateOffsetY = Mathf.Clamp(offsetY, -0.2f, 0.2f);
+    }
+
     public override void Evaluate(HandwritingEvaluationRequest request, Action<HandwritingFeedback> onComplete)
     {
         try

@@ -33,6 +33,10 @@ namespace WritingGrandfather.UI.PreciseWriting
         [Tooltip("교정 겹쳐보기 (선택) — 연결하면 카드가 표시됐다 사라진 뒤에 다음 글자로 넘어간다")]
         [SerializeField] private CompareOverlay compareOverlay;
 
+        [Tooltip("채점기가 TemplateSimilarityEvaluator면 연결 — ghost-character-label과 같은 비율로 본보기를 정렬해 채점한다. " +
+                 "(비워두면 채점기 자체 기본값으로 정렬되어, 화면에 보이는 본보기와 크기가 어긋날 수 있음)")]
+        [SerializeField] private TemplateSimilarityEvaluator templateEvaluator;
+
         [Tooltip("연습할 스테이지 데이터 — 연결하면 아래 데모 단어 대신 스테이지 글자들을 순서대로 출제")]
         [SerializeField] private StageData[] stages;
 
@@ -118,6 +122,12 @@ namespace WritingGrandfather.UI.PreciseWriting
             Bind();
             ApplyToggles();
             BuildGuideCross();
+
+            // 채점기가 traceGuide 없이도 화면에 실제로 보이는 본보기(ghost-character-label)와
+            // 같은 크기·위치로 정렬해 채점하도록 동기화 - 안 하면 채점기 자체 기본값을 써서
+            // 화면 본보기보다 작게/다른 위치에 정렬되고, 그 결과 화면 본보기에 맞춰 정확히
+            // 쓴 글씨가 "본보기보다 크게 벗어남"으로 오채점된다.
+            templateEvaluator?.SyncGhostLabelScale(GhostGlyphScale);
 
             // 스테이지 데이터가 연결돼 있으면 데모 단어 대신 스테이지 글자들로 교체
             // (스테이지 순서는 유지, 각 스테이지 안에서는 셔플. 단어별 소속 스테이지를 기록해 전환 연출에 사용)
